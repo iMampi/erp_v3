@@ -1,0 +1,28 @@
+row {
+	position: relative;
+}
+.table thead tr,
+.table thead,
+.table,
+.table thead tr td {
+	border-style: none;
+}
+.tbl-fixed {
+	overflow-y: scroll;
+	overflow-y: scroll;
+	height: fit-content;
+	max-height: 300px;
+	margin-top: auto;
+}
+/* table {
+	border-collapse: separate;
+	border-spacing: 0px;
+} */
+/* SELECT TABLE WITH THEAD TO MAKE IT STIKY. NOT ONLY thead*/
+table .myheader {
+	position: sticky;
+	top: 0;
+	background: rgb(117, 117, 117);
+}
+#backplate {
+}

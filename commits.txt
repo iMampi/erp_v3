@@ -1,0 +1,9 @@
+TODO :
+multi selection ligne - somme auto
+--------------------
+001:
+mainly working on the template structure of a page
+tresos_*.php
+ceci est le fichier de base pour toutes les structure à venir.
+
+

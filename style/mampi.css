@@ -1,0 +1,18 @@
+#header-top {
+	min-width: fit-content;
+}
+.bg-light-blue {
+    background-color: rgb(219, 247, 196);
+}
+.bg-dark {
+	color: aliceblue;
+}
+#table-000 {
+	margin-bottom: 0;
+}
+#table-000 thead tr,
+#table-000 thead,
+#table-000,
+#table-000 thead tr td {
+	border-style: none;
+}
