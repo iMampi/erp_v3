@@ -2,7 +2,7 @@
 	min-width: fit-content;
 }
 .bg-light-blue {
-    background-color: rgb(219, 247, 196);
+	background-color: rgb(219, 247, 196);
 }
 .bg-dark {
 	color: aliceblue;
@@ -16,3 +16,11 @@
 #table-000 thead tr td {
 	border-style: none;
 }
+.uid.input {
+	width: 4em;
+}
+/* #table-001 td input {
+	min-width: 100px;
+	width: 500px;
+	color: blue;
+} */

@@ -1,0 +1,67 @@
+  /*
+  JS
+    let j1="2021-02-30";
+    let j2="2022-03-30";
+    console.log(luxon.DateTime.fromFormat(j1,"yyyy-MM-dd"));
+    console.log(luxon.DateTime.fromFormat(j1,"yyyy-MM-dd").toLocaleString());
+    console.log(luxon.DateTime.fromFormat(j2,"yyyy-MM-dd"));
+    console.log(luxon.DateTime.fromFormat(j2,"yyyy-MM-dd").toLocaleString());
+    console.log(`j is ${dateField.value} ${validateDate(dateField)}`);
+    // console.log(`j2 is ${j2} ${validateDate(j2)}`);
+    */
+
+  /*    
+  JS
+    ////example of different option to check on class. 
+    activeRowElements.forEach(el=>{console.log(el.value);})
+
+    //here,we look by string for a substring
+    activeRowElements.forEach(el=>{console.log(el.getAttribute("class"));
+        console.log(el.getAttribute("class").includes('income'));
+    })
+
+    //here, we get an Array, an we check an element into this array obtained
+    //note : contains est cune method de classList. ne fonctionne pas avec une array (use includes)
+    activeRowElements.forEach(el=>{console.log(el.classList);
+        console.log(el.classList.contains("income"));
+    })
+    */
+
+  /*
+  js
+    //example of how to grab just the date class IN .row.active  (we use space)
+    const dateField=document.querySelector(".row.active .date");
+    console.log(dateField);
+    */
+
+js
+The keydown event is fired when a key is pressed. 
+Unlike the keypress event, the keydown event is fired for all keys, regardless of whether they produce a character value. 
+The keydown and keyup events provide a code indicating which key is pressed, while keypress indicates which character was entered.
+
+
+php
+encoding problem even with
+$dom = new DOMDocument("1.0","utf-8");
+
+reason :
+  DOMDocument::loadHTML will treat your string as being in ISO-8859-1 (the HTTP/1.1 default character set) unless you tell it otherwise. This results in UTF-8 strings being interpreted incorrectly.
+  The DOM extension was built on libxml2 whose HTML parser was made for HTML 4 - the default encoding for which is ISO-8859-1. Unless it encounters an appropriate meta tag or XML declaration stating otherwise loadHTML() will assume the content is ISO-8859-1.
+  Specifying the encoding when creating the DOMDocument as you have does not influence what the parser does - loading HTML (or XML) replaces both the xml version and encoding that you gave its constructor.
+and
+  The problem is with saveHTML() and saveXML(), both of them do not work correctly in Unix. They do not save UTF-8 characters correctly 
+
+solution :
+do not work with $dom->loadHTMLFile(). you must use second option;
+  instead of just :
+    $dom->loadHTML($mystring);
+  we convert  
+    $dom->loadHTML(mb_convert_encoding($mystring, 'HTML-ENTITIES', 'UTF-8'));
+
+OR
+
+  instead of just :
+    $dom->saveHTML;
+  do 
+    echo utf8_decode($dom->saveHTML($dom->documentElement));
+  see usefultipsalongtheway.txt for explaination

@@ -5,5 +5,11 @@ multi selection ligne - somme auto
 mainly working on the template structure of a page
 tresos_*.php
 ceci est le fichier de base pour toutes les structure à venir.
-
+--------------------
+002:
+dummy data for test of generation of tresos.php's rows.
+fixed encoding problem
+created base model for tables
+generation and filling of table working. gotta to change how handling data once data production used
+imported some helper functions from previous project (JS)
 
