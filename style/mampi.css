@@ -24,3 +24,16 @@
 	width: 500px;
 	color: blue;
 } */
+
+#testes {
+	display: inline-block;
+}
+
+.table {
+	margin-bottom: 0;
+	/* display: inline-block; */
+}
+
+td {
+	white-space: nowrap;
+}

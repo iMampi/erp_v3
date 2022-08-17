@@ -80,7 +80,7 @@
             <div class="row">
                 <div id="table-here">
                     <?php
-                    require_once __DIR__ . '/processors/generate_table_000.php';
+                    require_once __DIR__ . '/processessor/generate_table_000.php';
                     ?>
                     <!-- <table class="table bg-dark" id="table-000">
                         <thead class="">
@@ -117,7 +117,7 @@
             <div class="table-responsive-md">
                 <table class="table table-hover" id="table-001">
                     <?php
-                    require_once __DIR__ . "/processors/generate_table_001_rows.php";
+                    require_once __DIR__ . "/processessor/generate_table_001_rows.php";
                     ?>
                     <!-- <tbody>
                         <tr>

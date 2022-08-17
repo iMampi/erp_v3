@@ -12,4 +12,9 @@ fixed encoding problem
 created base model for tables
 generation and filling of table working. gotta to change how handling data once data production used
 imported some helper functions from previous project (JS)
+--------------------
+003:
+created facts_frnsr to see all factures fournisseur
+discovered "nowrap" (see general_tips) to solve for newline problem when puting input and button together into a td.
+generate_table_001.php working
 

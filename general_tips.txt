@@ -65,3 +65,11 @@ OR
   do 
     echo utf8_decode($dom->saveHTML($dom->documentElement));
   see usefultipsalongtheway.txt for explaination
+
+
+CSS 
+whenever you put two or more element together in the same container (div, or td or tr or etc..)
+use css :
+white-space: nowrap;
+or just add nowrap into the tag:
+<td nowrap>
