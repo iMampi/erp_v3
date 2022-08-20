@@ -1,3 +1,7 @@
+#main-container,
+#table-here {
+	min-width: 770px;
+}
 #header-top {
 	min-width: fit-content;
 }
@@ -34,6 +38,12 @@
 	/* display: inline-block; */
 }
 
-td {
+td,
+.nowrap {
 	white-space: nowrap;
+}
+
+.modal-dialog {
+	width: auto;
+	max-width: fit-content; // Optional, maximum
 }

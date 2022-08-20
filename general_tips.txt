@@ -73,3 +73,9 @@ use css :
 white-space: nowrap;
 or just add nowrap into the tag:
 <td nowrap>
+
+OR using bootstrap's class (see documentation fro more)
+<td class="d-flex flex-nowrap>"
+or (according to case use)
+<td class="input-group">
+<td class="btn-group">

@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <div class="container">
+    <div id="main-container" class="container">
         <nav id="header-top" class="sticky-top bg-light-blue">
             <?php
             require_once __DIR__ . "/../elements/header.html";
@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <div class="accordion row" id="filter-container">
-                    <div class="accordion-item">
+                    <div class="accordion-item px-0">
                         <h2 class="accordion-header" id="headingOne">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                 Filtres
@@ -82,54 +82,22 @@
                     <?php
                     require_once __DIR__ . '/processors/generate_table_000.php';
                     ?>
-                    <!-- <table class="table bg-dark" id="table-000">
-                        <thead class="">
-                            <tr>
-                                <td>uid</td>
-                                <td>date</td>
-                                <td>affectation</td>
-                                <td>référence</td>
-                                <td>libelle</td>
-                                <td>décaissement</td>
-                                <td>encaissement</td>
-                                <td>del</td>
-                            </tr>
-                            <tr>
-                                <td><input type="text" disabled class="uid input"></td>
-                                <td><input type="date" class="date input"></td>
-                                <td><input type="text" class="affectation input"></td>
-                                <td><input type="text" class="ref input"></td>
-                                <td><input type="text" class="libelle input"></td>
-                                <td><input type="text" class="decaissement input"></td>
-                                <td><input type="text" class="encaissement input"></td>
-                                <td><button>DEL</button></td>
 
-                            </tr>
-                        </thead>
-                    </table> -->
                 </div>
             </div>
 
 
         </nav>
         <!-- TABLEAU -->
+        <!-- FIXME width resopnse, class of this table. prendre fact fnsr comme reeference -->
         <div class="row ">
-            <div class="table-responsive-md">
+            <div class="
+            ">
                 <table class="table table-hover" id="table-001">
                     <?php
                     require_once __DIR__ . "/processors/generate_table_001_rows.php";
                     ?>
-                    <!-- <tbody>
-                        <tr>
-                            <td><input type="text" disabled class="uid input"></td>
-                            <td><input type="date" class="date input"></td>
-                            <td><input type="text" class="affectation input"></td>
-                            <td><input type="text" class="ref input"></td>
-                            <td><input type="text" class="libelle input"></td>
-                            <td><input type="text" class="decaissement input"></td>
-                            <td><input type="text" class="encaissement input"></td>
-                            <td><button>DEL</button></td>
-                    </tbody> -->
+
                 </table>
             </div>
         </div>

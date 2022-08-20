@@ -40,7 +40,7 @@ foreach ($dummy as $el) {
             $el_input->setAttribute("value", $el[3]);
         } elseif (in_array("affaire", $classes_array)) {
             $el_input->setAttribute("value", $el[4]);
-        } elseif (in_array("montant", $classes_array)) {
+        } elseif (in_array("total", $classes_array)) {
             $el_input->setAttribute("value", $el[5]);
         } elseif (in_array("detail", $classes_array)) {
             // $el_input->setAttribute("value", $el[6]);

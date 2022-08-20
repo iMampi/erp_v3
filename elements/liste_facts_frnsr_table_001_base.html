@@ -6,7 +6,7 @@
 			<td>fournisseur</td>
 			<td>numéro facture</td>
 			<td>affaire</td>
-			<td>montant</td>
+			<td>total</td>
 			<td>détails</td>
 			<td>nd</td>
 			<td>del</td>
@@ -15,34 +15,67 @@
 	<tbody class="bg-light">
 		<tr id="row-001">
 			<td>
-				<input type="text" disabled class="uid input" />
+				<input
+					type="text"
+					disabled
+					class="uid input form-control form-control-sm"
+				/>
 			</td>
 			<td>
-				<input type="date" disabled class="date input" />
-			</td>
-			<td>
-				<input type="text" disabled class="frnsr input" />
-				<button class="mytbn">+</button>
-			</td>
-			<td>
-				<input type="text" disabled class="num input" />
-			</td>
-			<td>
-				<input type="text" disabled class="affaire input" />
-			</td>
-			<td>
-				<input type="text" disabled class="montant input" />
-			</td>
-			<td>
-				<button>voir</button>
+				<input
+					type="date"
+					disabled
+					class="date input form-control form-control-sm"
+				/>
 			</td>
 			<td class="">
-				<select disabled class="nd input">
+				<input
+					type="text"
+					disabled
+					class="frnsr input form-control form-control-sm"
+				/>
+			</td>
+			<td>
+				<input
+					type="text"
+					disabled
+					class="num input form-control form-control-sm"
+				/>
+			</td>
+			<td>
+				<input
+					type="text"
+					disabled
+					class="affaire input form-control form-control-sm"
+				/>
+			</td>
+			<td>
+				<input
+					type="text"
+					disabled
+					class="total input form-control form-control-sm"
+				/>
+			</td>
+			<td>
+				<!-- Button trigger modal -->
+				<button
+					type="button"
+					class="btn btn-primary btn-sm btn-details"
+					data-bs-toggle="modal"
+					data-bs-target="#staticBackdrop"
+				>
+					see
+				</button>
+			</td>
+			<td class="">
+				<select disabled class="nd input form-control form-control-sm">
 					<option value="0">déclarable</option>
 					<option value="1">non déclarable</option>
 				</select>
 			</td>
-			<td><button>DEL</button></td>
+			<td>
+				<button class="btn btn-primary btn-sm btn-details">DEL</button>
+			</td>
 		</tr>
 	</tbody>
 </table>

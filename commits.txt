@@ -17,4 +17,13 @@ imported some helper functions from previous project (JS)
 created facts_frnsr to see all factures fournisseur
 discovered "nowrap" (see general_tips) to solve for newline problem when puting input and button together into a td.
 generate_table_001.php working
-
+--------------------
+004:
+factures_fournisseurs.php:
+added modal for details
+facture_frnsr_table_details_base.html:
+en cours de creation
+fixed front end behavvior in facts_frnsr
+min-width
+button position in modal
+header position element in modal

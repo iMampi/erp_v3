@@ -13,8 +13,10 @@
 </head>
 
 <body>
-    <div class="container">
-        <nav id="header-top" class="sticky-top bg-light-blue">
+    <div id="main-container" class="container px-0
+    ">
+        <nav id="header-top" class="sticky-top bg-light-blue w-100
+        ">
             <?php
             require_once __DIR__ . "/../elements/header.html";
             ?>
@@ -47,7 +49,7 @@
                     </div>
                 </div>
                 <div class="accordion row" id="filter-container">
-                    <div class="accordion-item">
+                    <div class="accordion-item px-0">
                         <h2 class="accordion-header" id="headingOne">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                 Filtres
@@ -61,19 +63,48 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div id="table-here">
-                    <?php
-                    require_once __DIR__ . '/processors/generate_table_001.php';
-                    ?>
+        </nav>
 
+        <!-- table -->
+        <div class="row">
+            <div id="table-here">
+                <?php
+                require_once __DIR__ . '/processors/generate_table_001.php';
+                ?>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+
+                    </div>
+                    <div class="modal-body">
+
+                        <div id="modal-body-heads">
+                            <?php
+                            //TODO : make the header of factures in details readonly
+                            require_once __DIR__ . "/../elements/facture_frnsr_header_base.html";
+                            ?>
+                        </div>
+                        <!-- TODO : to elete. we gonna use only JS here -->
+                        <div id="modal-body-table">
+                            <?php
+                            require_once __DIR__ . "/../elements/facture_frnsr_table_details_base.html";
+                            ?>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
                 </div>
             </div>
-
-
-        </nav>
-        <!-- TABLEAU -->
-
+        </div>
     </div>
 </body>
 
