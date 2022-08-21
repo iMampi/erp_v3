@@ -74,27 +74,28 @@
             </div>
         </div>
         <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <!-- modal détails facture -->
+        <div class="modal fade" id="modal-fact-detail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
-
                     </div>
                     <div class="modal-body">
 
                         <div id="modal-body-heads">
                             <?php
-                            //TODO : make the header of factures in details readonly
-                            require_once __DIR__ . "/../elements/facture_frnsr_header_base.html";
+                            //TODO : make the header of factures in details readonly. 
+                            //TODO : change to require once. 
+                            require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_header_base.html";
                             ?>
                         </div>
                         <!-- TODO : to elete. we gonna use only JS here -->
                         <div id="modal-body-table">
                             <?php
-                            require_once __DIR__ . "/../elements/facture_frnsr_table_details_base.html";
+                            //TODO : change to require once.
+                            require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_table_details_base.html";
                             ?>
                         </div>
                     </div>
@@ -105,6 +106,164 @@
                 </div>
             </div>
         </div>
+        <!-- end modal détails facture -->
+        <!-- modal creer fournisseur -->
+        <div class="modal fade" id="modal-creer-frnsr" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">création fournisseur</h5>
+                        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+
+
+                    </div>
+                    <div class="modal-body">
+
+                        <div id="modal-body-heads">
+                            <?php
+                            //TODO : make the header of factures in details readonly. 
+                            //TODO : change to require once. 
+                            require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_header_base.html";
+                            ?>
+                        </div>
+                        <!-- TODO : to elete. we gonna use only JS here -->
+                        <div id="modal-body-table">
+                            <?php
+                            //TODO : change to require once.
+                            require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_table_details_base.html";
+                            ?>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-fact-detail">annuler</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end creer fournisseur -->
+        <!-- modal creer item -->
+        <div class="modal fade" id="modal-creer-item" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">création article</h5>
+                        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+
+
+                    </div>
+                    <div class="modal-body">
+
+                        <div id="modal-body-heads">
+                            <?php
+                            //TODO : make the header of factures in details readonly. 
+                            //TODO : change to require once. 
+                            require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_header_base.html";
+                            ?>
+                        </div>
+                        <!-- TODO : to elete. we gonna use only JS here -->
+                        <div id="modal-body-table">
+                            <?php
+                            //TODO : change to require once.
+                            require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_table_details_base.html";
+                            ?>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-fact-detail">annuler</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end creer item -->
+        <!-- modal créer affaire -->
+
+        <div class="modal fade" id="modal-creer-affaire" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+            <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
+
+            </button>
+            <div class="modal-dialog modal-dialog-scrollable ">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">créer affaire</h5>
+
+
+
+                    </div>
+                    <div class="modal-body">
+
+                        <div id="modal-body-heads">
+                            <?php
+                            //TODO : make the header of factures in details readonly
+                            //TODO : change to require once.
+                            // require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_affectation_affaire_header_base.html";
+                            ?>
+                        </div>
+                        <!-- TODO : to elete. we gonna use only JS here -->
+                        <div id="modal-body-table">
+                            <?php
+                            //TODO : change to require once.
+                            // require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_affectation_affaire_details_base.html";
+                            ?>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-affect-affaire">annuler</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end créer  affaire -->
+        <!-- modal affectation affaire -->
+
+        <div class="modal fade" id="modal-affect-affaire" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+            <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
+
+            </button>
+            <div class="modal-dialog modal-dialog-scrollable ">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">affecter à une affaire</h5>
+
+
+
+                    </div>
+                    <div class="modal-body">
+
+                        <div id="modal-body-heads">
+                            <?php
+                            //TODO : make the header of factures in details readonly
+                            //TODO : change to require once.
+                            require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_affectation_affaire_header_base.html";
+                            ?>
+                        </div>
+                        <!-- TODO : to elete. we gonna use only JS here -->
+                        <div id="modal-body-table">
+                            <?php
+                            //TODO : change to require once.
+                            require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_affectation_affaire_details_base.html";
+                            ?>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">annuler</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end modal affectation affaire -->
+
     </div>
 </body>
 

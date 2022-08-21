@@ -45,5 +45,5 @@ td,
 
 .modal-dialog {
 	width: auto;
-	max-width: fit-content; // Optional, maximum
+	max-width: fit-content;
 }

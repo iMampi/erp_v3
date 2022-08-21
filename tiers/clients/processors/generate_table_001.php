@@ -1,10 +1,11 @@
 <?php
 //TODO :delete me
 require __DIR__ . "/dummy.php";
+// require __DIR__ . "/../../../el";
 
 
 
-$base = __DIR__ . "/../../elements/facts_frnsr/liste_facts_frnsr_table_001_base.html";
+$base = __DIR__ . "/../../../elements/tiers/clients/liste_clts_table_001_base.html";
 
 //create first DOM to handle base file
 $dom = new DOMDocument();

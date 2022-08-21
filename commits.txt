@@ -27,3 +27,12 @@ fixed front end behavvior in facts_frnsr
 min-width
 button position in modal
 header position element in modal
+-------------------
+005:
+added a button "quit modal" different from just "annuler"
+added multi nested modal for facture facts_frnsr
+added multi nested modal for facture facts_clt
+creation of  button "annuler" to quit a nested modal, to go back to the previous modal.
+
+started working on clients clts.php
+création de fiche clients

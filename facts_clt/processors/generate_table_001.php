@@ -4,7 +4,8 @@ require __DIR__ . "/dummy.php";
 
 
 
-$base = __DIR__ . "/../../elements/facts_frnsr/liste_facts_frnsr_table_001_base.html";
+$base = __DIR__ . "/../../elements/facts_clt/liste_facts_clt_table_001_base.html";
+
 
 //create first DOM to handle base file
 $dom = new DOMDocument();
@@ -35,7 +36,7 @@ foreach ($dummy as $el) {
             $el_input->setAttribute("value", $el[1]);
         } elseif (in_array("uid", $classes_array)) {
             $el_input->setAttribute("value", $el[0]);
-        } elseif (in_array("frnsr", $classes_array)) {
+        } elseif (in_array("clt", $classes_array)) {
             $el_input->setAttribute("value", $el[2]);
         } elseif (in_array("num", $classes_array)) {
             $el_input->setAttribute("value", $el[3]);
@@ -45,7 +46,7 @@ foreach ($dummy as $el) {
             $el_input->setAttribute("value", $el[5]);
         } elseif (in_array("detail", $classes_array)) {
             // $el_input->setAttribute("value", $el[6]);
-        } elseif (in_array("nd", $classes_array)) {
+        } elseif (in_array("state", $classes_array)) {
             $option_ = $xpath->query(".//*[(@value='" . $el[6] . "')]", $el_input);
             $option_[0]->setAttribute("selected", "true");
         }

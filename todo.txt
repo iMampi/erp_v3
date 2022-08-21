@@ -1,0 +1,26 @@
+affaire : modal pour election multiple <select > with btn "+"
+
+a etudier !! tous les boutons voir details pour tiers ouvre dans nouvel onglet
+
+
+
+all inputs : justify-right
+all label : justify-left
+
+user profil:
+superadmin
+admin
+responsable général
+responsable achat
+responsable commercial
+responsable tresorerie
+responsable stock
+commercial
+saisie achat
+saisie trésorerie
+
+
+matériel périphérique : le lectuer de code barre
+
+
+quand chargement liste

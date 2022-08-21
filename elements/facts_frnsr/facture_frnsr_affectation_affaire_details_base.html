@@ -1,0 +1,60 @@
+<table class="table">
+	<thead>
+		<tr>
+			<td class="ps-0">affaire id</td>
+			<td>clé de répartition</td>
+			<td>montant</td>
+			<td class="pe-0">
+				<button type="button" class="btn btn-sm btn-success w-100">
+					+
+				</button>
+			</td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="ps-0 my-auto btn-group w-100">
+				<input
+					list="aff
+					aire-list"
+					type="text"
+					name="item-choice"
+					class="affaire form-control form-control-sm"
+					placeholder="Choississez une affaire"
+				/>
+				<button
+					type="button"
+					class="btn btn-sm btn-success"
+					data-bs-toggle="modal"
+					data-bs-target="#modal-creer-affaire"
+				>
+					+
+				</button>
+			</td>
+			<td>
+				<input
+					type="number"
+					disabled
+					class="cle form-control form-control-sm"
+					placeholder="%"
+				/>
+			</td>
+			<td>
+				<input
+					type="number"
+					class="montant form-control form-control-sm"
+				/>
+			</td>
+
+			<td class="pe-0">
+				<button type="button" class="btn btn-sm btn-danger w-100">
+					del
+				</button>
+			</td>
+		</tr>
+	</tbody>
+	<datalist id="affaire-list">
+		<option value="001">001-biens</option>
+		<option value="002">002-services</option>
+	</datalist>
+</table>

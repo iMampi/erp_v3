@@ -1,29 +1,52 @@
 <div>
 	<div class="row">
-		<span class="col-form-label col-2">uid</span>
+		<span class="col-form-label col-2">numéro facture</span>
 		<div class="col-2 my-auto">
 			<input type="text" class="form-control form-control-sm" />
 		</div>
+		<span class="col-form-label col-2">état</span>
+		<div class="col-2 my-auto">
+			<select disabled class="nd input form-control form-control-sm">
+				<option value="0">impayée</option>
+				<option value="1">payée</option>
+			</select>
+		</div>
+		<!-- TODO:delete dummy options -->
+		<span class="col-form-label col-2">commercial</span>
+		<div class="col-2 my-auto">
+			<select disabled class="nd input form-control form-control-sm">
+				<option value="0">mampi</option>
+				<option value="1">sophie</option>
+			</select>
+		</div>
 	</div>
-	<div id="frnsr-selection" class="row nowrap">
-		<span class="col-form-label col-2">fournisseur ID</span>
+	<div id="clt-selection" class="row nowrap">
+		<span class="col-form-label col-2">client ID</span>
 		<div class="col my-auto btn-group">
 			<input
-				list="frnsr-list"
+				list="clt-list"
 				type="text"
-				name="frnsr-choice"
+				name="clt-choice"
 				class="form-control form-control-sm"
-				placeholder="Choississez un fournisseur"
+				placeholder="Choississez un client"
 			/>
 			<!-- </div> -->
 			<!-- <div class="col-1 my-auto pe-1"> -->
-			<button class="mytbn btn btn-sm btn-success text-center">+</button>
+			<button
+				class="mytbn btn btn-sm btn-success text-center"
+				data-bs-toggle="modal"
+				data-bs-target="#modal-creer-client"
+			>
+				+
+			</button>
 			<!-- </div> -->
 
 			<!-- <div class="col-1 my-auto ps-1"> -->
-			<button class="mytbn btn btn-sm btn-success text-center">se</button>
+			<button class="mytbn btn btn-sm btn-success text-center">
+				see
+			</button>
 		</div>
-		<datalist id="frnsr-list">
+		<datalist id="clt-list">
 			<option value="001">001-biens</option>
 			<option value="002">002-services</option>
 		</datalist>
@@ -33,27 +56,47 @@
 		<div class="col-2 my-auto">
 			<input type="date" class="form-control form-control-sm" />
 		</div>
-		<span class="col-form-label col-2">numéro facture</span>
-		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" />
-		</div>
-		<span class="col-form-label col-2">total</span>
-		<div class="col-2 my-auto">
-			<input type="number" class="form-control form-control-sm" />
-		</div>
-	</div>
-	<div class="row my-auto">
 		<span class="col-form-label col-2">affaire</span>
 		<div class="col-2 my-auto">
 			<input type="text" class="form-control form-control-sm" />
 		</div>
-		<!-- <div class="col-4 my-auto"></div> -->
-		<span class="col-form-label col-2">déclarable</span>
+	</div>
+
+	<div class="row my-auto">
+		<span class="col-form-label col-2">taux remise </span>
 		<div class="col-2 my-auto">
-			<select disabled class="nd input form-control form-control-sm">
-				<option value="0">déclarable</option>
-				<option value="1">non déclarable</option>
-			</select>
+			<input
+				type="numer"
+				class="form-control form-control-sm"
+				placeholder="%"
+			/>
+		</div>
+		<span class="col-form-label col-2">montant remise</span>
+		<div class="col-2 my-auto">
+			<input
+				type="number"
+				class="form-control form-control-sm"
+				placeholder="Ar"
+			/>
+		</div>
+	</div>
+	<div class="row my-auto">
+		<span class="col-form-label col-2">total HT</span>
+		<div class="col-2 my-auto">
+			<input type="text" class="form-control form-control-sm" disabled />
+		</div>
+
+		<span class="col-form-label col-2">TVA</span>
+		<div class="col-2 my-auto">
+			<input type="text" class="form-control form-control-sm" disabled />
+		</div>
+		<span class="col-form-label col-2">total TTC</span>
+		<div class="col-2 my-auto">
+			<input
+				type="number"
+				class="form-control form-control-sm"
+				disabled
+			/>
 		</div>
 	</div>
 </div>
