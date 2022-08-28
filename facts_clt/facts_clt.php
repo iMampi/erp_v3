@@ -1,10 +1,33 @@
-data-bs-toggle="modal" data-bs-target="#modal-detail-facture"
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/style/mampi.css">
+    <title>factures fournisseur</title>
+
+</head>
+
+<body>
     <div id="main-container" class="container px-0
     ">
         <nav id="header-top" class="sticky-top bg-light-blue w-100
         ">
-            <?php
-            require_once __DIR__ . "/../elements/header.html";
+        <?php
+            $base = __DIR__ . "/../elements/header.html";
+            $tag_id = "link-facts-clt";
+            $dom = new DOMDocument();
+            libxml_use_internal_errors(true);
+            $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
+            $link = $dom->getElementById($tag_id);
+            $classes = $link->getAttribute("class");
+            $classes .= " active";
+            $link->setAttribute("class", $classes);
+            echo utf8_decode($dom->saveHTML($dom->documentElement));
             ?>
             <div class="container-fluid position-relative">
                 <div class="">

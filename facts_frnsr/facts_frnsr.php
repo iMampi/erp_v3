@@ -17,8 +17,17 @@
     ">
         <nav id="header-top" class="sticky-top bg-light-blue w-100
         ">
-            <?php
-            require_once __DIR__ . "/../elements/header.html";
+        <?php
+            $base = __DIR__ . "/../elements/header.html";
+            $tag_id = "link-facts-frnsr";
+            $dom = new DOMDocument();
+            libxml_use_internal_errors(true);
+            $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
+            $link = $dom->getElementById($tag_id);
+            $classes = $link->getAttribute("class");
+            $classes .= " active";
+            $link->setAttribute("class", $classes);
+            echo utf8_decode($dom->saveHTML($dom->documentElement));
             ?>
             <div class="container-fluid position-relative">
                 <div class="">

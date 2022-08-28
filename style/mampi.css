@@ -47,3 +47,6 @@ td,
 	width: auto;
 	max-width: fit-content;
 }
+.name {
+	min-width: 12rem;
+}

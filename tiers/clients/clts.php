@@ -17,36 +17,21 @@
     ">
         <nav id="header-top" class="sticky-top bg-light-blue w-100
         ">
-            <?php
-            require_once __DIR__ . "/../../elements/header.html";
+        <?php
+            $base = __DIR__ . "/../../elements/header.html";
+            $tag_id = "link-clts";
+            $dom = new DOMDocument();
+            libxml_use_internal_errors(true);
+            $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
+            $link = $dom->getElementById($tag_id);
+            $classes = $link->getAttribute("class");
+            $classes .= " active";
+            $link->setAttribute("class", $classes);
+            echo utf8_decode($dom->saveHTML($dom->documentElement));
             ?>
             <div class="container-fluid position-relative">
                 <div class="">
-                    <div id="div-selection" class="row ">
-                        <span class="col">mois</span>
-                        <select name="mois" id="mois" class="col  ">
-                            <option value="all">Toute l'année</option>
-                            <option value="1">Janvier</option>
-                            <option value="2">Février</option>
-                            <option value="3">mars</option>
-                            <option value="4">avril</option>
-                            <option value="5">mai</option>
-                            <option value="6">juin</option>
-                            <option value="7">juillet</option>
-                            <option value="8">août</option>
-                            <option value="9">septembre</option>
-                            <option value="10">octobre</option>
-                            <option value="11">novembre</option>
-                            <option value="12">décembre</option>
-                        </select>
-                        <button type="button" class="col">exporter</button>
-                    </div>
-                    <div class="row">
-                        <span class="col">nombre factures</span><span class="col">0,00</span>
-                    </div>
-                    <div class="row">
-                        <span class="col">total factures</span><span class="col">0,00</span>
-                    </div>
+
                 </div>
                 <div class="accordion row" id="filter-container">
                     <div class="accordion-item px-0">

@@ -36,3 +36,15 @@ creation of  button "annuler" to quit a nested modal, to go back to the previous
 
 started working on clients clts.php
 création de fiche clients
+-------------------
+006:
+starting structure for client
+starting structure for facts_frnsr
+starting structure for employee
+starting structure for article
+
+modified code : "active" on header link when clicked/current page
+
+
+
+

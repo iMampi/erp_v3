@@ -8,7 +8,7 @@
     <script src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/style/mampi.css">
-    <title>Tréso</title>
+    <title>Articles</title>
 
 </head>
 
@@ -16,8 +16,8 @@
     <div id="main-container" class="container">
         <nav id="header-top" class="sticky-top bg-light-blue">
             <?php
-            $base = __DIR__ . "/../elements/header.html";
-            $tag_id = "link-tresos";
+            $base = __DIR__ . "/../../elements/header.html";
+            $tag_id = "link-items";
             $dom = new DOMDocument();
             libxml_use_internal_errors(true);
             $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
@@ -30,46 +30,14 @@
             <div class="container-fluid position-relative">
                 <div class="">
                     <div id="div-selection" class="row ">
-                        <span class="col">trésorerie</span>
-                        <select name="bank" id="bank" class="col">
-                        </select>
-
-                        <span class="col">mois</span>
-                        <select name="mois" id="mois" class="col">
-                            <option value="all">Toute l'année</option>
-                            <option value="1">Janvier</option>
-                            <option value="2">Février</option>
-                            <option value="3">mars</option>
-                            <option value="4">avril</option>
-                            <option value="5">mai</option>
-                            <option value="6">juin</option>
-                            <option value="7">juillet</option>
-                            <option value="8">août</option>
-                            <option value="9">septembre</option>
-                            <option value="10">octobre</option>
-                            <option value="11">novembre</option>
-                            <option value="12">décembre</option>
-                        </select>
+                        <span class="col">nombres d'articles</span>
+                        <span class="col">0</span>
 
                         <button type="button" class="col">exporter</button>
 
 
                     </div>
-                    <div class="row">
-                        <span class="col">solde début du mois</span><span class="col">0,00</span>
-                    </div>
-                    <div class="row">
-                        <span class="col">total décaissement</span><span class="col">0,00</span>
-                    </div>
-                    <div class="row">
-                        <span class="col">total encaissement</span><span class="col">1 000,00</span>
-                    </div>
-                    <div class="row">
-                        <span class="col">solde fin du mois</span><span class="col">1 000,00</span>
-                    </div>
-                    <div class="row">
-                        <span class="col">rapprochement</span><input type="text" class="col"><span class="col">etat rapprochement</span>
-                    </div>
+
                 </div>
                 <div class="accordion row" id="filter-container">
                     <div class="accordion-item px-0">
@@ -86,14 +54,6 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div id="table-here">
-                    <?php
-                    require_once __DIR__ . '/processors/generate_table_000.php';
-                    ?>
-
-                </div>
-            </div>
 
 
         </nav>
@@ -104,12 +64,47 @@
             ">
                 <table class="table table-hover" id="table-001">
                     <?php
-                    require_once __DIR__ . "/processors/generate_table_001_rows.php";
+                    require_once __DIR__ . '/processors/generate_table_001_base.php';
                     ?>
 
                 </table>
             </div>
         </div>
+        <!-- modal détails article -->
+        <div class="modal fade" id="modal-item-detail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Fiche article</h5>
+                    </div>
+                    <div class="modal-body">
+
+                        <div id="modal-body-heads">
+                            <?php
+                            //TODO : make the header of factures in details readonly. 
+                            //TODO : change to require once. 
+                            require __DIR__ . "/../../elements/warehouse/items/item_formulaire_base.html";
+                            ?>
+                        </div>
+                        <!-- TODO : to elete. we gonna use only JS here -->
+                        <div id="modal-body-table">
+                            <?php
+                            //TODO : change to require once.
+                            // require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_table_details_base.html";
+                            ?>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger">supprimer</button>
+                        <button type="button" class="btn btn-info">statistique</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end modal détails artible -->
     </div>
 </body>
 

@@ -2,7 +2,7 @@ affaire : modal pour election multiple <select > with btn "+"
 
 a etudier !! tous les boutons voir details pour tiers ouvre dans nouvel onglet
 
-
+min width on "input"s
 
 all inputs : justify-right
 all label : justify-left
