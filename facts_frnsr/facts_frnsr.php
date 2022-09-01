@@ -86,7 +86,7 @@
         <!-- modal détails facture -->
         <div class="modal fade" id="modal-fact-detail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
@@ -119,7 +119,7 @@
         <!-- modal creer fournisseur -->
         <div class="modal fade" id="modal-creer-frnsr" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="staticBackdropLabel">création fournisseur</h5>
@@ -155,7 +155,7 @@
         <!-- modal creer item -->
         <div class="modal fade" id="modal-creer-item" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="staticBackdropLabel">création article</h5>
@@ -195,7 +195,7 @@
             <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
 
             </button>
-            <div class="modal-dialog modal-dialog-scrollable ">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
 
                 <div class="modal-content">
 
@@ -237,7 +237,7 @@
             <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
 
             </button>
-            <div class="modal-dialog modal-dialog-scrollable ">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
 
                 <div class="modal-content">
 

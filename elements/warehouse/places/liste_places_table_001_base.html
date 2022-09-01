@@ -3,18 +3,10 @@
 		<tr class="align-middle text-capitalize">
 			<td class="">uid</td>
 			<td class="">nom</td>
-			<td>type</td>
-			<td>catégorie</td>
-			<td>famille</td>
-			<td>stockable</td>
-			<td>identifiable</td>
-			<td>prix de vente</td>
-			<td>
-				prix d'achat <br />
-				moyen pondéré
-			</td>
+			<td>adresse</td>
+			<td>phone</td>
+			<td>responsable</td>
 			<td>actif</td>
-			<td>déclarable</td>
 			<td>détails</td>
 			<td>DEL</td>
 		</tr>
@@ -39,52 +31,21 @@
 				<input
 					type="text"
 					disabled
-					class="type input form-control form-control-sm"
+					class="adresse input form-control form-control-sm"
 				/>
 			</td>
 			<td>
 				<input
 					type="text"
 					disabled
-					class="cat input form-control form-control-sm"
+					class="phone input form-control form-control-sm"
 				/>
 			</td>
 			<td>
 				<input
 					type="text"
 					disabled
-					class="fam input form-control form-control-sm"
-				/>
-			</td>
-			<td class="">
-				<input
-					class="form-check-input my-2 mx-4"
-					type="checkbox"
-					value="stockable"
-					id="stockable"
-				/>
-			</td>
-			<td class="">
-				<input
-					class="form-check-input my-2 mx-4"
-					type="checkbox"
-					value="identifiable"
-					id="identifiable"
-				/>
-			</td>
-
-			<td>
-				<input
-					type="text"
-					disabled
-					class="pv input form-control form-control-sm"
-				/>
-			</td>
-			<td>
-				<input
-					type="text"
-					disabled
-					class="pamp input form-control form-control-sm"
+					class="resp input form-control form-control-sm"
 				/>
 			</td>
 			<td>
@@ -96,22 +57,12 @@
 					<option value="0">inactif</option>
 				</select>
 			</td>
-			<td>
-				<select
-					class="nd form-control form-control-sm text-capitalize"
-					disabled
-				>
-					<option value="0">déclarable</option>
-					<option value="1">non déclarable</option>
-				</select>
-			</td>
-
 			<td class="">
 				<button
 					type="button"
 					class="btn btn-primary btn-sm btn-details"
 					data-bs-toggle="modal"
-					data-bs-target="#modal-item-detail"
+					data-bs-target="#modal-place-detail"
 				>
 					see
 				</button>

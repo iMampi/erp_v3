@@ -8,7 +8,7 @@
     <script src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/style/mampi.css">
-    <title>Articles</title>
+    <title>magasins</title>
 
 </head>
 
@@ -17,7 +17,7 @@
         <nav id="header-top" class="sticky-top bg-light-blue">
             <?php
             $base = __DIR__ . "/../../elements/header.html";
-            $tag_id = "link-items";
+            $tag_id = "link-places";
             $dom = new DOMDocument();
             libxml_use_internal_errors(true);
             $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
@@ -70,30 +70,31 @@
                 </table>
             </div>
         </div>
-        <!-- modal détails article -->
-        <div class="modal fade" id="modal-item-detail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-dialog modal-dialog-scrollable">
+        <!-- modal détails magasin -->
+        <div class="modal fade" id="modal-place-detail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <!-- <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button> -->
+            <!-- <div class="modal-dialog modal-dialog-scrollable modal-xl"> -->
+            <div class="modal-dialog modal-dialog-scrollable modal-lg ">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Fiche article</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel">Fiche magasin</h5>
                     </div>
                     <div class="modal-body">
 
-                        <div id="modal-body-heads">
-                            <?php
-                            //TODO : make the header of factures in details readonly. 
-                            //TODO : change to require once. 
-                            require __DIR__ . "/../../elements/warehouse/items/item_formulaire_base.html";
-                            ?>
-                        </div>
+                        <!-- <div id="modal-body-heads"> -->
+                        <?php
+                        //TODO : make the header of factures in details readonly. 
+                        //TODO : change to require once. 
+                        require __DIR__ . "/../../elements/warehouse/places/place_formulaire_base.html";
+                        ?>
+                        <!-- </div> -->
                         <!-- TODO : to elete. we gonna use only JS here -->
-                        <div id="modal-body-table">
-                            <?php
-                            //TODO : change to require once.
-                            // require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_table_details_base.html";
-                            ?>
-                        </div>
+                        <!-- <div id="modal-body-table"> -->
+                        <?php
+                        //TODO : change to require once.
+                        // require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_table_details_base.html";
+                        ?>
+                        <!-- </div> -->
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger">supprimer</button>
@@ -104,7 +105,7 @@
                 </div>
             </div>
         </div>
-        <!-- end modal détails artible -->
+        <!-- end modal détails magasin -->
     </div>
 </body>
 

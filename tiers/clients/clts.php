@@ -60,7 +60,7 @@
         <!-- modal détails facture -->
         <div class="modal fade" id="modal-clt-detail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="staticBackdropLabel">Fiche client</h5>

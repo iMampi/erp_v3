@@ -110,6 +110,363 @@
                 </table>
             </div>
         </div>
+        <!-- modal filter -->
+
+        <div class="modal fade" id="modal-filter" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
+            </button>
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">affecter à une facture/document</h5>
+                    </div>
+                    <div class="modal-body">
+
+                        <div id="modal-body-heads">
+                            <?php
+                            //TODO : make the header of factures in details readonly
+                            //TODO : change to require once.
+                            require __DIR__ . "/../elements/treso_affectation_affaire_header_base.html";
+                            ?>
+                        </div>
+                        <!-- TODO : to elete. we gonna use only JS here -->
+                        <div id="modal-body-table">
+                            <?php
+                            //TODO : change to require once.
+                            require __DIR__ . "/../elements/treso_affectation_affaire_details_base.html";
+                            ?>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">annuler</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end modal filter -->
+        <!-- modal affectation -->
+
+        <div class="modal fade" id="modal-affect" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+            <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
+
+            </button>
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">affecter à une facture/document</h5>
+                    </div>
+                    <div class="modal-body">
+
+                        <div id="modal-body-heads">
+                            <?php
+                            //TODO : make the header of factures in details readonly
+                            //TODO : change to require once.
+                            require __DIR__ . "/../elements/treso_affectation_affaire_header_base.html";
+                            ?>
+                        </div>
+                        <!-- TODO : to elete. we gonna use only JS here -->
+                        <div id="modal-body-table">
+                            <?php
+                            //TODO : change to require once.
+                            require __DIR__ . "/../elements/treso_affectation_affaire_details_base.html";
+                            ?>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">annuler</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end modal affectation -->
+        <!-- modal creer new type affect -->
+        <div class="modal fade" id="modal-creer-type-affect" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+            <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
+
+            </button>
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">créer un nouveau type d'affectation</h5>
+                    </div>
+                    <div class="modal-body">
+
+                        <div id="modal-body-heads">
+                            <?php
+                            //TODO : make the header of factures in details readonly
+                            //TODO : change to require once.
+                            require __DIR__ . "/../elements/others/affect_base.html";
+                            ?>
+                        </div>
+                        <!-- TODO : to elete. we gonna use only JS here -->
+                        <div id="modal-body-table">
+                            <?php
+                            //TODO : change to require once.
+                            // require __DIR__ . "/../elements/treso_affectation_affaire_details_base.html";
+                            ?>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-affect">annuler</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end modal creer new type affect-->
+        <!-- modal creer new tiers -->
+        <!-- TODO : formulaire en fonction du tiers sélectionner -->
+        <div class="modal fade" id="modal-creer-tiers-affect" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+            <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
+
+            </button>
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">créer un nouveau tiers</h5>
+                    </div>
+                    <div class="modal-body">
+
+                        <div id="modal-body-heads">
+                            <?php
+                            //TODO : make the header of factures in details readonly
+                            //TODO : change to require once.
+                            // if founisseur then this, if client then that, if social, then another one
+                            // for the purpose of development, we gonna use only factures frnsr
+
+                            require __DIR__ . "/../elements/tiers/fournisseurs/fournisseur_formulaire_base.html";                            ?>
+                        </div>
+                        <!-- TODO : to elete. we gonna use only JS here -->
+                        <div id="modal-body-table">
+                            <?php
+                            //TODO : change to require once.
+                            // require __DIR__ . "/../elements/treso_affectation_affaire_details_base.html";
+                            ?>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-affect">annuler</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end modal creer new tiers-->
+        <!-- modal creer new doc -->
+        <!-- TODO : formulaire en fonction du tiers sélectionner -->
+        <div class="modal fade" id="modal-creer-doc" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+            <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
+
+            </button>
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">créer un nouveau document</h5>
+                    </div>
+                    <div class="modal-body">
+
+                        <div id="modal-body-heads">
+                            <?php
+                            //TODO : make the header of factures in details readonly
+                            //TODO : change to require once.
+                            // if founisseur then this, if client then that, if social, then another one
+                            // for the purpose of development, we gonna use only factures frnsr
+                            require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_header_base.html";
+                            ?>
+                        </div>
+                        <!-- TODO : to elete. we gonna use only JS here -->
+                        <div id="modal-body-table">
+                            <?php
+                            //TODO : change to require once.
+                            require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_table_details_base.html";
+                            ?>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-affect">annuler</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- TODO : change annule bs-target according to which btn opened modal  -->
+        <!-- end modal creer new doc-->
+        <!-- modal creer new article -->
+        <div class="modal fade" id="modal-creer-item" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+            <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
+
+            </button>
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">créer un nouveau document</h5>
+                    </div>
+                    <div class="modal-body">
+
+                        <div id="modal-body-heads">
+                            <?php
+                            //TODO : make the header of factures in details readonly
+                            //TODO : change to require once.
+                            // if founisseur then this, if client then that, if social, then another one
+                            // for the purpose of development, we gonna use only factures frnsr
+                            require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_header_base.html";
+                            ?>
+                        </div>
+                        <!-- TODO : to elete. we gonna use only JS here -->
+                        <div id="modal-body-table">
+                            <?php
+                            //TODO : change to require once.
+                            require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_table_details_base.html";
+                            ?>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-affect">annuler</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end modal creer new article-->
+        <!-- modal affect affaire -->
+        <div class="modal fade" id="modal-creer-affaire" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+            <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
+
+            </button>
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">créer un nouveau document</h5>
+                    </div>
+                    <div class="modal-body">
+
+                        <div id="modal-body-heads">
+                            <?php
+                            //TODO : make the header of factures in details readonly
+                            //TODO : change to require once.
+                            // if founisseur then this, if client then that, if social, then another one
+                            // for the purpose of development, we gonna use only factures frnsr
+                            require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_header_base.html";
+                            ?>
+                        </div>
+                        <!-- TODO : to elete. we gonna use only JS here -->
+                        <div id="modal-body-table">
+                            <?php
+                            //TODO : change to require once.
+                            require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_table_details_base.html";
+                            ?>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-affect">annuler</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end modal affect affaire-->
+        <!-- modal creer categorie item -->
+        <div class="modal fade" id="modal-creer-cat" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+            <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
+
+            </button>
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">créer un nouveau document</h5>
+                    </div>
+                    <div class="modal-body">
+
+                        <div id="modal-body-heads">
+                            <?php
+                            //TODO : make the header of factures in details readonly
+                            //TODO : change to require once.
+                            // if founisseur then this, if client then that, if social, then another one
+                            // for the purpose of development, we gonna use only factures frnsr
+                            require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_header_base.html";
+                            ?>
+                        </div>
+                        <!-- TODO : to elete. we gonna use only JS here -->
+                        <div id="modal-body-table">
+                            <?php
+                            //TODO : change to require once.
+                            require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_table_details_base.html";
+                            ?>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-affect">annuler</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end modal creer categorie item-->
+        <!-- modal creer categorie item -->
+        <div class="modal fade" id="modal-creer-cat" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+            <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
+
+            </button>
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">créer un nouveau document</h5>
+                    </div>
+                    <div class="modal-body">
+
+                        <div id="modal-body-heads">
+                            <?php
+                            //TODO : make the header of factures in details readonly
+                            //TODO : change to require once.
+                            // if founisseur then this, if client then that, if social, then another one
+                            // for the purpose of development, we gonna use only factures frnsr
+                            require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_header_base.html";
+                            ?>
+                        </div>
+                        <!-- TODO : to elete. we gonna use only JS here -->
+                        <div id="modal-body-table">
+                            <?php
+                            //TODO : change to require once.
+                            require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_table_details_base.html";
+                            ?>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal-affect">annuler</button>
+                        <button type="button" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- modal creer categorie item -->
     </div>
 </body>
 

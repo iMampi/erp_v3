@@ -1,5 +1,6 @@
 #main-container,
-#table-here {
+#table-here,
+.modal-dialog {
 	min-width: 770px;
 }
 #header-top {
@@ -45,8 +46,8 @@ td,
 
 .modal-dialog {
 	width: auto;
-	max-width: fit-content;
+	max-width: fit-conent;
 }
-.name {
+td .name {
 	min-width: 12rem;
 }

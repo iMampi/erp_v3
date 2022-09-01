@@ -79,3 +79,17 @@ OR using bootstrap's class (see documentation fro more)
 or (according to case use)
 <td class="input-group">
 <td class="btn-group">
+--------------------------
+MODAL CUSTOMISATION
+#cache the bootsrap modal. use the modal's id here
+var modal2 = new bootstrap.Modal(document.getElementById("modal-creer-tiers-affect"), {
+  keyboard: false
+})
+
+#pour régler le probleme de double backdrop qui bloque tout
+mod.addEventListener('hidden.bs.modal', function (event) {
+  let q=document.querySelectorAll('.modal-backdrop');
+for ( let m of q){
+    m.parentElement.removeChild(m);
+}
+})

@@ -35,7 +35,7 @@
 		</datalist>
 	</div>
 	<div class="row my-auto">
-		<span class="col-form-label col-2">date</span>
+		<span class="col-form-label col-2 my-auto">date</span>
 		<div class="col-2 my-auto">
 			<input type="date" class="form-control form-control-sm" />
 		</div>
@@ -43,15 +43,28 @@
 		<div class="col-2 my-auto">
 			<input type="text" class="form-control form-control-sm" />
 		</div>
-		<span class="col-form-label col-2">total</span>
+		<span class="col-form-label col-2 my-auto">total</span>
 		<div class="col-2 my-auto">
 			<input type="number" class="form-control form-control-sm" />
 		</div>
 	</div>
 	<div class="row my-auto">
 		<span class="col-form-label col-2">affaire</span>
-		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" />
+		<div class="col-6 my-auto">
+			<div class="my-auto input-group">
+				<input
+					type="text"
+					disabled
+					class="form-control form-control-sm"
+				/>
+				<button
+					class="btn btn-sm btn-success text-center"
+					data-bs-toggle="modal"
+					data-bs-target="#modal-affect-affaire"
+				>
+					->
+				</button>
+			</div>
 		</div>
 		<!-- <div class="col-4 my-auto"></div> -->
 		<span class="col-form-label col-2">déclarable</span>

@@ -44,6 +44,16 @@ starting structure for employee
 starting structure for article
 
 modified code : "active" on header link when clicked/current page
+-------------------
+007:
+added class .modal-lg to .modal
+added min-width for .modal
+
+Tréso:
+added buttons to  .affection in tables' td
+created modal affectation for tresos
+extended dummy
+created base nested modal for new tiers, type affectation, doc, etc...
 
 
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -8,18 +8,16 @@
     <script src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/style/mampi.css">
-    <title>liste employés</title>
+    <title>magasin</title>
 
 </head>
 
 <body>
-    <div id="main-container" class="container px-0
-    ">
-        <nav id="header-top" class="sticky-top bg-light-blue w-100
-        ">
-        <?php
+    <div id="main-container" class="container">
+        <nav id="header-top" class="sticky-top bg-light-blue">
+            <?php
             $base = __DIR__ . "/../../elements/header.html";
-            $tag_id = "link-emps";
+            $tag_id = "link-places";
             $dom = new DOMDocument();
             libxml_use_internal_errors(true);
             $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
@@ -31,6 +29,14 @@
             ?>
             <div class="container-fluid position-relative">
                 <div class="">
+                    <div id="div-selection" class="row ">
+                        <span class="col">nombres d'articles</span>
+                        <span class="col">0</span>
+
+                        <button type="button" class="col">exporter</button>
+
+
+                    </div>
 
                 </div>
                 <div class="accordion row" id="filter-container">
@@ -48,22 +54,30 @@
                     </div>
                 </div>
             </div>
+
+
         </nav>
-        <!-- table -->
-        <div class="row">
-            <div id="table-here">
-                <?php
-                require_once __DIR__ . '/processors/generate_table_001.php';
-                ?>
+        <!-- TABLEAU -->
+        <!-- FIXME width resopnse, class of this table. prendre fact fnsr comme reeference -->
+        <div class="row ">
+            <div class="
+            ">
+                <table class="table table-hover" id="table-001">
+                    <?php
+                    require_once __DIR__ . '/processors/generate_table_001_base.php';
+                    ?>
+
+                </table>
             </div>
         </div>
-        <!-- modal détails facture -->
-        <div class="modal fade" id="modal-emp-detail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <!-- modal détails magasin -->
+        <div class="modal fade" id="modal-place-detail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style>
             <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <!-- <div class="modal-dialog modal-dialog-scrollable modal-xl"> -->
+            <div class="modal-dialog modal-xl modal-dialog-scrollable ">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Fiche client</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel">Fiche magasin</h5>
                     </div>
                     <div class="modal-body">
 
@@ -71,7 +85,7 @@
                             <?php
                             //TODO : make the header of factures in details readonly. 
                             //TODO : change to require once. 
-                            require __DIR__ . "/../../elements/tiers/employees/employee_formulaire_base.html";
+                            require __DIR__ . "/../../elements/warehouse/places/place_formulaire_base.html";
                             ?>
                         </div>
                         <!-- TODO : to elete. we gonna use only JS here -->
@@ -83,14 +97,15 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-info">Statistique</button>
+                        <button type="button" class="btn btn-danger">supprimer</button>
+                        <button type="button" class="btn btn-info">statistique</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
                         <button type="button" class="btn btn-primary">Save</button>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- end modal détails facture -->
+        <!-- end modal détails magasin -->
     </div>
 </body>
 

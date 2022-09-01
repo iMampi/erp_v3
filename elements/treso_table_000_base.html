@@ -1,5 +1,5 @@
 <table class="table bg-dark" id="table-000">
-	<thead class="">
+	<thead class="text-capitalize">
 		<tr>
 			<td>uid</td>
 			<td>date</td>
@@ -11,15 +11,61 @@
 			<td>del</td>
 		</tr>
 		<tr>
-			<td><input type="text" disabled class="uid input"></td>
-			<td><input type="date" class="date input"></td>
-			<td><input type="text" class="affectation input"></td>
-			<td><input type="text" class="ref input"></td>
-			<td><input type="text" class="libelle input"></td>
-			<td><input type="text" class="decaissement input"></td>
-			<td><input type="text" class="encaissement input"></td>
-			<td><button>DEL</button></td>
-
+			<td>
+				<input
+					type="text"
+					disabled
+					class="uid input form-control form-control-sm"
+				/>
+			</td>
+			<td>
+				<input
+					type="date"
+					class="date input form-control form-control-sm"
+				/>
+			</td>
+			<td class="btn-group">
+				<input
+					type="text"
+					class="affectation input form-control form-control-sm"
+				/><button
+					type="button"
+					class="btn btn-primary btn-sm btn-details"
+					data-bs-toggle="modal"
+					data-bs-target="#modal-affect"
+				>
+					wr
+				</button>
+			</td>
+			<td>
+				<input
+					type="text"
+					class="ref input form-control form-control-sm"
+				/>
+			</td>
+			<td>
+				<input
+					type="text"
+					class="libelle input form-control form-control-sm"
+				/>
+			</td>
+			<td>
+				<input
+					type="text"
+					class="decaissement input form-control form-control-sm"
+				/>
+			</td>
+			<td>
+				<input
+					type="text"
+					class="encaissement input form-control form-control-sm"
+				/>
+			</td>
+			<td>
+				<button type="button" class="btn btn-danger btn-sm btn-details">
+					DEL
+				</button>
+			</td>
 		</tr>
 	</thead>
 </table>
