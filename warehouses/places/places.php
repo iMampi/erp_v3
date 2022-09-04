@@ -85,7 +85,7 @@
                         <?php
                         //TODO : make the header of factures in details readonly. 
                         //TODO : change to require once. 
-                        require __DIR__ . "/../../elements/warehouse/places/place_formulaire_base.html";
+                        require __DIR__ . "/../../elements/warehouses/places/place_formulaire_base.html";
                         ?>
                         <!-- </div> -->
                         <!-- TODO : to elete. we gonna use only JS here -->

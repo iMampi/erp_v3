@@ -4,6 +4,7 @@ a etudier !! tous les boutons voir details pour tiers ouvre dans nouvel onglet
 
 min width on "input"s
 
+ajouter au subheader le titre de où on est
 all inputs : justify-right
 all label : justify-left
 
@@ -24,3 +25,9 @@ matériel périphérique : le lectuer de code barre
 
 
 quand chargement liste
+
+tous les formualaires qui ont besoin de lister des items
+fact clt
+fact frsnt
+mvt interne
+>>>un seul et meme fichier de base

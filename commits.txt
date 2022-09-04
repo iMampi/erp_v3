@@ -54,6 +54,18 @@ added buttons to  .affection in tables' td
 created modal affectation for tresos
 extended dummy
 created base nested modal for new tiers, type affectation, doc, etc...
+-------------------
+008:
+change design of filter. from accordion to modal
+
+starting to work on familles
+starting to work on categories
+starting to work on new_fact_clt
+starting to work on new_fact_frnsr
+starting to work on mvt interne
+starting to work on mvt interne
+
+
 
 
 

@@ -5,7 +5,7 @@ require __DIR__ . "/dummy.php";
 
 
 
-$base = __DIR__ . "/../../../elements/warehouse/items/liste_items_table_001_base.html";
+$base = __DIR__ . "/../../../elements/warehouses/places/liste_places_table_001_base.html";
 
 //create first DOM to handle base file
 $dom = new DOMDocument();

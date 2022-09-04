@@ -27,7 +27,7 @@
             $link->setAttribute("class", $classes);
             echo utf8_decode($dom->saveHTML($dom->documentElement));
             ?>
-            <div class="container-fluid position-relative">
+            <div id="header-body" class="container-fluid position-relative my-3">
                 <div class="">
                     <div id="div-selection" class="row ">
                         <span class="col">trésorerie</span>
@@ -71,20 +71,8 @@
                         <span class="col">rapprochement</span><input type="text" class="col"><span class="col">etat rapprochement</span>
                     </div>
                 </div>
-                <div class="accordion row" id="filter-container">
-                    <div class="accordion-item px-0">
-                        <h2 class="accordion-header" id="headingOne">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Filtres
-                            </button>
-                        </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                Insert filter fields here
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <button type="button" class="col btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-filter">filter</button>
+
             </div>
             <div class="row">
                 <div id="table-here">
@@ -111,7 +99,6 @@
             </div>
         </div>
         <!-- modal filter -->
-
         <div class="modal fade" id="modal-filter" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
             </button>
@@ -120,7 +107,7 @@
                 <div class="modal-content">
 
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">affecter à une facture/document</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel">Filtrer</h5>
                     </div>
                     <div class="modal-body">
 
