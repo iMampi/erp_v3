@@ -64,7 +64,12 @@ starting to work on new_fact_clt
 starting to work on new_fact_frnsr
 starting to work on mvt interne
 starting to work on mvt interne
+-------------------
+009:
 
+j'ai commencé à utiliser getboundingboxclientrect (js)pour obtenir exactement ce que je voulais.
+j'ai traivaillé sur "mvts_internes". et tout marche parfaitement pour l'instant.
+il reste à netoyer le script js
 
 
 

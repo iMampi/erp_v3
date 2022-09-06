@@ -2,12 +2,18 @@
 #table-here,
 .modal-dialog {
 	min-width: 770px;
+	/* margin-left: 0px;
+	margin-right: 0px;
+	padding-left: 0px;
+	padding-right: 0px; */
 }
 #header-top {
 	min-width: fit-content;
 }
+.bg-g,
 .bg-light-blue {
-	background-color: rgb(219, 247, 196);
+	background-color: rgb(208 233 255);
+	/* background-color: rgba(152, 197, 255, 0.459); */
 }
 .bg-dark {
 	color: aliceblue;
@@ -21,14 +27,23 @@
 #table-000 thead tr td {
 	border-style: none;
 }
-.uid.input {
-	width: 4em;
+.sticky-offset {
+	top: 500px;
 }
+/* .uid.input,
+td>.uid {
+	width: 4em;
+} */
 /* #table-001 td input {
 	min-width: 100px;
 	width: 500px;
 	color: blue;
 } */
+.td-uid {
+	width: 8em;
+	min-width: 8em;
+	max-width: 8em;
+}
 
 #testes {
 	display: inline-block;
