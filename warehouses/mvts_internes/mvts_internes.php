@@ -14,7 +14,7 @@
 </head>
 
 <body class="bg-g">
-    <div id="main-container" class="container-fluid ">
+    <div id="main-container" class="container-fluid px-0">
         <div id="header-top" class=" bg-light-blue">
             <?php
             $base = __DIR__ . "/../../elements/header.html";
@@ -53,7 +53,7 @@
             <!-- TABLEAU -->
             <!-- FIXME width resopnse, class of this table. prendre fact fnsr comme reeference -->
             <div id="table-container" class="row position-relative">
-                <div class="
+                <div class="px-0
             ">
                     <div class="
             ">

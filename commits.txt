@@ -70,6 +70,15 @@ starting to work on mvt interne
 j'ai commencé à utiliser getboundingboxclientrect (js)pour obtenir exactement ce que je voulais.
 j'ai traivaillé sur "mvts_internes". et tout marche parfaitement pour l'instant.
 il reste à netoyer le script js
+-------------------
+010:
+starting to work on affaire , based on the new lay out with fixed-header.js
+added different modals in affaires 
+
+added unité de ccomptage pour "item.php">base formualaires
+
+fixed-header.js: fixed a problem where the hieght of navbar was miss calculated because the first call of getboundingboxclientrect was calculating too fast when changint page when a navbar folded. (like 412px). called getboundingboxclientrect on navBarInnerContainer a second time. 
+
 
 
 

@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
 	const navBarInnerContainer = document.getElementById("main-navbar");
 	let subHeader = document.getElementById("sub-header");
-	const offsetHeader = navBarInnerContainer.getBoundingClientRect().height;
+	var offsetHeader = navBarInnerContainer.getBoundingClientRect().height;
+	//run a second time to avoid misscalculation (doing it too fast)
+	offsetHeader = navBarInnerContainer.getBoundingClientRect().height;
 
 	subHeader.style.top = offsetHeader + "px";
 
@@ -10,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const subHeaderRect = subHeader.getBoundingClientRect();
 
 	let val = subHeaderRect.top;
-	console.log("val is ; " + val);
+	// console.log("val is ; " + val);
 	// tableContainer.style.top = val + "px";
 
 	const zeThead = document.getElementById("ze-thead");

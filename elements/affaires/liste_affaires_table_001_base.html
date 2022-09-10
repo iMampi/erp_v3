@@ -3,9 +3,11 @@
 		<tr>
 			<td class="ps-5 td-uid"><div class="ps-4">uid</div></td>
 			<td>date</td>
-			<td>origne</td>
-			<td>destination</td>
-			<td>nom</td>
+			<td>client</td>
+			<td>employés</td>
+			<td>total</td>
+			<td>état</td>
+			<td>factures</td>
 			<td>détails</td>
 			<td class="pe-5 td-uid text-end"><div class="pe-3">del</div></td>
 		</tr>
@@ -14,12 +16,14 @@
 		<tr id="row-001">
 			<td class="td-uid ps-5">
 				<div class="uid ps-4">
-					<input
-						type="text"
-						disabled
-						class="uid input form-control form-control-sm"
-					/>
-				</div>
+
+				<input
+					type="text"
+					disabled
+					class="uid input form-control form-control-sm"
+				/>
+			</div>
+
 			</td>
 			<td>
 				<input
@@ -32,41 +36,58 @@
 				<input
 					type="text"
 					disabled
-					class="origin input form-control form-control-sm"
+					class="clt input form-control form-control-sm"
 				/>
 			</td>
 			<td>
 				<input
 					type="text"
 					disabled
-					class="destination input form-control form-control-sm"
+					class="emp input form-control form-control-sm"
+				/>
+			</td>
+
+			<td>
+				<input
+					type="text"
+					disabled
+					class="total input form-control form-control-sm"
 				/>
 			</td>
 			<td class="">
+				<select
+					disabled
+					class="etat input form-control form-control-sm"
+				>
+					<option value="0">impayée</option>
+					<option value="1">payée</option>
+				</select>
+			</td>
+			<td>
+				<!-- TODO maybe a modal -->
 				<input
 					type="text"
 					disabled
-					class="nom input form-control form-control-sm"
+					class="factures input form-control form-control-sm"
 				/>
 			</td>
 			<td>
+				<!-- Button trigger modal -->
 				<button
 					type="button"
-					class="btn btn-primary btn-sm btn-details w-100"
+					class="btn btn-primary btn-sm btn-details"
 					data-bs-toggle="modal"
-					data-bs-target="#modal-detail"
+					data-bs-target="#modal-details"
 				>
 					see
 				</button>
 			</td>
-
 			<td class="text-end pe-5">
 				<div class="pe-3">
 					<button class="btn btn-primary btn-sm btn-details">
 						DEL
 					</button>
-				</div>
-			</td>
+
 		</tr>
 	</tbody>
 </table>

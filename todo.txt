@@ -8,6 +8,8 @@ ajouter au subheader le titre de où on est
 all inputs : justify-right
 all label : justify-left
 
+numéro de série : disabled by default, ativeted only when item selected
+
 user profil:
 superadmin
 admin

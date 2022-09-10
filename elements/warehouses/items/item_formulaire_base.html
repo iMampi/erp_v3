@@ -57,7 +57,20 @@
 		</div>
 	</div>
 	<div class="row">
-		<span class="col-form-label col-2">stockable</span>
+		<span class="col-form-label col-2 my-auto">unité de comptage</span>
+
+		<div class="col-2 my-auto btn-group">
+			<select
+				disabled
+				class="stockable input form-control form-control-sm"
+			>
+				<option value="1">unité</option>
+				<option value="2">surface</option>
+				<option value="3">longeur</option>
+			</select>
+			<button type="button" class="btn btn-sm btn-success">+</button>
+		</div>
+		<span class="col-form-label col-2 my-auto">stockable</span>
 
 		<div class="col-2 my-auto">
 			<select
@@ -68,7 +81,7 @@
 				<option value="1">oui</option>
 			</select>
 		</div>
-		<span class="col-form-label col-2">identifiable</span>
+		<span class="col-form-label col-2 my-auto">identifiable</span>
 
 		<div class="col-2 my-auto">
 			<select

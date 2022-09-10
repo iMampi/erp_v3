@@ -8,7 +8,7 @@
     <script src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/style/mampi.css">
-    <title>Nouvelle facture client</title>
+    <title>nouvelle facture fournisseur</title>
 
 </head>
 
@@ -17,7 +17,7 @@
         <nav id="header-top" class="sticky-top bg-light-blue">
             <?php
             $base = __DIR__ . "/../../elements/header.html";
-            $tag_id = "link-new-fact-clt";
+            $tag_id = "link-new-fact-frnsr";
             $dom = new DOMDocument();
             libxml_use_internal_errors(true);
             $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
@@ -37,8 +37,6 @@
                 </div>
                 <button type="button" class="col btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-fam-detail">nouveau</button>
                 <button type="button" class="col btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-fam-detail">valider</button>
-                <!-- TODO validation creation de commande lors de la validation -->
-
                 <!-- <button type="button" class="col btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-filter">filter</button> -->
             </div>
 
@@ -46,7 +44,7 @@
         </nav>
         <div class="row formulaire">
             <?php
-            require __DIR__ . "/../../elements/facts_clt/facture_clt_header_base.html"
+            require __DIR__ . "/../../elements/facts_frnsr/facture_frnsr_header_base.html"
             ?>
         </div>
         <!-- TABLEAU -->
@@ -98,8 +96,8 @@
             </div>
         </div>
         <!-- end modal filter -->
-        <!-- modal creer article -->
-        <div class="modal fade" id="modal-creer-item" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <!-- modal détails article -->
+        <div class="modal fade" id="modal-fam-detail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-dialog modal-dialog-scrollable modal-lg">
                 <div class="modal-content">
@@ -132,7 +130,7 @@
                 </div>
             </div>
         </div>
-        <!-- end modal creer article -->
+        <!-- end modal détails artible -->
 
     </div>
 </body>
