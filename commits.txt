@@ -83,8 +83,10 @@ fixed-header.js: fixed a problem pwhere the hieght of navbar was miss calculated
 implementing new design with fixed-header in trésos.php, clients.php, employees,frnsrs,items,familles, categories, magasins,facts_clt,facts_frnsr
 changed html bases
 fixed-header.js: calling getboundingboxclientrect on navBarInnerContainer a THIRD time. 
-
-
+-------------------
+011:
+starting to implement modals_processors. 
+for that we start on fiche client
 
 
 
