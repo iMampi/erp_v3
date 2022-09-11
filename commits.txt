@@ -77,7 +77,13 @@ added different modals in affaires
 
 added unité de ccomptage pour "item.php">base formualaires
 
-fixed-header.js: fixed a problem where the hieght of navbar was miss calculated because the first call of getboundingboxclientrect was calculating too fast when changint page when a navbar folded. (like 412px). called getboundingboxclientrect on navBarInnerContainer a second time. 
+fixed-header.js: fixed a problem pwhere the hieght of navbar was miss calculated because the first call of getboundingboxclientrect was calculating too fast when changint page when a navbar folded. (like 412px). called getboundingboxclientrect on navBarInnerContainer a second time. 
+-------------------
+011:
+implementing new design with fixed-header in trésos.php, clients.php, employees,frnsrs,items,familles, categories, magasins,facts_clt,facts_frnsr
+changed html bases
+fixed-header.js: calling getboundingboxclientrect on navBarInnerContainer a THIRD time. 
+
 
 
 

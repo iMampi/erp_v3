@@ -1,20 +1,24 @@
 <table class="table table-hover" id="table-001">
-	<thead class="bg-dark">
-		<tr class="align-middle text-capitalize">
-			<td class="">uid</td>
-			<td class="">nom</td>
-			<td>détails</td>
-			<td>DEL</td>
+	<thead id="ze-thead" class="bg-dark sticky-top">
+		<tr>
+			<td class="ps-5 td-uid"><div class="ps-4">uid</div></td>
+			<td class="col-auto">nom</td>
+			<td class="col-1">détails</td>
+			<td class="col-1 pe-5 td-uid text-end">
+				<div class="pe-4">del</div>
+			</td>
 		</tr>
 	</thead>
-	<tbody class="bg-light">
+	<tbody id="ze-tbody" class="bg-light position-relative">
 		<tr id="row-001">
-			<td>
-				<input
-					type="text"
-					disabled
-					class="uid input form-control form-control-sm"
-				/>
+			<td class="td-uid ps-5">
+				<div class="uid ps-4">
+					<input
+						type="text"
+						disabled
+						class="uid input form-control form-control-sm"
+					/>
+				</div>
 			</td>
 			<td>
 				<input
@@ -28,13 +32,17 @@
 					type="button"
 					class="btn btn-primary btn-sm btn-details"
 					data-bs-toggle="modal"
-					data-bs-target="#modal-fam-detail"
+					data-bs-target="#modal-details"
 				>
 					see
 				</button>
 			</td>
-			<td>
-				<button class="btn btn-primary btn-sm btn-details">DEL</button>
+			<td class="text-end pe-5">
+				<div class="pe-4">
+					<button class="btn btn-danger btn-sm btn-details">
+						DEL
+					</button>
+				</div>
 			</td>
 		</tr>
 	</tbody>

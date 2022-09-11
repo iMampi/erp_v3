@@ -1,8 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
 	const navBarInnerContainer = document.getElementById("main-navbar");
 	let subHeader = document.getElementById("sub-header");
+	// const offsetHeader = setTimeout(() => {
+	// 	navBarInnerContainer.getBoundingClientRect().height;
+	// }, 500);
 	var offsetHeader = navBarInnerContainer.getBoundingClientRect().height;
 	//run a second time to avoid misscalculation (doing it too fast)
+	offsetHeader = navBarInnerContainer.getBoundingClientRect().height;
 	offsetHeader = navBarInnerContainer.getBoundingClientRect().height;
 
 	subHeader.style.top = offsetHeader + "px";

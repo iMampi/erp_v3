@@ -9,7 +9,7 @@
     <script src="/js/fixed-header.js"></script>
     <link rel="stylesheet" href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/style/mampi.css">
-    <title>magasins</title>
+    <title>mouvements internes</title>
 
 </head>
 
@@ -36,7 +36,7 @@
                         <span class="col">0</span>
 
                     </div>
-                    <div id="div-selection" class="row ">
+                    <div id="div-btns" class="row ">
                         <div class="col-auto me-auto">
                             <button type="button" class="col-auto btn btn-info" data-bs-toggle="modal" data-bs-target="#modal-fam-detail">nouveau</button>
                             <button type="button" class="col-auto btn btn-info me-auto" data-bs-toggle="modal" data-bs-target="#modal-fam-detail">valider</button>
@@ -64,6 +64,8 @@
                     </div>
                 </div>
             </div>
+            <!-- end TABLEAU -->
+
             <!-- modal détails mvt interne -->
             <div class="modal fade" id="modal-detail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <!-- <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button> -->
