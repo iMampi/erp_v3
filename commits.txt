@@ -87,6 +87,13 @@ fixed-header.js: calling getboundingboxclientrect on navBarInnerContainer a THIR
 011:
 starting to implement modals_processors. 
 for that we start on fiche client
+-------------------
+012:
+started working on authorization
+started to implement OOP for handling authorization and authentification
+autoload.php implemented ussing /classes/ to keep all classes.
+created utilites php
+
 
 
 

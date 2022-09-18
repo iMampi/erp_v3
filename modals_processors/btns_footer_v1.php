@@ -13,7 +13,10 @@ $btns = $xpath->query(".//*[contains(@class,'btn')]");
 //it works
 //TODO : include algo for what btns appears or not according to roles
 foreach ($btns as $btn) {
-    $btn->setAttribute("disabled", '');
+    if (!in_array($btn->getAttribute('id'), ['statistics', 'cancel'])) {
+
+        $btn->setAttribute("disabled", '');
+    };
 }
 
 

@@ -1,5 +1,13 @@
 {
-    "require": {
-        "twbs/bootstrap": "5.1.3"
-    }
+	"autoload": {
+		"psr-4": {
+			"MySpace\\": "classes/",
+			"Variables\\": "classes/variables",
+			"Session\\": "classes/session/",
+			"Authorizations\\": "classes/authorizations/"
+		}
+	},
+	"require": {
+		"twbs/bootstrap": "5.1.3"
+	}
 }
