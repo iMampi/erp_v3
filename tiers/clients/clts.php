@@ -1,31 +1,32 @@
 <?php
 
 
-session_start();
 require_once __DIR__ . "/../../vendor/autoload.php";
+session_start();
 
-use Session\User;
+// use Session\User;
 
-// require_once __DIR__ . "/../../dummy_user.php";
-$myauthoriz = [
-    1,
-    0, 1, 0, 0,
-    1, 1, 1, 1,
-    1, 1, 1, 1,
-    1, 1, 1, 1,
-    1, 1, 1, 1,
-    1, 1, 1, 1,
-    1, 1, 1, 1,
-    1, 1, 1, 1,
-    1, 1, 1, 1,
-    1, 1, 1, 1,
-    1, 1, 1, 1,
-    1, 1, 1, 1,
-    1, 1, 1, 1
-    
-];
-$dummy_user = new User(26, "Mampi", $myauthoriz);
-$_SESSION["user"] = $dummy_user;
+// // require_once __DIR__ . "/../../dummy_user.php";
+// $myauthoriz = [
+//     1,
+//     0, 1, 0, 0,
+//     1, 1, 1, 1,
+//     1, 1, 1, 1,
+//     1, 1, 1, 1,
+//     1, 1, 1, 1,
+//     1, 1, 1, 1,
+//     1, 1, 1, 1,
+//     1, 1, 1, 1,
+//     1, 1, 1, 1,
+//     1, 1, 1, 1,
+//     1, 1, 1, 1,
+//     1, 1, 1, 1,
+//     1, 1, 1, 1
+
+// ];
+// $dummy_user = new User(26, "Mampi", $myauthoriz);
+// $_SESSION["user"] = $dummy_user;
+////////////////////////////////////
 // $_SESSION["authorization"] = $dummy_user->authorizations;
 ?>
 <!DOCTYPE html>
@@ -68,14 +69,11 @@ $_SESSION["user"] = $dummy_user;
                     </div>
                     <div id="div-btns" class="row ">
                         <div class="col-auto me-auto">
-                            <button type="button" class="col-auto btn btn-info" id="btn-main-new" data-bs-toggle="modal"
-                                data-bs-target="#modal-main-new">nouveau</button>
-                            <button type="button" class="col-auto btn btn-info me-auto" data-bs-toggle="modal"
-                                data-bs-target="#modal-fam-detail">valider</button>
+                            <button type="button" class="col-auto btn btn-info" id="btn-main-new" data-bs-toggle="modal" data-bs-target="#modal-main-new">nouveau</button>
+                            <button type="button" class="col-auto btn btn-info me-auto" data-bs-toggle="modal" data-bs-target="#modal-fam-detail">valider</button>
                         </div>
                         <div class="col-auto justify-content-end">
-                            <button type="button" class="col-auto btn btn-info me-auto" data-bs-toggle="modal"
-                                data-bs-target="#modal-filter">filtrer</button>
+                            <button type="button" class="col-auto btn btn-info me-auto" data-bs-toggle="modal" data-bs-target="#modal-filter">filtrer</button>
                             <button type="button" class="col-auto btn btn-info ">exporter</button>
                         </div>
 
@@ -86,10 +84,8 @@ $_SESSION["user"] = $dummy_user;
             <!-- TABLEAU -->
             <!-- FIXME width resopnse, class of this table. prendre fact fnsr comme reeference -->
             <div id="table-container" class="row position-relative">
-                <div class="px-0
-            ">
-                    <div class="
-            ">
+                <div class="px-0">
+                    <div class="">
                         <?php
                         require_once __DIR__ . '/processors/generate_table_001.php';
                         ?>
@@ -98,10 +94,8 @@ $_SESSION["user"] = $dummy_user;
                 </div>
             </div>
             <!-- modal filter -->
-            <div class="modal fade" id="modal-filter" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal"
-                    aria-label="Close">
+            <div class="modal fade" id="modal-filter" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
                 </button>
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
 
@@ -136,10 +130,8 @@ $_SESSION["user"] = $dummy_user;
             </div>
             <!-- end modal filter -->
             <!-- modal main new clt -->
-            <div class="modal fade" id="modal-main-new" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal"
-                    aria-label="Close">
+            <div class="modal fade" id="modal-main-new" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
                 </button>
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
 
@@ -174,10 +166,8 @@ $_SESSION["user"] = $dummy_user;
             </div>
             <!-- end modal main new clt -->
             <!-- modal détails clts -->
-            <div class="modal fade" id="modal-clt-detail" data-bs-backdrop="static" data-bs-keyboard="false"
-                tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+            <div class="modal fade" id="modal-clt-detail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">

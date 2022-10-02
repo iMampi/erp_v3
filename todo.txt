@@ -33,3 +33,8 @@ fact clt
 fact frsnt
 mvt interne
 >>>un seul et meme fichier de base
+
+
+tiers> les banques
+prefill  tiers with local banques and local authorities
+local banques can be  both fournisseru, client and banques.

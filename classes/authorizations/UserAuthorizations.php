@@ -3,10 +3,11 @@
 namespace Authorizations;
 
 use Authorizations\Authorization;
-
+use Exception;
 
 class UserAuthorizations
 {
+    public int $length = 69;
     public int $active;
     public Authorization $client;
     public Authorization $fournisseur;
@@ -21,10 +22,18 @@ class UserAuthorizations
     public Authorization $authorization;
     public Authorization $affaire;
     public Authorization $devis;
+    public Authorization $avoir_client;
+    public Authorization $mvt_treso;
+    public Authorization $nd_client;
+    public Authorization $mvt_interne;
 
     function __construct(array $auth_data)
     {
+        // TODO : chager en affectation auto par 4
         $data = func_get_arg(0);
+        if ($this->length != count($data)) {
+            throw new Exception("data entered is not the correct size");
+        }
         for ($i = 0; $i < count($data); $i++) {
             $data[$i] = intval($data[$i]);
         }
@@ -106,6 +115,30 @@ class UserAuthorizations
             $data[50],
             $data[51],
             $data[52]
+        );
+        $this->avoir_client = new Authorization(
+            $data[53],
+            $data[54],
+            $data[55],
+            $data[56]
+        );
+        $this->mvt_treso = new Authorization(
+            $data[57],
+            $data[58],
+            $data[59],
+            $data[60]
+        );
+        $this->nd_client = new Authorization(
+            $data[61],
+            $data[62],
+            $data[63],
+            $data[64]
+        );
+        $this->mvt_interne = new Authorization(
+            $data[65],
+            $data[66],
+            $data[67],
+            $data[68]
         );
     }
 }

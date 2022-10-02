@@ -93,6 +93,19 @@ started working on authorization
 started to implement OOP for handling authorization and authentification
 autoload.php implemented ussing /classes/ to keep all classes.
 created utilites php
+-------------------
+013:
+login for index.php
+creation of db.php
+now ussing $_SESSION["user"]
+now ussing $_SESSION["logged"]
+modified UserAuthorization to fit with database
+created utilities for formatting database arry used for creating UserAuthorization
+logout.php created
+login_utils created
+DISCONNECT link created
+modified some clts.php part using Session to fit with the current User and UserAuthentification class
+
 
 
 

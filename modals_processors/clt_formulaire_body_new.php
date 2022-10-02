@@ -1,9 +1,15 @@
 <?php
+
 require_once $_SERVER["DOCUMENT_ROOT"] . "/utilities/authorization_utils.php";
+
+
 $cycle = "client";
 if (isset($_SESSION["user"])) {
-    echo "you are loggd in <br>";
+    // FIXME : do the correct check
+    echo " you are loggd in <br>";
     if (authorized($_SESSION["user"]->authorizations, $cycle, "create")) {
+        // FIXME : do the correct check
+
         // if (($_SESSION["user"]->authorizations->active == 1) && ($_SESSION["user"]->authorizations->client->create == 1)) {
         // TODO grab role of user
         $base = __DIR__ . "/../elements/tiers/clients/client_formulaire_base.html";
