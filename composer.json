@@ -4,8 +4,15 @@
 			"MySpace\\": "classes/",
 			"Variables\\": "classes/variables",
 			"Session\\": "classes/session/",
-			"Authorizations\\": "classes/authorizations/"
-		}
+			"Authorizations\\": "classes/authorizations/",
+			"Employee\\": "classes/employee/",
+			"Salary\\": "classes/salary/",
+			"Tax\\": "classes/tax/"
+		},
+		"files": [
+			"classes/session/Functions.php",
+			"classes/tax/Functions.php"
+		]
 	},
 	"require": {
 		"twbs/bootstrap": "5.1.3"

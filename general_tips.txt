@@ -104,3 +104,31 @@ $extra = 'mypage.php';
 header("Location: http://$host$uri/$extra");
 exit;
 ?>
+----------------------
+php
+autoload, namespaced fucntions :
+
+From PHP 5.6 and higher you can import/use functions from other PHP files as follows:
+
+require_once __DIR__ . "/../../path/to/your/vendor/autoload.php";
+use function myprogram\src\Tools\MyFunc;
+//use the imported function
+MyFunc();
+However, for PHP 7.0, I needed to add the function to "files" in the composer.json:
+
+"autoload" : {
+    "psr-4" : {
+      "myprogram\\src\\" : "myprogram/src/"
+    },
+"files" : [
+      "myprogram/src/Tools/ScriptWithMyFunc.php"
+    ]
+And then run composer dump-autoload to update autoload.php.
+
+ALTERNATIVELY:
+
+You can also import functions from scripts directly without composer:
+
+require_once full\path\to\ScriptWithMyFunc.php;
+MyFunc();
+But (at least for me) this only works when ScriptWithMyFunc.php does not have a namespace.

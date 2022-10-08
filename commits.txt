@@ -105,7 +105,20 @@ logout.php created
 login_utils created
 DISCONNECT link created
 modified some clts.php part using Session to fit with the current User and UserAuthentification class
+-------------------
+014:
+generate_header_logged($name) pour petit message de bienvenu au lieu de faire un snackbar, directement dans le header. on a ajouter la div "title-container" pour faciliiter la manipulation
+using generate_header_logged in index
+using generate_header_logged in clts. and added redirection to index to log in when not logged
+new static class : Session/Logged
+-------------------
+015:
+class Session/Logged is overkilled. changed to namespaced function (see tips on how it works on php7/5);
+replacing all Session/Logged by is_logged();
+creating is authorized($cycle) for those who can see/visit the page;
+strating to add constant "CYCLEx" to each page;
 
+starting to create class for FicheDePaie and its dependencies
 
 
 

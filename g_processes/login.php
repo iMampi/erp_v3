@@ -19,11 +19,6 @@ $host  = $_SERVER['HTTP_HOST'];
 if ($signing_in) {
     session_start();
     $permissions = array_slice($signing_in, 3, count($signing_in) - 4);
-    // echo "var_dump : ";
-    // var_dump($permissions);
-    // echo "<br>";
-    // echo "permissions are : ";
-    // echo count($permissions);
     $_SESSION["user"] = new User(intval($signing_in[0]), $signing_in[1], $permissions);
     $_SESSION["logged"] = $signing_in["logged"];
     // va:r_dump($_SESSION["user"]);

@@ -1,5 +1,7 @@
 <?php
-session_start()
+require_once __DIR__ . "/vendor/autoload.php";
+session_start();
+
 ?>
 
 <!DOCTYPE html>
@@ -20,9 +22,13 @@ session_start()
 <body class="">
 
     <?php
+    // TODO : make it so it is a dashboard that appeares here. when doing it, put verification of logged at start of file
     if ((isset($_SESSION["logged"])) && ($_SESSION["logged"] == "logged")) {
-        $output = file_get_contents(__DIR__ . "/elements/header.html");
+        // $output = file_get_contents(__DIR__ . "/elements/header.html");
+        require_once __DIR__ . '/utilities/login_utils.php';
+        $output = generate_logged_header($_SESSION['user']->name);
     } else {
+
         $output = "
     <div class='d-flex flex-column min-vh-100 justify-content-center align-items-center'>
         <form action='\g_processes\login.php' method='POST'>

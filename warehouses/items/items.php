@@ -1,3 +1,12 @@
+<?php
+
+use function Session\is_logged;
+
+require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
+
+session_start();
+is_logged();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,18 +26,10 @@
     <div id="main-container" class="container-fluid px-0">
         <div id="header-top" class=" bg-light-blue">
             <?php
-            $base = __DIR__ . "/../../elements/header.html";
-            $tag_id = "link-items";
-            $dom = new DOMDocument();
-            libxml_use_internal_errors(true);
-            $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
-            $link = $dom->getElementById($tag_id);
-            $classes = $link->getAttribute("class");
-            $classes .= " active";
-            $link->setAttribute("class", $classes);
-            echo utf8_decode($dom->saveHTML($dom->documentElement));
-            ?>
-            <div id="sub-header" class="container-fluid sticky-top py-2 bordered bg-light-blue
+            require_once $_SERVER["DOCUMENT_ROOT"] . '/utilities/login_utils.php';
+            $output = generate_logged_header($_SESSION['user']->name, "link-items");
+            echo $output;
+            ?> <div id="sub-header" class="container-fluid sticky-top py-2 bordered bg-light-blue
             ">
                 <div class="px-5">
                     <div id="div-selection" class="row ">

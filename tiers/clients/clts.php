@@ -1,33 +1,14 @@
 <?php
 
+use function Session\can_visit;
+use function Session\is_logged;
 
-require_once __DIR__ . "/../../vendor/autoload.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
+
 session_start();
 
-// use Session\User;
-
-// // require_once __DIR__ . "/../../dummy_user.php";
-// $myauthoriz = [
-//     1,
-//     0, 1, 0, 0,
-//     1, 1, 1, 1,
-//     1, 1, 1, 1,
-//     1, 1, 1, 1,
-//     1, 1, 1, 1,
-//     1, 1, 1, 1,
-//     1, 1, 1, 1,
-//     1, 1, 1, 1,
-//     1, 1, 1, 1,
-//     1, 1, 1, 1,
-//     1, 1, 1, 1,
-//     1, 1, 1, 1,
-//     1, 1, 1, 1
-
-// ];
-// $dummy_user = new User(26, "Mampi", $myauthoriz);
-// $_SESSION["user"] = $dummy_user;
-////////////////////////////////////
-// $_SESSION["authorization"] = $dummy_user->authorizations;
+define("CYCLE0", "client");
+is_logged();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -48,16 +29,15 @@ session_start();
     <div id="main-container" class="container-fluid px-0">
         <div id="header-top" class=" bg-light-blue">
             <?php
-            $base = __DIR__ . "/../../elements/header.html";
-            $tag_id = "link-clts";
-            $dom = new DOMDocument();
-            libxml_use_internal_errors(true);
-            $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
-            $link = $dom->getElementById($tag_id);
-            $classes = $link->getAttribute("class");
-            $classes .= " active";
-            $link->setAttribute("class", $classes);
-            echo utf8_decode($dom->saveHTML($dom->documentElement));
+            require_once $_SERVER["DOCUMENT_ROOT"] . '/utilities/login_utils.php';
+            $output = generate_logged_header($_SESSION['user']->name, "link-clts");
+            echo $output;
+            if (!can_visit(CYCLE0)) {
+                // TODO : IMPLEMENT ME CORRECTLY
+                echo "cannot be here";
+            } else {
+                echo "you are welcome here";
+            }
             ?>
             <div id="sub-header" class="container-fluid sticky-top py-2 bordered bg-light-blue
             ">

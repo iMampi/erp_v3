@@ -1,3 +1,12 @@
+<?php
+
+use function Session\is_logged;
+
+require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
+
+session_start();
+is_logged();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
