@@ -1,10 +1,12 @@
 <?php 
 namespace Employee;
 
+use Salary\Avantage\Avantages;
+
 class EmployeeBase{
     public $noms;
 
-    public $prenoms,;
+    public $prenoms;
 
     public $debut;
 
@@ -24,10 +26,10 @@ class EmployeeBase{
 
     public $avantages;
 
-    public function __construct($matricule,$noms, $prenoms, $debut, $csp, $sal_base, $fin, $smie, $nb_enfant, $reduc_enfant , $avantages)
+    public function __construct($matricule,$noms, $prenoms, $debut, $csp, $sal_base, $fin, $smie, $nb_enfant, $reduc_enfant , array $avantages_arr)
     {
         $this->noms = $noms;
-        $this->prenoms, = $prenoms,;
+        $this->prenoms = $prenoms;
         $this->debut = $debut;
         $this->csp = $csp;
         $this->sal_base = $sal_base;
@@ -36,7 +38,7 @@ class EmployeeBase{
         $this->nb_enfant = $nb_enfant;
         $this->reduc_enfant = $reduc_enfant;
         $this->matricule = $matricule;
-        $this->avantages = $avantages;
+        $this->avantages = new Avantages($avantages_arr,$this->sal_base);
     }
 
 

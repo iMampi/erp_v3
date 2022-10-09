@@ -1,7 +1,7 @@
-<?php  
+<?php 
 namespace Salary;
 
-class SmieData{
+class Avantagedata{
     protected array $data;
 
     public function __construct(array $data)
@@ -11,3 +11,4 @@ class SmieData{
 
 
 }
+?>

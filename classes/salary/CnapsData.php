@@ -1,13 +1,13 @@
-<?php  
+<?php
+
 namespace Salary;
 
-class CnapsData{
-    protected $data;
+class CnapsData
+{
+    protected array $data;
 
-    public function __construct($data)
+    public function __construct(array $data)
     {
         $this->data = $data;
     }
-
-
 }

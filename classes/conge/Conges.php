@@ -1,8 +1,9 @@
 <?php 
-namespace Salary;
+namespace Salary\Conge;
 
 class Conges{
-    protected $base,$conges_consommes,;
+    protected $base;
+    protected $conges_consommes;
 
     public function __construct($base,$conges_consommes,)
     {

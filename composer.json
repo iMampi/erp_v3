@@ -7,6 +7,7 @@
 			"Authorizations\\": "classes/authorizations/",
 			"Employee\\": "classes/employee/",
 			"Salary\\": "classes/salary/",
+			"Conge\\": "classes/conge",
 			"Tax\\": "classes/tax/"
 		},
 		"files": [

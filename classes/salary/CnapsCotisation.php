@@ -9,10 +9,11 @@ class CnapsCotisation
     protected $month;
 
     protected $sal_brut;
-
+    protected $cotisation_employee;
+    protected $cotisation_patron;
     protected $cnaps_data;
 
-    public function __construct($year, $month, $sal_brut, CnapsCotisation $cnaps_data)
+    public function __construct($year, $month, $sal_brut,  $cnaps_data)
     {
         $this->year = $year;
         $this->month = $month;

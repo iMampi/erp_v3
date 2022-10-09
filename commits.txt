@@ -119,6 +119,12 @@ creating is authorized($cycle) for those who can see/visit the page;
 strating to add constant "CYCLEx" to each page;
 
 starting to create class for FicheDePaie and its dependencies
+-------------------
+016:
+working on all this fichde paie et calcul. le calcul de l'irsa, des avantages et des congés sont bien mis en place. par contre pour l'instant, c'est hard coded. les calcul dynamique devornt etre implémenté plus tard.
+CongesMonthly
+MonthlySalary >> Salary Monthly. pour la constance des noms.
+
 
 
 
