@@ -8,7 +8,9 @@
 			"Employee\\": "classes/employee/",
 			"Salary\\": "classes/salary/",
 			"Conge\\": "classes/conge",
-			"Tax\\": "classes/tax/"
+			"Tax\\": "classes/tax/",
+			"Base\\": "classes/base/",
+			"Cotisation\\": "classes/cotisation/"
 		},
 		"files": [
 			"classes/session/Functions.php",

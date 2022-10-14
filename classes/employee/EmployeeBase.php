@@ -20,7 +20,7 @@ class EmployeeBase{
 
     public $nb_enfant;
 
-    public $reduc_enfant;
+    public int $reduc_enfant; //1 or 0
 
     public $matricule;
 
@@ -43,4 +43,3 @@ class EmployeeBase{
 
 
 }
-?>

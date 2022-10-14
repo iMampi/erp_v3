@@ -12,7 +12,6 @@ class Avantages
     public array $details = [];
     public float $montant_brut = 0;
     public float $montant_imposable = 0;
-    public float $plafond = 0;
     //plafond 20% des rémunératoin brute en numéraires 
     //TODO : vérifier texte pour plus de précision
 

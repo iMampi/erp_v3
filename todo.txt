@@ -38,3 +38,7 @@ mvt interne
 tiers> les banques
 prefill  tiers with local banques and local authorities
 local banques can be  both fournisseru, client and banques.
+
+
+calcul des fiche de paie:
+calcul des cotisation > créer un objet pour tenir le total des détails des cotisations au lieu de récup les données traités

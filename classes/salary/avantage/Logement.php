@@ -11,6 +11,7 @@ class Logement extends Avantage
     {
         $this->sal_base = \floatval($sal_base);
         parent::__construct($montant_brut);
+        $this->calc_plafond();
     }
 
     public function calc_plafond()

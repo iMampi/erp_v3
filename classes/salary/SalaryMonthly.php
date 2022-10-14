@@ -2,15 +2,18 @@
 
 namespace Salary;
 
+use Salary\IrsaPayable;
 use Conge\CongesMonthly;
+use Cotisation\SmieData;
+use Cotisation\CnapsData;
 use Employee\EmployeeBase;
-use Salary\SmieCotisation;
-use Salary\CnapsCotisation;
+use Cotisation\SmieCotisation;
 use Salary\Avantage\Avantages;
+use Cotisation\CnapsCotisation;
+
 
 class SalaryMonthly
 {
-
     public float $sal_base;
     public float $temps;
     public float $sal_prorata;
@@ -18,12 +21,12 @@ class SalaryMonthly
     public Avantages $avantages;
     public float $avantages_imposables;
     public float $sal_brut;
-    public float $sal_imposable;
+    public float $sal_imposable_avant_cot;
     public float $sal_numeraire;
     public float $allocation_familliale;
     public float $conges_consommes;
     public float $indemnites_conges;
-    public float $smie;
+    public string $smie;
     public int $year;
     public int $month;
     public float $cot_cnaps;
@@ -34,7 +37,7 @@ class SalaryMonthly
     public float $irsa_abattement;
     public float $irsa_net;
 
-    public function __construct(int $year, int $month, EmployeeBase $EmployeeBase, $temps, $prime, $allocation_familliale, CongesMonthly $conges, $smie_data, $cnaps_data)
+    public function __construct(int $year, int $month, EmployeeBase $EmployeeBase, $temps, $prime, $allocation_familliale, CongesMonthly $conges, CnapsData $cnaps_data, SmieData $smie_data)
     {
         $this->year = $year;
         $this->month = $month;
@@ -42,6 +45,7 @@ class SalaryMonthly
         $this->sal_base = $EmployeeBase->sal_base;
         $this->temps = $temps;
         $this->prime = $prime;
+        $this->smie = $EmployeeBase->smie;
         $this->avantages = $EmployeeBase->avantages;
         $this->nb_enfant = $EmployeeBase->nb_enfant;
         $this->reduc_enfant = $EmployeeBase->reduc_enfant;
@@ -61,15 +65,14 @@ class SalaryMonthly
         $smie_ = new SmieCotisation($this->year, $this->month, $this->sal_brut, $smie_data);
         $this->cot_smie = $smie_->cotisation_employee;
 
-        $this->sal_imposable = $this->sal_prorata + $this->prime + $this->avantages->montant_imposable + $this->indemnites_conges;
+        $this->sal_imposable_avant_cot = $this->sal_prorata + $this->prime + $this->avantages->montant_imposable + $this->indemnites_conges;
         -$this->cot_cnaps - $this->cot_smie;
 
-        $irsa_ = new IrsaPayable($this->year, $this->month, $this->sal_imposable, $this->reduc_enfant, $this->nb_enfant);
+        $irsa_ = new IrsaPayable($this->year, $this->month, $this->sal_imposable_avant_cot, $this->smie, $this->reduc_enfant, $this->nb_enfant);
         $this->irsa_brut = $irsa_->irsa_brut;
         $this->irsa_abattement = $irsa_->abattement_enfant;
         $this->irsa_net = $irsa_->irsa_net;
 
-        $this->sal_net = $this->sal_numeraire - $this->cot_cnaps - $this->cot_smie - $this->irsa_net + $this->$allocation_familliale;
+        $this->sal_net = $this->sal_numeraire - $this->cot_cnaps - $this->cot_smie - $this->irsa_net + $this->allocation_familliale;
     }
 }
-// 

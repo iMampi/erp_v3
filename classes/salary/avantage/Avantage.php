@@ -19,8 +19,6 @@ class Avantage
         return $this->montant_brut * $this->rate;
     }
 
-
-
     function get_montant_brut()
     {
         return $this->montant_brut;
