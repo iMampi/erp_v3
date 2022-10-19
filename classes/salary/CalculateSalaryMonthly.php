@@ -12,8 +12,9 @@ use Salary\Avantage\Avantages;
 use Cotisation\CnapsCotisation;
 
 
-class SalaryMonthly
+class CalculateSalaryMonthly
 {
+    public EmployeeBase $EmployeeBase;
     public float $sal_base;
     public float $temps;
     public float $sal_prorata;
@@ -39,17 +40,20 @@ class SalaryMonthly
 
     public function __construct(int $year, int $month, EmployeeBase $EmployeeBase, $temps, $prime, $allocation_familliale, CongesMonthly $conges, CnapsData $cnaps_data, SmieData $smie_data)
     {
+
+        $this->EmployeeBase = $EmployeeBase;
         $this->year = $year;
         $this->month = $month;
         $this->allocation_familliale = $allocation_familliale;
         $this->sal_base = $EmployeeBase->sal_base;
+        $this->conges_consommes = $conges->conges_consommes;
         $this->temps = $temps;
         $this->prime = $prime;
         $this->smie = $EmployeeBase->smie;
         $this->avantages = $EmployeeBase->avantages;
         $this->nb_enfant = $EmployeeBase->nb_enfant;
         $this->reduc_enfant = $EmployeeBase->reduc_enfant;
-        $this->conges_consommes = $conges->conges_consommes;
+
         $this->indemnites_conges = $conges->indemnites_conges;
         $this->sal_prorata = $this->sal_base * ($temps - $this->conges_consommes) / 30;
 

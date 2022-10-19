@@ -7,8 +7,9 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 
 session_start();
 
-define("CYCLE0", "client");
+$cycle_clt = "client";
 is_logged();
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -30,34 +31,45 @@ is_logged();
         <div id="header-top" class=" bg-light-blue">
             <?php
             require_once $_SERVER["DOCUMENT_ROOT"] . '/utilities/login_utils.php';
-            $output = generate_logged_header($_SESSION['user']->name, "link-clts");
-            echo $output;
-            if (!can_visit(CYCLE0)) {
-                // TODO : IMPLEMENT ME CORRECTLY
-                echo "cannot be here";
-            } else {
-                echo "you are welcome here";
-            }
+            $header = generate_logged_header($_SESSION['user']->name, "link-clts");
+            echo $header;
+
             ?>
             <div id="sub-header" class="container-fluid sticky-top py-2 bordered bg-light-blue
             ">
                 <div class="px-5">
-                    <div id="div-selection" class="row ">
-                        <span class="col">nombres de clients</span>
-                        <span class="col">0</span>
-
-                    </div>
-                    <div id="div-btns" class="row ">
-                        <div class="col-auto me-auto">
-                            <button type="button" class="col-auto btn btn-info" id="btn-main-new" data-bs-toggle="modal" data-bs-target="#modal-main-new">nouveau</button>
-                            <button type="button" class="col-auto btn btn-info me-auto" data-bs-toggle="modal" data-bs-target="#modal-fam-detail">valider</button>
+                    <?php
+                    if (!can_visit($cycle_clt)) {
+                        // TODO : IMPLEMENT ME CORRECTLY
+                        // TODO : create a global variable for those message. maybe a constant to autoload
+                        echo "<div id='div-selection' class='row '>
+                        <h1 class='text-center'>You cannot visit this page.</h1>
                         </div>
-                        <div class="col-auto justify-content-end">
-                            <button type="button" class="col-auto btn btn-info me-auto" data-bs-toggle="modal" data-bs-target="#modal-filter">filtrer</button>
-                            <button type="button" class="col-auto btn btn-info ">exporter</button>
-                        </div>
+                        ";
+                    } else {
+                        $sub_header = <<<TXT
 
-                    </div>
+                        <div id="div-selection" class="row ">
+                            <span class="col">nombres de clients</span>
+                            <span class="col">0</span>
+
+                        </div>
+                        <div id="div-btns" class="row ">
+                            <div class="col-auto me-auto">
+                                <button type="button" class="col-auto btn btn-info" id="btn-main-new" data-bs-toggle="modal" data-bs-target="#modal-main-new">nouveau</button>
+                                <button type="button" class="col-auto btn btn-info me-auto" data-bs-toggle="modal" data-bs-target="#modal-fam-detail">valider</button>
+                            </div>
+                            <div class="col-auto justify-content-end">
+                                <button type="button" class="col-auto btn btn-info me-auto" data-bs-toggle="modal" data-bs-target="#modal-filter">filtrer</button>
+                                <button type="button" class="col-auto btn btn-info ">exporter</button>
+                            </div>
+
+                        </div>
+                        TXT;
+                        echo $sub_header;
+                    }
+                    ?>
+
                 </div>
             </div>
             <!-- </div> -->
@@ -67,6 +79,7 @@ is_logged();
                 <div class="px-0">
                     <div class="">
                         <?php
+
                         require_once __DIR__ . '/processors/generate_table_001.php';
                         ?>
 

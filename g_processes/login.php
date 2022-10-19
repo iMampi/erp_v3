@@ -1,5 +1,4 @@
 <?php
-
 // TODO:HASH PASSWORD 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/database/db.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
@@ -16,6 +15,7 @@ $host  = $_SERVER['HTTP_HOST'];
 
 
 
+// TODO:  put this into a function to autoload
 if ($signing_in) {
     session_start();
     $permissions = array_slice($signing_in, 3, count($signing_in) - 4);

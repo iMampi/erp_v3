@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	//run a second time to avoid misscalculation (doing it too fast)
 	offsetHeader = navBarInnerContainer.getBoundingClientRect().height;
 	offsetHeader = navBarInnerContainer.getBoundingClientRect().height;
-
+	console.log(offsetHeader);
 	subHeader.style.top = offsetHeader + "px";
 
 	const tableContainer = document.getElementById("table-container");

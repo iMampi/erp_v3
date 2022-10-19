@@ -127,6 +127,12 @@ MonthlySalary >> Salary Monthly. pour la constance des noms.
 -------------------
 017:
 first iteration of all the calculation for salary done. all set, seems to work. gotta create a unittest. all class looks good
+-------------------
+018:
+worked on clts.php : putted the basics for dynamic content according to logged user's authorization
+generate table 001.php : now use can_visit() to authorized pepople and logged people only
+clts.php : dynamic content for subheader and table's content
+
 
 
 

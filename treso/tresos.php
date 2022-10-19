@@ -1,11 +1,14 @@
 <?php
 
+use function Session\can_visit;
+use function Session\is_logged;
+
 require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 
-use Session\Logged;
-
 session_start();
-Logged::verify();
+
+define("CYCLE0", "client");
+is_logged();
 ?>
 <!DOCTYPE html>
 <html lang="en">

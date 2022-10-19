@@ -3,7 +3,7 @@
 // use Session\User;
 
 use Conge\CongesMonthly;
-use Salary\SalaryMonthly;
+use Salary\CalculateSalary Month;
 use Employee\EmployeeBase;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -37,7 +37,7 @@ $conges_data=new CongesMonthly(2022,3,$my_sal_base,2);
 
 // var_dump($rakoto);
 
-$fdp= new SalaryMonthly(2022,3,$rakoto,30,0,0,$conges_data,$SMIE_data,$CNAPS_data);
+$fdp= new CalculateSalary Month(2022,3,$rakoto,30,0,0,$conges_data,$SMIE_data,$CNAPS_data);
 // foreach ($CNAPS_data as $key => $value) {
 //     echo "$key - $value";
 // }

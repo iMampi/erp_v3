@@ -4,7 +4,7 @@ use Base\DataObjByDate;
 use Conge\CongesMonthly;
 use Cotisation\SmieData;
 use Cotisation\CnapsData;
-use Salary\SalaryMonthly;
+use Salary\CalculateSalaryMonthly;
 use Employee\EmployeeBase;
 use Cotisation\SmieCotisation;
 use Cotisation\CnapsCotisation;
@@ -48,6 +48,7 @@ $rakoto = new EmployeeBase(
     "RAKOTO",
     "Jean",
     "2022-01-01",
+    "DAF",
     "4A",
     $my_sal_base,
     "",
@@ -60,7 +61,7 @@ $conges_data = new CongesMonthly(2022, 3, $my_sal_base, 2);
 
 // var_dump($rakoto);
 
-$fdp = new SalaryMonthly(2022, 3, $rakoto, 30, 0, 0, $conges_data, $data, $data2);
+$fdp = new CalculateSalaryMonthly(2022, 3, $rakoto, 30, 0, 0, $conges_data, $data, $data2);
 
 // var_dump($rakoto);
 // echo "<br>";
