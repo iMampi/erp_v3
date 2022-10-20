@@ -1,11 +1,15 @@
 <?php
 
+use function Session\can_visit;
 use function Session\is_logged;
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 
 session_start();
+
+$cycle_frnsr = "fournisseur";
 is_logged();
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -27,13 +31,27 @@ is_logged();
         <div id="header-top" class=" bg-light-blue">
             <?php
             require_once $_SERVER["DOCUMENT_ROOT"] . '/utilities/login_utils.php';
-            $output = generate_logged_header($_SESSION['user']->name, "link-frnsrs");
-            echo $output;
+            $header = generate_logged_header($_SESSION['user']->name, "link-frnsrs");
+            echo $header;
+
             ?>
             <div id="sub-header" class="container-fluid sticky-top py-2 bordered bg-light-blue
             ">
                 <div class="px-5">
-                    <div id="div-selection" class="row ">
+                    <?php
+                    if (!can_visit($cycle_frnsr)) {
+                        // TODO : IMPLEMENT ME CORRECTLY
+                        // TODO : create a global variable for those message. maybe a constant to autoload
+                        echo "<div id='div-selection' class='row '>
+                        <h1 class='text-center'>You cannot visit this page.</h1>
+                        <div id='div-btns' class='row '>
+                        
+                        </div>
+                        </div>
+                        ";
+                    } else {
+                        $sub_header = <<<TXT
+                        <div id="div-selection" class="row ">
                         <span class="col">nombres de fournisseurs</span>
                         <span class="col">0</span>
 
@@ -49,6 +67,11 @@ is_logged();
                         </div>
 
                     </div>
+                    TXT;
+                        echo $sub_header;
+                    }
+                    ?>
+
                 </div>
             </div>
             <!-- </div> -->

@@ -22,7 +22,7 @@ is_logged();
     <script src="/js/fixed-header.js"></script>
     <link rel="stylesheet" href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/style/mampi.css">
-    <title>clients</title>
+    <title>listes clients</title>
 
 </head>
 
@@ -131,7 +131,7 @@ is_logged();
                     <div class="modal-content">
 
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Filtrer</h5>
+                            <h5 class="modal-title" id="staticBackdropLabel">créer nouveau client</h5>
                         </div>
                         <div class="modal-body">
 

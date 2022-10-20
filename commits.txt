@@ -130,11 +130,15 @@ first iteration of all the calculation for salary done. all set, seems to work. 
 -------------------
 018:
 worked on clts.php : putted the basics for dynamic content according to logged user's authorization
-generate table 001.php : now use can_visit() to authorized pepople and logged people only
+generate table 001.php : now use can_visit() to authporized pepople and logged people only
 clts.php : dynamic content for subheader and table's content
-
-
-
+-------------------
+019:
+frnsrs.php : dynamic content for subheader and table's content
+remarque : quand je change dynamiquement le contenu a ffiché selon  les authorizations. ca fout le bordel avec "subheader" sticky. par contre, tant que dans le tableu il y a au moins 2 row, ca marche nickel. on reste sur ca en attendant dans les "generrate table 001.php" (clts et frnsr for now)
+items.php : dynamic content for subheader and table's content
+creation of autoload function Session\can_create();
+client : "nouveau" replaced old funciton by new function from autoload
 
 
 

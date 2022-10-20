@@ -1,8 +1,13 @@
 <?php
 //TODO :delete me
+use function Session\can_visit;
+
+require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
+
 require __DIR__ . "/dummy.php";
 // require __DIR__ . "/../../../el";
 
+$cycle_frnsr = "fournisseur";
 
 
 // require __DIR__ . "/../../../elements/tiers/fournisseurs/liste_frnsrs_table_001_base.html";
@@ -20,37 +25,64 @@ $xpath = new DOMXPath($dom);
 
 $row_counter = 1;
 
-foreach ($dummy as $el) {
-    $tr_ = $tr_model->cloneNode(true);
+if (can_visit($cycle_frnsr)) {
+    // if (can_visit($cycle_frnsr)) {
+    foreach ($dummy as $el) {
+        $tr_ = $tr_model->cloneNode(true);
 
-    $id_ = sprintf('%03d', $row_counter);
-    $tr_->setAttribute("id", $id_);
-    $tbody_->appendChild($tr_);
+        $id_ = sprintf('%03d', $row_counter);
+        $tr_->setAttribute("id", $id_);
+        $tbody_->appendChild($tr_);
 
 
-    $nodes = $xpath->query(".//*[contains(@class,'input')]", $tr_);
-    foreach ($nodes as $el_input) {
-        $classes = $el_input->getAttribute('class');
-        $classes_array = explode(" ", $classes);
+        $nodes = $xpath->query(".//*[contains(@class,'input')]", $tr_);
+        foreach ($nodes as $el_input) {
+            $classes = $el_input->getAttribute('class');
+            $classes_array = explode(" ", $classes);
 
-        if (in_array("date", $classes_array)) {
-            $el_input->setAttribute("value", $el[1]);
-        } elseif (in_array("uid", $classes_array)) {
-            $el_input->setAttribute("value", $el[0]);
-        } elseif (in_array("frnsr", $classes_array)) {
-            $el_input->setAttribute("value", $el[2]);
-        } elseif (in_array("num", $classes_array)) {
-            $el_input->setAttribute("value", $el[3]);
-        } elseif (in_array("affaire", $classes_array)) {
-            $el_input->setAttribute("value", $el[4]);
-        } elseif (in_array("total", $classes_array)) {
-            $el_input->setAttribute("value", $el[5]);
-        } elseif (in_array("detail", $classes_array)) {
-            // $el_input->setAttribute("value", $el[6]);
-        } elseif (in_array("nd", $classes_array)) {
-            $option_ = $xpath->query(".//*[(@value='" . $el[6] . "')]", $el_input);
-            $option_[0]->setAttribute("selected", "true");
+            if (in_array("date", $classes_array)) {
+                $el_input->setAttribute("value", $el[1]);
+            } elseif (in_array("uid", $classes_array)) {
+                $el_input->setAttribute("value", $el[0]);
+            } elseif (in_array("frnsr", $classes_array)) {
+                $el_input->setAttribute("value", $el[2]);
+            } elseif (in_array("num", $classes_array)) {
+                $el_input->setAttribute("value", $el[3]);
+            } elseif (in_array("affaire", $classes_array)) {
+                $el_input->setAttribute("value", $el[4]);
+            } elseif (in_array("total", $classes_array)) {
+                $el_input->setAttribute("value", $el[5]);
+            } elseif (in_array("detail", $classes_array)) {
+                // $el_input->setAttribute("value", $el[6]);
+            } elseif (in_array("nd", $classes_array)) {
+                $option_ = $xpath->query(".//*[(@value='" . $el[6] . "')]", $el_input);
+                $option_[0]->setAttribute("selected", "true");
+            }
         }
     }
+} else {
+        // TODO : fix the classs in the base
+
+    // $tr_ = $tr_model->cloneNode(true);
+    // $tr_2 = $tr_model->cloneNode(true);
+    $tr_ = $tr_model->cloneNode();
+    $tr_2 = $tr_model->cloneNode();
+
+    $td_ = $dom->createElement("td");
+    $td_2 = $dom->createElement("td");
+    $txt_ = $dom->createTextNode("Nothing for you to see here.");
+    $txt_2 = $dom->createTextNode("Contact your administrator to change that.");
+    $td_->appendChild($txt_);
+    $td_2->appendChild($txt_2);
+    // TODO : set colspan's number dynamically;
+    $td_->setAttribute('colspan', "4");
+    // $td_->setAttribute('rowspan', "2");
+    $td_->setAttribute('class', "px-5 text-center");
+    $td_2->setAttribute('colspan', "4");
+    $td_2->setAttribute('class', "px-5 text-center");
+    $tr_->appendChild($td_);
+    $tr_2->appendChild($td_2);
+    $tbody_->appendChild($tr_);
+    $tbody_->appendChild($tr_2);
 }
 echo utf8_decode($dom->saveHTML($dom->documentElement));
