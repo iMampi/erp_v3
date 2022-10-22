@@ -139,7 +139,12 @@ remarque : quand je change dynamiquement le contenu a ffiché selon  les authori
 items.php : dynamic content for subheader and table's content
 creation of autoload function Session\can_create();
 client : "nouveau" replaced old funciton by new function from autoload
-
+-------------------
+020:
+starting to work on creating new client. modulable structure  according to personnality type. set default to "personne physqiue"
+human.html
+comapny.html
+new_client.js : handling dom manipulation according to personnality type
 
 
 
