@@ -136,7 +136,7 @@ is_logged();
                         </div>
                         <div class="modal-body">
 
-                            <div id="modal-body-heads">
+                            <div id="new-client-modal-body-heads">
                                 <?php
                                 //TODO : make the header of factures in details readonly
                                 //TODO : change to require once.
@@ -153,7 +153,7 @@ is_logged();
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">annuler</button>
-                            <button type="button" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-primary" id="save-new-client">Save</button>
                         </div>
                     </div>
                 </div>

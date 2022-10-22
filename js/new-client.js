@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 	// definitions
 	const selectTypePersonnality = document.getElementById("type-personnality");
+	const btnSaveNewClient = document.getElementById("save-new-client");
 	const refRow = document.getElementById("ref-row");
 	var listDOM = {};
 
@@ -35,6 +36,38 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	}
 
+	function getInputsValues() {
+		let inputObj = {};
+		let modalBodyHeads = document.getElementById(
+			"new-client-modal-body-heads"
+		);
+		let inputs = modalBodyHeads.querySelectorAll(".input");
+		inputs.forEach((input) => {
+			inputObj[input.id] = input.value;
+		});
+		return inputObj;
+	}
+
+	function submitIt(inputObj) {
+		console.log("we subrmit it");
+		let strObj = JSON.stringify();
+		//console.log(dataObj);
+		return sendData(strObj);
+	}
+	async function sendData(inputObj) {
+		let strObj = JSON.stringify(inputObj);
+
+		const response = await fetch("/database/save/new_client.php", {
+			method: "POST",
+			body: strObj,
+		});
+
+		//note: change response.text() to const data = await response.json() If we return JSON we must also use .json() instead of .text() in JavaScript:
+		let resp = await response.text();
+		// console.log(resp);
+		return resp;
+	}
+
 	// action
 	selectTypePersonnality.addEventListener("input", () => {
 		let value = selectTypePersonnality.value;
@@ -55,5 +88,10 @@ document.addEventListener("DOMContentLoaded", () => {
 		} else {
 			console.log("personnality type value error");
 		}
+	});
+
+	btnSaveNewClient.addEventListener("click", () => {
+		// const resp = submitIt(getInputsValues());
+		sendData(getInputsValues()).then((resp) => console.log(resp));
 	});
 });

@@ -144,7 +144,13 @@ client : "nouveau" replaced old funciton by new function from autoload
 starting to work on creating new client. modulable structure  according to personnality type. set default to "personne physqiue"
 human.html
 comapny.html
-new_client.js : handling dom manipulation according to personnality type
+
+(based on previous project "mp.local")
+new_client.js : handling dom manipulation according to personnality type;
+    starting to implement saving new client. funciton sendData  async,getINputsValues();
+    
+
+starting to create php Class for database : DbHandler, Query
 
 
 
