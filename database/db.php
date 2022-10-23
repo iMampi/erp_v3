@@ -55,9 +55,10 @@ function Myquery($conn, $query)
 
 function Sanitize($conn, $var)
 {
-    if (get_magic_quotes_gpc()) {
-        $var = stripslashes($var);
-    }
+    // DECRAPETED
+    // if (\get_magic_quotes_gpc()) {
+    //     $var = stripslashes($var);
+    // }
     $var = strip_tags($var);
     $var = htmlspecialchars($var);
 
@@ -75,7 +76,7 @@ function FetchAll($conn, $table)
 function ResultToArray(object $result, $mode = MYSQLI_BOTH)
 {
     if (!in_array($mode, [MYSQLI_NUM, MYSQLI_ASSOC, MYSQLI_BOTH])) {
-        throw Exception("Mode is neither MYSQLI_NUM or MYSQLI_ASSOC or MYSQLI_BOTH");
+        throw new \Exception("Mode is neither MYSQLI_NUM or MYSQLI_ASSOC or MYSQLI_BOTH");
     }
     // echo "result <br>";
     // var_dump($result);

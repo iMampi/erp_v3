@@ -10,7 +10,8 @@
 			"Conge\\": "classes/conge",
 			"Tax\\": "classes/tax/",
 			"Base\\": "classes/base/",
-			"Cotisation\\": "classes/cotisation/"
+			"Cotisation\\": "classes/cotisation/",
+			"Database\\": "classes/database/"
 		},
 		"files": [
 			"classes/session/Functions.php",
