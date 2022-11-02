@@ -2,6 +2,9 @@
 
 namespace Database;
 
+use Database\PreparedStatement;
+
+
 class DbHandler
 {
     static $created = 0;
@@ -34,10 +37,53 @@ class DbHandler
         if (self::$connection->connect_error) die("Cannot connect");
     }
 
-    static function query($myquery)
+    static function select_query($myquery)
     {
-        $result = self::$connection->query($myquery);
-        if (!$result) die("Problem with your query");
-        return new Result($result);
+        try {
+
+            $result = self::$connection->query($myquery);
+            if (!$result) die("Problem with your query");
+            return new Result($result);
+        } catch (\Exception $e) {
+            // TODO : err will be logged
+            return new Result(\null);
+        }
+    }
+
+
+    static function execute_prepared_statement(StandardPreparedStatement $prepared_statement)
+    {
+        $stmt = self::$connection->stmt_init();
+        $res = $stmt->prepare($prepared_statement->query);
+        if (!$res) {
+            echo "Échec lors de la préparation de la requête 01\n";
+        } else {
+            //call_user_func_array(array($stmt, "bind_param"), $binding);
+            $stmt->bind_param(...$prepared_statement->binding);
+            try {
+                //code...
+                $stmt->execute();
+            } catch (\Throwable $th) {
+                print $th->getMessage();
+            }
+            // $x = $stmt->affected_rows;
+            $res = $stmt->get_result();
+            $user = $res->fetch_assoc();
+            echo "result is : <br>";
+            \var_dump($user);
+            // echo "affected rows are nb $x";
+            $mode = "create";
+            // if ($x > 0) {
+            //     $insert_id = $stmt->get_result()->fetch_assoc(\MYSQLI_NUM)[0];
+            //     if ($mode === "insert") {
+            //         $insert_id = "-" . $stmt->insert_id;
+            //     }
+            //     print "$mode-ok$insert_id";
+            // } else {
+            //     // print "$mode-err";
+            // }
+        }
+        // $stmt->close();
+        // self::$connection->close();
     }
 }

@@ -1,15 +1,22 @@
-<?php 
+<?php
 
 namespace Database;
 
-class Result{
+class Result
+{
     public $dataObj;
     public $dataArray;
-    
+
     function __construct($dataObj)
     {
-        $this->dataObj=$dataObj;
-        $this->dataArray=$this->result_to_array($dataObj);
+        if ($dataObj != \null) {
+
+            $this->dataObj = $dataObj;
+            $this->dataArray = $this->result_to_array($dataObj);
+        } else {
+            $this->dataObj = \null;
+            $this->dataArray = \null;
+        }
     }
 
     function result_to_array(object $result, $mode = MYSQLI_BOTH)

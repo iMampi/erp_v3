@@ -66,11 +66,17 @@ $fdp = new CalculateSalaryMonthly(2022, 3, $rakoto, 30, 0, 0, $conges_data, $dat
 // var_dump($rakoto);
 // echo "<br>";
 // echo "<br>";
-var_dump($fdp);
-echo "<br>";
-echo "<br>";
-echo $fdp->sal_base;
 
+// var_dump($fdp);
+// echo "<br>";
+// echo "<br>";
+// echo $fdp->sal_base;
+class test{
+    public $att;
+    function __construct(){}
+}
+$x=new test();
+echo "class is : " . $x->att::class;
 // $keys = array_keys($test);
 // $timed_keys = [];
 // foreach ($keys as $key) {

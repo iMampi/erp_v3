@@ -14,12 +14,21 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (listDOM[selectedOption]) {
 			// The HTML code of this file has already been fetched.
 			// It is available as 'files[selectedOption]'.
-			console.log("there" + JSON.stringify(listDOM));
+			// console.log("there" + JSON.stringify(listDOM));
 			let doc = new DOMParser().parseFromString(
 				listDOM[selectedOption],
 				"text/html"
 			);
-			refRow.after(doc.body);
+			// refRow.after(doc.body);
+			// for (let elems of doc.body.childNodes) {
+			// 	refRow.parentNode.insertBefore(elems, refRow.nextSibling);
+			// }
+			for (let i = doc.body.childNodes.length - 1; i >= 0; i--) {
+				refRow.parentNode.insertBefore(
+					doc.body.childNodes[i],
+					refRow.nextSibling
+				);
+			}
 		} else {
 			// Fetch the HTML code of this file.
 			fetch("/elements/tiers/clients/" + selectedOption + ".html")
@@ -29,7 +38,14 @@ document.addEventListener("DOMContentLoaded", () => {
 					// Save the HTML code of this file in the files array,
 					// so we won't need to fetch it again.
 					listDOM[selectedOption] = doc.body.innerHTML;
-					refRow.after(doc.body);
+					console.log("here");
+					for (let i = doc.body.childNodes.length - 1; i >= 0; i--) {
+						// console.log(i);
+						refRow.parentNode.insertBefore(
+							doc.body.childNodes[i],
+							refRow.nextSibling
+						);
+					}
 
 					// The file is now available as 'listDOM[selectedOption]'.
 				});
@@ -45,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		inputs.forEach((input) => {
 			inputObj[input.id] = input.value;
 		});
+		// console.log(inputObj);
 		return inputObj;
 	}
 

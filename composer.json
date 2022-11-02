@@ -11,6 +11,7 @@
 			"Tax\\": "classes/tax/",
 			"Base\\": "classes/base/",
 			"Cotisation\\": "classes/cotisation/",
+			"Converter\\": "classes/converter/",
 			"Database\\": "classes/database/"
 		},
 		"files": [

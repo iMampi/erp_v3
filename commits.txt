@@ -155,7 +155,13 @@ starting to create php Class for database : DbHandler, Query
 021:
 created finished DbHandler, to be a singleton;
 drop the Query class, using Result class instead.
-
-
+-------------------
+022:
+mainly worked on MYSQL query to save new client
+Queries class
+Binding class
+NConverter\NewCLient class
+tested all thosse new class, now it works.
+must finalize DbHandler::execute prepared statemnt. works now for saving new client but must still work on it to get final ID and error handling
 
 
