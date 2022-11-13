@@ -31,6 +31,7 @@ is_logged();
     <div id="main-container" class="container-fluid px-0">
         <div id="header-top" class=" bg-light-blue">
             <?php
+            // generate headers
             require_once $_SERVER["DOCUMENT_ROOT"] . '/utilities/login_utils.php';
             $header = generate_logged_header($_SESSION['user']->name, "link-clts");
             echo $header;
@@ -40,6 +41,7 @@ is_logged();
             ">
                 <div class="px-5">
                     <?php
+                    // can see or cannot see?
                     if (!can_visit($cycle_clt)) {
                         // TODO : IMPLEMENT ME CORRECTLY
                         // TODO : create a global variable for those message. maybe a constant to autoload
@@ -57,7 +59,7 @@ is_logged();
                         </div>
                         <div id="div-btns" class="row ">
                             <div class="col-auto me-auto">
-                                <button type="button" class="col-auto btn btn-info" id="btn-main-new" data-bs-toggle="modal" data-bs-target="#modal-main-new">nouveau</button>
+                                <button type="button" class="col-auto btn btn-info" id="btn-main-new" data-bs-toggle="modal" data-bs-target="#modal-clt-new">nouveau</button>
                                 <button type="button" class="col-auto btn btn-info me-auto" data-bs-toggle="modal" data-bs-target="#modal-fam-detail">valider</button>
                             </div>
                             <div class="col-auto justify-content-end">
@@ -124,7 +126,7 @@ is_logged();
             </div>
             <!-- end modal filter -->
             <!-- modal main new clt -->
-            <div class="modal fade" id="modal-main-new" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="modal-clt-new" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
                 </button>
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
@@ -152,7 +154,7 @@ is_logged();
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">annuler</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel-new-client">annuler</button>
                             <button type="button" class="btn btn-primary" id="save-new-client">Save</button>
                         </div>
                     </div>

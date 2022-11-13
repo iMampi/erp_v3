@@ -4,8 +4,8 @@ use function Session\can_visit;
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 
-require __DIR__ . "/dummy.php";
-// require __DIR__ . "/../../../el";
+// require __DIR__ . "/dummy.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/database/select/all_clients.php";
 
 $cycle_clt = "client";
 
@@ -25,7 +25,7 @@ $row_counter = 1;
 
 // if (can_visit($cycle_clt)) {
 if (can_visit($cycle_clt)) {
-    foreach ($dummy as $el) {
+    foreach ($all_clients as $client) {
         $tr_ = $tr_model->cloneNode(true);
 
         $id_ = sprintf('%03d', $row_counter);
@@ -34,27 +34,32 @@ if (can_visit($cycle_clt)) {
 
 
         $nodes = $xpath->query(".//*[contains(@class,'input')]", $tr_);
-        foreach ($nodes as $el_input) {
-            $classes = $el_input->getAttribute('class');
+        foreach ($nodes as $client_input) {
+            $classes = $client_input->getAttribute('class');
             $classes_array = explode(" ", $classes);
 
             if (in_array("date", $classes_array)) {
-                $el_input->setAttribute("value", $el[1]);
+                //     $client_input->setAttribute("value", $client[1]);
             } elseif (in_array("uid", $classes_array)) {
-                $el_input->setAttribute("value", $el[0]);
-            } elseif (in_array("frnsr", $classes_array)) {
-                $el_input->setAttribute("value", $el[2]);
-            } elseif (in_array("num", $classes_array)) {
-                $el_input->setAttribute("value", $el[3]);
-            } elseif (in_array("affaire", $classes_array)) {
-                $el_input->setAttribute("value", $el[4]);
-            } elseif (in_array("total", $classes_array)) {
-                $el_input->setAttribute("value", $el[5]);
-            } elseif (in_array("detail", $classes_array)) {
-                // $el_input->setAttribute("value", $el[6]);
-            } elseif (in_array("nd", $classes_array)) {
-                $option_ = $xpath->query(".//*[(@value='" . $el[6] . "')]", $el_input);
-                $option_[0]->setAttribute("selected", "true");
+                $client_input->setAttribute("value", $client["uid"]);
+            } elseif (in_array("clt-name", $classes_array)) {
+                if ($client["raison_sociale"]) {
+                    $name_value = $client["raison_sociale"];
+                } else {
+                    $name_value = $client["noms"] . " " . $client["prenoms"];
+                }
+                $client_input->setAttribute("value", $name_value);
+                // } elseif (in_array("num", $classes_array)) {
+                //     $client_input->setAttribute("value", $client[3]);
+                // } elseif (in_array("affaire", $classes_array)) {
+                //     $client_input->setAttribute("value", $client[4]);
+                // } elseif (in_array("total", $classes_array)) {
+                //     $client_input->setAttribute("value", $client[5]);
+                // } elseif (in_array("detail", $classes_array)) {
+                //     // $client_input->setAttribute("value", $client[6]);
+                // } elseif (in_array("nd", $classes_array)) {
+                //     $option_ = $xpath->query(".//*[(@value='" . $client[6] . "')]", $client_input);
+                //     $option_[0]->setAttribute("selected", "true");
             }
         }
     }

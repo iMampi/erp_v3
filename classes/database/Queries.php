@@ -7,6 +7,9 @@ class Queries
 {
     public string $mode;
     public string $query;
+    static public $select_all_clients = "
+    call all_clients 
+    ";
     static public $save_new_client = "
     SELECT new_client(?,
     ?,
@@ -42,6 +45,9 @@ class Queries
         switch ($this->mode) {
             case 'save_new_client':
                 $this->query = self::$save_new_client;
+                break;
+            case 'select_all_clients':
+                $this->query = self::$select_all_clients;
                 break;
 
             default:
@@ -99,7 +105,7 @@ class Queries
 //             $arr["active_"],
 //             $arr["note"],
 //             $arr["nom_commercial"],
-//             $arr["raison_social"],
+//             $arr["raison_sociale"],
 //             $arr["noms"],
 //             $arr["prenoms"],
 //             $arr["cin"],

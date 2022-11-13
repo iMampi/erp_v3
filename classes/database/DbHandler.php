@@ -37,14 +37,19 @@ class DbHandler
         if (self::$connection->connect_error) die("Cannot connect");
     }
 
-    static function select_query($myquery)
+    static function select_query(string $myquery, $mode)
     {
         try {
 
             $result = self::$connection->query($myquery);
             if (!$result) die("Problem with your query");
-            return new Result($result);
+            // echo "<br>called 1<br>";
+            $result_ = new Result($result, $mode);
+            // print_r($result_->dataArray);
+            return $result_->dataArray;
         } catch (\Exception $e) {
+            echo "<br>error <br>";
+
             // TODO : err will be logged
             return new Result(\null);
         }
@@ -59,18 +64,30 @@ class DbHandler
             echo "Échec lors de la préparation de la requête 01\n";
         } else {
             //call_user_func_array(array($stmt, "bind_param"), $binding);
-            $stmt->bind_param(...$prepared_statement->binding);
-            try {
-                //code...
-                $stmt->execute();
-            } catch (\Throwable $th) {
-                print $th->getMessage();
+            if (empty($prepared_statement->binding)) {
+                echo "<br>called 2<br>";
+                // TODO : pas top, à changer
+
+                return self::select_query($prepared_statement->query);
+            } else {
+
+                $stmt->bind_param(...$prepared_statement->binding);
+                try {
+                    $stmt->execute();
+                } catch (\Throwable $th) {
+                    return "err1 : " . $th->getMessage();
+                }
+                // $x = $stmt->affected_rows;
+                try {
+                    $res = $stmt->get_result();
+                    $results = $res->fetch_assoc();
+                    // echo "result is : <br> ";
+                    return \json_encode($results);
+                } catch (\Throwable $th) {
+                    return "err2 : " . $th->getMessage();
+                }
             }
-            // $x = $stmt->affected_rows;
-            $res = $stmt->get_result();
-            $user = $res->fetch_assoc();
-            echo "result is : <br>";
-            \var_dump($user);
+
             // echo "affected rows are nb $x";
             $mode = "create";
             // if ($x > 0) {

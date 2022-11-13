@@ -37,7 +37,7 @@ class NewClient extends Converter
             // for human   
 
             $this->data_for_db["nom_commercial"] = \null;
-            $this->data_for_db["raison_social"] = \null;
+            $this->data_for_db["raison_sociale"] = \null;
             $this->data_for_db["noms"] = $input["noms"];
             $this->data_for_db["prenoms"] = $input["prenoms"];
             $this->data_for_db["cin"] = $input["cin"];

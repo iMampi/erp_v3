@@ -160,8 +160,19 @@ drop the Query class, using Result class instead.
 mainly worked on MYSQL query to save new client
 Queries class
 Binding class
-NConverter\NewCLient class
+Converter\NewCLient class
 tested all thosse new class, now it works.
 must finalize DbHandler::execute prepared statemnt. works now for saving new client but must still work on it to get final ID and error handling
-
-
+-------------------
+023:
+fixed typo: raison social into raison sociale;
+new-client.js : created obj DefaultValuesNewClientFormObj to clean new_client_form. edited base html's inputs by adding "client-form" class to all inputs and selects;
+-------------------
+024:
+new-client.js : in cleanNewClientForm(), added a call to fecthAndAppendHTML("human");
+-------------------
+025:
+database : stored function all_clients created;
+added $mode param in select_query() and calling  select_query() by default if prepared statement has null binding;
+updating generate_table_001 for clts to fill table using results from calling all_client;
+all_clients.php : created to fetch/sellect all client and return array

@@ -36,7 +36,7 @@ class Bindings
                 $arr["active_"],
                 $arr["note"],
                 $arr["nom_commercial"],
-                $arr["raison_social"],
+                $arr["raison_sociale"],
                 $arr["noms"],
                 $arr["prenoms"],
                 $arr["cin"],

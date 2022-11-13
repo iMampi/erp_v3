@@ -48,3 +48,6 @@ note:
 quand je change dynamiquement le contenu a ffiché selon  les authorizations. ca fout le bordel avec "subheader" sticky. par contre, tant que dans le tableu il y a au moins 2 row, ca marche nickel. on reste sur ca en attendant.
 
 per page create an objet to old data : cycle, header'links to highlight,
+
+DBHandler :
+make a method for select and another for insert and update

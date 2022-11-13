@@ -1,13 +1,16 @@
 <?php
 
+use Database\Queries;
 use Base\DataObjByDate;
+use Database\DbHandler;
 use Conge\CongesMonthly;
 use Cotisation\SmieData;
 use Cotisation\CnapsData;
-use Salary\CalculateSalaryMonthly;
 use Employee\EmployeeBase;
 use Cotisation\SmieCotisation;
 use Cotisation\CnapsCotisation;
+use Salary\CalculateSalaryMonthly;
+use Database\StandardPreparedStatement;
 
 require_once __DIR__ . "/vendor/autoload.php";
 
@@ -71,12 +74,15 @@ $fdp = new CalculateSalaryMonthly(2022, 3, $rakoto, 30, 0, 0, $conges_data, $dat
 // echo "<br>";
 // echo "<br>";
 // echo $fdp->sal_base;
-class test{
+class test
+{
     public $att;
-    function __construct(){}
+    function __construct()
+    {
+    }
 }
-$x=new test();
-echo "class is : " . $x->att::class;
+$x = new test();
+echo "class is : " . $x::class;
 // $keys = array_keys($test);
 // $timed_keys = [];
 // foreach ($keys as $key) {
@@ -116,3 +122,12 @@ echo "class is : " . $x->att::class;
 // echo $x->format("d/m/Y");
 // echo "<br>";
 // var_dump($y);
+
+$arr_ = [];
+echo "is empty? : " . empty($arr);
+new DbHandler();
+$Query = new Queries("select_all_clients");
+
+// $Statement = new StandardPreparedStatement($Query, \null);
+$res_ = DbHandler::select_query($Query->query, MYSQLI_ASSOC);
+var_dump($res_);

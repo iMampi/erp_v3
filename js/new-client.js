@@ -1,6 +1,40 @@
+const DefaultValuesNewClientFormObj = {
+	uid: "",
+	"type-personnality": "1",
+	actif: "1",
+	evaluation: "2",
+	declarable: "1",
+	noms: "",
+	prenoms: "",
+	cin: "",
+	"cin-date": "",
+	"cin-lieu": "",
+	"naissance-date": "",
+	"naissance-lieu": "",
+	adress: "",
+	phone1: "",
+	phone2: "",
+	mail1: "",
+	mail2: "",
+	"type-vente": "1",
+	encours: "",
+	echeance: "",
+	nif: "",
+	stat: "",
+	rcs: "",
+	commissionable: "0",
+	note: "",
+	"nom-commercial": "",
+	"raison-sociale": "",
+};
+
 document.addEventListener("DOMContentLoaded", () => {
 	// definitions
 	const selectTypePersonnality = document.getElementById("type-personnality");
+
+	const modalMainNewClient = document.getElementById("modal-clt-new");
+	const btnCancelNewClient = document.getElementById("cancel-new-client");
+
 	const btnSaveNewClient = document.getElementById("save-new-client");
 	const refRow = document.getElementById("ref-row");
 	var listDOM = {};
@@ -61,16 +95,22 @@ document.addEventListener("DOMContentLoaded", () => {
 		inputs.forEach((input) => {
 			inputObj[input.id] = input.value;
 		});
-		// console.log(inputObj);
+		console.log(inputObj);
 		return inputObj;
 	}
 
-	function submitIt(inputObj) {
-		console.log("we subrmit it");
-		let strObj = JSON.stringify();
-		//console.log(dataObj);
-		return sendData(strObj);
+	function cleanNewClientForm() {
+		const inputsClientForm =
+			modalMainNewClient.querySelectorAll(".client-form.input");
+		// console.log("canceling");
+		inputsClientForm.forEach((input) => {
+			// console.log(input.id);
+			input.value = DefaultValuesNewClientFormObj[input.id];
+		});
+		fecthAndAppendHTML("human");
+		// console.log(inputsClientForm);
 	}
+
 	async function sendData(inputObj) {
 		let strObj = JSON.stringify(inputObj);
 
@@ -85,6 +125,15 @@ document.addEventListener("DOMContentLoaded", () => {
 		return resp;
 	}
 
+	async function responseHandler(response) {
+		try {
+			// return JSON.parse(await response);
+			let myjson = JSON.parse(await response);
+			return Object.values(myjson)[0];
+		} catch (e) {
+			return "error";
+		}
+	}
 	// action
 	selectTypePersonnality.addEventListener("input", () => {
 		let value = selectTypePersonnality.value;
@@ -95,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			} finally {
 				fecthAndAppendHTML("human");
 			}
-		} else if (value == 0) {
+		} else if (value == 2) {
 			try {
 				let humans = document.querySelectorAll(".human");
 				humans.forEach((div) => div.remove());
@@ -109,6 +158,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	btnSaveNewClient.addEventListener("click", () => {
 		// const resp = submitIt(getInputsValues());
-		sendData(getInputsValues()).then((resp) => console.log(resp));
+		sendData(getInputsValues())
+			.then((resp) => responseHandler(resp))
+			.then((result) => console.log(result));
+	});
+	//TODO : if good, clean and close, and snckbar. if bad, snackbar, then with reason.
+
+	btnCancelNewClient.addEventListener("click", () => {
+		cleanNewClientForm();
 	});
 });

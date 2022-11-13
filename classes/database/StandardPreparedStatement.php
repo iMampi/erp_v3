@@ -11,9 +11,14 @@ class StandardPreparedStatement
 {
     public string $query;
     public array $binding;
-    function __construct(Queries $queries, Bindings $bindings)
+    function __construct(Queries $queries, ?Bindings $bindings)
     {
         $this->query = $queries->query;
-        $this->binding = $bindings->binding;
+        if ($bindings) {
+
+            $this->binding = $bindings->binding;
+        } else {
+            $this->binding = [];
+        }
     }
 }
