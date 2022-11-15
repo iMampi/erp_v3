@@ -132,3 +132,18 @@ You can also import functions from scripts directly without composer:
 require_once full\path\to\ScriptWithMyFunc.php;
 MyFunc();
 But (at least for me) this only works when ScriptWithMyFunc.php does not have a namespace.
+---------------------------
+js
+dom disabled input:
+you can use either 
+input.setAttribute() or input.disabled=true
+The following input elements are all disabled:
+<input disabled />
+<input disabled="" />
+<input disabled="disabled" />
+<input disabled="true" />
+<input disabled="false" /> <!-- still disabled! -->
+
+but to remove "disabled", to make input active, you can onl
+y use input.disabled=true.
+------------------

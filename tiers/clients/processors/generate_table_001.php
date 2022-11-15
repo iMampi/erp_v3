@@ -5,7 +5,7 @@ use function Session\can_visit;
 require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 
 // require __DIR__ . "/dummy.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/database/select/all_clients.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/database/select/all_clients_name.php";
 
 $cycle_clt = "client";
 
@@ -44,7 +44,7 @@ if (can_visit($cycle_clt)) {
                 $client_input->setAttribute("value", $client["uid"]);
             } elseif (in_array("clt-name", $classes_array)) {
                 if ($client["raison_sociale"]) {
-                    $name_value = $client["raison_sociale"];
+                    $name_value = $client["nom_commercial"] . " / " . $client["raison_sociale"];
                 } else {
                     $name_value = $client["noms"] . " " . $client["prenoms"];
                 }

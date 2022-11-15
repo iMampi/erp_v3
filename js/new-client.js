@@ -27,6 +27,102 @@ const DefaultValuesNewClientFormObj = {
 	"nom-commercial": "",
 	"raison-sociale": "",
 };
+const personnalities = { 1: "human", 2: "company" };
+var listDOM = {};
+
+async function sendData(url, inputObj) {
+	let strObj = JSON.stringify(inputObj);
+
+	const response = await fetch(url, {
+		method: "POST",
+		body: strObj,
+	});
+
+	//note: change response.text() to const data = await response.json() If we return JSON we must also use .json() instead of .text() in JavaScript:
+	let resp = await response.text();
+	// console.log(resp);
+	return resp;
+}
+
+async function responseHandlerSaveNewClient(response) {
+	try {
+		// return JSON.parse(await response);
+		let myjson = JSON.parse(await response);
+		// console.log(myjson);
+		//NOTE : the correct way for save. not correct for select query
+		return Object.values(myjson)[0];
+	} catch (e) {
+		return "error";
+	}
+}
+
+function fecthAndAppendHTML(refRow, selectedOption, disabled) {
+	disabled = disabled || false;
+	if (![false, true].includes(disabled)) {
+		throw new Error("neither 'true' or 'false'.");
+	}
+	// function to cache fetched result
+	// if (!selectedOption) || (refRow.parentNode.querySelector(`.${selectedOption}`)) {
+	if (
+		!selectedOption ||
+		refRow.parentNode.querySelector(`.${selectedOption}`) != undefined
+	) {
+		return;
+	}
+
+	if (listDOM[selectedOption]) {
+		// The HTML code of this file has already been fetched.
+		// It is available as 'files[selectedOption]'.
+		// console.log("there" + JSON.stringify(listDOM));
+		let doc = new DOMParser().parseFromString(
+			listDOM[selectedOption],
+			"text/html"
+		);
+		//inputs are disabled or not?
+
+		let inputs_ = doc.querySelectorAll(".input");
+		inputs_.forEach((element) => {
+			element.disabled = disabled;
+		});
+		// refRow.after(doc.body);
+		// for (let elems of doc.body.childNodes) {
+		// 	refRow.parentNode.insertBefore(elems, refRow.nextSibling);
+		// }
+		for (let i = doc.body.childNodes.length - 1; i >= 0; i--) {
+			refRow.parentNode.insertBefore(
+				doc.body.childNodes[i],
+				refRow.nextSibling
+			);
+		}
+	} else {
+		// Fetch the HTML code of this file.
+		fetch("/elements/tiers/clients/" + selectedOption + ".html")
+			.then((resp) => resp.text())
+			.then((txt) => {
+				let doc = new DOMParser().parseFromString(txt, "text/html");
+
+				// Save the HTML code of this file in the files array,
+				// so we won't need to fetch it again.
+				listDOM[selectedOption] = doc.body.innerHTML;
+
+				//inputs are disabled or not?
+				let inputs_ = doc.querySelectorAll(".input");
+				inputs_.forEach((element) => {
+					element.disabled = disabled;
+				});
+				console.log("here");
+				for (let i = doc.body.childNodes.length - 1; i >= 0; i--) {
+					// console.log(i);
+					refRow.parentNode.insertBefore(
+						doc.body.childNodes[i],
+						refRow.nextSibling
+					);
+				}
+
+				// The file is now available as 'listDOM[selectedOption]'.
+			});
+	}
+}
 
 document.addEventListener("DOMContentLoaded", () => {
 	// definitions
@@ -36,55 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const btnCancelNewClient = document.getElementById("cancel-new-client");
 
 	const btnSaveNewClient = document.getElementById("save-new-client");
-	const refRow = document.getElementById("ref-row");
-	var listDOM = {};
-
-	function fecthAndAppendHTML(selectedOption) {
-		// function to cache fetched result
-		if (!selectedOption) {
-			return;
-		}
-
-		if (listDOM[selectedOption]) {
-			// The HTML code of this file has already been fetched.
-			// It is available as 'files[selectedOption]'.
-			// console.log("there" + JSON.stringify(listDOM));
-			let doc = new DOMParser().parseFromString(
-				listDOM[selectedOption],
-				"text/html"
-			);
-			// refRow.after(doc.body);
-			// for (let elems of doc.body.childNodes) {
-			// 	refRow.parentNode.insertBefore(elems, refRow.nextSibling);
-			// }
-			for (let i = doc.body.childNodes.length - 1; i >= 0; i--) {
-				refRow.parentNode.insertBefore(
-					doc.body.childNodes[i],
-					refRow.nextSibling
-				);
-			}
-		} else {
-			// Fetch the HTML code of this file.
-			fetch("/elements/tiers/clients/" + selectedOption + ".html")
-				.then((resp) => resp.text())
-				.then((txt) => {
-					let doc = new DOMParser().parseFromString(txt, "text/html");
-					// Save the HTML code of this file in the files array,
-					// so we won't need to fetch it again.
-					listDOM[selectedOption] = doc.body.innerHTML;
-					console.log("here");
-					for (let i = doc.body.childNodes.length - 1; i >= 0; i--) {
-						// console.log(i);
-						refRow.parentNode.insertBefore(
-							doc.body.childNodes[i],
-							refRow.nextSibling
-						);
-					}
-
-					// The file is now available as 'listDOM[selectedOption]'.
-				});
-		}
-	}
+	const refRowClientNew = modalMainNewClient.querySelector("#ref-row");
 
 	function getInputsValues() {
 		let inputObj = {};
@@ -107,33 +155,10 @@ document.addEventListener("DOMContentLoaded", () => {
 			// console.log(input.id);
 			input.value = DefaultValuesNewClientFormObj[input.id];
 		});
-		fecthAndAppendHTML("human");
+		fecthAndAppendHTML(refRowClientNew, "human", false);
 		// console.log(inputsClientForm);
 	}
 
-	async function sendData(inputObj) {
-		let strObj = JSON.stringify(inputObj);
-
-		const response = await fetch("/database/save/new_client.php", {
-			method: "POST",
-			body: strObj,
-		});
-
-		//note: change response.text() to const data = await response.json() If we return JSON we must also use .json() instead of .text() in JavaScript:
-		let resp = await response.text();
-		// console.log(resp);
-		return resp;
-	}
-
-	async function responseHandler(response) {
-		try {
-			// return JSON.parse(await response);
-			let myjson = JSON.parse(await response);
-			return Object.values(myjson)[0];
-		} catch (e) {
-			return "error";
-		}
-	}
 	// action
 	selectTypePersonnality.addEventListener("input", () => {
 		let value = selectTypePersonnality.value;
@@ -142,14 +167,14 @@ document.addEventListener("DOMContentLoaded", () => {
 				let companies = document.querySelectorAll(".company");
 				companies.forEach((div) => div.remove());
 			} finally {
-				fecthAndAppendHTML("human");
+				fecthAndAppendHTML(refRowClientNew, "human", false);
 			}
 		} else if (value == 2) {
 			try {
 				let humans = document.querySelectorAll(".human");
 				humans.forEach((div) => div.remove());
 			} finally {
-				fecthAndAppendHTML("company");
+				fecthAndAppendHTML(refRowClientNew, "company", false);
 			}
 		} else {
 			console.log("personnality type value error");
@@ -158,8 +183,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	btnSaveNewClient.addEventListener("click", () => {
 		// const resp = submitIt(getInputsValues());
-		sendData(getInputsValues())
-			.then((resp) => responseHandler(resp))
+		sendData("/database/save/new_client.php", getInputsValues())
+			.then((resp) => responseHandlerSaveNewClient(resp))
 			.then((result) => console.log(result));
 	});
 	//TODO : if good, clean and close, and snckbar. if bad, snackbar, then with reason.

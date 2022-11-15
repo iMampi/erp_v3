@@ -51,6 +51,11 @@ class Bindings
                 $arr["declarable"],
                 $arr["commissionable"]
             ];
+        } elseif ($this->converter::class == "Converter\SelectOneClient") {
+            $this->binding = [
+                'i',
+                $this->converter->data_for_db["uid"]
+            ];
         } else {
             echo "NOT VALID";
         }

@@ -51,3 +51,8 @@ per page create an objet to old data : cycle, header'links to highlight,
 
 DBHandler :
 make a method for select and another for insert and update
+
+clients:
+type de vente : a credit /au comptant
+valeur encours : si comptant grisé et  0
+echeance (nb de jour) : si comptant grisé et 0

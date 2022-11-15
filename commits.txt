@@ -176,3 +176,9 @@ database : stored function all_clients created;
 added $mode param in select_query() and calling  select_query() by default if prepared statement has null binding;
 updating generate_table_001 for clts to fill table using results from calling all_client;
 all_clients.php : created to fetch/sellect all client and return array
+-------------------
+026:
+clients : les js
+fetchandappendhtml() : modifiied. introduction de antikey_
+introduction de disabled, param supplementaire pour la function (ref, selectedoption,disabled)
+fillinputs(): working

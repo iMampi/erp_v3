@@ -21,6 +21,7 @@ is_logged();
     <script src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/fixed-header.js"></script>
     <script src="/js/new-client.js"></script>
+    <script src="/js/details-client.js"></script>
     <link rel="stylesheet" href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/style/mampi.css">
     <title>listes clients</title>
@@ -162,7 +163,7 @@ is_logged();
             </div>
             <!-- end modal main new clt -->
             <!-- modal détails clts -->
-            <div class="modal fade" id="modal-clt-detail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="modal-clt-details" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
                     <div class="modal-content">

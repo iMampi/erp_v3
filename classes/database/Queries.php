@@ -7,6 +7,9 @@ class Queries
 {
     public string $mode;
     public string $query;
+    static public $select_one_client = "
+    call one_client_details(?) 
+    ";
     static public $select_all_clients = "
     call all_clients 
     ";
@@ -48,6 +51,9 @@ class Queries
                 break;
             case 'select_all_clients':
                 $this->query = self::$select_all_clients;
+                break;
+            case 'select_one_client':
+                $this->query = self::$select_one_client;
                 break;
 
             default:

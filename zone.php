@@ -4,11 +4,13 @@ use Database\Queries;
 use Base\DataObjByDate;
 use Database\DbHandler;
 use Conge\CongesMonthly;
+use Converter\SelectOneClient;
 use Cotisation\SmieData;
 use Cotisation\CnapsData;
 use Employee\EmployeeBase;
 use Cotisation\SmieCotisation;
 use Cotisation\CnapsCotisation;
+use Database\Bindings;
 use Salary\CalculateSalaryMonthly;
 use Database\StandardPreparedStatement;
 
@@ -125,9 +127,12 @@ echo "class is : " . $x::class;
 
 $arr_ = [];
 echo "is empty? : " . empty($arr);
+$SelectOneCLientObj = new SelectOneClient(["uid" => "5"]);
+// var_dump($SelectOneCLientObj->data_for_db);
 new DbHandler();
-$Query = new Queries("select_all_clients");
-
-// $Statement = new StandardPreparedStatement($Query, \null);
-$res_ = DbHandler::select_query($Query->query, MYSQLI_ASSOC);
+$Query = new Queries("select_one_client");
+$Binding = new Bindings($SelectOneCLientObj);
+$Statement = new StandardPreparedStatement($Query, $Binding);
+$res_ = DbHandler::execute_prepared_statement($Statement);
+// $res_ = DbHandler::select_query($Query->query, MYSQLI_ASSOC);
 var_dump($res_);
