@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+		<!-- <script src="/js/fixed-header.js"></script> -->
+		<script src="/js/toast.js"></script>
+		<!-- <script src="/js/new-client.js"></script> -->
+		<!-- <script src="/js/details-client.js"></script> -->
+		<link
+			rel="stylesheet"
+			href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css"
+		/>
+		<link rel="stylesheet" href="/style/mampi.css" />
+		<title>tests</title>
+	</head>
+	<body>
+		<div class="container-fluid">
+			<button id="toaster">click me</button>
+			<div
+				aria-live="polite"
+				aria-atomic="true"
+				class="position-relative"
+			>
+				<div
+					class="toast-container position-fixed top-0 end-0 p-3"
+					id="toast-container"
+				></div>
+			</div>
+		</div>
+	</body>
+</html>

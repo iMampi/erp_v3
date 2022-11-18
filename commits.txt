@@ -182,3 +182,9 @@ clients : les js
 fetchandappendhtml() : modifiied. introduction de antikey_
 introduction de disabled, param supplementaire pour la function (ref, selectedoption,disabled)
 fillinputs(): working
+-------------------
+027:
+working on toast/snackbar.
+created a base toast and a test.
+toast.js file works liks expected.
+TODO : need to customize and template the content of toast, and add alert theme.

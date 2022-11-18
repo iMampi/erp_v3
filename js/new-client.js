@@ -30,6 +30,20 @@ const DefaultValuesNewClientFormObj = {
 const personnalities = { 1: "human", 2: "company" };
 var listDOM = {};
 
+async function saveNewclient(inputObj) {
+	let url = "/database/save/new_client.php";
+	let response = await sendData(url, inputObj);
+	let result = await responseHandlerSaveNewClient(response);
+	if (result[0] == "sucess") {
+	} else if (result[0] == "failure") {
+	} else {
+		throw new Error("wrong value returned");
+	}
+	// TODO : finish me
+	let deleteMe = document.getElementById("div-selection");
+	deleteMe.textContent = result[0] + " :: " + result[1];
+}
+
 async function sendData(url, inputObj) {
 	let strObj = JSON.stringify(inputObj);
 
@@ -46,13 +60,22 @@ async function sendData(url, inputObj) {
 
 async function responseHandlerSaveNewClient(response) {
 	try {
-		// return JSON.parse(await response);
 		let myjson = JSON.parse(await response);
-		// console.log(myjson);
 		//NOTE : the correct way for save. not correct for select query
-		return Object.values(myjson)[0];
+		//NOTE : works for error also
+		// TODO : handle for when it is an error
+		// if (myjson[0])
+		console.log(myjson);
+		if (myjson[0]) {
+			return ["success", Object.values(myjson[1])[0]];
+		} else {
+			return ["failure", Object.values(myjson[1])[0]];
+		}
+		// console.log(typeof myjson[0]);
+		// return Object.values(myjson)[0];
 	} catch (e) {
-		return "error";
+		// TODO : comment me
+		return "error js: " + e;
 	}
 }
 
@@ -135,6 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const refRowClientNew = modalMainNewClient.querySelector("#ref-row");
 
 	function getInputsValues() {
+		//TODO : add paramater "modal", to delimit the dom. and take it out
 		let inputObj = {};
 		let modalBodyHeads = document.getElementById(
 			"new-client-modal-body-heads"
@@ -183,9 +207,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	btnSaveNewClient.addEventListener("click", () => {
 		// const resp = submitIt(getInputsValues());
-		sendData("/database/save/new_client.php", getInputsValues())
-			.then((resp) => responseHandlerSaveNewClient(resp))
-			.then((result) => console.log(result));
+		// sendData("/database/save/new_client.php", getInputsValues())
+		// 	.then((resp) => responseHandlerSaveNewClient(resp))
+		// 	.then((result) => console.log(result));
+		saveNewclient(getInputsValues());
 	});
 	//TODO : if good, clean and close, and snckbar. if bad, snackbar, then with reason.
 

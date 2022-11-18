@@ -56,7 +56,7 @@ class DbHandler
     }
 
 
-    static function execute_prepared_statement(StandardPreparedStatement $prepared_statement)
+    static function execute_prepared_statement(StandardPreparedStatement $prepared_statement, $fetch_mode = \MYSQLI_BOTH)
     {
         $stmt = self::$connection->stmt_init();
         $res = $stmt->prepare($prepared_statement->query);
@@ -72,20 +72,40 @@ class DbHandler
             } else {
 
                 $stmt->bind_param(...$prepared_statement->binding);
+
                 try {
+
                     $stmt->execute();
-                } catch (\Throwable $th) {
-                    return "err1 : " . $th->getMessage();
-                }
-                // $x = $stmt->affected_rows;
-                try {
                     $res = $stmt->get_result();
-                    $results = $res->fetch_assoc();
+                    $results = $res->fetch_array($fetch_mode);
                     // echo "result is : <br> ";
-                    return \json_encode($results);
+                    $result_array = [\true, $results];
                 } catch (\Throwable $th) {
-                    return "err2 : " . $th->getMessage();
+                    $error_arr_ = ["error" => $th->getMessage()];
+                    $result_array = [\false, $error_arr_];
+                    // return "err2 : " . $th->getMessage();
+                } finally {
+                    return ($result_array);
                 }
+
+
+                // UNCOMMENT ME
+                // try {
+                //     $stmt->execute();
+                // } catch (\Throwable $th) {
+                //     return "err1 : " . $th->getMessage();
+                // }
+                // // $x = $stmt->affected_rows;
+                // try {
+                //     $res = $stmt->get_result();
+                //     $results = $res->fetch_array($fetch_mode);
+                //     // echo "result is : <br> ";
+                //     return \json_encode($results);
+                // } catch (\Throwable $th) {
+                //     $error_arr_ = ["error" => $th->getMessage()];
+                //     // return "err2 : " . $th->getMessage();
+                //     return \json_encode($error_arr_);
+                // }
             }
 
             // echo "affected rows are nb $x";

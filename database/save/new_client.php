@@ -27,7 +27,8 @@ if (($_SERVER["REQUEST_METHOD"] == "POST")) {
     $Query = new Queries("save_new_client");
     $Binding = new Bindings($NewClientObj);
     $Statement = new StandardPreparedStatement($Query, $Binding);
-    print(DbHandler::execute_prepared_statement($Statement));
+    $temp_array_result = DbHandler::execute_prepared_statement($Statement, MYSQLI_NUM);
+    print(json_encode($temp_array_result));
 
     // foreach ($arr_banks as $value) {
     //     $converter_bank[$value["bank_name"]] = $value["bank_table"];
