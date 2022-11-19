@@ -1,47 +1,39 @@
-document.addEventListener("DOMContentLoaded", () => {
-	const toastTrigger = document.getElementById("toaster");
-	const toastContainer = document.getElementById("toast-container");
-	// const toastLiveExample = document.getElementById('liveToast')
-	// const toastLiveExample = document.getElementById('liveToast')
-	function showMe() {
-		let toastCounter = 1;
-		const myFunction = function () {
-			fetch("/elements/toast.html")
-				.then((resp) => resp.text())
-				.then((txt) => {
-					let doc = new DOMParser().parseFromString(txt, "text/html");
-					doc.getElementById("liveToast").id =
-						"liveToast-" + toastCounter;
-					toastContainer.prepend(doc.body.childNodes[0]);
-					toastCounter += 1;
-					let children = toastContainer.childNodes;
-					console.log(children);
-					const test = new bootstrap.Toast(children[0]);
+// const toastLiveExample = document.getElementById('liveToast')
+// const toastLiveExample = document.getElementById('liveToast')
+function showMe() {
+	let toastCounter = 1;
+	const myFunction = function (mode, mytext) {
+		// TODO : put const as a param. useless call
+		const toastContainer = document.getElementById("toast-container");
 
-					children[0].addEventListener("hidden.bs.toast", (e) => {
-						e.target.remove();
-					});
+		fetch("/elements/toast/toast_" + mode + "_base.html")
+			.then((resp) => resp.text())
+			.then((txt) => {
+				let doc = new DOMParser().parseFromString(txt, "text/html");
+				doc.getElementById("liveToast").id =
+					"liveToast-" + toastCounter;
+				doc.querySelector(".toast-body>span").textContent = mytext;
 
-					test.show();
+				toastContainer.prepend(doc.body.childNodes[0]);
+
+				toastCounter += 1;
+				let children = toastContainer.childNodes;
+				// console.log(children);
+				const test = new bootstrap.Toast(children[0]);
+
+				children[0].addEventListener("hidden.bs.toast", (e) => {
+					e.target.remove();
 				});
-		};
-		return myFunction;
-	}
-	const ClosuredShowMe = showMe();
 
+				test.show();
+			});
+	};
+	return myFunction;
+}
+// const ClosuredShowMe = showMe();
 
-	if (toastTrigger) {
-		toastTrigger.addEventListener("click", () => {
-			ClosuredShowMe();
-		});
-	}
-	// setTimeout(() => {
-	// 	console.log("value");
-	// 	const toasts = document.querySelectorAll(".toast");
-	// 	toasts.forEach((el) => {
-	// 		const test = new bootstrap.Toast(el);
-
-	// 		test.show();
-	// 	});
-	// }, 100);
-});
+// if (toastTrigger) {
+// 	toastTrigger.addEventListener("click", () => {
+// 		ClosuredShowMe();
+// 	});
+// }

@@ -147,3 +147,27 @@ The following input elements are all disabled:
 but to remove "disabled", to make input active, you can onl
 y use input.disabled=true.
 ------------------
+html, bootsrap svg icons
+change height and width to 20-20
+and viewBox to "0 0 20 20"
+
+that is the main idea. just tweak those value to your convenience.
+--------------------
+bootstrap modal show/hide 
+modal since i initialy use data attributes to show the modal, the js methods wont work. In order for the js method to work, you must use JS to show first the modal. (see notes in general tips)
+but if you still use data attribute s to fire modal, you gotta use a custom js for it to work as expected.
+
+function hideModal(modalId) {
+	// note : modal since i initialy use data attributes to show the modal, the js methods wont work. In order for the js method to work, you must use JS to show first the modal. (see notes in general tips)
+	let myModalEl = document.getElementById(modalId);
+	let myModal = new bootstrap.Modal(myModalEl);
+	myModalEl.classList.remove("show");
+	console.log(document.querySelector(".modal-backdrop"));
+	document.querySelector(".modal-backdrop").remove();
+	document.body.classList.remove("modal-open");
+	document.body.style.removeProperty("overflow");
+	document.body.style.removeProperty("padding-right");
+	myModal.hide();
+}
+https://stackoverflow.com/questions/23677765/bootstrap-modal-hide-is-not-working
+and rad the documentation

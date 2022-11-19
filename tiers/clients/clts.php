@@ -20,6 +20,7 @@ is_logged();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/fixed-header.js"></script>
+    <script src="/js/toast.js"></script>
     <script src="/js/new-client.js"></script>
     <script src="/js/details-client.js"></script>
     <link rel="stylesheet" href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
@@ -127,7 +128,7 @@ is_logged();
             </div>
             <!-- end modal filter -->
             <!-- modal main new clt -->
-            <div class="modal fade" id="modal-clt-new" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="modal-clt-new" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
                 </button>
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
@@ -160,6 +161,8 @@ is_logged();
                         </div>
                     </div>
                 </div>
+
+
             </div>
             <!-- end modal main new clt -->
             <!-- modal détails clts -->
@@ -200,7 +203,11 @@ is_logged();
                 </div>
             </div>
             <!-- end modal details clts -->
+            <!-- TOAST  -->
+            <!-- end TOAST  -->
         </div>
+        <div class="toast-container position-fixed top-0 end-0 p-3" id="toast-container"></div>
+
 </body>
 
 </html>

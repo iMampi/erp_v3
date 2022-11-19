@@ -71,4 +71,7 @@ td .name {
 	min-width: 12rem;
 }
 
-
+#toast-container {
+	z-index: 1100 !important;
+	opacity: 1 !important;
+}

@@ -30,18 +30,32 @@ const DefaultValuesNewClientFormObj = {
 const personnalities = { 1: "human", 2: "company" };
 var listDOM = {};
 
+function hideModal(modalId) {
+	// note : modal since i initialy use data attributes to show the modal, the js methods wont work. In order for the js method to work, you must use JS to show first the modal. (see notes in general tips)
+	let myModalEl = document.getElementById(modalId);
+	let myModal = new bootstrap.Modal(myModalEl);
+	myModalEl.classList.remove("show");
+	console.log(document.querySelector(".modal-backdrop"));
+	document.querySelector(".modal-backdrop").remove();
+	document.body.classList.remove("modal-open");
+	document.body.style.removeProperty("overflow");
+	document.body.style.removeProperty("padding-right");
+	myModal.hide();
+}
+const ClosuredShowMe = showMe();
+
 async function saveNewclient(inputObj) {
 	let url = "/database/save/new_client.php";
 	let response = await sendData(url, inputObj);
 	let result = await responseHandlerSaveNewClient(response);
-	if (result[0] == "sucess") {
+	if (result[0] == "success") {
+		ClosuredShowMe(result[0], "Nouveau client créé avec succès");
 	} else if (result[0] == "failure") {
+		ClosuredShowMe(result[0], "Echec de la création du client");
 	} else {
 		throw new Error("wrong value returned");
 	}
-	// TODO : finish me
-	let deleteMe = document.getElementById("div-selection");
-	deleteMe.textContent = result[0] + " :: " + result[1];
+	return result[0] == "success";
 }
 
 async function sendData(url, inputObj) {
@@ -210,7 +224,15 @@ document.addEventListener("DOMContentLoaded", () => {
 		// sendData("/database/save/new_client.php", getInputsValues())
 		// 	.then((resp) => responseHandlerSaveNewClient(resp))
 		// 	.then((result) => console.log(result));
-		saveNewclient(getInputsValues());
+		saveNewclient(getInputsValues()).then((result) => {
+			if (result) {
+				//TODO :close and clean
+				hideModal("modal-clt-new");
+				cleanNewClientForm();
+			} else {
+				//TODO : show error
+			}
+		});
 	});
 	//TODO : if good, clean and close, and snckbar. if bad, snackbar, then with reason.
 
