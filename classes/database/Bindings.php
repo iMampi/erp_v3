@@ -1,7 +1,7 @@
 <?php
 
 // declare(strict_types=1);
-
+//TODO : DRY, there are case where the binding is the same
 namespace Database;
 
 use Converter\Converter;
@@ -10,7 +10,7 @@ class Bindings
 {
     public Converter $converter;
     public array $binding;
-    static public array $save_new_client;
+    // static public array $save_new_client;
 
     function __construct(Converter $converter)
     {
@@ -33,7 +33,7 @@ class Bindings
                 $arr["phone2"],
                 $arr["mail1"],
                 $arr["mail2"],
-                $arr["active_"],
+                $arr["active_client"],
                 $arr["note"],
                 $arr["nom_commercial"],
                 $arr["raison_sociale"],
@@ -52,6 +52,11 @@ class Bindings
                 $arr["commissionable"]
             ];
         } elseif ($this->converter::class == "Converter\SelectOneClient") {
+            $this->binding = [
+                'i',
+                $this->converter->data_for_db["uid"]
+            ];
+        } elseif ($this->converter::class == "Converter\DeleteClient") {
             $this->binding = [
                 'i',
                 $this->converter->data_for_db["uid"]

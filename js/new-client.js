@@ -93,7 +93,7 @@ async function responseHandlerSaveNewClient(response) {
 	}
 }
 
-function fecthAndAppendHTML(refRow, selectedOption, disabled) {
+async function fecthAndAppendHTML(refRow, selectedOption, disabled) {
 	disabled = disabled || false;
 	if (![false, true].includes(disabled)) {
 		throw new Error("neither 'true' or 'false'.");
@@ -104,7 +104,7 @@ function fecthAndAppendHTML(refRow, selectedOption, disabled) {
 		!selectedOption ||
 		refRow.parentNode.querySelector(`.${selectedOption}`) != undefined
 	) {
-		return;
+		return false;
 	}
 
 	if (listDOM[selectedOption]) {
@@ -131,6 +131,7 @@ function fecthAndAppendHTML(refRow, selectedOption, disabled) {
 				refRow.nextSibling
 			);
 		}
+		return refRow.parentNode;
 	} else {
 		// Fetch the HTML code of this file.
 		fetch("/elements/tiers/clients/" + selectedOption + ".html")
@@ -155,10 +156,13 @@ function fecthAndAppendHTML(refRow, selectedOption, disabled) {
 						refRow.nextSibling
 					);
 				}
+				console.log("jf :");
+				console.log(refRow.parentNode);
 
 				// The file is now available as 'listDOM[selectedOption]'.
 			});
 	}
+	return refRow.parentNode;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -170,8 +174,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const btnSaveNewClient = document.getElementById("save-new-client");
 	const refRowClientNew = modalMainNewClient.querySelector("#ref-row");
+	const typeVenteInput = document.querySelector("#modal-clt-new #type-vente");
+	const encoursInput = document.querySelector("#modal-clt-new #encours");
+	const echeanceInput = document.querySelector("#modal-clt-new #echeance");
 
-	function getInputsValues() {
+	function getInputsValuesClientNew() {
 		//TODO : add paramater "modal", to delimit the dom. and take it out
 		let inputObj = {};
 		let modalBodyHeads = document.getElementById(
@@ -185,7 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		return inputObj;
 	}
 
-	function cleanNewClientForm() {
+	function cleanClientNewForm() {
 		const inputsClientForm =
 			modalMainNewClient.querySelectorAll(".client-form.input");
 		// console.log("canceling");
@@ -195,6 +202,18 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 		fecthAndAppendHTML(refRowClientNew, "human", false);
 		// console.log(inputsClientForm);
+	}
+
+	function typeVenteInputBehavior() {
+		if (typeVenteInput.value == "1") {
+			encoursInput.disabled = false;
+			echeanceInput.disabled = false;
+		} else if (typeVenteInput.value == "0") {
+			encoursInput.disabled = true;
+			encoursInput.value = "0";
+			echeanceInput.disabled = true;
+			echeanceInput.value = "0";
+		}
 	}
 
 	// action
@@ -220,15 +239,15 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 
 	btnSaveNewClient.addEventListener("click", () => {
-		// const resp = submitIt(getInputsValues());
-		// sendData("/database/save/new_client.php", getInputsValues())
+		// const resp = submitIt(getInputsValuesClientNew());
+		// sendData("/database/save/new_client.php", getInputsValuesClientNew())
 		// 	.then((resp) => responseHandlerSaveNewClient(resp))
 		// 	.then((result) => console.log(result));
-		saveNewclient(getInputsValues()).then((result) => {
+		saveNewclient(getInputsValuesClientNew()).then((result) => {
 			if (result) {
 				//TODO :close and clean
 				hideModal("modal-clt-new");
-				cleanNewClientForm();
+				cleanClientNewForm();
 			} else {
 				//TODO : show error
 			}
@@ -237,6 +256,10 @@ document.addEventListener("DOMContentLoaded", () => {
 	//TODO : if good, clean and close, and snckbar. if bad, snackbar, then with reason.
 
 	btnCancelNewClient.addEventListener("click", () => {
-		cleanNewClientForm();
+		cleanClientNewForm();
+	});
+
+	typeVenteInput.addEventListener("input", () => {
+		typeVenteInputBehavior();
 	});
 });

@@ -190,7 +190,7 @@ is_logged();
                                 ?>
                             </div>
                         </div>
-                        <div class="modal-footer">
+                        <div class="modal-footer d-flex justify-content-between">
                             <!-- <button type="button" class="btn btn-info">modifier</button>
                             <button type="button" class="btn btn-info">statistique</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>

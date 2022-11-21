@@ -60,3 +60,5 @@ echeance (nb de jour) : si comptant grisé et 0
 spining while waiting treatment/loading
 
 DRY : i use 2 different template for toast (succes/failure) because of colors, bg et svg
+
+mysql on client detail SP : how ot impelment the "active_client=1" condition

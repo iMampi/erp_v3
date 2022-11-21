@@ -30,10 +30,16 @@ if (can_visit($cycle_clt)) {
 
         $id_ = sprintf('%03d', $row_counter);
         $tr_->setAttribute("id", $id_);
+
+        if ($client["active_client"] == "0") {
+            $tr_->setAttribute("class", $tr_->getAttribute("class") . " collapse-row");
+        }
         $tbody_->appendChild($tr_);
+        $row_counter++;
 
 
         $nodes = $xpath->query(".//*[contains(@class,'input')]", $tr_);
+
         foreach ($nodes as $client_input) {
             $classes = $client_input->getAttribute('class');
             $classes_array = explode(" ", $classes);

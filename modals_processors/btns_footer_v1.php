@@ -9,12 +9,15 @@ libxml_use_internal_errors(true);
 $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
 $xpath = new DOMXPath($dom);
 
+// print_r($_SESSION);
+// print_r($_SESSION["user"]->authorizations);
 $btns = $xpath->query(".//*[contains(@class,'btn')]");
 //it works
 //TODO : include algo for what btns appears or not according to roles
 foreach ($btns as $btn) {
-    if (!in_array($btn->getAttribute('id'), ['statistics', 'cancel'])) {
-
+    if (($btn->getAttribute("id") == "modify") && (!$_SESSION["user"]->authorizations->client->update)) {
+        $btn->setAttribute("disabled", '');
+    } else if (($btn->getAttribute("id") == "delete") && (!$_SESSION["user"]->authorizations->client->update)) {
         $btn->setAttribute("disabled", '');
     };
 }

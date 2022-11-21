@@ -194,3 +194,16 @@ toast.js fixed.
 tweaked #toast-container in css to have what we want.
 created helper hideModal() to deal with modals. (see notes on modal show/hide)
 implemented next nstep of saveNewclient() on "success".
+-------------------
+029:
+one_client_details.php : print value in json format now;
+details-client.js : since tweaking returned value of sendData(), I updated the rseponseHandlerClientDetail()
+fixed behavior of typeVente (à credit/au comptant ->encours->echeance)
+changed .col-4 for input of tel and email in client formulaire base.
+client process : implemented the active_client column for filtering . also, we never totally delete data, we juste make it inactive. so that is why we did this.
+
+/client/generate_table_001.php : $row_counter was not incremented.
+
+client/generate_table_001.php : add class collapse-row to inactive client;
+checkpoint fbefore modifying bottsrap modal handler
+--------------------

@@ -15,7 +15,7 @@ class NewClient extends Converter
     public function converter_for_db()
     {
         $input = $this->data_from_user;
-        $this->data_for_db["uid"] = $input["uid"]||\null;
+        $this->data_for_db["uid"] = $input["uid"] || \null;
         $this->data_for_db["type_personnality_uid"] = \intval($input["type-personnality"]);
         $this->data_for_db["adress"] = $input["adress"];
         $this->data_for_db["nif"] = $input["nif"];
@@ -25,7 +25,7 @@ class NewClient extends Converter
         $this->data_for_db["phone2"] = $input["phone2"];
         $this->data_for_db["mail1"] = $input["mail1"];
         $this->data_for_db["mail2"] = $input["mail2"];
-        $this->data_for_db["active_"] = \intval($input["actif"]);
+        $this->data_for_db["active_client"] = \intval($input["actif"]);
         $this->data_for_db["note"] = $input["note"];
         $this->data_for_db["type_vente"] = $input["type-vente"];
         $this->data_for_db["encours"] = \floatval($input["encours"]) || 0;

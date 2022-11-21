@@ -7,6 +7,9 @@ class Queries
 {
     public string $mode;
     public string $query;
+    static public $delete_client = "
+    update clients set active_client='0' where uid=? 
+    ";
     static public $select_one_client = "
     call one_client_details(?) 
     ";
@@ -55,6 +58,9 @@ class Queries
             case 'select_one_client':
                 $this->query = self::$select_one_client;
                 break;
+            case 'delete_client':
+                $this->query = self::$delete_client;
+                break;
 
             default:
                 # code...
@@ -98,30 +104,3 @@ class Queries
 
 
 }
-
-// $arr["type_personnality_uid"],
-//             $arr["adress"],
-//             $arr["nif"],
-//             $arr["stat"],
-//             $arr["rcs"],
-//             $arr["phone1"],
-//             $arr["phone2"],
-//             $arr["mail1"],
-//             $arr["mail2"],
-//             $arr["active_"],
-//             $arr["note"],
-//             $arr["nom_commercial"],
-//             $arr["raison_sociale"],
-//             $arr["noms"],
-//             $arr["prenoms"],
-//             $arr["cin"],
-//             $arr["cin_date"],
-//             $arr["cin_lieu"],
-//             $arr["naissance_date"],
-//             $arr["naissance_lieu"],
-//             $arr["type_vente"],
-//             $arr["encours"],
-//             $arr["nb_jour"],
-//             $arr["evaluation"],
-//             $arr["declarable"],
-//             $arr["commissionable"]
