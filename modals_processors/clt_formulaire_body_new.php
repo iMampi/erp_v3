@@ -38,6 +38,7 @@ if (isset($_SESSION["user"])) {
         // $modulable_div->appendChild($new_node);
 
         // disable "uid" field 
+        // TODO : optimize make a query instead
         foreach ($inputs as $input) {
             if (strpos($input->getAttribute("class"), "uid")) {
 

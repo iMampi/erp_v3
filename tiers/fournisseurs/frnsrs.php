@@ -20,6 +20,9 @@ is_logged();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/fixed-header.js"></script>
+    <script src="/js/server-communication.js"></script>
+    <script src="/js/toast.js"></script>
+
     <link rel="stylesheet" href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/style/mampi.css">
     <title>liste fournisseurs</title>
@@ -89,8 +92,46 @@ is_logged();
                     </div>
                 </div>
             </div>
-            <!-- modal détails facture -->
-            <div class="modal fade" id="modal-frnsr-detail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <!-- modal main new frnsr -->
+            <div class="modal fade" id="modal-clt-new" tabindex="-1">
+                <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+                <div class="modal-dialog modal-dialog-scrollable modal-lg">
+
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">créer nouveau client</h5>
+                        </div>
+                        <div class="modal-body">
+
+                            <div id="new-client-modal-body-heads">
+                                <?php
+                                //TODO : make the header of factures in details readonly
+                                //TODO : change to require once.
+                                require_once __DIR__ . "/../../modals_processors/clt_formulaire_body_new.php";
+                                ?>
+                            </div>
+                            <!-- TODO : to elete. we gonna use only JS here -->
+                            <div id="modal-body-table">
+                                <?php
+                                //TODO : change to require once.
+                                // require __DIR__ . "/../elements/treso_affectation_affaire_details_base.html";
+                                ?>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel-client-new">annuler</button>
+                            <button type="button" class="btn btn-primary" id="save-client-new">Save</button>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- end modal main new frnsr -->
+            <!-- modal détails frnsr -->
+            <div class="modal fade" id="modal-frnsr-detail" tabindex="-1">
                 <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
                     <div class="modal-content">
@@ -122,8 +163,14 @@ is_logged();
                     </div>
                 </div>
             </div>
-            <!-- end modal détails facture -->
+            <!-- end modal détails frnsr -->
         </div>
+        <!-- TOAST  -->
+
+        <div class="toast-container position-fixed top-0 end-0 p-3" id="toast-container"></div>
+        <!-- end TOAST  -->
+
+
 </body>
 
 </html>

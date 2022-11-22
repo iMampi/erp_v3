@@ -20,6 +20,8 @@ is_logged();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/fixed-header.js"></script>
+    <!-- TODO : put toast in a php>element file. html and js. to handle it dynamicaly. futur proof -->
+    <script src="/js/server-communication.js"></script>
     <script src="/js/toast.js"></script>
     <script src="/js/new-client.js"></script>
     <script src="/js/details-client.js"></script>
@@ -61,7 +63,7 @@ is_logged();
                         </div>
                         <div id="div-btns" class="row ">
                             <div class="col-auto me-auto">
-                                <button type="button" class="col-auto btn btn-info" id="btn-main-new" data-bs-toggle="modal" data-bs-target="#modal-clt-new">nouveau</button>
+                                <button type="button" class="col-auto btn btn-info" id="btn-client-new" >nouveau</button>
                                 <button type="button" class="col-auto btn btn-info me-auto" data-bs-toggle="modal" data-bs-target="#modal-fam-detail">valider</button>
                             </div>
                             <div class="col-auto justify-content-end">
@@ -128,7 +130,7 @@ is_logged();
             </div>
             <!-- end modal filter -->
             <!-- modal main new clt -->
-            <div class="modal fade" id="modal-clt-new" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="modal-clt-new" tabindex="-1">
                 <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
                 </button>
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
@@ -156,8 +158,8 @@ is_logged();
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel-new-client">annuler</button>
-                            <button type="button" class="btn btn-primary" id="save-new-client">Save</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel-client-new">annuler</button>
+                            <button type="button" class="btn btn-primary" id="save-client-new">Save</button>
                         </div>
                     </div>
                 </div>
@@ -166,7 +168,7 @@ is_logged();
             </div>
             <!-- end modal main new clt -->
             <!-- modal détails clts -->
-            <div class="modal fade" id="modal-clt-details" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" tabindex="-1" id="modal-clt-details">
                 <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
                     <div class="modal-content">
@@ -203,10 +205,10 @@ is_logged();
                 </div>
             </div>
             <!-- end modal details clts -->
-            <!-- TOAST  -->
-            <!-- end TOAST  -->
         </div>
+        <!-- TOAST  -->
         <div class="toast-container position-fixed top-0 end-0 p-3" id="toast-container"></div>
+        <!-- end TOAST  -->
 
 </body>
 

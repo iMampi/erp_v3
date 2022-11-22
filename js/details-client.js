@@ -103,6 +103,17 @@ document.addEventListener("DOMContentLoaded", () => {
 	let refRowClientDetails = modalClientDetails.querySelector("#ref-row");
 
 	const btnDelClient = modalClientDetails.querySelector("#delete");
+	const table001 = document.getElementById("table-001");
+
+	var bsModalClientDetails = new bootstrap.Modal(modalClientDetails, {
+		backdrop: "static",
+		keyboard: false,
+		focus: true,
+	});
+
+	const btnCancelModalClientDetails = document
+		.getElementById("modal-clt-details")
+		.querySelector("#btn-cancel");
 
 	async function deleteClient() {
 		let myurl = "/database/delete/delete_one_client.php";
@@ -144,20 +155,30 @@ document.addEventListener("DOMContentLoaded", () => {
 						).toString();
 						let classKey = "." + personnalities[antiKey_];
 						let fieldsPersonnality =
-							document.querySelectorAll(classKey);
+							modalClientDetails.querySelectorAll(classKey);
 						// console.log("calling removing");
 						fieldsPersonnality.forEach((div) => div.remove());
-						return [
-							appendAndFill(
-								refRowClientDetails,
-								personnalities[
-									result[1]["type_personnality_uid"]
-								],
-								true
-							),
-							result[1],
-						];
+						// return [
+						// 	appendAndFill(
+						// 		refRowClientDetails,
+						// 		personnalities[
+						// 			result[1]["type_personnality_uid"]
+						// 		],
+						// 		true
+						// 	),
+						// 	result[1],
+						// ];
 					} finally {
+						fecthAndAppendHTML(
+							refRowClientDetails,
+							personnalities[result[1]["type_personnality_uid"]],
+							true
+						).then((newDom) => {
+							setTimeout(() => {
+								fillInputsDetails(result[1]);
+							}, 200);
+							bsModalClientDetails.show();
+						});
 						// let newDom =
 						// 	document.getElementById("modal-clt-details");
 						// fillInputsDetails(newDom, result[1]);
@@ -178,13 +199,19 @@ document.addEventListener("DOMContentLoaded", () => {
 						// }
 					}
 				}
-			})
-			.then((newdom) => {
-				fillInputsDetails(newdom[1]);
 			});
+
 		// .then((result) => fillInputs(result));
 	}
 
+	function openModal() {
+		// let uid =
+		// btnTarget.parentNode.parentNode.querySelector(".input .uid").value;
+		// setTimeout(() => {
+		// 	zeModal.show();
+		// }, 200);
+		bsModalClientDetails.show();
+	}
 	btnsClientDetails.forEach((btnClientDetails) => {
 		btnClientDetails.addEventListener("click", (event) => {
 			showDetails(event);
@@ -195,5 +222,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	btnDelClient.addEventListener("click", () => {
 		deleteClient();
+	});
+
+	table001.addEventListener("click", (e) => {
+		if (e.target.id == "btn-details") {
+			openModal(e.target);
+		}
+	});
+
+	btnCancelModalClientDetails.addEventListener("click", () => {
+		bsModalClientDetails.hide();
 	});
 });

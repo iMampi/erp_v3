@@ -207,3 +207,12 @@ client process : implemented the active_client column for filtering . also, we n
 client/generate_table_001.php : add class collapse-row to inactive client;
 checkpoint fbefore modifying bottsrap modal handler
 --------------------
+030:
+modifying bootsrap modal. no more using css creation but js(see documentation)
+fixed see client details and cancel
+fixed new client save and cancel
+updated see client details taht made field inn modal client new disapear (human and company'sfield)
+could not use async on fetchandappendhtml then fillinputs. had to use settimeout for it to work properly in details-clients.js
+we start o work on frnsr.php'js
+------------------------
+

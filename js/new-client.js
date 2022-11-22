@@ -30,18 +30,6 @@ const DefaultValuesNewClientFormObj = {
 const personnalities = { 1: "human", 2: "company" };
 var listDOM = {};
 
-function hideModal(modalId) {
-	// note : modal since i initialy use data attributes to show the modal, the js methods wont work. In order for the js method to work, you must use JS to show first the modal. (see notes in general tips)
-	let myModalEl = document.getElementById(modalId);
-	let myModal = new bootstrap.Modal(myModalEl);
-	myModalEl.classList.remove("show");
-	console.log(document.querySelector(".modal-backdrop"));
-	document.querySelector(".modal-backdrop").remove();
-	document.body.classList.remove("modal-open");
-	document.body.style.removeProperty("overflow");
-	document.body.style.removeProperty("padding-right");
-	myModal.hide();
-}
 const ClosuredShowMe = showMe();
 
 async function saveNewclient(inputObj) {
@@ -58,19 +46,7 @@ async function saveNewclient(inputObj) {
 	return result[0] == "success";
 }
 
-async function sendData(url, inputObj) {
-	let strObj = JSON.stringify(inputObj);
 
-	const response = await fetch(url, {
-		method: "POST",
-		body: strObj,
-	});
-
-	//note: change response.text() to const data = await response.json() If we return JSON we must also use .json() instead of .text() in JavaScript:
-	let resp = await response.text();
-	// console.log(resp);
-	return resp;
-}
 
 async function responseHandlerSaveNewClient(response) {
 	try {
@@ -94,6 +70,7 @@ async function responseHandlerSaveNewClient(response) {
 }
 
 async function fecthAndAppendHTML(refRow, selectedOption, disabled) {
+	console.log("gthypp called");
 	disabled = disabled || false;
 	if (![false, true].includes(disabled)) {
 		throw new Error("neither 'true' or 'false'.");
@@ -169,14 +146,21 @@ document.addEventListener("DOMContentLoaded", () => {
 	// definitions
 	const selectTypePersonnality = document.getElementById("type-personnality");
 
-	const modalMainNewClient = document.getElementById("modal-clt-new");
-	const btnCancelNewClient = document.getElementById("cancel-new-client");
+	const modalClientNew = document.getElementById("modal-clt-new");
+	const btnCancelClientNew = document.getElementById("cancel-client-new");
+	const btnClientNew = document.getElementById("btn-client-new");
 
-	const btnSaveNewClient = document.getElementById("save-new-client");
-	const refRowClientNew = modalMainNewClient.querySelector("#ref-row");
+	const btnSaveNewClient = document.getElementById("save-client-new");
+	const refRowClientNew = modalClientNew.querySelector("#ref-row");
 	const typeVenteInput = document.querySelector("#modal-clt-new #type-vente");
 	const encoursInput = document.querySelector("#modal-clt-new #encours");
 	const echeanceInput = document.querySelector("#modal-clt-new #echeance");
+
+	const bsModalClientNew = new bootstrap.Modal(modalClientNew, {
+		backdrop: "static",
+		keyboard: false,
+		focus: true,
+	});
 
 	function getInputsValuesClientNew() {
 		//TODO : add paramater "modal", to delimit the dom. and take it out
@@ -194,7 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	function cleanClientNewForm() {
 		const inputsClientForm =
-			modalMainNewClient.querySelectorAll(".client-form.input");
+			modalClientNew.querySelectorAll(".client-form.input");
 		// console.log("canceling");
 		inputsClientForm.forEach((input) => {
 			// console.log(input.id);
@@ -218,6 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	// action
 	selectTypePersonnality.addEventListener("input", () => {
+		console.log("fgt called");
 		let value = selectTypePersonnality.value;
 		if (value == 1) {
 			try {
@@ -246,7 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		saveNewclient(getInputsValuesClientNew()).then((result) => {
 			if (result) {
 				//TODO :close and clean
-				hideModal("modal-clt-new");
+				bsModalClientNew.hide();
 				cleanClientNewForm();
 			} else {
 				//TODO : show error
@@ -255,11 +240,19 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 	//TODO : if good, clean and close, and snckbar. if bad, snackbar, then with reason.
 
-	btnCancelNewClient.addEventListener("click", () => {
-		cleanClientNewForm();
-	});
-
 	typeVenteInput.addEventListener("input", () => {
 		typeVenteInputBehavior();
 	});
+
+	btnClientNew.addEventListener("click", () => {
+		bsModalClientNew.show();
+	});
+
+	btnCancelClientNew.addEventListener("click", () => {
+		//TODO : finish me , clean inputs
+		bsModalClientNew.hide();
+		cleanClientNewForm();
+	});
+
+	btnCancelClientNew;
 });
