@@ -75,17 +75,32 @@ class DbHandler
 
                 try {
 
-                    $stmt->execute();
+                    $step1 = $stmt->execute();
+                    // echo 'step1 is ';
+                    // echo ($step1);
                     $res = $stmt->get_result();
+
                     $results = $res->fetch_array($fetch_mode);
                     // echo "result is : <br> ";
                     $result_array = [\true, $results];
+                    $ouput_final = $result_array;
                 } catch (\Throwable $th) {
-                    $error_arr_ = ["error" => $th->getMessage()];
-                    $result_array = [\false, $error_arr_];
-                    // return "err2 : " . $th->getMessage();
+                    try {
+                        $nb_affected_row = $stmt->affected_rows;
+                        if ($nb_affected_row > 0) {
+                            $ouput_final = [true, ["nb_affected_row" => $nb_affected_row]];
+                        } else {
+                            throw $th;
+                        }
+                    } catch (\Throwable $th) {
+
+                        $error_arr_ = ["error" => $th->getMessage(), "step1" => $step1];
+                        $result_array = [\false, $error_arr_];
+                        // return "err2 : " . $th->getMessage();
+                        $ouput_final = $result_array;
+                    }
                 } finally {
-                    return ($result_array);
+                    return ($ouput_final);
                 }
 
 

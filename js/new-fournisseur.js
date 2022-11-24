@@ -40,9 +40,9 @@ async function saveNewclient(inputObj) {
 	let response = await sendData(url, inputObj);
 	let result = await responseHandlerSaveNewClient(response);
 	if (result[0] == "success") {
-		ClosuredShowMe(result[0], "Nouveau client créé avec succès");
+		ToastShowClosured(result[0], "Nouveau client créé avec succès");
 	} else if (result[0] == "failure") {
-		ClosuredShowMe(result[0], "Echec de la création du client");
+		ToastShowClosured(result[0], "Echec de la création du client");
 	} else {
 		throw new Error("wrong value returned");
 	}

@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	let refRowClientDetails = modalClientDetails.querySelector("#ref-row");
 
-	const btnDelClient = modalClientDetails.querySelector("#delete");
+	const btnDelClient = modalClientDetails.querySelector("#btn-delete");
 	const table001 = document.getElementById("table-001");
 
 	var bsModalClientDetails = new bootstrap.Modal(modalClientDetails, {
@@ -117,11 +117,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	async function deleteClient() {
 		let myurl = "/database/delete/delete_one_client.php";
-		let myuid = modalClientDetails.querySelector("#uid");
-		let response = await sendData(myurl, { uid: myuid });
-		console.log(response);
+		let cltUid = modalClientDetails.querySelector("#uid").value;
+		let response = await sendData(myurl, { uid: cltUid });
+		// TODO : we dont use await response.json because it is already handled in senData () as respones.text(). so we have to call JSON method manually;
+		let myjson = JSON.parse(response);
+		// let myjson = await response.json();
+		if (Array.isArray(myjson)) {
+			if (myjson[0] && myjson[1]["nb_affected_row"] == "1") {
+				removeTableRow(cltUid);
+				ToastShowClosured("success", "Client effacé avec succès");
+				bsModalClientDetails.hide();
+			} else {
+				ToastShowClosured("failure", "Echec suppression client");
+			}
+		} else {
+			ToastShowClosured(myjson[0], "Echec suppression client");
+		}
 	}
 
+	function removeTableRow(cltUid) {
+		try {
+			let trToDelete = document.getElementById("row-" + cltUid);
+			trToDelete.classList.add("collapse-row");
+			return true;
+		} catch (err) {
+			return false;
+		}
+	}
 	function appendAndFill(refRow, selection, disabled) {
 		return new Promise((resolve, reject) => {
 			let calling = fecthAndAppendHTML(refRow, selection, disabled);
@@ -221,6 +243,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 
 	btnDelClient.addEventListener("click", () => {
+		// TODO : test authority
 		deleteClient();
 	});
 

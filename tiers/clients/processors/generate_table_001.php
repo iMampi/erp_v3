@@ -21,21 +21,21 @@ $tr_model = $dom->getElementById("row-001");
 $tbody_->removeChild($tr_model);
 $xpath = new DOMXPath($dom);
 
-$row_counter = 1;
+// $row_counter = 1;
 
 // if (can_visit($cycle_clt)) {
 if (can_visit($cycle_clt)) {
     foreach ($all_clients as $client) {
         $tr_ = $tr_model->cloneNode(true);
 
-        $id_ = sprintf('%03d', $row_counter);
+        $id_ = "row-" . sprintf('%03d', $client["uid"]);
         $tr_->setAttribute("id", $id_);
 
         if ($client["active_client"] == "0") {
             $tr_->setAttribute("class", $tr_->getAttribute("class") . " collapse-row");
         }
         $tbody_->appendChild($tr_);
-        $row_counter++;
+        // $row_counter++;
 
 
         $nodes = $xpath->query(".//*[contains(@class,'input')]", $tr_);

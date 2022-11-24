@@ -10,7 +10,8 @@ function showMe() {
 			.then((resp) => resp.text())
 			.then((txt) => {
 				let doc = new DOMParser().parseFromString(txt, "text/html");
-				doc.getElementById("liveToast").id =
+				// doc.getElementById("liveToast").id =
+				doc.querySelector("#liveToast").id =
 					"liveToast-" + toastCounter;
 				doc.querySelector(".toast-body>span").textContent = mytext;
 
@@ -30,10 +31,10 @@ function showMe() {
 	};
 	return myFunction;
 }
-// const ClosuredShowMe = showMe();
+// const ToastShowClosured = showMe();
 
 // if (toastTrigger) {
 // 	toastTrigger.addEventListener("click", () => {
-// 		ClosuredShowMe();
+// 		ToastShowClosured();
 // 	});
 // }

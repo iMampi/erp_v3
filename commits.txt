@@ -215,4 +215,8 @@ updated see client details taht made field inn modal client new disapear (human 
 could not use async on fetchandappendhtml then fillinputs. had to use settimeout for it to work properly in details-clients.js
 we start o work on frnsr.php'js
 ------------------------
-
+031:
+fixed some logic naming 
+implemented deleteclient process
+fixed Dbhandler returning value to handle update , insert and error mysql query
+!!!il reste à impementé la vérification de pouvoir

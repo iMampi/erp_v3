@@ -27,12 +27,11 @@ document.addEventListener("DOMContentLoaded", () => {
 		};
 		return myFunction;
 	}
-	const ClosuredShowMe = showMe();
-
+	const ToastShowClosured = showMe();
 
 	if (toastTrigger) {
 		toastTrigger.addEventListener("click", () => {
-			ClosuredShowMe();
+			ToastShowClosured();
 		});
 	}
 	// setTimeout(() => {

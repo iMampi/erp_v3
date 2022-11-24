@@ -30,23 +30,22 @@ const DefaultValuesNewClientFormObj = {
 const personnalities = { 1: "human", 2: "company" };
 var listDOM = {};
 
-const ClosuredShowMe = showMe();
+const ToastShowClosured = showMe();
 
 async function saveNewclient(inputObj) {
 	let url = "/database/save/new_client.php";
 	let response = await sendData(url, inputObj);
 	let result = await responseHandlerSaveNewClient(response);
+	// console.log(result);
 	if (result[0] == "success") {
-		ClosuredShowMe(result[0], "Nouveau client créé avec succès");
+		ToastShowClosured(result[0], "Nouveau client créé avec succès");
 	} else if (result[0] == "failure") {
-		ClosuredShowMe(result[0], "Echec de la création du client");
+		ToastShowClosured(result[0], "Echec de la création du client");
 	} else {
 		throw new Error("wrong value returned");
 	}
 	return result[0] == "success";
 }
-
-
 
 async function responseHandlerSaveNewClient(response) {
 	try {
@@ -81,6 +80,11 @@ async function fecthAndAppendHTML(refRow, selectedOption, disabled) {
 		!selectedOption ||
 		refRow.parentNode.querySelector(`.${selectedOption}`) != undefined
 	) {
+		console.log("checing : ");
+		console.log(selectedOption);
+		console.log(
+			refRow.parentNode.querySelector(`.${selectedOption}`) != undefined
+		);
 		return false;
 	}
 
@@ -150,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const btnCancelClientNew = document.getElementById("cancel-client-new");
 	const btnClientNew = document.getElementById("btn-client-new");
 
-	const btnSaveNewClient = document.getElementById("save-client-new");
+	const btnSaveNewClient = document.getElementById("btn-save-client-new");
 	const refRowClientNew = modalClientNew.querySelector("#ref-row");
 	const typeVenteInput = document.querySelector("#modal-clt-new #type-vente");
 	const encoursInput = document.querySelector("#modal-clt-new #encours");

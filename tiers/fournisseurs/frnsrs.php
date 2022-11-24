@@ -122,7 +122,7 @@ is_logged();
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel-client-new">annuler</button>
-                            <button type="button" class="btn btn-primary" id="save-client-new">Save</button>
+                            <button type="button" class="btn btn-primary" id="btn-save-client-new">Save</button>
                         </div>
                     </div>
                 </div>
