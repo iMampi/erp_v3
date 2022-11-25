@@ -188,6 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			// console.log(input.id);
 			input.value = DefaultValuesNewClientFormObj[input.id];
 		});
+
 		fecthAndAppendHTML(refRowClientNew, "human", false);
 		// console.log(inputsClientForm);
 	}
@@ -205,58 +206,75 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	// action
-	selectTypePersonnality.addEventListener("input", () => {
-		console.log("fgt called");
-		let value = selectTypePersonnality.value;
-		if (value == 1) {
-			try {
-				let companies = document.querySelectorAll(".company");
-				companies.forEach((div) => div.remove());
-			} finally {
-				fecthAndAppendHTML(refRowClientNew, "human", false);
-			}
-		} else if (value == 2) {
-			try {
-				let humans = document.querySelectorAll(".human");
-				humans.forEach((div) => div.remove());
-			} finally {
-				fecthAndAppendHTML(refRowClientNew, "company", false);
-			}
-		} else {
-			console.log("personnality type value error");
-		}
-	});
-
-	btnSaveNewClient.addEventListener("click", () => {
-		// const resp = submitIt(getInputsValuesClientNew());
-		// sendData("/database/save/new_client.php", getInputsValuesClientNew())
-		// 	.then((resp) => responseHandlerSaveNewClient(resp))
-		// 	.then((result) => console.log(result));
-		saveNewclient(getInputsValuesClientNew()).then((result) => {
-			if (result) {
-				//TODO :close and clean
-				bsModalClientNew.hide();
-				cleanClientNewForm();
+	try {
+		selectTypePersonnality.addEventListener("input", () => {
+			console.log("fgt called");
+			let value = selectTypePersonnality.value;
+			if (value == 1) {
+				try {
+					let companies = document.querySelectorAll(".company");
+					companies.forEach((div) => div.remove());
+				} finally {
+					fecthAndAppendHTML(refRowClientNew, "human", false);
+				}
+			} else if (value == 2) {
+				try {
+					let humans = document.querySelectorAll(".human");
+					humans.forEach((div) => div.remove());
+				} finally {
+					fecthAndAppendHTML(refRowClientNew, "company", false);
+				}
 			} else {
-				//TODO : show error
+				console.log("personnality type value error");
 			}
 		});
-	});
-	//TODO : if good, clean and close, and snckbar. if bad, snackbar, then with reason.
+	} catch (e) {}
 
-	typeVenteInput.addEventListener("input", () => {
-		typeVenteInputBehavior();
-	});
+	try {
+		btnSaveNewClient.addEventListener("click", () => {
+			// const resp = submitIt(getInputsValuesClientNew());
+			// sendData("/database/save/new_client.php", getInputsValuesClientNew())
+			// 	.then((resp) => responseHandlerSaveNewClient(resp))
+			// 	.then((result) => console.log(result));
+			saveNewclient(getInputsValuesClientNew()).then((result) => {
+				if (result) {
+					//TODO :close and clean
+					bsModalClientNew.hide();
+					cleanClientNewForm();
+				} else {
+					//TODO : show error
+				}
+			});
+		});
+		//TODO : if good, clean and close, and snckbar. if bad, snackbar, then with reason.
+	} catch (error) {}
 
-	btnClientNew.addEventListener("click", () => {
-		bsModalClientNew.show();
-	});
+	try {
+		typeVenteInput.addEventListener("input", () => {
+			typeVenteInputBehavior();
+		});
+	} catch (error) {}
 
-	btnCancelClientNew.addEventListener("click", () => {
-		//TODO : finish me , clean inputs
-		bsModalClientNew.hide();
-		cleanClientNewForm();
-	});
+	try {
+		btnClientNew.addEventListener("click", () => {
+			bsModalClientNew.show();
+		});
+	} catch (error) {}
 
-	btnCancelClientNew;
+	try {
+		btnCancelClientNew.addEventListener("click", () => {
+			//TODO : finish me , clean inputs
+			bsModalClientNew.hide();
+			fetchSessionAuthorizationValue(
+				"/session_request/session_request.php",
+				"client",
+				"create"
+			).then((response) => {
+				if (response["response"] > 0) {
+					cleanClientNewForm();
+				}
+			});
+			// console.log(sessionValue);
+		});
+	} catch (error) {}
 });

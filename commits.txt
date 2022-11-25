@@ -220,3 +220,10 @@ fixed some logic naming
 implemented deleteclient process
 fixed Dbhandler returning value to handle update , insert and error mysql query
 !!!il reste à impementé la vérification de pouvoir
+------------------------
+032:
+server-communication.js : created fetchSessionAuthorizationValue();
+to check value of session->user->authorization;
+session_request/session_request.php : to communicate with js script to fetch $_session value;
+new-client.js : added try cactch for eventhandler. because some elements may not exists if user has not the right authorization.
+implemented fetchSessionAuthorizationValue for btnCancelClientNew

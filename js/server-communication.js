@@ -11,3 +11,13 @@ async function sendData(url, inputObj) {
 	// console.log(resp);
 	return resp;
 }
+
+async function fetchSessionAuthorizationValue(url, mycycle, action) {
+	const myjson = JSON.stringify({ cycle: mycycle, action: action });
+	const response = await fetch(url, {
+		method: "POST",
+		body: myjson,
+	});
+	let resp = await response.json();
+	return resp;
+}
