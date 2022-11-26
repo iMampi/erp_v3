@@ -19,17 +19,17 @@ function disableInput(input) {
 async function showMe() {}
 
 function fillInputsDetails(valueObj) {
-	console.log("dhfh : ");
-	// console.log(md);
+	// console.log("valueObj : ");
+	// console.log(valueObj);
 	// let inputsElements = md.querySelectorAll(".input");
 	let md = document.getElementById("modal-clt-details");
 	let inputsElements = md.getElementsByClassName("input");
-	console.log("trans : ");
-	console.log(inputsElements);
+
+	// console.log("inputsElement :");
+	// console.log(inputsElements);
 	// let inputsElements = document.querySelectorAll(
 	// "#modal-clt-details .input"
 	// );
-	// console.log(inputsElements);
 	//TODO : use a DTO
 	for (let index = 0; index < inputsElements.length; index++) {
 		let element = inputsElements[index];
@@ -96,13 +96,21 @@ function fillInputsDetails(valueObj) {
 	}
 }
 
+function makeEditable(inputElements) {
+	inputElements.forEach((input) => {
+		if (!["uid", "type-personnality"].includes(input.id)) {
+			input.disabled = false;
+		}
+	});
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-	const btnsClientDetails = document.querySelectorAll(".btn-details");
 	const modalClientDetails = document.getElementById("modal-clt-details");
 
 	let refRowClientDetails = modalClientDetails.querySelector("#ref-row");
 
 	const btnDelClient = modalClientDetails.querySelector("#btn-delete");
+	const btnModifyClient = modalClientDetails.querySelector("#btn-modify");
 	const table001 = document.getElementById("table-001");
 
 	var bsModalClientDetails = new bootstrap.Modal(modalClientDetails, {
@@ -111,9 +119,22 @@ document.addEventListener("DOMContentLoaded", () => {
 		focus: true,
 	});
 
-	const btnCancelModalClientDetails = document
-		.getElementById("modal-clt-details")
-		.querySelector("#btn-cancel");
+	const btnCancelModalClientDetails =
+		modalClientDetails.querySelector("#btn-cancel");
+
+	const btnSaveModalClientDetails =
+		modalClientDetails.querySelector("#btn-save");
+
+	function getInputsValuesClientDetails() {
+		//TODO : add paramater "modal", to delimit the dom. and take it out
+		let inputObj = {};
+		let inputs = modalClientDetails.querySelectorAll(".input");
+		inputs.forEach((input) => {
+			inputObj[input.id] = input.value;
+		});
+		console.log(inputObj);
+		return inputObj;
+	}
 
 	async function deleteClient() {
 		let myurl = "/database/delete/delete_one_client.php";
@@ -132,6 +153,27 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 		} else {
 			ToastShowClosured(myjson[0], "Echec suppression client");
+		}
+	}
+
+	async function saveUpdatedClient(inputsValuesObj) {
+		let myurl = "/database/save/update_client.php";
+		let response = await sendData(myurl, inputsValuesObj);
+		// TODO : we dont use await response.json because it is already handled in senData () as respones.text(). so we have to call JSON method manually;
+		let myjson = await JSON.parse(response);
+		console.log(myjson);
+		// let myjson = await response.json();
+		if (Array.isArray(myjson)) {
+			// note : structure particuliere retourné par la funciton sql
+			if (myjson[0] && myjson[1][0] >= 1) {
+				ToastShowClosured("success", "Client mis à jour avec succès");
+				bsModalClientDetails.hide();
+				// TODO : js update dom when saved correctly
+			} else {
+				ToastShowClosured("failure", "Echec de la mise à jour");
+			}
+		} else {
+			ToastShowClosured("failure", "Echec suppression client, not array");
 		}
 	}
 
@@ -166,6 +208,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			uid: myuid,
 		})
 			.then((resp) => {
+				// console.log("shwodetail :");
+				// console.log(resp);
 				return responseHandlerSelectOneClient(resp);
 			})
 			.then((result) => {
@@ -180,8 +224,8 @@ document.addEventListener("DOMContentLoaded", () => {
 						let classKey = "." + personnalities[antiKey_];
 						let fieldsPersonnality =
 							modalClientDetails.querySelectorAll(classKey);
-						console.log("calling removing");
-						console.log(antiKey_);
+						// console.log("calling removing");
+						// console.log(antiKey_);
 						fieldsPersonnality.forEach((div) => div.remove());
 						// return [
 						// 	appendAndFill(
@@ -256,6 +300,21 @@ document.addEventListener("DOMContentLoaded", () => {
 	try {
 		btnCancelModalClientDetails.addEventListener("click", () => {
 			bsModalClientDetails.hide();
+		});
+	} catch (e) {}
+
+	try {
+		btnModifyClient.addEventListener("click", (e) => {
+			let inputsForEdition =
+				modalClientDetails.querySelectorAll(".input");
+			makeEditable(inputsForEdition);
+		});
+	} catch (e) {}
+
+	try {
+		btnSaveModalClientDetails.addEventListener("click", (e) => {
+			let inputsValuesObj = getInputsValuesClientDetails();
+			saveUpdatedClient(inputsValuesObj);
 		});
 	} catch (e) {}
 });

@@ -228,9 +228,17 @@ session_request/session_request.php : to communicate with js script to fetch $_s
 new-client.js : added try cactch for eventhandler. because some elements may not exists if user has not the right authorization.
 implemented fetchSessionAuthorizationValue for btnCancelClientNew
 ------------------------
-
 033:
 in details-client.js : showDetails(), changet event.currentTarget to event.target
 
 generate btns_footer , change tit so the btn is not generated if user has not the authorization
 a php file buttons footer new php created to generate the buttons for modal-client-client
+------------------------
+034:
+working on modify client.
+update_client.php
+UpdateClient.php
+Queries.php
+Bindings.php
+create a fucntion update_client in sql.
+details-client.js>saveUpdatedClient() : now works correctly

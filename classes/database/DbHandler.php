@@ -7,6 +7,7 @@ use Database\PreparedStatement;
 
 class DbHandler
 {
+    // TODO : make them private
     static $created = 0;
     const HOST = "localhost:3306";
     const USER = "imampi";
@@ -75,7 +76,7 @@ class DbHandler
 
                 try {
 
-                    $step1 = $stmt->execute();
+                    $stmt->execute();
                     // echo 'step1 is ';
                     // echo ($step1);
                     $res = $stmt->get_result();
@@ -85,6 +86,7 @@ class DbHandler
                     $result_array = [\true, $results];
                     $ouput_final = $result_array;
                 } catch (\Throwable $th) {
+
                     try {
                         $nb_affected_row = $stmt->affected_rows;
                         if ($nb_affected_row > 0) {
@@ -94,7 +96,8 @@ class DbHandler
                         }
                     } catch (\Throwable $th) {
 
-                        $error_arr_ = ["error" => $th->getMessage(), "step1" => $step1];
+                        $error_arr_ = ["error" => $th->getMessage(), "nb" => $stmt->affected_rows, "res" => $res];
+                        // $error_arr_ = ["error" => $th->getMessage(), "step1" => $step1];
                         $result_array = [\false, $error_arr_];
                         // return "err2 : " . $th->getMessage();
                         $ouput_final = $result_array;

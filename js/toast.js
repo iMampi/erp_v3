@@ -5,7 +5,6 @@ function showMe() {
 	const myFunction = function (mode, mytext) {
 		// TODO : put const as a param. useless call
 		const toastContainer = document.getElementById("toast-container");
-
 		fetch("/elements/toast/toast_" + mode + "_base.html")
 			.then((resp) => resp.text())
 			.then((txt) => {

@@ -7,6 +7,36 @@ class Queries
 {
     public string $mode;
     public string $query;
+    static public $update_client = "
+    select update_client(?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?)
+    ";
+    
     static public $delete_client = "
     update clients set active_client='0' where uid=? 
     ";
@@ -60,6 +90,13 @@ class Queries
                 break;
             case 'delete_client':
                 $this->query = self::$delete_client;
+                break;
+
+            case 'update_client':
+                $this->query = self::$update_client;
+                break;
+            case 'test':
+                $this->query = self::$test;
                 break;
 
             default:

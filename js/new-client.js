@@ -69,7 +69,6 @@ async function responseHandlerSaveNewClient(response) {
 }
 
 async function fecthAndAppendHTML(refRow, selectedOption, disabled) {
-	console.log("gthypp called");
 	disabled = disabled || false;
 	if (![false, true].includes(disabled)) {
 		throw new Error("neither 'true' or 'false'.");
@@ -80,7 +79,6 @@ async function fecthAndAppendHTML(refRow, selectedOption, disabled) {
 		!selectedOption ||
 		refRow.parentNode.querySelector(`.${selectedOption}`) != undefined
 	) {
-
 		return false;
 	}
 
@@ -133,8 +131,8 @@ async function fecthAndAppendHTML(refRow, selectedOption, disabled) {
 						refRow.nextSibling
 					);
 				}
-				console.log("jf :");
-				console.log(refRow.parentNode);
+				// console.log("jf :");
+				// console.log(refRow.parentNode);
 
 				// The file is now available as 'listDOM[selectedOption]'.
 			});
