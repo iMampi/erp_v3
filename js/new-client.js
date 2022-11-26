@@ -80,11 +80,7 @@ async function fecthAndAppendHTML(refRow, selectedOption, disabled) {
 		!selectedOption ||
 		refRow.parentNode.querySelector(`.${selectedOption}`) != undefined
 	) {
-		console.log("checing : ");
-		console.log(selectedOption);
-		console.log(
-			refRow.parentNode.querySelector(`.${selectedOption}`) != undefined
-		);
+
 		return false;
 	}
 
@@ -129,7 +125,7 @@ async function fecthAndAppendHTML(refRow, selectedOption, disabled) {
 				inputs_.forEach((element) => {
 					element.disabled = disabled;
 				});
-				console.log("here");
+				// console.log("here");
 				for (let i = doc.body.childNodes.length - 1; i >= 0; i--) {
 					// console.log(i);
 					refRow.parentNode.insertBefore(
@@ -151,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const selectTypePersonnality = document.getElementById("type-personnality");
 
 	const modalClientNew = document.getElementById("modal-clt-new");
-	const btnCancelClientNew = document.getElementById("cancel-client-new");
+	const btnCancelClientNew = document.getElementById("btn-cancel-client-new");
 	const btnClientNew = document.getElementById("btn-client-new");
 
 	const btnSaveNewClient = document.getElementById("btn-save-client-new");

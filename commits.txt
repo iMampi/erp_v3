@@ -227,3 +227,10 @@ to check value of session->user->authorization;
 session_request/session_request.php : to communicate with js script to fetch $_session value;
 new-client.js : added try cactch for eventhandler. because some elements may not exists if user has not the right authorization.
 implemented fetchSessionAuthorizationValue for btnCancelClientNew
+------------------------
+
+033:
+in details-client.js : showDetails(), changet event.currentTarget to event.target
+
+generate btns_footer , change tit so the btn is not generated if user has not the authorization
+a php file buttons footer new php created to generate the buttons for modal-client-client

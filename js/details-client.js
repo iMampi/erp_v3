@@ -156,10 +156,12 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	async function showDetails(event) {
-		console.log("called here");
-		let parent = event.currentTarget.parentNode.parentNode;
+		// TODO : refactor
+		// console.log("called here");
+		let parent = event.target.parentNode.parentNode;
 		let myuid = parent.querySelector(".input.uid").value;
-		// console.log(uid);
+		// console.log("myuid tr");
+		// console.log(myuid);
 		sendData("/database/select/one_client_details.php", {
 			uid: myuid,
 		})
@@ -178,7 +180,8 @@ document.addEventListener("DOMContentLoaded", () => {
 						let classKey = "." + personnalities[antiKey_];
 						let fieldsPersonnality =
 							modalClientDetails.querySelectorAll(classKey);
-						// console.log("calling removing");
+						console.log("calling removing");
+						console.log(antiKey_);
 						fieldsPersonnality.forEach((div) => div.remove());
 						// return [
 						// 	appendAndFill(
@@ -199,7 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
 							setTimeout(() => {
 								fillInputsDetails(result[1]);
 							}, 200);
-							bsModalClientDetails.show();
+							// bsModalClientDetails.show();
 						});
 						// let newDom =
 						// 	document.getElementById("modal-clt-details");
@@ -226,34 +229,33 @@ document.addEventListener("DOMContentLoaded", () => {
 		// .then((result) => fillInputs(result));
 	}
 
-	function openModal() {
-		// let uid =
-		// btnTarget.parentNode.parentNode.querySelector(".input .uid").value;
-		// setTimeout(() => {
-		// 	zeModal.show();
-		// }, 200);
-		bsModalClientDetails.show();
-	}
-	btnsClientDetails.forEach((btnClientDetails) => {
-		btnClientDetails.addEventListener("click", (event) => {
-			showDetails(event);
+	// btnsClientDetails.forEach((btnClientDetails) => {
+	// 	btnClientDetails.addEventListener("click", (event) => {
+	// 		showDetails(event);
 
-			// fecthAndAppendHTML();
+	// 		// fecthAndAppendHTML();
+	// 	});
+	// });
+	try {
+		btnDelClient.addEventListener("click", () => {
+			// TODO : test authority
+			deleteClient();
 		});
-	});
+	} catch (e) {}
 
-	btnDelClient.addEventListener("click", () => {
-		// TODO : test authority
-		deleteClient();
-	});
+	try {
+		table001.addEventListener("click", (e) => {
+			if (e.target.id == "btn-details") {
+				// TODO :refactor
+				showDetails(e);
+				bsModalClientDetails.show();
+			}
+		});
+	} catch (e) {}
 
-	table001.addEventListener("click", (e) => {
-		if (e.target.id == "btn-details") {
-			openModal(e.target);
-		}
-	});
-
-	btnCancelModalClientDetails.addEventListener("click", () => {
-		bsModalClientDetails.hide();
-	});
+	try {
+		btnCancelModalClientDetails.addEventListener("click", () => {
+			bsModalClientDetails.hide();
+		});
+	} catch (e) {}
 });

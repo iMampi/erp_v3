@@ -129,7 +129,7 @@ is_logged();
                 </div>
             </div>
             <!-- end modal filter -->
-            <!-- modal main new clt -->
+            <!-- modal client new -->
             <div class="modal fade" id="modal-clt-new" tabindex="-1">
                 <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
                 </button>
@@ -158,15 +158,18 @@ is_logged();
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel-client-new">annuler</button>
-                            <button type="button" class="btn btn-primary" id="btn-save-client-new">Save</button>
+                            <?php
+                            require_once __DIR__ . "/../../modals_processors/buttons_footer_new.php";
+                            ?>
+                            <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel-client-new">annuler</button>
+                            <button type="button" class="btn btn-primary" id="btn-save-client-new">Save</button> -->
                         </div>
                     </div>
                 </div>
 
 
             </div>
-            <!-- end modal main new clt -->
+            <!-- end modal client new -->
             <!-- modal détails clts -->
             <div class="modal fade" tabindex="-1" id="modal-clt-details">
                 <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
