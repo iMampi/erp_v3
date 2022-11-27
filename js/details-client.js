@@ -14,8 +14,36 @@ function disableInputs(inputNodeList) {
 	});
 }
 function disableInput(input) {
-	input.getAttribut("disabled", "true");
+	input.setAttribute("disabled", "true");
 }
+
+function updateClientRow(mytable, dataObj) {
+	let row = mytable.querySelector(
+		"#row-" + zeroLeftPadding(dataObj["uid"], 3, false)
+	);
+	console.log(dataObj);
+	let inputsRow = row.querySelectorAll(".input");
+	inputsRow.forEach((input) => {
+		// console.log(input.classList);
+		if (input.classList.contains("clt-name", "input")) {
+			if (
+				dataObj["noms"] == undefined &&
+				dataObj["prenoms"] == undefined
+			) {
+				input.value =
+					dataObj["nom-commercial"] +
+					" / " +
+					dataObj["raison-sociale"];
+			} else if (
+				dataObj["nom-commercial"] == undefined &&
+				dataObj["raison-sociale"] == undefined
+			) {
+				input.value = dataObj["noms"] + " " + dataObj["prenoms"];
+			}
+		}
+	});
+}
+
 async function showMe() {}
 
 function fillInputsDetails(valueObj) {
@@ -132,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		inputs.forEach((input) => {
 			inputObj[input.id] = input.value;
 		});
-		console.log(inputObj);
+		// console.log(inputObj);
 		return inputObj;
 	}
 
@@ -161,19 +189,26 @@ document.addEventListener("DOMContentLoaded", () => {
 		let response = await sendData(myurl, inputsValuesObj);
 		// TODO : we dont use await response.json because it is already handled in senData () as respones.text(). so we have to call JSON method manually;
 		let myjson = await JSON.parse(response);
-		console.log(myjson);
+		// let myjson = response;
+		// console.log(myjson);
 		// let myjson = await response.json();
 		if (Array.isArray(myjson)) {
 			// note : structure particuliere retourné par la funciton sql
 			if (myjson[0] && myjson[1][0] >= 1) {
-				ToastShowClosured("success", "Client mis à jour avec succès");
-				bsModalClientDetails.hide();
+				ToastShowClosured("success", "Client mis à jour avec succès.");
+				let inputsForEdition =
+					modalClientDetails.querySelectorAll(".input");
+				disableInputs(inputsForEdition);
+				updateClientRow(table001, inputsValuesObj);
 				// TODO : js update dom when saved correctly
 			} else {
-				ToastShowClosured("failure", "Echec de la mise à jour");
+				ToastShowClosured("failure", "Echec de la mise à jour.");
 			}
 		} else {
-			ToastShowClosured("failure", "Echec suppression client, not array");
+			ToastShowClosured(
+				"failure",
+				"Echec de la mise à jour, contactez l'administrateur système."
+			);
 		}
 	}
 

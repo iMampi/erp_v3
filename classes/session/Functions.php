@@ -2,8 +2,6 @@
 
 namespace Session;
 
-
-
 function is_logged()
 {
     // FIXME : double usage. get rid of "logged" and just use "user"-> active
@@ -30,6 +28,15 @@ function can_visit($cycle)
 function can_create($cycle)
 {
     if ((!isset($_SESSION["logged"])) || (!isset($_SESSION["user"])) || ($_SESSION["user"]->authorizations->$cycle->create != 1)) {
+        return \false;
+    }
+    return \true;
+}
+
+function can_update($cycle)
+{
+    // TODO refactor
+    if ((!isset($_SESSION["logged"])) || (!isset($_SESSION["user"])) || ($_SESSION["user"]->authorizations->$cycle->update != 1)) {
         return \false;
     }
     return \true;

@@ -242,3 +242,9 @@ Queries.php
 Bindings.php
 create a fucntion update_client in sql.
 details-client.js>saveUpdatedClient() : now works correctly
+------------------------
+035:
+finish saveUpdatedClient. now input get disabeld on success. updated message for toast.
+update table's row when update successful updateClietnRow();
+Session\Functions.php : created can_update();
+update_client.php : implemented can_update("client");
