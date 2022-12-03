@@ -23,6 +23,7 @@ is_logged();
     <script src="/js/fixed-header.js"></script>
     <!-- TODO : put toast in a php>element file. html and js. to handle it dynamicaly. futur proof -->
     <script src="/js/server-communication.js"></script>
+    <script src="/js/confirmation.js"></script>
     <script src="/js/toast.js"></script>
     <script src="/js/new-client.js"></script>
     <script src="/js/details-client.js"></script>
@@ -213,6 +214,25 @@ is_logged();
         <!-- TOAST  -->
         <div class="toast-container position-fixed top-0 end-0 p-3" id="toast-container"></div>
         <!-- end TOAST  -->
+        <!-- confirmation  modal-->
+
+        <div class="modal fade bg-confirmation" tabindex="-1" id="modal-confirmation">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Etes-vous sûr?</h5>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer d-flex justify-content-end">
+                        <button type="button" class="col-auto btn  btn-success" id="btn-confirmation-yes">confirmer</button>
+                        <button type="button" class="col-auto btn btn-danger" id="btn-confirmation-no">annuler</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- endconfirmation  modal-->
+
 
 </body>
 

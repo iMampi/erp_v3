@@ -6,13 +6,13 @@ use Database\DbHandler;
 use Converter\DeleteClient;
 use Database\StandardPreparedStatement;
 
-use function Session\can_create;
+use function Session\can_delete;
 
-session_start();
 require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
+session_start();
 
 new DbHandler();
-if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("client"))) {
+if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_delete("client"))) {
 
     $data = json_decode(file_get_contents('php://input'), true);
 

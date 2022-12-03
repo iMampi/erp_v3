@@ -29,7 +29,7 @@ const DefaultValuesNewClientFormObj = {
 };
 const personnalities = { 1: "human", 2: "company" };
 var listDOM = {};
-
+var modificationWatcher = false;
 const ToastShowClosured = showMe();
 
 async function saveNewclient(inputObj) {
@@ -73,14 +73,13 @@ async function fecthAndAppendHTML(refRow, selectedOption, disabled) {
 	if (![false, true].includes(disabled)) {
 		throw new Error("neither 'true' or 'false'.");
 	}
-	// function to cache fetched result
-	// if (!selectedOption) || (refRow.parentNode.querySelector(`.${selectedOption}`)) {
 	if (
 		!selectedOption ||
 		refRow.parentNode.querySelector(`.${selectedOption}`) != undefined
 	) {
 		return false;
 	}
+	// function to cache fetched result
 
 	if (listDOM[selectedOption]) {
 		// The HTML code of this file has already been fetched.
@@ -160,6 +159,81 @@ document.addEventListener("DOMContentLoaded", () => {
 		focus: true,
 	});
 
+	//confirmation modal
+	const modalConfirmation = document.getElementById("modal-confirmation");
+	const bsModalConfirmation = new bootstrap.Modal(modalConfirmation, {
+		backdrop: false,
+		keyboard: false,
+		focus: true,
+	});
+
+	const btnConfirmationYes = modalConfirmation.querySelector(
+		"#btn-confirmation-yes"
+	);
+	const btnConfirmationNo = modalConfirmation.querySelector(
+		"#btn-confirmation-no"
+	);
+
+	// OBJECT for confirmation
+	const confirmationObj = {
+		modal: modalConfirmation,
+		bsModal: bsModalConfirmation,
+		btnYes: btnConfirmationYes,
+		btnNo: btnConfirmationNo,
+	};
+
+	const quitCreation = {
+		message:
+			"Des champs ont été modifiés.<br>\
+			Vos modifications vont être perdus.<br>\
+			Êtes vous sûr de vouloir quitter ce formulaire?",
+		yes: () => {
+			bsModalClientNew.hide();
+			cleanFormClientNew();
+			modificationWatcher = false;
+		},
+		no: () => {
+			bsModalConfirmation.hide();
+		},
+	};
+
+	// FUNCTIONS
+
+	function cleanFormClientNew() {
+		//check if authorized to create, should i bother to clean if form is empty?
+		fetchSessionAuthorizationValue(
+			"/session_request/session_request.php",
+			"client",
+			"create"
+		).then((response) => {
+			if (response["response"] > 0) {
+				_cleanClientNewForm();
+			}
+		});
+	}
+
+	function _cleanClientNewForm() {
+		const inputsClientForm =
+			modalClientNew.querySelectorAll(".client-form.input");
+		inputsClientForm.forEach((input) => {
+			input.value = DefaultValuesNewClientFormObj[input.id];
+		});
+
+		let companyDivs = modalClientNew.querySelectorAll(".company");
+		if (companyDivs.length > 0) {
+			console.log("truthy");
+			companyDivs.forEach((div) => {
+				div.remove();
+			});
+		}
+		let humanDivs = modalClientNew.querySelectorAll(".human");
+		if (humanDivs.length == 0) {
+			console.log("falsy");
+			fecthAndAppendHTML(refRowClientNew, "human", false);
+		}
+		// console.log(inputsClientForm);
+	}
+
 	function getInputsValuesClientNew() {
 		//TODO : add paramater "modal", to delimit the dom. and take it out
 		let inputObj = {};
@@ -172,19 +246,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 		console.log(inputObj);
 		return inputObj;
-	}
-
-	function cleanClientNewForm() {
-		const inputsClientForm =
-			modalClientNew.querySelectorAll(".client-form.input");
-		// console.log("canceling");
-		inputsClientForm.forEach((input) => {
-			// console.log(input.id);
-			input.value = DefaultValuesNewClientFormObj[input.id];
-		});
-
-		fecthAndAppendHTML(refRowClientNew, "human", false);
-		// console.log(inputsClientForm);
 	}
 
 	function typeVenteInputBehavior() {
@@ -234,7 +295,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				if (result) {
 					//TODO :close and clean
 					bsModalClientNew.hide();
-					cleanClientNewForm();
+					_cleanClientNewForm();
 				} else {
 					//TODO : show error
 				}
@@ -258,17 +319,24 @@ document.addEventListener("DOMContentLoaded", () => {
 	try {
 		btnCancelClientNew.addEventListener("click", () => {
 			//TODO : finish me , clean inputs
-			bsModalClientNew.hide();
-			fetchSessionAuthorizationValue(
-				"/session_request/session_request.php",
-				"client",
-				"create"
-			).then((response) => {
-				if (response["response"] > 0) {
-					cleanClientNewForm();
-				}
-			});
-			// console.log(sessionValue);
+			if (modificationWatcher) {
+				openModalConfirmation(confirmationObj, quitCreation);
+			} else {
+				bsModalClientNew.hide();
+			}
 		});
 	} catch (error) {}
+
+	btnConfirmationYes.addEventListener("click", () => {
+		setTimeout(() => {
+			console.log("modificationWatacher");
+			console.log(modificationWatcher);
+			console.log("confirmaionObj");
+			console.log(confirmationObj);
+		}, 1000);
+	});
+
+	modalClientNew.addEventListener("input", () => {
+		modificationWatcher = true;
+	});
 });

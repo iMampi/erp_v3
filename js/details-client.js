@@ -2,7 +2,7 @@ async function responseHandlerSelectOneClient(response) {
 	try {
 		// return JSON.parse(await response);
 		let myjson = JSON.parse(await response);
-		// console.log(myjson);
+		console.log(myjson);
 		return myjson;
 	} catch (e) {
 		return "error 2";
@@ -138,7 +138,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	let refRowClientDetails = modalClientDetails.querySelector("#ref-row");
 
 	const btnDelClient = modalClientDetails.querySelector("#btn-delete");
-	const btnModifyClient = modalClientDetails.querySelector("#btn-modify");
+	const btnModifyClientDetails =
+		modalClientDetails.querySelector("#btn-modify");
 	const table001 = document.getElementById("table-001");
 
 	var bsModalClientDetails = new bootstrap.Modal(modalClientDetails, {
@@ -146,6 +147,63 @@ document.addEventListener("DOMContentLoaded", () => {
 		keyboard: false,
 		focus: true,
 	});
+
+	//confirmation modal
+	const modalConfirmation = document.getElementById("modal-confirmation");
+	const bsModalConfirmation = new bootstrap.Modal(modalConfirmation, {
+		backdrop: false,
+		keyboard: false,
+		focus: true,
+	});
+
+	const btnConfirmationYes = modalConfirmation.querySelector(
+		"#btn-confirmation-yes"
+	);
+	const btnConfirmationNo = modalConfirmation.querySelector(
+		"#btn-confirmation-no"
+	);
+	// OBJECT for confirmation
+	const confirmationDetailsObj = {
+		modal: modalConfirmation,
+		bsModal: bsModalConfirmation,
+		btnYes: btnConfirmationYes,
+		btnNo: btnConfirmationNo,
+	};
+
+	const quitDetails = {
+		message:
+			"Des champs ont été modifiés.<br>\
+				Vos modifications vont être perdus.<br>\
+				Êtes vous sûr de vouloir quitter ce formulaire?",
+		yes: () => {
+			let inputsForEdition =
+				modalClientDetails.querySelectorAll(".input");
+			disableInputs(inputsForEdition);
+			bsModalClientDetails.hide();
+			modificationWatcher = false;
+		},
+		no: () => {
+			bsModalConfirmation.hide();
+		},
+	};
+
+	const saveDetails = {
+		message:
+			"Des champs ont été modifiés.<br>\
+				Vos modifications vont être enregistrées.<br>\
+				Êtes vous sûr de vouloir sauvegarder vos modification?",
+		yes: () => {
+			let inputsValuesObj = getInputsValuesClientDetails();
+			saveUpdatedClient(inputsValuesObj).then((result) => {
+				if (result) {
+					modificationWatcher = false;
+				}
+			});
+		},
+		no: () => {
+			bsModalConfirmation.hide();
+		},
+	};
 
 	const btnCancelModalClientDetails =
 		modalClientDetails.querySelector("#btn-cancel");
@@ -189,9 +247,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		let response = await sendData(myurl, inputsValuesObj);
 		// TODO : we dont use await response.json because it is already handled in senData () as respones.text(). so we have to call JSON method manually;
 		let myjson = await JSON.parse(response);
-		// let myjson = response;
-		// console.log(myjson);
-		// let myjson = await response.json();
+
 		if (Array.isArray(myjson)) {
 			// note : structure particuliere retourné par la funciton sql
 			if (myjson[0] && myjson[1][0] >= 1) {
@@ -200,15 +256,19 @@ document.addEventListener("DOMContentLoaded", () => {
 					modalClientDetails.querySelectorAll(".input");
 				disableInputs(inputsForEdition);
 				updateClientRow(table001, inputsValuesObj);
-				// TODO : js update dom when saved correctly
+				btnSaveModalClientDetails.disabled = true;
+				btnModifyClientDetails.disabled = false;
+				return true;
 			} else {
 				ToastShowClosured("failure", "Echec de la mise à jour.");
+				return false;
 			}
 		} else {
 			ToastShowClosured(
 				"failure",
 				"Echec de la mise à jour, contactez l'administrateur système."
 			);
+			return false;
 		}
 	}
 
@@ -262,16 +322,6 @@ document.addEventListener("DOMContentLoaded", () => {
 						// console.log("calling removing");
 						// console.log(antiKey_);
 						fieldsPersonnality.forEach((div) => div.remove());
-						// return [
-						// 	appendAndFill(
-						// 		refRowClientDetails,
-						// 		personnalities[
-						// 			result[1]["type_personnality_uid"]
-						// 		],
-						// 		true
-						// 	),
-						// 	result[1],
-						// ];
 					} finally {
 						fecthAndAppendHTML(
 							refRowClientDetails,
@@ -283,38 +333,13 @@ document.addEventListener("DOMContentLoaded", () => {
 							}, 200);
 							// bsModalClientDetails.show();
 						});
-						// let newDom =
-						// 	document.getElementById("modal-clt-details");
-						// fillInputsDetails(newDom, result[1]);
+
 						//must use time out. because when we update the DOM with appendAndFill, it does not update directly
-						// setTimeout(() => {
-						// 	fillInputsDetails(result[1]);
-						// }, 200);
-						// try {
-						// 	fecthAndAppendHTML(
-						// 		s
-						// 		personnalities[
-						// 			result[1]["type_personnality_uid"]
-						// 		],
-						// 		true
-						// 	);
-						// } finally {
-						// 	fillInputsDetails(result[1]);
-						// }
 					}
 				}
 			});
-
-		// .then((result) => fillInputs(result));
 	}
 
-	// btnsClientDetails.forEach((btnClientDetails) => {
-	// 	btnClientDetails.addEventListener("click", (event) => {
-	// 		showDetails(event);
-
-	// 		// fecthAndAppendHTML();
-	// 	});
-	// });
 	try {
 		btnDelClient.addEventListener("click", () => {
 			// TODO : test authority
@@ -333,13 +358,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	} catch (e) {}
 
 	try {
-		btnCancelModalClientDetails.addEventListener("click", () => {
-			bsModalClientDetails.hide();
-		});
-	} catch (e) {}
-
-	try {
-		btnModifyClient.addEventListener("click", (e) => {
+		btnModifyClientDetails.addEventListener("click", (e) => {
 			let inputsForEdition =
 				modalClientDetails.querySelectorAll(".input");
 			makeEditable(inputsForEdition);
@@ -348,8 +367,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	try {
 		btnSaveModalClientDetails.addEventListener("click", (e) => {
-			let inputsValuesObj = getInputsValuesClientDetails();
-			saveUpdatedClient(inputsValuesObj);
+			if (modificationWatcher) {
+				// console.log(modificationWatcher);
+
+				openModalConfirmation(confirmationDetailsObj, saveDetails);
+			}
+		});
+	} catch (e) {}
+
+	modalClientDetails.addEventListener("input", () => {
+		modificationWatcher = true;
+	});
+
+	try {
+		btnCancelModalClientDetails.addEventListener("click", () => {
+			//TODO : finish me , clean inputs
+			if (modificationWatcher) {
+				openModalConfirmation(confirmationDetailsObj, quitDetails);
+			} else {
+				let inputsForEdition =
+					modalClientDetails.querySelectorAll(".input");
+				disableInputs(inputsForEdition);
+				bsModalClientDetails.hide();
+			}
+		});
+	} catch (error) {}
+
+	try {
+		btnModifyClientDetails.addEventListener("click", () => {
+			btnSaveModalClientDetails.disabled = false;
+			btnModifyClientDetails.disabled = true;
 		});
 	} catch (e) {}
 });

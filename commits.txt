@@ -247,4 +247,17 @@ details-client.js>saveUpdatedClient() : now works correctly
 finish saveUpdatedClient. now input get disabeld on success. updated message for toast.
 update table's row when update successful updateClietnRow();
 Session\Functions.php : created can_update();
-update_client.php : implemented can_update("client");
+update_client.php : implemented can_update("client");------------------------
+036:
+Session\Functions.php : created can_delete();
+delete one client.php : implemented can_delete("client");
+session_start() after autoload.php
+mampi.css : bg-confirmation, to make the background darker when modals called with js. nothing to be done. all handled by modal
+confirmation. js : implemented openModalConfirmation()
+detail-client.js : btnCancelModalClientDetails => disableInputs();
+starting to implement modal-confirmation
+implemented for client creation when canceling
+implemented for client details modification when canceling and when saving
+btnModify and btnSave ; disabled when the other is active.
+I had to change the html base : made btn-save disabled by default
+

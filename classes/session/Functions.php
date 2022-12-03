@@ -41,3 +41,11 @@ function can_update($cycle)
     }
     return \true;
 }
+function can_delete($cycle)
+{
+    // TODO refactor
+    if ((!isset($_SESSION["logged"])) || (!isset($_SESSION["user"])) || ($_SESSION["user"]->authorizations->$cycle->delete != 1)) {
+        return \false;
+    }
+    return \true;
+}
