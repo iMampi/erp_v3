@@ -264,3 +264,5 @@ I had to change the html base : made btn-save disabled by default
 037:
 implemented confirmation for deleteClient
 fixed removeTableRow() by adding zeroLeftPadding() when getting
+------------------------
+037:
