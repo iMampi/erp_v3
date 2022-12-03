@@ -65,3 +65,7 @@ mysql on client detail SP : how ot impelment the "active_client=1" condition
 
 clts.php
 when user is not authorized o create, button save still appears.
+
+for rows in table:
+now, it is 3 digit num. (ex : row-050)
+must change that to 4 or 5 digit (ex : row-00100)

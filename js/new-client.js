@@ -327,15 +327,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	} catch (error) {}
 
-	btnConfirmationYes.addEventListener("click", () => {
-		setTimeout(() => {
-			console.log("modificationWatacher");
-			console.log(modificationWatcher);
-			console.log("confirmaionObj");
-			console.log(confirmationObj);
-		}, 1000);
-	});
-
 	modalClientNew.addEventListener("input", () => {
 		modificationWatcher = true;
 	});

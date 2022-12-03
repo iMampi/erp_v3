@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		btnNo: btnConfirmationNo,
 	};
 
-	const quitDetails = {
+	const quitDetailsObj = {
 		message:
 			"Des champs ont été modifiés.<br>\
 				Vos modifications vont être perdus.<br>\
@@ -187,7 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		},
 	};
 
-	const saveDetails = {
+	const saveDetailsObj = {
 		message:
 			"Des champs ont été modifiés.<br>\
 				Vos modifications vont être enregistrées.<br>\
@@ -199,6 +199,16 @@ document.addEventListener("DOMContentLoaded", () => {
 					modificationWatcher = false;
 				}
 			});
+		},
+		no: () => {
+			bsModalConfirmation.hide();
+		},
+	};
+
+	const deteleClientObj = {
+		message: "Etes vous sûr de vouloir supprimer ce client?",
+		yes: () => {
+			deleteClient();
 		},
 		no: () => {
 			bsModalConfirmation.hide();
@@ -231,7 +241,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		// let myjson = await response.json();
 		if (Array.isArray(myjson)) {
 			if (myjson[0] && myjson[1]["nb_affected_row"] == "1") {
-				removeTableRow(cltUid);
+				let x = removeTableRow(cltUid);
+				console.log(x);
 				ToastShowClosured("success", "Client effacé avec succès");
 				bsModalClientDetails.hide();
 			} else {
@@ -273,8 +284,11 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	function removeTableRow(cltUid) {
+		console.log("collapsing " + cltUid);
 		try {
-			let trToDelete = document.getElementById("row-" + cltUid);
+			let trToDelete = document.getElementById(
+				"row-" + zeroLeftPadding(cltUid, 3, false)
+			);
 			trToDelete.classList.add("collapse-row");
 			return true;
 		} catch (err) {
@@ -342,8 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	try {
 		btnDelClient.addEventListener("click", () => {
-			// TODO : test authority
-			deleteClient();
+			openModalConfirmation(confirmationDetailsObj, deteleClientObj);
 		});
 	} catch (e) {}
 
@@ -370,7 +383,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (modificationWatcher) {
 				// console.log(modificationWatcher);
 
-				openModalConfirmation(confirmationDetailsObj, saveDetails);
+				openModalConfirmation(confirmationDetailsObj, saveDetailsObj);
 			}
 		});
 	} catch (e) {}
@@ -383,7 +396,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		btnCancelModalClientDetails.addEventListener("click", () => {
 			//TODO : finish me , clean inputs
 			if (modificationWatcher) {
-				openModalConfirmation(confirmationDetailsObj, quitDetails);
+				openModalConfirmation(confirmationDetailsObj, quitDetailsObj);
 			} else {
 				let inputsForEdition =
 					modalClientDetails.querySelectorAll(".input");
