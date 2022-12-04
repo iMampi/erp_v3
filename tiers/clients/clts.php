@@ -27,6 +27,7 @@ is_logged();
     <script src="/js/toast.js"></script>
     <script src="/js/new-client.js"></script>
     <script src="/js/details-client.js"></script>
+    <script src="/js/client-filter.js"></script>
     <link rel="stylesheet" href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/style/mampi.css">
     <title>listes clients</title>
@@ -69,7 +70,7 @@ is_logged();
                                 <button type="button" class="col-auto btn btn-info me-auto" data-bs-toggle="modal" data-bs-target="#modal-fam-detail">valider</button>
                             </div>
                             <div class="col-auto justify-content-end">
-                                <button type="button" class="col-auto btn btn-info me-auto" data-bs-toggle="modal" data-bs-target="#modal-filter">filtrer</button>
+                                <button type="button" class="col-auto btn btn-info me-auto" id='btn-client-filter'>filtrer</button>
                                 <button type="button" class="col-auto btn btn-info ">exporter</button>
                             </div>
 
@@ -96,7 +97,7 @@ is_logged();
                 </div>
             </div>
             <!-- modal filter -->
-            <div class="modal fade" id="modal-filter" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="modal-client-filter" tabindex="-1">
                 <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
                 </button>
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
@@ -108,24 +109,11 @@ is_logged();
                         </div>
                         <div class="modal-body">
 
-                            <div id="modal-body-heads">
-                                <?php
-                                //TODO : make the header of factures in details readonly
-                                //TODO : change to require once.
-                                // require __DIR__ . "/../elements/treso_affectation_affaire_header_base.html";
-                                ?>
-                            </div>
-                            <!-- TODO : to elete. we gonna use only JS here -->
-                            <div id="modal-body-table">
-                                <?php
-                                //TODO : change to require once.
-                                // require __DIR__ . "/../elements/treso_affectation_affaire_details_base.html";
-                                ?>
-                            </div>
+                            <?php require_once __DIR__ . "/../../elements/tiers/clients/client_filter.html" ?>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">annuler</button>
-                            <button type="button" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-secondary" id="btn-cancel-filter">annuler</button>
+                            <button type="button" class="btn btn-primary" id="btn-apply-filter">appliquer</button>
                         </div>
                     </div>
                 </div>

@@ -265,4 +265,14 @@ I had to change the html base : made btn-save disabled by default
 implemented confirmation for deleteClient
 fixed removeTableRow() by adding zeroLeftPadding() when getting
 ------------------------
-037:
+038:
+created base for filter modal (html). all inputs are disabled by default;
+added checkbox for active filterfield;
+the js part is in new--client.js;
+definition of function done. il reste l'implementation de certaines fucntions.
+les bouttons sur ModalFilter sont fonctionnels;
+modified the modalClientFilter from data-bs to pure js;
+les checkbox sont fonctinnel. disable or enable inputs via changeStateFieldClientFilter();
+getDataClientFilter() implemented;
+il reste à implementer les champs spécifiquet à chaque personnalités...
+

@@ -1,0 +1,349 @@
+<div class="container">
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input class="form-check-input" type="checkbox" id="checkbox-uid" />
+			<span class="col-form-label col-2">client id</span>
+		</div>
+		<div class="col my-auto">
+			<input
+				type="text"
+				class="form-control form-control-sm input uid client-form"
+				id="uid"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox-personnality"
+			/>
+
+			<span class="col-form-label col-2">personnalité</span>
+		</div>
+		<div class="col my-auto">
+			<select
+				class="personnality input form-control form-control-sm client-form"
+				id="personnality"
+				required
+				disabled
+			>
+				<option value="all">tous</option>
+				<option value="1">physique</option>
+				<option value="2">morale</option>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox-actif"
+			/>
+
+			<span class="col-form-label col-2">actif</span>
+		</div>
+
+		<div class="col my-auto">
+			<select
+				class="actif input form-control form-control-sm client-form"
+				required
+				id="actif"
+				disabled
+			>
+				<option value="1">oui</option>
+				<option value="0">non</option>
+				<option value="all">tous</option>
+			</select>
+		</div>
+	</div>
+	<!-- <div class="row" id="div-modulable"></div> -->
+
+	<div class="row" id="ref-row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox-evaluation"
+			/>
+
+			<span class="col-form-label col-2">évaluation</span>
+		</div>
+
+		<div class="col my-auto">
+			<select
+				class="evaluation input form-control form-control-sm client-form"
+				required
+				id="evaluation"
+				disabled
+			>
+				<option value="all">tous</option>
+
+				<option value="2">unknown</option>
+				<option value="1">good</option>
+				<option value="0">bad</option>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox-declarable"
+			/>
+
+			<span class="col-form-label col-2">déclarable</span>
+		</div>
+
+		<div class="col my-auto">
+			<select
+				class="declarable input form-control form-control-sm client-form"
+				required
+				id="declarable"
+				disabled
+			>
+				<option value="all">tous</option>
+
+				<option value="1">oui</option>
+				<option value="0">non</option>
+			</select>
+		</div>
+		<!-- <div class="row" id="ref-row"> -->
+		<!-- name according to personnaly type -->
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox-adress"
+			/>
+			<span class="col-form-label col-2">adresse</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="text"
+				class="adress form-control form-control-sm input client-form"
+				id="adress"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox-phone"
+			/>
+			<span class="col-form-label col-2">telephone</span>
+		</div>
+		<div class="col my-auto">
+			<input
+				type="text"
+				class="phone form-control form-control-sm input client-form"
+				id="phone"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox-mail"
+			/>
+
+			<span class="col-form-label col-2">email</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="text"
+				class="mail form-control form-control-sm input client-form"
+				id="mail"
+				disabled
+			/>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox-typeVente"
+			/>
+
+			<span class="col-form-label col-2">type de vente</span>
+		</div>
+
+		<div class="col my-auto">
+			<select
+				class="typeVente input form-control form-control-sm input client-form"
+				id="typeVente"
+				disabled
+			>
+				<option value="all">tous</option>
+
+				<option value="0">au comptant</option>
+				<option value="1">à crédit</option>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox-encours"
+			/>
+			<span class="col-form-label col-2">encours</span>
+		</div>
+		<div class="col my-auto">
+			<input
+				type="number"
+				class="encours form-control encours form-control-sm input client-form"
+				id="encours-min"
+				disabled
+			/>
+		</div>
+		<div class="col my-auto">
+			<input
+				type="number"
+				class="encours form-control encours form-control-sm input client-form"
+				id="encours-max"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox-echeance"
+			/>
+			<span class="col-form-label col-2">échéance</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="number"
+				class="echeance form-control echeance form-control-sm input client-form"
+				id="echeance-min"
+				disabled
+			/>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="number"
+				class="echeance form-control echeance form-control-sm input client-form"
+				id="echeance-max"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row my-auto">
+		<div class="col-3 form-check form-switch my-auto">
+			<input class="form-check-input" type="checkbox" id="checkbox-nif" />
+
+			<span class="col-form-label col-2">nif</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="text"
+				class="nif form-control form-control-sm input client-form"
+				id="nif"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row my-auto">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox-stat"
+			/>
+
+			<span class="col-form-label col-2">stat</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="text"
+				class="stat form-control form-control-sm input client-form"
+				id="stat"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row my-auto">
+		<div class="col-3 form-check form-switch my-auto">
+			<input class="form-check-input" type="checkbox" id="checkbox-rcs" />
+
+			<span class="col-form-label col-2">rcs</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="text"
+				class="rcs form-control form-control-sm input client-form"
+				id="rcs"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row my-auto">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox-commissionable"
+			/>
+
+			<span class="col-form-label col-2">commissionable</span>
+		</div>
+
+		<div class="col my-auto">
+			<select
+				class="commissionable input form-control form-control-sm client-form"
+				id="commissionable"
+				disabled
+			>
+				<option value="all">tous</option>
+
+				<option value="0">non</option>
+				<option value="1">oui</option>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox-note"
+			/>
+			<label for="note" class="form-label">note</label>
+		</div>
+
+		<div class="col my-auto">
+			<textarea
+				class="note form-control input client-form"
+				id="note"
+				rows="3"
+				disabled
+			></textarea>
+		</div>
+	</div>
+</div>

@@ -142,6 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		modalClientDetails.querySelector("#btn-modify");
 	const table001 = document.getElementById("table-001");
 
+
 	var bsModalClientDetails = new bootstrap.Modal(modalClientDetails, {
 		backdrop: "static",
 		keyboard: false,
@@ -155,6 +156,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		keyboard: false,
 		focus: true,
 	});
+
+
 
 	const btnConfirmationYes = modalConfirmation.querySelector(
 		"#btn-confirmation-yes"

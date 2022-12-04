@@ -145,6 +145,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const modalClientNew = document.getElementById("modal-clt-new");
 	const btnCancelClientNew = document.getElementById("btn-cancel-client-new");
+
+	const btnClientFilter = document.getElementById("btn-client-filter");
 	const btnClientNew = document.getElementById("btn-client-new");
 
 	const btnSaveNewClient = document.getElementById("btn-save-client-new");
@@ -163,6 +165,19 @@ document.addEventListener("DOMContentLoaded", () => {
 	const modalConfirmation = document.getElementById("modal-confirmation");
 	const bsModalConfirmation = new bootstrap.Modal(modalConfirmation, {
 		backdrop: false,
+		keyboard: false,
+		focus: true,
+	});
+
+	//modal filter
+	const modalClientFilter = document.getElementById("modal-client-filter");
+
+	const btnCancelModalClientFilter =
+		modalClientFilter.querySelector("#btn-cancel-filter");
+	const btnApplyModalClientFilter =
+		modalClientFilter.querySelector("#btn-apply-filter");
+	const bsmodalClientFilter = new bootstrap.Modal(modalClientFilter, {
+		backdrop: "static",
 		keyboard: false,
 		focus: true,
 	});
@@ -198,6 +213,37 @@ document.addEventListener("DOMContentLoaded", () => {
 	};
 
 	// FUNCTIONS
+
+	function changeStateFieldClientFilter(target) {
+		let checked = target.checked;
+		let fieldName = target.id.split("-")[1];
+		let inputs = modalClientFilter.querySelectorAll("." + fieldName);
+		inputs.forEach((myinput) => {
+			if (checked) {
+				myinput.disabled = false;
+			} else {
+				myinput.disabled = true;
+			}
+		});
+	}
+
+	function filterClients() {}
+	function getDataClientFilter() {
+		let dataFilterObj = {};
+		let checkboxes = modalClientFilter.querySelectorAll(
+			"input[type=checkbox]:checked"
+		);
+
+		checkboxes.forEach((checkboxe) => {
+			let fieldName = checkboxe.id.split("-")[1];
+			let inputs = modalClientFilter.querySelectorAll("." + fieldName);
+			inputs.forEach((myinput) => {
+				dataFilterObj[myinput.id] = myinput.value;
+			});
+		});
+
+		return dataFilterObj;
+	}
 
 	function cleanFormClientNew() {
 		//check if authorized to create, should i bother to clean if form is empty?
@@ -327,7 +373,36 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	} catch (error) {}
 
+	try {
+		btnClientFilter.addEventListener("click", () => {
+			bsmodalClientFilter.show();
+		});
+	} catch (error) {}
+
+	try {
+		btnCancelModalClientFilter.addEventListener("click", () => {
+			bsmodalClientFilter.hide();
+		});
+	} catch (error) {}
+
+	try {
+		btnApplyModalClientFilter.addEventListener("click", () => {
+			console.log(getDataClientFilter());
+			// filterClients(getDataClientFilter());
+			// bsmodalClientFilter.hide();
+		});
+	} catch (error) {}
+
 	modalClientNew.addEventListener("input", () => {
 		modificationWatcher = true;
 	});
+
+	try {
+		modalClientFilter.addEventListener("input", (event) => {
+			let target = event.target;
+			if (target.type == "checkbox") {
+				changeStateFieldClientFilter(target);
+			}
+		});
+	} catch (error) {}
 });
