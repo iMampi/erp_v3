@@ -1,7 +1,21 @@
 <div class="container">
 	<div class="row">
+		<button
+			type="button"
+			class="btn btn-outline-success btn-sm"
+			id="btn-filter-basic"
+		>
+			filtre basic
+		</button>
+	</div>
+
+	<div class="row">
 		<div class="col-3 form-check form-switch my-auto">
-			<input class="form-check-input" type="checkbox" id="checkbox-uid" />
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--uid"
+			/>
 			<span class="col-form-label col-2">client id</span>
 		</div>
 		<div class="col my-auto">
@@ -18,7 +32,7 @@
 			<input
 				class="form-check-input"
 				type="checkbox"
-				id="checkbox-personnality"
+				id="checkbox--personnality"
 			/>
 
 			<span class="col-form-label col-2">personnalité</span>
@@ -41,7 +55,7 @@
 			<input
 				class="form-check-input"
 				type="checkbox"
-				id="checkbox-actif"
+				id="checkbox--actif"
 			/>
 
 			<span class="col-form-label col-2">actif</span>
@@ -61,13 +75,198 @@
 		</div>
 	</div>
 	<!-- <div class="row" id="div-modulable"></div> -->
+	<!-- COMPANY -->
+
+	<div class="row company">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--nom-commercial"
+			/>
+			<span class="col-form-label col-2">nom commercial</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="text"
+				class="form-control form-control-sm input nom-commercial client-form"
+				id="nom-commercial"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row company">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--raison-sociale"
+			/>
+
+			<span class="col-form-label col-2">raison social</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="text"
+				class="form-control form-control-sm input raison-sociale client-form"
+				id="raison-sociale"
+				disabled
+			/>
+		</div>
+	</div>
+	<!-- END COMPANY -->
+
+	<!-- HUMAN -->
+	<div class="row human">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--noms"
+			/>
+
+			<span class="col-form-label col-2">noms</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="text"
+				class="noms form-control form-control-sm input client-form"
+				id="noms"
+				disabled
+			/>
+		</div>
+	</div>
+
+	<div class="row human">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--prenoms"
+			/>
+
+			<span class="col-form-label col-2">prenoms</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="text"
+				class="prenoms form-control form-control-sm client-form"
+				id="prenoms"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row human">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--cin"
+			/>
+			<span class="col-form-label col-2">cin</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="text"
+				class="form-control form-control-sm input cin client-form"
+				id="cin"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row human">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--cin-date"
+			/>
+
+			<span class="col-form-label col-2">date de délivrance</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="date"
+				class="form-control form-control-sm input cin-date client-form"
+				id="cin-date"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row human">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--cin-delivrance"
+			/>
+
+			<span class="col-form-label col-2">lieu de délivrance</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="text"
+				class="form-control form-control-sm input cin-delivrance client-form"
+				id="cin-delivrance"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row human">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--naissance-date"
+			/>
+
+			<span class="col-form-label col-2">date de naissance</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="date"
+				class="form-control form-control-sm input naissance-date client-form"
+				id="naissance-date"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row human">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--naissance-lieu"
+			/>
+
+			<span class="col-form-label col-2">lieu de naissance</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="text"
+				class="form-control form-control-sm input naissance-lieu client-form"
+				id="naissance-lieu"
+				disabled
+			/>
+		</div>
+	</div>
+	<!-- END HUMAN -->
 
 	<div class="row" id="ref-row">
 		<div class="col-3 form-check form-switch my-auto">
 			<input
 				class="form-check-input"
 				type="checkbox"
-				id="checkbox-evaluation"
+				id="checkbox--evaluation"
 			/>
 
 			<span class="col-form-label col-2">évaluation</span>
@@ -93,7 +292,7 @@
 			<input
 				class="form-check-input"
 				type="checkbox"
-				id="checkbox-declarable"
+				id="checkbox--declarable"
 			/>
 
 			<span class="col-form-label col-2">déclarable</span>
@@ -120,7 +319,7 @@
 			<input
 				class="form-check-input"
 				type="checkbox"
-				id="checkbox-adress"
+				id="checkbox--adress"
 			/>
 			<span class="col-form-label col-2">adresse</span>
 		</div>
@@ -139,7 +338,7 @@
 			<input
 				class="form-check-input"
 				type="checkbox"
-				id="checkbox-phone"
+				id="checkbox--phone"
 			/>
 			<span class="col-form-label col-2">telephone</span>
 		</div>
@@ -157,7 +356,7 @@
 			<input
 				class="form-check-input"
 				type="checkbox"
-				id="checkbox-mail"
+				id="checkbox--mail"
 			/>
 
 			<span class="col-form-label col-2">email</span>
@@ -178,7 +377,7 @@
 			<input
 				class="form-check-input"
 				type="checkbox"
-				id="checkbox-typeVente"
+				id="checkbox--type-vente"
 			/>
 
 			<span class="col-form-label col-2">type de vente</span>
@@ -186,8 +385,8 @@
 
 		<div class="col my-auto">
 			<select
-				class="typeVente input form-control form-control-sm input client-form"
-				id="typeVente"
+				class="type-vente input form-control form-control-sm input client-form"
+				id="type-vente"
 				disabled
 			>
 				<option value="all">tous</option>
@@ -202,7 +401,7 @@
 			<input
 				class="form-check-input"
 				type="checkbox"
-				id="checkbox-encours"
+				id="checkbox--encours"
 			/>
 			<span class="col-form-label col-2">encours</span>
 		</div>
@@ -228,7 +427,7 @@
 			<input
 				class="form-check-input"
 				type="checkbox"
-				id="checkbox-echeance"
+				id="checkbox--echeance"
 			/>
 			<span class="col-form-label col-2">échéance</span>
 		</div>
@@ -253,7 +452,11 @@
 	</div>
 	<div class="row my-auto">
 		<div class="col-3 form-check form-switch my-auto">
-			<input class="form-check-input" type="checkbox" id="checkbox-nif" />
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--nif"
+			/>
 
 			<span class="col-form-label col-2">nif</span>
 		</div>
@@ -272,7 +475,7 @@
 			<input
 				class="form-check-input"
 				type="checkbox"
-				id="checkbox-stat"
+				id="checkbox--stat"
 			/>
 
 			<span class="col-form-label col-2">stat</span>
@@ -289,7 +492,11 @@
 	</div>
 	<div class="row my-auto">
 		<div class="col-3 form-check form-switch my-auto">
-			<input class="form-check-input" type="checkbox" id="checkbox-rcs" />
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--rcs"
+			/>
 
 			<span class="col-form-label col-2">rcs</span>
 		</div>
@@ -308,7 +515,7 @@
 			<input
 				class="form-check-input"
 				type="checkbox"
-				id="checkbox-commissionable"
+				id="checkbox--commissionable"
 			/>
 
 			<span class="col-form-label col-2">commissionable</span>
@@ -332,7 +539,7 @@
 			<input
 				class="form-check-input"
 				type="checkbox"
-				id="checkbox-note"
+				id="checkbox--note"
 			/>
 			<label for="note" class="form-label">note</label>
 		</div>

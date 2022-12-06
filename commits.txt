@@ -169,7 +169,7 @@ fixed typo: raison social into raison sociale;
 new-client.js : created obj DefaultValuesNewClientFormObj to clean new_client_form. edited base html's inputs by adding "client-form" class to all inputs and selects;
 -------------------
 024:
-new-client.js : in cleanNewClientForm(), added a call to fecthAndAppendHTML("human");
+new-client.js : in cleanNewClientForm(), added a call to fecthAndAppendHTMLClientForm("human");
 -------------------
 025:
 database : stored function all_clients created;
@@ -275,4 +275,11 @@ modified the modalClientFilter from data-bs to pure js;
 les checkbox sont fonctinnel. disable or enable inputs via changeStateFieldClientFilter();
 getDataClientFilter() implemented;
 il reste à implementer les champs spécifiquet à chaque personnalités...
+------------------------
+039:
+implemente all fields for filter modal;
+created client_filter_basic.html and client_filter_advanced.hmtl;
+implemented mangemant of filter_basic and filter_advanced in js (new-client.js);
+il reste à implementer le reset du filter (le bouton default et quand on quitte le modal)
+
 

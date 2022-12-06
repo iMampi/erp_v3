@@ -142,7 +142,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		modalClientDetails.querySelector("#btn-modify");
 	const table001 = document.getElementById("table-001");
 
-
 	var bsModalClientDetails = new bootstrap.Modal(modalClientDetails, {
 		backdrop: "static",
 		keyboard: false,
@@ -156,8 +155,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		keyboard: false,
 		focus: true,
 	});
-
-
 
 	const btnConfirmationYes = modalConfirmation.querySelector(
 		"#btn-confirmation-yes"
@@ -300,7 +297,11 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 	function appendAndFill(refRow, selection, disabled) {
 		return new Promise((resolve, reject) => {
-			let calling = fecthAndAppendHTML(refRow, selection, disabled);
+			let calling = fecthAndAppendHTMLClientForm(
+				refRow,
+				selection,
+				disabled
+			);
 			if (calling) {
 				resolve(calling);
 			} else {
@@ -340,7 +341,7 @@ document.addEventListener("DOMContentLoaded", () => {
 						// console.log(antiKey_);
 						fieldsPersonnality.forEach((div) => div.remove());
 					} finally {
-						fecthAndAppendHTML(
+						fecthAndAppendHTMLClientForm(
 							refRowClientDetails,
 							personnalities[result[1]["type_personnality_uid"]],
 							true

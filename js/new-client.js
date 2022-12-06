@@ -68,7 +68,7 @@ async function responseHandlerSaveNewClient(response) {
 	}
 }
 
-async function fecthAndAppendHTML(refRow, selectedOption, disabled) {
+async function fecthAndAppendHTMLClientForm(refRow, selectedOption, disabled) {
 	disabled = disabled || false;
 	if (![false, true].includes(disabled)) {
 		throw new Error("neither 'true' or 'false'.");
@@ -214,9 +214,75 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	// FUNCTIONS
 
+	// TODO : DRY : combine those tow function
+	function appendHTMLFilterBasic() {
+		let name = "filter_basic";
+		let modalFilterBody = modalClientFilter.querySelector(".modal-body ");
+
+		modalFilterBody.querySelector(".container").remove();
+
+		if (listDOM[name]) {
+			// The HTML code of this file has already been fetched.
+			// It is available as 'files[selectedOption]'.
+			let doc = new DOMParser().parseFromString(
+				listDOM[name],
+				"text/html"
+			);
+
+			modalFilterBody.appendChild(doc.body.childNodes[0]);
+		} else {
+			// Fetch the HTML code of this file.
+			fetch("/elements/tiers/clients/client_" + name + ".html")
+				.then((resp) => resp.text())
+				.then((txt) => {
+					let doc = new DOMParser().parseFromString(txt, "text/html");
+					listDOM[name] = doc.body.innerHTML;
+
+					// Save the HTML code of this file in the files array,
+					// so we won't need to fetch it again.
+
+					modalFilterBody.appendChild(doc.body.childNodes[0]);
+
+					// The file is now available as 'listDOM[selectedOption]'.
+				});
+		}
+	}
+	function appendHTMLFilterAdvanced() {
+		let name = "filter_advanced";
+		let modalFilterBody = modalClientFilter.querySelector(".modal-body ");
+
+		modalFilterBody.querySelector(".container").remove();
+
+		if (listDOM[name]) {
+			// The HTML code of this file has already been fetched.
+			// It is available as 'files[selectedOption]'.
+			let doc = new DOMParser().parseFromString(
+				listDOM[name],
+				"text/html"
+			);
+			modalFilterBody.appendChild(doc.body.childNodes[0]);
+		} else {
+			// Fetch the HTML code of this file.
+			fetch("/elements/tiers/clients/client_" + name + ".html")
+				.then((resp) => resp.text())
+				.then((txt) => {
+					let doc = new DOMParser().parseFromString(txt, "text/html");
+
+					listDOM[name] = doc.body.innerHTML;
+					// The file is now available as 'listDOM[selectedOption]'.
+					// we do this before appending because for some reason, doc becomes empty
+
+					// Save the HTML code of this file in the files array,
+					// so we won't need to fetch it again.
+
+					modalFilterBody.appendChild(doc.body.childNodes[0]);
+				});
+		}
+	}
+
 	function changeStateFieldClientFilter(target) {
 		let checked = target.checked;
-		let fieldName = target.id.split("-")[1];
+		let fieldName = target.id.split("--")[1];
 		let inputs = modalClientFilter.querySelectorAll("." + fieldName);
 		inputs.forEach((myinput) => {
 			if (checked) {
@@ -275,7 +341,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		let humanDivs = modalClientNew.querySelectorAll(".human");
 		if (humanDivs.length == 0) {
 			console.log("falsy");
-			fecthAndAppendHTML(refRowClientNew, "human", false);
+			fecthAndAppendHTMLClientForm(refRowClientNew, "human", false);
 		}
 		// console.log(inputsClientForm);
 	}
@@ -316,14 +382,22 @@ document.addEventListener("DOMContentLoaded", () => {
 					let companies = document.querySelectorAll(".company");
 					companies.forEach((div) => div.remove());
 				} finally {
-					fecthAndAppendHTML(refRowClientNew, "human", false);
+					fecthAndAppendHTMLClientForm(
+						refRowClientNew,
+						"human",
+						false
+					);
 				}
 			} else if (value == 2) {
 				try {
 					let humans = document.querySelectorAll(".human");
 					humans.forEach((div) => div.remove());
 				} finally {
-					fecthAndAppendHTML(refRowClientNew, "company", false);
+					fecthAndAppendHTMLClientForm(
+						refRowClientNew,
+						"company",
+						false
+					);
 				}
 			} else {
 				console.log("personnality type value error");
@@ -402,6 +476,17 @@ document.addEventListener("DOMContentLoaded", () => {
 			let target = event.target;
 			if (target.type == "checkbox") {
 				changeStateFieldClientFilter(target);
+			}
+		});
+	} catch (error) {}
+
+	try {
+		modalClientFilter.addEventListener("click", (event) => {
+			let target = event.target;
+			if (target.id == "btn-filter-basic") {
+				appendHTMLFilterBasic();
+			} else if (target.id == "btn-filter-advanced") {
+				appendHTMLFilterAdvanced();
 			}
 		});
 	} catch (error) {}

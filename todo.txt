@@ -69,3 +69,14 @@ when user is not authorized o create, button save still appears.
 for rows in table:
 now, it is 3 digit num. (ex : row-050)
 must change that to 4 or 5 digit (ex : row-00100)
+
+
+filter:
+add simple filter with few fields,
+and "more fields option"
+
+for modification:
+client et fournisseur. extend to other tiers.
+il y a des champs qu'on ne peut pas et devrait pas modifier. ex :  personnalité et uid
+modifier la query update (la function ou procedures)
+note care risque de corruption de donné si l'utilisateur rend le champ disabled par défaut enabled.

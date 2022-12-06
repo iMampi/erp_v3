@@ -109,7 +109,8 @@ is_logged();
                         </div>
                         <div class="modal-body">
 
-                            <?php require_once __DIR__ . "/../../elements/tiers/clients/client_filter.html" ?>
+                            <?php //require_once __DIR__ . "/../../elements/tiers/clients/client_filter_advanced.html" 
+                            require_once __DIR__ . "/../../elements/tiers/clients/client_filter_basic.html" ?>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" id="btn-cancel-filter">annuler</button>
