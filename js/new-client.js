@@ -246,7 +246,11 @@ document.addEventListener("DOMContentLoaded", () => {
 					// The file is now available as 'listDOM[selectedOption]'.
 				});
 		}
+
+		// add eventlistener to inputpersonnalityfilter
 	}
+
+	// function
 	function appendHTMLFilterAdvanced() {
 		let name = "filter_advanced";
 		let modalFilterBody = modalClientFilter.querySelector(".modal-body ");
@@ -280,6 +284,59 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	}
 
+	function filterPersonnalityHandler() {
+		let inputPersonnalityFilter =
+			modalClientFilter.querySelector("#personnality");
+
+		let checkboxNomCommercial = modalClientFilter.querySelector(
+			"#checkbox--nom-commercial"
+		);
+		let checkboxRaisonSociale = modalClientFilter.querySelector(
+			"#checkbox--raison-sociale"
+		);
+		let checkboxNoms = modalClientFilter.querySelector("#checkbox--noms");
+		let checkboxPrenoms =
+			modalClientFilter.querySelector("#checkbox--prenoms");
+
+		let inputNomCommercial =
+			modalClientFilter.querySelector("#nom-commercial");
+		let inputRaisonSociale =
+			modalClientFilter.querySelector("#raison-sociale");
+		let inputNoms = modalClientFilter.querySelector("#noms");
+		let inputPrenoms = modalClientFilter.querySelector("#prenoms");
+
+		inputPersonnalityFilter.addEventListener("input", (e) => {
+			console.log("called");
+			if (e.target.value == "1") {
+				checkboxNomCommercial.disabled = true;
+				checkboxRaisonSociale.disabled = true;
+				checkboxNomCommercial.checked = false;
+				checkboxRaisonSociale.checked = false;
+				inputRaisonSociale.value = "";
+				inputNomCommercial.value = "";
+				inputRaisonSociale.disabled = true;
+				inputNomCommercial.disabled = true;
+				checkboxNoms.disabled = false;
+				checkboxPrenoms.disabled = false;
+			} else if (e.target.value == "2") {
+				checkboxNomCommercial.disabled = false;
+				checkboxRaisonSociale.disabled = false;
+				checkboxNoms.disabled = true;
+				checkboxPrenoms.disabled = true;
+				checkboxNoms.checked = false;
+				checkboxPrenoms.checked = false;
+				inputNoms.value = "";
+				inputPrenoms.value = "";
+				inputNoms.disabled = true;
+				inputPrenoms.disabled = true;
+			} else if (e.target.value == "all") {
+				checkboxNomCommercial.disabled = false;
+				checkboxRaisonSociale.disabled = false;
+				checkboxNoms.disabled = false;
+				checkboxPrenoms.disabled = false;
+			}
+		});
+	}
 	function changeStateFieldClientFilter(target) {
 		let checked = target.checked;
 		let fieldName = target.id.split("--")[1];
@@ -487,6 +544,10 @@ document.addEventListener("DOMContentLoaded", () => {
 				appendHTMLFilterBasic();
 			} else if (target.id == "btn-filter-advanced") {
 				appendHTMLFilterAdvanced();
+			}
+
+			if (target.id == "personnality") {
+				filterPersonnalityHandler();
 			}
 		});
 	} catch (error) {}
