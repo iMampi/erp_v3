@@ -286,5 +286,13 @@ il reste à implementer la gestion behavior avec personnality...
 040:
 implemented filterPersonnalityHandler(), to handle check box and inputs on filterModal according to the personnality slected.
 il reste à implementer le reset du filter (le bouton default et quand on quitte le modal)...
+------------------------
+041:
+
+##new-client.js:
+created object defaultClientFilter;
+implemented resetFilter();
+created button btn-reset-filter();
+changed defautl hmtl for client_filter_advanced and client_filter_basic : #actif and #personnality active by default
 
 

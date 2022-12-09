@@ -113,6 +113,8 @@ is_logged();
                             require_once __DIR__ . "/../../elements/tiers/clients/client_filter_basic.html" ?>
                         </div>
                         <div class="modal-footer">
+
+                            <button type="button" class="btn btn-secondary" id="btn-reset-filter">paramètre par défaut</button>
                             <button type="button" class="btn btn-secondary" id="btn-cancel-filter">annuler</button>
                             <button type="button" class="btn btn-primary" id="btn-apply-filter">appliquer</button>
                         </div>

@@ -27,6 +27,35 @@ const DefaultValuesNewClientFormObj = {
 	"nom-commercial": "",
 	"raison-sociale": "",
 };
+const DefaultValuesClientFilter = {
+	uid: "",
+	personnality: "all",
+	actif: "1",
+	evaluation: "all",
+	declarable: "all",
+	noms: "",
+	prenoms: "",
+	cin: "",
+	"cin-date": "",
+	"cin-lieu": "",
+	"naissance-date": "",
+	"naissance-lieu": "",
+	adress: "",
+	phone: "",
+	mail: "",
+	"type-vente": "1",
+	nif: "",
+	stat: "",
+	rcs: "",
+	commissionable: "all",
+	note: "",
+	"nom-commercial": "",
+	"raison-sociale": "",
+	"encours-min": "",
+	"encours-max": "",
+	"echeance-min": "",
+	"echeance-max": "",
+};
 const personnalities = { 1: "human", 2: "company" };
 var listDOM = {};
 var modificationWatcher = false;
@@ -161,6 +190,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		focus: true,
 	});
 
+	const btnResetFilter = document.getElementById("btn-reset-filter");
+
 	//confirmation modal
 	const modalConfirmation = document.getElementById("modal-confirmation");
 	const bsModalConfirmation = new bootstrap.Modal(modalConfirmation, {
@@ -214,6 +245,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	// FUNCTIONS
 
+	function resetFilter() {
+		let inputs = modalClientFilter.querySelectorAll(".input");
+		let checkboxes = modalClientFilter.querySelectorAll(
+			"input[type=checkbox]"
+		);
+		checkboxes.forEach((checkbox) => {
+			if (
+				["checkbox--personnality", "checkbox--actif"].includes(
+					checkbox.id
+				)
+			) {
+				checkbox.checked = true;
+			} else {
+				checkbox.checked = false;
+			}
+		});
+		inputs.forEach((myinput) => {
+			myinput.value = DefaultValuesClientFilter[myinput.id];
+			if (["personnality", "actif"].includes(myinput.id)) {
+				myinput.disabled = false;
+			} else {
+				myinput.disabled = true;
+			}
+		});
+	}
+
 	// TODO : DRY : combine those tow function
 	function appendHTMLFilterBasic() {
 		let name = "filter_basic";
@@ -251,6 +308,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	// function
+
 	function appendHTMLFilterAdvanced() {
 		let name = "filter_advanced";
 		let modalFilterBody = modalClientFilter.querySelector(".modal-body ");
@@ -512,6 +570,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	try {
 		btnCancelModalClientFilter.addEventListener("click", () => {
+			appendHTMLFilterBasic();
+			resetFilter();
 			bsmodalClientFilter.hide();
 		});
 	} catch (error) {}
@@ -549,6 +609,12 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (target.id == "personnality") {
 				filterPersonnalityHandler();
 			}
+		});
+	} catch (error) {}
+
+	try {
+		btnResetFilter.addEventListener("click", () => {
+			resetFilter();
 		});
 	} catch (error) {}
 });
