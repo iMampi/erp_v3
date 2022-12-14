@@ -80,4 +80,10 @@ client et fournisseur. extend to other tiers.
 il y a des champs qu'on ne peut pas et devrait pas modifier. ex :  personnalité et uid
 modifier la query update (la function ou procedures)
 note care risque de corruption de donné si l'utilisateur rend le champ disabled par défaut enabled.
-remember fields'sinput and checkboxes when switching between basci and advanced fitler
+remember fields'sinput and checkboxes when switching between basci and advanced fitler : for now we put just multi filed whith "and". must add choice later for "and" or "or"
+
+treatement of input dat to be save : remove space (trim). so that " " => null
+
+dans filtre, là où c'est des chiffres, mettre zero pardefaut
+
+for query based on number, s'assurer que pas de negatif, transformer en valeru absolue. bien sur si limité uniquemnt à de nombre positif

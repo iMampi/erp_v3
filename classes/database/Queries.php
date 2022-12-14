@@ -7,6 +7,8 @@ class Queries
 {
     public string $mode;
     public string $query;
+    static public $filter_client = "select * from view_all_clients";
+
     static public $update_client = "
     select update_client(?,
     ?,
@@ -36,7 +38,7 @@ class Queries
     ?,
     ?)
     ";
-    
+
     static public $delete_client = "
     update clients set active_client='0' where uid=? 
     ";
@@ -94,6 +96,9 @@ class Queries
 
             case 'update_client':
                 $this->query = self::$update_client;
+                break;
+            case 'filter_clients':
+                $this->query = self::$filter_client;
                 break;
             case 'test':
                 $this->query = self::$test;

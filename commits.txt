@@ -294,5 +294,15 @@ created object defaultClientFilter;
 implemented resetFilter();
 created button btn-reset-filter();
 changed defautl hmtl for client_filter_advanced and client_filter_basic : #actif and #personnality active by default
+added those new function when quitting fitler modal
 
-
+------------------------
+042:
+implente fitler query...
+query use whre like %xx%
+Queries
+Binding
+ObjConverter
+bon...filter query marche. la partie sql fetch to php est ok. il y a surement des bug ou des erreur qui traine encore. mais on va faire avec.
+il reste à implemnter le traitment js...
+aussi, lors de l'ajout d'un nouveau client, la page ne se met pas à jour...

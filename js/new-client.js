@@ -76,6 +76,22 @@ async function saveNewclient(inputObj) {
 	return result[0] == "success";
 }
 
+async function filterClient(inputObj) {
+	let url = "/database/select/select_filtered_clients.php";
+	let response = await sendData(url, inputObj);
+	// let result = await response.text();
+	// (response);
+	console.log(response);
+	// if (result[0] == "success") {
+	// 	ToastShowClosured(result[0], "Nouveau client créé avec succès");
+	// } else if (result[0] == "failure") {
+	// 	ToastShowClosured(result[0], "Echec de la création du client");
+	// } else {
+	// 	throw new Error("wrong value returned");
+	// }
+	// return result[0] == "success";
+}
+
 async function responseHandlerSaveNewClient(response) {
 	try {
 		let myjson = JSON.parse(await response);
@@ -408,7 +424,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	}
 
-	function filterClients() {}
 	function getDataClientFilter() {
 		let dataFilterObj = {};
 		let checkboxes = modalClientFilter.querySelectorAll(
@@ -416,7 +431,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		);
 
 		checkboxes.forEach((checkboxe) => {
-			let fieldName = checkboxe.id.split("-")[1];
+			let fieldName = checkboxe.id.split("--")[1];
 			let inputs = modalClientFilter.querySelectorAll("." + fieldName);
 			inputs.forEach((myinput) => {
 				dataFilterObj[myinput.id] = myinput.value;
@@ -578,7 +593,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	try {
 		btnApplyModalClientFilter.addEventListener("click", () => {
-			console.log(getDataClientFilter());
+			myobj=getDataClientFilter();
+			console.log(myobj);
+			filterClient(myobj);
 			// filterClients(getDataClientFilter());
 			// bsmodalClientFilter.hide();
 		});

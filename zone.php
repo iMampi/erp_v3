@@ -124,15 +124,8 @@ echo "class is : " . $x::class;
 // echo $x->format("d/m/Y");
 // echo "<br>";
 // var_dump($y);
+$arr_=["a","b","c","d","e"];
 
-$arr_ = [];
-echo "is empty? : " . empty($arr);
-$SelectOneCLientObj = new SelectOneClient(["uid" => "5"]);
-// var_dump($SelectOneCLientObj->data_for_db);
-new DbHandler();
-$Query = new Queries("select_one_client");
-$Binding = new Bindings($SelectOneCLientObj);
-$Statement = new StandardPreparedStatement($Query, $Binding);
-$res_ = DbHandler::execute_prepared_statement($Statement);
-// $res_ = DbHandler::select_query($Query->query, MYSQLI_ASSOC);
-var_dump($res_);
+foreach ($arr_ as $key => $value) {
+    if (current($arr_))
+}

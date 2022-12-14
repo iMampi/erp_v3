@@ -50,6 +50,7 @@ class DbHandler
             return $result_->dataArray;
         } catch (\Exception $e) {
             echo "<br>error <br>";
+            \var_dump($e);
 
             // TODO : err will be logged
             return new Result(\null);

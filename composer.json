@@ -12,7 +12,8 @@
 			"Base\\": "classes/base/",
 			"Cotisation\\": "classes/cotisation/",
 			"Converter\\": "classes/converter/",
-			"Database\\": "classes/database/"
+			"Database\\": "classes/database/",
+			"Database\\Special\\": "classes/database/special"
 		},
 		"files": [
 			"classes/session/Functions.php",
