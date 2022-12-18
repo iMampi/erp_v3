@@ -305,4 +305,14 @@ Binding
 ObjConverter
 bon...filter query marche. la partie sql fetch to php est ok. il y a surement des bug ou des erreur qui traine encore. mais on va faire avec.
 il reste à implemnter le traitment js...
-aussi, lors de l'ajout d'un nouveau client, la page ne se met pas à jour...
+aussi, lors de l'ajout d'un nouveau client, la page ne se met pas à jour...&
+------------------------
+043:
+new-client.js :
+fillTableClients() opérationnel;
+generateRowTableClient() opérationnel;
+quelques note to TODO à l'intérieur.;
+pas besoin de reset les inputs du modal filter une fois le filtre appliqué. ca crée un bonne user experience je trouve. pour rappeler quellles ont été les parametres.
+
+il faut ajouter un bouton "annuler la selection filtré" ou un turc du genre.
+aussi, lors de l'ajout d'un nouveau client, la page ne se met pas à jour...&

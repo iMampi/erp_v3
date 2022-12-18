@@ -87,3 +87,5 @@ treatement of input dat to be save : remove space (trim). so that " " => null
 dans filtre, là où c'est des chiffres, mettre zero pardefaut
 
 for query based on number, s'assurer que pas de negatif, transformer en valeru absolue. bien sur si limité uniquemnt à de nombre positif
+
+for all query (update, filter, read,...) : how to handle big size of data?

@@ -61,6 +61,36 @@ var listDOM = {};
 var modificationWatcher = false;
 const ToastShowClosured = showMe();
 
+function fillTableClients(myJson, myTableBody) {
+	try {
+		// TODO : make it so it takes model from the source. not from active window. imagine if table has no row, so no actual reference model
+		let trModel = myTableBody.firstElementChild.cloneNode(true);
+		myTableBody.innerHTML = "";
+		console.log(myJson);
+		myJson.forEach((elementObj) => {
+			let newRow = generateRowTableClient(trModel, elementObj);
+			myTableBody.appendChild(newRow);
+		});
+	} catch (error) {
+		return false;
+	}
+	return true;
+}
+
+function generateRowTableClient(nodeModel, DataObj) {
+	console.log(DataObj);
+	let newNode = nodeModel.cloneNode(true);
+	newNode.id = "row" - +zeroLeftPadding(DataObj["uid"], 3, false);
+	newNode.querySelector("input.uid").value = DataObj["uid"];
+	if (DataObj["type_personnality_uid"] == "1") {
+		newNode.querySelector(".clt-name.input").value =
+			DataObj["noms"] + " " + DataObj["prenoms"];
+	} else if (DataObj["type_personnality_uid"] == "2") {
+		newNode.querySelector(".clt-name").value =
+			DataObj["nom_commercial"] + " / " + DataObj["raison_sociale"];
+	}
+	return newNode;
+}
 async function saveNewclient(inputObj) {
 	let url = "/database/save/new_client.php";
 	let response = await sendData(url, inputObj);
@@ -76,12 +106,13 @@ async function saveNewclient(inputObj) {
 	return result[0] == "success";
 }
 
-async function filterClient(inputObj) {
+async function filterClient(inputObj, tableBodyClients) {
 	let url = "/database/select/select_filtered_clients.php";
 	let response = await sendData(url, inputObj);
-	// let result = await response.text();
-	// (response);
-	console.log(response);
+	let myjson = JSON.parse(response);
+	return fillTableClients(myjson, tableBodyClients);
+
+	// console.log(myjson);
 	// if (result[0] == "success") {
 	// 	ToastShowClosured(result[0], "Nouveau client créé avec succès");
 	// } else if (result[0] == "failure") {
@@ -98,15 +129,12 @@ async function responseHandlerSaveNewClient(response) {
 		//NOTE : the correct way for save. not correct for select query
 		//NOTE : works for error also
 		// TODO : handle for when it is an error
-		// if (myjson[0])
 		console.log(myjson);
 		if (myjson[0]) {
 			return ["success", Object.values(myjson[1])[0]];
 		} else {
 			return ["failure", Object.values(myjson[1])[0]];
 		}
-		// console.log(typeof myjson[0]);
-		// return Object.values(myjson)[0];
 	} catch (e) {
 		// TODO : comment me
 		return "error js: " + e;
@@ -186,6 +214,8 @@ async function fecthAndAppendHTMLClientForm(refRow, selectedOption, disabled) {
 
 document.addEventListener("DOMContentLoaded", () => {
 	// definitions
+
+	const tableBodyClients = document.getElementById("ze-tbody");
 	const selectTypePersonnality = document.getElementById("type-personnality");
 
 	const modalClientNew = document.getElementById("modal-clt-new");
@@ -223,7 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		modalClientFilter.querySelector("#btn-cancel-filter");
 	const btnApplyModalClientFilter =
 		modalClientFilter.querySelector("#btn-apply-filter");
-	const bsmodalClientFilter = new bootstrap.Modal(modalClientFilter, {
+	const bsModalClientFilter = new bootstrap.Modal(modalClientFilter, {
 		backdrop: "static",
 		keyboard: false,
 		focus: true,
@@ -579,7 +609,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	try {
 		btnClientFilter.addEventListener("click", () => {
-			bsmodalClientFilter.show();
+			bsModalClientFilter.show();
 		});
 	} catch (error) {}
 
@@ -587,17 +617,18 @@ document.addEventListener("DOMContentLoaded", () => {
 		btnCancelModalClientFilter.addEventListener("click", () => {
 			appendHTMLFilterBasic();
 			resetFilter();
-			bsmodalClientFilter.hide();
+			bsModalClientFilter.hide();
 		});
 	} catch (error) {}
 
 	try {
 		btnApplyModalClientFilter.addEventListener("click", () => {
-			myobj=getDataClientFilter();
+			myobj = getDataClientFilter();
 			console.log(myobj);
-			filterClient(myobj);
+			filterClient(myobj, tableBodyClients);
+			bsModalClientFilter.hide();
 			// filterClients(getDataClientFilter());
-			// bsmodalClientFilter.hide();
+			// bsModalClientFilter.hide();
 		});
 	} catch (error) {}
 
