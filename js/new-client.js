@@ -82,12 +82,23 @@ function generateRowTableClient(nodeModel, DataObj) {
 	let newNode = nodeModel.cloneNode(true);
 	newNode.id = "row" - +zeroLeftPadding(DataObj["uid"], 3, false);
 	newNode.querySelector("input.uid").value = DataObj["uid"];
-	if (DataObj["type_personnality_uid"] == "1") {
+	if (
+		DataObj["type_personnality_uid"] == "1" ||
+		DataObj["type-personnality"] == "1"
+	) {
 		newNode.querySelector(".clt-name.input").value =
 			DataObj["noms"] + " " + DataObj["prenoms"];
-	} else if (DataObj["type_personnality_uid"] == "2") {
-		newNode.querySelector(".clt-name").value =
-			DataObj["nom_commercial"] + " / " + DataObj["raison_sociale"];
+	} else if (
+		DataObj["type_personnality_uid"] == "2" ||
+		DataObj["type-personnality"] == "2"
+	) {
+		if (DataObj["nom_commercial"] !== undefined) {
+			newNode.querySelector(".clt-name").value =
+				DataObj["nom_commercial"] + " / " + DataObj["raison_sociale"];
+		} else {
+			newNode.querySelector(".clt-name").value =
+				DataObj["nom-commercial"] + " / " + DataObj["raison-sociale"];
+		}
 	}
 	return newNode;
 }
@@ -95,7 +106,8 @@ async function saveNewclient(inputObj) {
 	let url = "/database/save/new_client.php";
 	let response = await sendData(url, inputObj);
 	let result = await responseHandlerSaveNewClient(response);
-	// console.log(result);
+	console.log("result is : ");
+	console.log(result);
 	if (result[0] == "success") {
 		ToastShowClosured(result[0], "Nouveau client créé avec succès");
 	} else if (result[0] == "failure") {
@@ -103,7 +115,7 @@ async function saveNewclient(inputObj) {
 	} else {
 		throw new Error("wrong value returned");
 	}
-	return result[0] == "success";
+	return [result[0] == "success", result[1]];
 }
 
 async function filterClient(inputObj, tableBodyClients) {
@@ -571,9 +583,19 @@ document.addEventListener("DOMContentLoaded", () => {
 			// sendData("/database/save/new_client.php", getInputsValuesClientNew())
 			// 	.then((resp) => responseHandlerSaveNewClient(resp))
 			// 	.then((result) => console.log(result));
-			saveNewclient(getInputsValuesClientNew()).then((result) => {
-				if (result) {
-					//TODO :close and clean
+			let dataObj = getInputsValuesClientNew();
+			saveNewclient(dataObj).then((result) => {
+				if (result[0]) {
+					// insert uid of newly created client
+					dataObj["uid"] = result[1];
+					console.log("dataObj");
+					console.log(dataObj);
+					let rowModel =
+						tableBodyClients.firstElementChild.cloneNode(true);
+					tableBodyClients.append(
+						generateRowTableClient(rowModel, dataObj)
+					);
+
 					bsModalClientNew.hide();
 					_cleanClientNewForm();
 				} else {
