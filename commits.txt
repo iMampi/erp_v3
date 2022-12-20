@@ -324,3 +324,11 @@ modifier un peu les valeur retourner par saveNewClient(), et la facon dont c'est
 ------------------------
 045:
 fixed a bug with class QueryFilterConditionsConstructor  when desacivating a input filter or putting actif or personnality on "all";
+------------------------
+046:
+new-client.js:
+inserting #btn-remove-filter button when applying a filter whose parameters are not default parameter;
+create var defaultFilterFlag for that.
+insertButtonRemoveFilter();
+implemented in functions using around filter.
+fixed client_filter_*.html : input prenom missing .input

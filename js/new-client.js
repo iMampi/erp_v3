@@ -60,7 +60,7 @@ const personnalities = { 1: "human", 2: "company" };
 var listDOM = {};
 var modificationWatcher = false;
 const ToastShowClosured = showMe();
-
+var defaultFilterFlag = true;
 function fillTableClients(myJson, myTableBody) {
 	try {
 		// TODO : make it so it takes model from the source. not from active window. imagine if table has no row, so no actual reference model
@@ -73,6 +73,11 @@ function fillTableClients(myJson, myTableBody) {
 		});
 	} catch (error) {
 		return false;
+	}
+	if (myJson == { personnality: "all", actif: "1" }) {
+		defaultFilterFlag = true;
+	} else {
+		defaultFilterFlag = false;
 	}
 	return true;
 }
@@ -229,6 +234,7 @@ async function fecthAndAppendHTMLClientForm(refRow, selectedOption, disabled) {
 
 document.addEventListener("DOMContentLoaded", () => {
 	// definitions
+	const divBtns = document.getElementById("div-btns");
 
 	const tableBodyClients = document.getElementById("ze-tbody");
 	const selectTypePersonnality = document.getElementById("type-personnality");
@@ -266,7 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const btnCancelModalClientFilter =
 		modalClientFilter.querySelector("#btn-cancel-filter");
-	const btnApplyModalClientFilter =
+	const btnApplyClientFilter =
 		modalClientFilter.querySelector("#btn-apply-filter");
 	const bsModalClientFilter = new bootstrap.Modal(modalClientFilter, {
 		backdrop: "static",
@@ -305,6 +311,16 @@ document.addEventListener("DOMContentLoaded", () => {
 	};
 
 	// FUNCTIONS
+
+	function insertButtonRemoveFilter() {
+		let myHtml =
+			'<button id="btn-remove-filter" class="col-auto btn btn-danger me-auto">supprimer le filtre</button>';
+		let mydiv = divBtns.lastElementChild;
+		let myNode = new DOMParser().parseFromString(myHtml, "text/html");
+		mydiv.prepend(myNode.body.childNodes[0]);
+	}
+
+
 
 	function resetFilter() {
 		let inputs = modalClientFilter.querySelectorAll(".input");
@@ -647,11 +663,14 @@ document.addEventListener("DOMContentLoaded", () => {
 	} catch (error) {}
 
 	try {
-		btnApplyModalClientFilter.addEventListener("click", () => {
+		btnApplyClientFilter.addEventListener("click", () => {
 			myobj = getDataClientFilter();
 			console.log(myobj);
 			filterClient(myobj, tableBodyClients);
 			bsModalClientFilter.hide();
+			if (!defaultFilterFlag) {
+				insertButtonRemoveFilter();
+			}
 			// filterClients(getDataClientFilter());
 			// bsModalClientFilter.hide();
 		});
@@ -688,6 +707,20 @@ document.addEventListener("DOMContentLoaded", () => {
 	try {
 		btnResetFilter.addEventListener("click", () => {
 			resetFilter();
+		});
+	} catch (error) {}
+
+	try {
+		divBtns.addEventListener("click", (e) => {
+			if (e.target.id == "btn-remove-filter") {
+				e.target.remove();
+				resetFilter();
+				filterClient(
+					{ personnality: "all", actif: "1" },
+					tableBodyClients
+				);
+				defaultFilterFlag = true;
+			}
 		});
 	} catch (error) {}
 });
