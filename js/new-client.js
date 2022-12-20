@@ -78,7 +78,7 @@ function fillTableClients(myJson, myTableBody) {
 }
 
 function generateRowTableClient(nodeModel, DataObj) {
-	console.log(DataObj);
+	// console.log(DataObj);
 	let newNode = nodeModel.cloneNode(true);
 	newNode.id = "row" - +zeroLeftPadding(DataObj["uid"], 3, false);
 	newNode.querySelector("input.uid").value = DataObj["uid"];
@@ -121,6 +121,9 @@ async function saveNewclient(inputObj) {
 async function filterClient(inputObj, tableBodyClients) {
 	let url = "/database/select/select_filtered_clients.php";
 	let response = await sendData(url, inputObj);
+
+	console.log("error?");
+	console.log(response);
 	let myjson = JSON.parse(response);
 	return fillTableClients(myjson, tableBodyClients);
 

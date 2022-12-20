@@ -321,3 +321,6 @@ aussi, lors de l'ajout d'un nouveau client, la page ne se met pas à jour...&
 #new-client.js:
 enfin implementer l'insertion dans le tableau principal quand création new client is succesful.
 modifier un peu les valeur retourner par saveNewClient(), et la facon dont c'est géré dans le event hhandler
+------------------------
+045:
+fixed a bug with class QueryFilterConditionsConstructor  when desacivating a input filter or putting actif or personnality on "all";
