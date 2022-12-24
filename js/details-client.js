@@ -2,7 +2,7 @@ async function responseHandlerSelectOneClient(response) {
 	try {
 		// return JSON.parse(await response);
 		let myjson = JSON.parse(await response);
-		console.log(myjson);
+		// console.log(myjson);
 		return myjson;
 	} catch (e) {
 		return "error 2";
@@ -43,8 +43,6 @@ function updateClientRow(mytable, dataObj) {
 		}
 	});
 }
-
-async function showMe() {}
 
 function fillInputsDetails(valueObj) {
 	// console.log("valueObj : ");
@@ -156,18 +154,27 @@ document.addEventListener("DOMContentLoaded", () => {
 		focus: true,
 	});
 
-	const btnConfirmationYes = modalConfirmation.querySelector(
+	var btnConfirmationYes = modalConfirmation.querySelector(
 		"#btn-confirmation-yes"
 	);
-	const btnConfirmationNo = modalConfirmation.querySelector(
+	const clonedBtnConfirmationYes = btnConfirmationYes.cloneNode(true);
+	var btnConfirmationNo = modalConfirmation.querySelector(
 		"#btn-confirmation-no"
 	);
+	const clonedBtnConfirmationNo = btnConfirmationNo.cloneNode(true);
+
+	const btnsConfirmations = {
+		yes: btnConfirmationYes,
+		no: btnConfirmationNo,
+	};
 	// OBJECT for confirmation
 	const confirmationDetailsObj = {
 		modal: modalConfirmation,
 		bsModal: bsModalConfirmation,
-		btnYes: btnConfirmationYes,
-		btnNo: btnConfirmationNo,
+		btnYes: btnsConfirmations["yes"],
+		btnNo: btnsConfirmations["no"],
+		clonedBtnYes: clonedBtnConfirmationYes,
+		clonedBtnNo: clonedBtnConfirmationNo,
 	};
 
 	const quitDetailsObj = {
@@ -176,11 +183,13 @@ document.addEventListener("DOMContentLoaded", () => {
 				Vos modifications vont être perdus.<br>\
 				Êtes vous sûr de vouloir quitter ce formulaire?",
 		yes: () => {
+			console.log("cancelled modifica");
 			let inputsForEdition =
 				modalClientDetails.querySelectorAll(".input");
 			disableInputs(inputsForEdition);
+			bsModalConfirmation.hide();
 			bsModalClientDetails.hide();
-			modificationWatcher = false;
+			return false;
 		},
 		no: () => {
 			bsModalConfirmation.hide();
@@ -193,12 +202,12 @@ document.addEventListener("DOMContentLoaded", () => {
 				Vos modifications vont être enregistrées.<br>\
 				Êtes vous sûr de vouloir sauvegarder vos modification?",
 		yes: () => {
+			console.log("called yes");
+			bsModalConfirmation.hide();
+
 			let inputsValuesObj = getInputsValuesClientDetails();
-			saveUpdatedClient(inputsValuesObj).then((result) => {
-				if (result) {
-					modificationWatcher = false;
-				}
-			});
+			saveUpdatedClient(inputsValuesObj);
+			return false;
 		},
 		no: () => {
 			bsModalConfirmation.hide();
@@ -209,6 +218,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		message: "Etes vous sûr de vouloir supprimer ce client?",
 		yes: () => {
 			deleteClient();
+			// for modificationWatcher
+			return false;
 		},
 		no: () => {
 			bsModalConfirmation.hide();
@@ -254,14 +265,18 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	async function saveUpdatedClient(inputsValuesObj) {
+		console.log("saving update called");
 		let myurl = "/database/save/update_client.php";
 		let response = await sendData(myurl, inputsValuesObj);
+		console.log(response);
 		// TODO : we dont use await response.json because it is already handled in senData () as respones.text(). so we have to call JSON method manually;
 		let myjson = await JSON.parse(response);
-
+		// console.log("myjson");
 		if (Array.isArray(myjson)) {
 			// note : structure particuliere retourné par la funciton sql
 			if (myjson[0] && myjson[1][0] >= 1) {
+				console.log("succc");
+				console.log(JSON.stringify(myjson));
 				ToastShowClosured("success", "Client mis à jour avec succès.");
 				let inputsForEdition =
 					modalClientDetails.querySelectorAll(".input");
@@ -269,17 +284,21 @@ document.addEventListener("DOMContentLoaded", () => {
 				updateClientRow(table001, inputsValuesObj);
 				btnSaveModalClientDetails.disabled = true;
 				btnModifyClientDetails.disabled = false;
-				return true;
-			} else {
-				ToastShowClosured("failure", "Echec de la mise à jour.");
 				return false;
+			} else {
+				console.log("faileeddd");
+				console.log(JSON.stringify(myjson));
+				ToastShowClosured("failure", "Echec de la mise à jour.");
+				return true;
 			}
 		} else {
+			console.log("faileeddd2");
+
 			ToastShowClosured(
 				"failure",
 				"Echec de la mise à jour, contactez l'administrateur système."
 			);
-			return false;
+			return true;
 		}
 	}
 
@@ -360,7 +379,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	try {
 		btnDelClient.addEventListener("click", () => {
-			openModalConfirmation(confirmationDetailsObj, deteleClientObj);
+			modificationWatcher = openModalConfirmation(
+				confirmationDetailsObj,
+				deteleClientObj
+			);
 		});
 	} catch (e) {}
 
@@ -384,10 +406,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	try {
 		btnSaveModalClientDetails.addEventListener("click", (e) => {
+			console.log("btn save clicked");
 			if (modificationWatcher) {
 				// console.log(modificationWatcher);
 
-				openModalConfirmation(confirmationDetailsObj, saveDetailsObj);
+				let result = openModalConfirmation(
+					confirmationDetailsObj,
+					saveDetailsObj
+				);
+				modificationWatcher = result;
+			} else {
+				ToastShowClosured("success", "Client mis à jour avec succès.");
+				let inputsForEdition =
+					modalClientDetails.querySelectorAll(".input");
+				disableInputs(inputsForEdition);
 			}
 		});
 	} catch (e) {}
@@ -400,12 +432,17 @@ document.addEventListener("DOMContentLoaded", () => {
 		btnCancelModalClientDetails.addEventListener("click", () => {
 			//TODO : finish me , clean inputs
 			if (modificationWatcher) {
-				openModalConfirmation(confirmationDetailsObj, quitDetailsObj);
+				modificationWatcher = openModalConfirmation(
+					confirmationDetailsObj,
+					quitDetailsObj
+				);
 			} else {
 				let inputsForEdition =
 					modalClientDetails.querySelectorAll(".input");
 				disableInputs(inputsForEdition);
 				bsModalClientDetails.hide();
+				btnModifyClientDetails.disabled = false;
+				btnSaveModalClientDetails.disabled = true;
 			}
 		});
 	} catch (error) {}

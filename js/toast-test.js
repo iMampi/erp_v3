@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	// const toastLiveExample = document.getElementById('liveToast')
 	// const toastLiveExample = document.getElementById('liveToast')
 	function showMe() {
+		console.log("Showmealle");
 		let toastCounter = 1;
 		const myFunction = function () {
 			fetch("/elements/toast.html")

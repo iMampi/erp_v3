@@ -73,6 +73,10 @@ class FilterClients extends Converter
         "mail" => "string",
     ];
     public string $conditions;
+    public int $echeance_counter = 0;
+    public int $encours_counter = 0;
+    public int $type_vente_counter = 0;
+
 
     function __construct(array $data)
     {
@@ -157,32 +161,43 @@ class FilterClients extends Converter
 
                     case 'echeance-min':
                     case 'echeance-max':
-                        $mymin = $data['echeance-min'];
-                        $mymax = $data['echeance-max'];
-                        if ((\intval($mymin) == 0) && (\intval($mymax) == 0)) {
-                            $this->conditions .= " echeance = 0 and";
-                        } elseif ((\intval($mymin) >= 0) && (\intval($mymax) > 0)) {
-                            $this->conditions .= " echeance BETWEEN $mymin AND $mymax and";
-                        } elseif ((\intval($mymin) > 0) && (\intval($mymax) == 0)) {
-                            $this->conditions .= " echeance > $mymin and";
-                        } elseif ((\intval($mymin) > 0) && (\intval($mymax) == 0)) {
-                            $this->conditions .= " echeance > $mymin and";
-                        };
+
+                        // if ($this->type_vente_counter == 0) {
+                        //     $this->conditions .= "type_vente = 1 and";
+                        //     $this->type_vente_counter += 1;
+                        // }
+                        if ($this->echeance_counter == 0) {
+                            $mymin = $data['echeance-min'];
+                            $mymax = $data['echeance-max'];
+                            if ((\intval($mymin) == 0) && (\intval($mymax) == 0)) {
+                                $this->conditions .= " nb_jour = 0 and";
+                            } elseif ((\intval($mymin) > 0) && (\intval($mymax) > 0)) {
+                                $this->conditions .= " nb_jour BETWEEN $mymin AND $mymax and";
+                            } elseif ((\intval($mymin) > 0) && (\intval($mymax) == 0)) {
+                                $this->conditions .= " nb_jour >= $mymin and";
+                            } elseif ((\intval($mymax) > 0) && (\intval($mymin) == 0)) {
+                                $this->conditions .= " nb_jour BETWEEN 1 AND $mymax and";
+                            };
+                            $this->echeance_counter += 1;
+                        }
                         break;
 
                     case 'encours-min':
                     case 'encours-max':
-                        $mymin = $data['encours-min'];
-                        $mymax = $data['encours-max'];
-                        if ((\intval($mymin) == 0) && (\intval($mymax) == 0)) {
-                            $this->conditions .= " encours = 0 and";
-                        } elseif ((\intval($mymin) >= 0) && (\intval($mymax) > 0)) {
-                            $this->conditions .= " echeance BETWEEN $mymin AND $mymax and";
-                        } elseif ((\intval($mymin) > 0) && (\intval($mymax) == 0)) {
-                            $this->conditions .= " echeance > $mymin and";
-                        } elseif ((\intval($mymin) > 0) && (\intval($mymax) == 0)) {
-                            $this->conditions .= " echeance > $mymin and";
-                        };
+                        if ($this->encours_counter == 0) {
+                            $mymin = $data['encours-min'];
+                            $mymax = $data['encours-max'];
+                            if ((\intval($mymin) == 0) && (\intval($mymax) == 0)) {
+                                $this->conditions .= " encours = 0 and";
+                            } elseif ((\intval($mymin) > 0) && (\intval($mymax) > 0)) {
+                                $this->conditions .= " encours BETWEEN $mymin AND $mymax and";
+                            } elseif ((\intval($mymin) > 0) && (\intval($mymax) == 0)) {
+                                $this->conditions .= " encours >= $mymin and";
+                            } elseif ((\intval($mymax) > 0) && (\intval($mymin) == 0)) {
+                                $this->conditions .= " encours BETWEEN 1 AND $mymax and";
+                            };
+                            $this->encours_counter += 1;
+                        }
                         break;
                 }
                 if ($key == $last_key) {

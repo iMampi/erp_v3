@@ -31,6 +31,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_visit("client"))) {
     // DbHandler::select_query($myquery);
 
     // TODO : use prepared statement
+    // print($myquery);
     print(json_encode(DbHandler::select_query($myquery, MYSQLI_ASSOC)));
 
     // print(json_encode(DbHandler::execute_prepared_statement($Statement)));

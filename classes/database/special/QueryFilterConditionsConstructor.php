@@ -1,10 +1,14 @@
 <?php
 
 namespace Database\Special;
+
+//TODO : deleteme not used anymore
 // TODO : a modifier pour protecitn. pour l'instant, c'est juste une simple querry. a mettre en preparedquery
 class QueryFilterConditionsConstructor
 {
     public string $conditions_string;
+    public int $echeance_counter;
+    public int $encours_counter;
     function __construct(array $data)
     {
         if (\count($data) > 0) {
@@ -58,36 +62,41 @@ class QueryFilterConditionsConstructor
 
                     case 'echeance-min':
                     case 'echeance-max':
-                        $mymin = $data['echeance-min'];
-                        $mymax = $data['echeance-max'];
-                        if ((\intval($mymin) == 0) && (\intval($mymax) == 0)) {
-                            $this->conditions_string .= " echeance = 0 and";
-                        } elseif ((\intval($mymin) >= 0) && (\intval($mymax) > 0)) {
-                            $this->conditions_string .= " echeance BETWEEN $mymin AND $mymax and";
-                        } elseif ((\intval($mymin) > 0) && (\intval($mymax) == 0)) {
-                            $this->conditions_string .= " echeance > $mymin and";
-                        } elseif ((\intval($mymin) > 0) && (\intval($mymax) == 0)) {
-                            $this->conditions_string .= " echeance > $mymin and";
-                        };
+                        if ($this->echeance_counter > 0) {
+                            $mymin = $data['echeance-min'];
+                            $mymax = $data['echeance-max'];
+                            if ((\intval($mymin) == 0) && (\intval($mymax) == 0)) {
+                                $this->conditions_string .= " nb_jour = 0 and";
+                            } elseif ((\intval($mymin) >= 0) && (\intval($mymax) > 0)) {
+                                $this->conditions_string .= " nb_jour BETWEEN $mymin AND $mymax and";
+                            } elseif ((\intval($mymin) > 0) && (\intval($mymax) == 0)) {
+                                $this->conditions_string .= " nb_jour > $mymin and";
+                            } elseif ((\intval($mymin) > 0) && (\intval($mymax) == 0)) {
+                                $this->conditions_string .= " nb_jour > $mymin and";
+                            };
+                        }
                         break;
 
                     case 'encours-min':
                     case 'encours-max':
-                        $mymin = $data['encours-min'];
-                        $mymax = $data['encours-max'];
-                        if ((\intval($mymin) == 0) && (\intval($mymax) == 0)) {
-                            $this->conditions_string .= " encours = 0 and";
-                        } elseif ((\intval($mymin) >= 0) && (\intval($mymax) > 0)) {
-                            $this->conditions_string .= " echeance BETWEEN $mymin AND $mymax and";
-                        } elseif ((\intval($mymin) > 0) && (\intval($mymax) == 0)) {
-                            $this->conditions_string .= " echeance > $mymin and";
-                        } elseif ((\intval($mymin) > 0) && (\intval($mymax) == 0)) {
-                            $this->conditions_string .= " echeance > $mymin and";
-                        };
+                        if ($this->encours_counter > 0) {
+
+                            $mymin = $data['encours-min'];
+                            $mymax = $data['encours-max'];
+                            if ((\intval($mymin) == 0) && (\intval($mymax) == 0)) {
+                                $this->conditions_string .= " encours = 0 and";
+                            } elseif ((\intval($mymin) >= 0) && (\intval($mymax) > 0)) {
+                                $this->conditions_string .= " encours BETWEEN $mymin AND $mymax and";
+                            } elseif ((\intval($mymin) > 0) && (\intval($mymax) == 0)) {
+                                $this->conditions_string .= " encours > $mymin and";
+                            } elseif ((\intval($mymin) > 0) && (\intval($mymax) == 0)) {
+                                $this->conditions_string .= " encours > $mymin and";
+                            };
+                        }
                         break;
                 }
                 if ($key == $last_key) {
-                    $this->conditions_string=\preg_replace('/\s*and\s*$/',"",$this->conditions_string);
+                    $this->conditions_string = \preg_replace('/\s*and\s*$/', "", $this->conditions_string);
                 }
             }
         }

@@ -332,3 +332,12 @@ create var defaultFilterFlag for that.
 insertButtonRemoveFilter();
 implemented in functions using around filter.
 fixed client_filter_*.html : input prenom missing .input
+------------------------
+047:
+FilterClients.php : bug typo
+
+fixed client_filter_advanced.html : default value for encours and echeance i s0
+
+update client: problem with event handler on btnyes (multiple event handler generateed each time the mfunction openmodalconfirmation is called).fixed
+update client : fixed behaviour confirmation modal not hidding
+

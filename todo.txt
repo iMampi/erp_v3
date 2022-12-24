@@ -89,3 +89,8 @@ dans filtre, là où c'est des chiffres, mettre zero pardefaut
 for query based on number, s'assurer que pas de negatif, transformer en valeru absolue. bien sur si limité uniquemnt à de nombre positif
 
 for all query (update, filter, read,...) : how to handle big size of data?
+
+for filter with parameter : better create an object with attreibutes = fields which have their own attreibutes
+
+
+when doing 

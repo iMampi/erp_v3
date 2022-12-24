@@ -56,6 +56,13 @@ const DefaultValuesClientFilter = {
 	"echeance-min": "",
 	"echeance-max": "",
 };
+const FieldsWithNumberValues = [
+	"encours-min",
+	"encours-max",
+	"echeance-min",
+	"echeance-max",
+];
+
 const personnalities = { 1: "human", 2: "company" };
 var listDOM = {};
 var modificationWatcher = false;
@@ -130,6 +137,7 @@ async function filterClient(inputObj, tableBodyClients) {
 	console.log("error?");
 	console.log(response);
 	let myjson = JSON.parse(response);
+
 	return fillTableClients(myjson, tableBodyClients);
 
 	// console.log(myjson);
@@ -319,8 +327,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		let myNode = new DOMParser().parseFromString(myHtml, "text/html");
 		mydiv.prepend(myNode.body.childNodes[0]);
 	}
-
-
 
 	function resetFilter() {
 		let inputs = modalClientFilter.querySelectorAll(".input");
@@ -641,9 +647,10 @@ document.addEventListener("DOMContentLoaded", () => {
 		btnCancelClientNew.addEventListener("click", () => {
 			//TODO : finish me , clean inputs
 			if (modificationWatcher) {
-				openModalConfirmation(confirmationObj, quitCreation);
-			} else {
-				bsModalClientNew.hide();
+				modificationWatcher = openModalConfirmation(
+					confirmationObj,
+					quitCreation
+				);
 			}
 		});
 	} catch (error) {}
@@ -664,7 +671,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	try {
 		btnApplyClientFilter.addEventListener("click", () => {
-			myobj = getDataClientFilter();
+			let myobj = getDataClientFilter();
+			Object.entries(myobj).forEach((arr_) => {
+				if (
+					FieldsWithNumberValues.includes(arr_[0]) &
+					(arr_[0] === "")
+				) {
+					myobj[arr_[0]] = 0;
+				}
+			});
 			console.log(myobj);
 			filterClient(myobj, tableBodyClients);
 			bsModalClientFilter.hide();
