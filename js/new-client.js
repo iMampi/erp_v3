@@ -68,17 +68,27 @@ var listDOM = {};
 var modificationWatcher = false;
 const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
-function fillTableClients(myJson, myTableBody) {
+async function fillTableClients(myJson, myTableBody) {
+	console.log("filling table");
 	try {
-		// TODO : make it so it takes model from the source. not from active window. imagine if table has no row, so no actual reference model
-		let trModel = myTableBody.firstElementChild.cloneNode(true);
+		// TODO : to cache
+		let response = await fetch(
+			"/elements/tiers/clients/liste_clts_table_001_base.html"
+		);
+		let rowBaseText = await response.text();
+		let doc = new DOMParser().parseFromString(rowBaseText, "text/html");
+		let trModel = doc.querySelector("#row-001");
+		
 		myTableBody.innerHTML = "";
+		console.log("myJson");
 		console.log(myJson);
 		myJson.forEach((elementObj) => {
 			let newRow = generateRowTableClient(trModel, elementObj);
 			myTableBody.appendChild(newRow);
 		});
 	} catch (error) {
+		console.log("filling table err");
+		console.log(error);
 		return false;
 	}
 	if (myJson == { personnality: "all", actif: "1" }) {
@@ -134,11 +144,11 @@ async function filterClient(inputObj, tableBodyClients) {
 	let url = "/database/select/select_filtered_clients.php";
 	let response = await sendData(url, inputObj);
 
-	console.log("error?");
-	console.log(response);
+	// console.log("error?");
+	// console.log(response);
 	let myjson = JSON.parse(response);
 
-	return fillTableClients(myjson, tableBodyClients);
+	return await fillTableClients(myjson, tableBodyClients);
 
 	// console.log(myjson);
 	// if (result[0] == "success") {
@@ -683,7 +693,14 @@ document.addEventListener("DOMContentLoaded", () => {
 			console.log(myobj);
 			filterClient(myobj, tableBodyClients);
 			bsModalClientFilter.hide();
-			if (!defaultFilterFlag) {
+			let testing =
+				!defaultFilterFlag &
+				!divBtns.querySelector("#btn-remove-filter");
+			console.log("testing");
+			console.log(!defaultFilterFlag);
+			console.log(!divBtns.querySelector("#btn-remove-filter"));
+			console.log(testing);
+			if (!divBtns.querySelector("#btn-remove-filter")) {
 				insertButtonRemoveFilter();
 			}
 			// filterClients(getDataClientFilter());

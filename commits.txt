@@ -340,4 +340,9 @@ fixed client_filter_advanced.html : default value for encours and echeance i s0
 
 update client: problem with event handler on btnyes (multiple event handler generateed each time the mfunction openmodalconfirmation is called).fixed
 update client : fixed behaviour confirmation modal not hidding
+------------------------
+048:
+only calling insertButtonRemoveFilter() when not existing;
+fixed updateClientRow();
+fillTableClients() changed to async. using elements\tiers\clients\liste_clts_table_001_base.html as trModel.
 

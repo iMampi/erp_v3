@@ -19,7 +19,7 @@ function disableInput(input) {
 
 function updateClientRow(mytable, dataObj) {
 	let row = mytable.querySelector(
-		"#row-" + zeroLeftPadding(dataObj["uid"], 3, false)
+		"#row-" + zeroLeftPadding(parseInt(dataObj["uid"]), 3, false)
 	);
 	console.log(dataObj);
 	let inputsRow = row.querySelectorAll(".input");
