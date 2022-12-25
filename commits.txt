@@ -345,4 +345,9 @@ update client : fixed behaviour confirmation modal not hidding
 only calling insertButtonRemoveFilter() when not existing;
 fixed updateClientRow();
 fillTableClients() changed to async. using elements\tiers\clients\liste_clts_table_001_base.html as trModel.
-
+------------------------
+049:
+finished const quitCreation;
+finished eventhandler for btnCancelClientNew;
+changed makeEditable() into makeEditableClientDetails() and its implementation;
+changed implementation of typeVenteInputBehavior(). now can be used on all modals;

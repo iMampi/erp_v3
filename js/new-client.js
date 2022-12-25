@@ -78,7 +78,7 @@ async function fillTableClients(myJson, myTableBody) {
 		let rowBaseText = await response.text();
 		let doc = new DOMParser().parseFromString(rowBaseText, "text/html");
 		let trModel = doc.querySelector("#row-001");
-		
+
 		myTableBody.innerHTML = "";
 		console.log("myJson");
 		console.log(myJson);
@@ -250,6 +250,20 @@ async function fecthAndAppendHTMLClientForm(refRow, selectedOption, disabled) {
 	return refRow.parentNode;
 }
 
+function typeVenteInputBehavior(modal) {
+	let myTypeVenteInput = modal.querySelector("#type-vente");
+	let myEncoursInput = modal.querySelector("#encours");
+	let myEcheanceInput = modal.querySelector("#echeance");
+	if (myTypeVenteInput.value == "1") {
+		myEncoursInput.disabled = false;
+		myEcheanceInput.disabled = false;
+	} else if (myTypeVenteInput.value == "0") {
+		myEncoursInput.disabled = true;
+		myEncoursInput.value = "0";
+		myEcheanceInput.disabled = true;
+		myEcheanceInput.value = "0";
+	}
+}
 document.addEventListener("DOMContentLoaded", () => {
 	// definitions
 	const divBtns = document.getElementById("div-btns");
@@ -265,7 +279,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const btnSaveNewClient = document.getElementById("btn-save-client-new");
 	const refRowClientNew = modalClientNew.querySelector("#ref-row");
-	const typeVenteInput = document.querySelector("#modal-clt-new #type-vente");
+	const typeVenteInputClientNew = document.querySelector(
+		"#modal-clt-new #type-vente"
+	);
 	const encoursInput = document.querySelector("#modal-clt-new #encours");
 	const echeanceInput = document.querySelector("#modal-clt-new #echeance");
 
@@ -321,6 +337,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		yes: () => {
 			bsModalClientNew.hide();
 			cleanFormClientNew();
+			bsModalConfirmation.hide();
 			modificationWatcher = false;
 		},
 		no: () => {
@@ -567,17 +584,17 @@ document.addEventListener("DOMContentLoaded", () => {
 		return inputObj;
 	}
 
-	function typeVenteInputBehavior() {
-		if (typeVenteInput.value == "1") {
-			encoursInput.disabled = false;
-			echeanceInput.disabled = false;
-		} else if (typeVenteInput.value == "0") {
-			encoursInput.disabled = true;
-			encoursInput.value = "0";
-			echeanceInput.disabled = true;
-			echeanceInput.value = "0";
-		}
-	}
+	// function typeVenteInputBehaviorClientNew() {
+	// 	if (typeVenteInputClientNew.value == "1") {
+	// 		encoursInput.disabled = false;
+	// 		echeanceInput.disabled = false;
+	// 	} else if (typeVenteInputClientNew.value == "0") {
+	// 		encoursInput.disabled = true;
+	// 		encoursInput.value = "0";
+	// 		echeanceInput.disabled = true;
+	// 		echeanceInput.value = "0";
+	// 	}
+	// }
 
 	// action
 	try {
@@ -642,8 +659,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	} catch (error) {}
 
 	try {
-		typeVenteInput.addEventListener("input", () => {
-			typeVenteInputBehavior();
+		typeVenteInputClientNew.addEventListener("input", () => {
+			typeVenteInputBehavior(modalClientNew);
 		});
 	} catch (error) {}
 
@@ -661,6 +678,8 @@ document.addEventListener("DOMContentLoaded", () => {
 					confirmationObj,
 					quitCreation
 				);
+			} else {
+				bsModalClientNew.hide();
 			}
 		});
 	} catch (error) {}

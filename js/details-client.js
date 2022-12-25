@@ -122,10 +122,30 @@ function fillInputsDetails(valueObj) {
 	}
 }
 
-function makeEditable(inputElements) {
+function makeInputsEditable(inputElements) {
 	inputElements.forEach((input) => {
 		if (!["uid", "type-personnality"].includes(input.id)) {
 			input.disabled = false;
+		}
+	});
+}
+
+function makeClientModifyInputsEditable(inputElements) {
+	// console.log("inputElements");
+	// console.log(inputElements.values());
+	// console.log(inputElements.item());
+	let typeVenteFlag = false;
+	inputElements.forEach((input) => {
+		if (!["uid", "type-personnality"].includes(input.id)) {
+			if (input.id == "type-vente" && input.value == "0") {
+				typeVenteFlag = true;
+			}
+			input.disabled = false;
+		}
+	});
+	inputElements.forEach((input) => {
+		if (["encours", "echeance"].includes(input.id) && typeVenteFlag) {
+			input.disabled = true;
 		}
 	});
 }
@@ -145,6 +165,9 @@ document.addEventListener("DOMContentLoaded", () => {
 		keyboard: false,
 		focus: true,
 	});
+
+	const inputTypeVenteClientDetails =
+		modalClientDetails.querySelector("#type-vente");
 
 	//confirmation modal
 	const modalConfirmation = document.getElementById("modal-confirmation");
@@ -400,7 +423,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		btnModifyClientDetails.addEventListener("click", (e) => {
 			let inputsForEdition =
 				modalClientDetails.querySelectorAll(".input");
-			makeEditable(inputsForEdition);
+			makeClientModifyInputsEditable(inputsForEdition);
 		});
 	} catch (e) {}
 
@@ -451,6 +474,11 @@ document.addEventListener("DOMContentLoaded", () => {
 		btnModifyClientDetails.addEventListener("click", () => {
 			btnSaveModalClientDetails.disabled = false;
 			btnModifyClientDetails.disabled = true;
+		});
+	} catch (e) {}
+	try {
+		inputTypeVenteClientDetails.addEventListener("click", () => {
+			typeVenteInputBehavior(modalClientDetails);
 		});
 	} catch (e) {}
 });
