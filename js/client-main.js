@@ -124,6 +124,7 @@ function generateRowTableClient(nodeModel, DataObj) {
 	}
 	return newNode;
 }
+
 async function saveNewclient(inputObj) {
 	let url = "/database/save/new_client.php";
 	let response = await sendData(url, inputObj);
@@ -272,12 +273,12 @@ document.addEventListener("DOMContentLoaded", () => {
 	const selectTypePersonnality = document.getElementById("type-personnality");
 
 	const modalClientNew = document.getElementById("modal-clt-new");
-	const btnCancelClientNew = document.getElementById("btn-cancel-client-new");
+	const btnCancelClientNew = document.getElementById("btn-cancel-new");
 
 	const btnClientFilter = document.getElementById("btn-client-filter");
 	const btnClientNew = document.getElementById("btn-client-new");
 
-	const btnSaveNewClient = document.getElementById("btn-save-client-new");
+	const btnSaveNewClient = document.getElementById("btn-save-new");
 	const refRowClientNew = modalClientNew.querySelector("#ref-row");
 	const typeVenteInputClientNew = document.querySelector(
 		"#modal-clt-new #type-vente"
@@ -550,7 +551,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	function _cleanClientNewForm() {
 		const inputsClientForm =
-			modalClientNew.querySelectorAll(".client-form.input");
+			modalClientNew.querySelectorAll(".tiers-form.input");
 		inputsClientForm.forEach((input) => {
 			input.value = DefaultValuesNewClientFormObj[input.id];
 		});
@@ -635,6 +636,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			// sendData("/database/save/new_client.php", getInputsValuesClientNew())
 			// 	.then((resp) => responseHandlerSaveNewClient(resp))
 			// 	.then((result) => console.log(result));
+			// TODO : add confirmation
 			let dataObj = getInputsValuesClientNew();
 			saveNewclient(dataObj).then((result) => {
 				if (result[0]) {
@@ -642,6 +644,7 @@ document.addEventListener("DOMContentLoaded", () => {
 					dataObj["uid"] = result[1];
 					console.log("dataObj");
 					console.log(dataObj);
+					//TODO : use to DOMPARSER
 					let rowModel =
 						tableBodyClients.firstElementChild.cloneNode(true);
 					tableBodyClients.append(

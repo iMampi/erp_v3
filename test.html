@@ -1,36 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<script src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-		<!-- <script src="/js/fixed-header.js"></script> -->
-		<script src="/js/toast-test.js"></script>
-		<!-- <script src="/js/new-client.js"></script> -->
-		<!-- <script src="/js/details-client.js"></script> -->
-		<link
-			rel="stylesheet"
-			href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css"
-		/>
-		<link rel="stylesheet" href="/style/mampi.css" />
-		<title>tests</title>
-	</head>
-	<body>
-		<div class="container-fluid">
-			<button id="toaster">click me</button>
-			<div
-				aria-live="polite"
-				aria-atomic="true"
-				class="position-relative"
-			>
-				<div
-					class="toast-container position-fixed top-0 end-0 p-3"
-					id="toast-container"
-				></div>
-			</div>
-		</div>
+<div id="div-selection" class="row ">
+	<span class="col">nombres de fournisseurs</span>
+	<span class="col">0</span>
 
-		<button id="btn-remove-filter" class="col-auto btn btn-info me-auto">supprimer le filtre</button>
-	</body>
-</html>
+</div>
+<div id="div-btns" class="row ">
+	<div class="col-auto me-auto">
+		<button type="button" class="col-auto btn btn-info" id="btn-fournisseur-new" >nouveau</button>
+		<button type="button" class="col-auto btn btn-info me-auto" data-bs-toggle="modal" data-bs-target="#modal-fam-detail">valider</button>
+	</div>
+	<div class="col-auto justify-content-end">
+		<button type="button" class="col-auto btn btn-info me-auto" id='btn-fournisseur-filter'>filtrer</button>
+		<button type="button" class="col-auto btn btn-info ">exporter</button>
+	</div>
+
+</div>

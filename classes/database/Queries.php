@@ -77,12 +77,43 @@ class Queries
     ?)
 ";
 
+    static public $save_new_fournisseur = "
+    SELECT new_fournisseur(
+        ?,
+        ? , 
+        ? ,
+        ? ,
+        ? ,
+        ? ,
+        ? ,
+        ? ,
+        ? ,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?
+    )";
+
     public function __construct($mode)
     {
         $this->mode = $mode;
         switch ($this->mode) {
             case 'save_new_client':
                 $this->query = self::$save_new_client;
+                break;
+            case 'save_new_fournisseur':
+                $this->query = self::$save_new_fournisseur;
                 break;
             case 'select_all_clients':
                 $this->query = self::$select_all_clients;
@@ -99,9 +130,6 @@ class Queries
                 break;
             case 'filter_clients':
                 $this->query = self::$filter_client;
-                break;
-            case 'test':
-                $this->query = self::$test;
                 break;
 
             default:

@@ -351,3 +351,15 @@ finished const quitCreation;
 finished eventhandler for btnCancelClientNew;
 changed makeEditable() into makeEditableClientDetails() and its implementation;
 changed implementation of typeVenteInputBehavior(). now can be used on all modals;
+------------------------
+050:
+started working on fournisseur;
+renamed btn-cancel-client-new to btn-cancel-new in elements\modals\buttons_modal_footer_new.html;
+duplicated company and human for now for client and fournisseur;
+implementing modal fournisseur new.
+class DTO created, fournisseur implemented in Queries,NewFournisseur, inplementation in Binding,
+new_fournisseur.php creatd.
+btncancelforunisseurnew works.
+btncancelforunisseurnew save works for saving.
+SAving works.
+keep working on fournisseur...confirmation quit modal wehn saved, add saved line...

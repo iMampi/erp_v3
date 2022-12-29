@@ -51,6 +51,34 @@ class Bindings
                 $arr["declarable"],
                 $arr["commissionable"]
             ];
+        } else if ($this->converter::class == "Converter\NewFournisseur") {
+            $this->binding = [
+                'issssssssissssssssssdiii',
+                $this->converter->data_for_db["type_personnality_uid"],
+                $arr["adress"],
+                $arr["nif"],
+                $arr["stat"],
+                $arr["rcs"],
+                $arr["phone1"],
+                $arr["phone2"],
+                $arr["mail1"],
+                $arr["mail2"],
+                $arr["active_fournisseur"],
+                $arr["note"],
+                $arr["nom_commercial"],
+                $arr["raison_sociale"],
+                $arr["noms"],
+                $arr["prenoms"],
+                $arr["cin"],
+                $arr["cin_date"],
+                $arr["cin_lieu"],
+                $arr["naissance_date"],
+                $arr["naissance_lieu"],
+                $arr["encours"],
+                $arr["nb_jour"],
+                $arr["evaluation"],
+                $arr["declarable"]
+            ];
         } elseif ($this->converter::class == "Converter\UpdateClient") {
             $this->binding = [
                 'iissssssssissssssssssidiiii',

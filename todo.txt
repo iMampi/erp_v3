@@ -93,4 +93,8 @@ for all query (update, filter, read,...) : how to handle big size of data?
 for filter with parameter : better create an object with attreibutes = fields which have their own attreibutes
 
 
-when doing 
+input fieds pram for confirmation (ss et cs)
+
+class DTO newforunisseur and newclient are literraly the same. refactor this
+
+mysql : when using new_fourniseur and new_client : in insert into tiers, doublon might happen. think about it

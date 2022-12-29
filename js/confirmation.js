@@ -1,5 +1,6 @@
 function openModalConfirmation(modalObj, modeObj) {
 	console.log("called confirmation");
+	console.log(modalObj);
 	modalObj.modal.querySelector(".modal-body").innerHTML = modeObj.message;
 	modalObj.bsModal.show();
 	modalObj.btnYes.addEventListener("click", () => {

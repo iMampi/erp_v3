@@ -40,7 +40,7 @@ is_logged();
             <?php
             // generate headers
             require_once $_SERVER["DOCUMENT_ROOT"] . '/utilities/login_utils.php';
-            $header = generate_logged_header($_SESSION['user']->name, "link-frnsrs");
+            $header = generate_logged_header($_SESSION['user']->name, "link-fournisseurs");
             echo $header;
 
             ?>
@@ -95,9 +95,9 @@ is_logged();
                     </div>
                 </div>
             </div>
-            <!-- modal filter TEST -->
+            <!-- modal filter -->
             <div class="modal fade" id="modal-fournisseur-filter" tabindex="-1">
-                <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Close">
+                <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
                 </button>
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
 
@@ -109,8 +109,7 @@ is_logged();
                         <div class="modal-body">
 
                             <?php
-                            // require_once __DIR__ . "/../../elements/tiers/fournisseurs/fournisseur_filter_basic.html" 
-                            ?>
+                            require_once __DIR__ . "/../../elements/tiers/fournisseurs/fournisseur_filter_basic.html" ?>
                         </div>
                         <div class="modal-footer">
 
@@ -124,10 +123,12 @@ is_logged();
             <!-- end modal filter -->
             <!-- modal fournisseur new -->
             <div class="modal fade" id="modal-fournisseur-new" tabindex="-1">
-                <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Close">
+                <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
                 </button>
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
+
                     <div class="modal-content">
+
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel">créer nouveau fournisseur</h5>
                         </div>
@@ -175,7 +176,7 @@ is_logged();
                                 <?php
                                 //TODO : make the header of factures in details readonly. 
                                 //TODO : change to require once. 
-                                // require_once __DIR__ . "/../../modals_processors/fournisseur_formulaire_body_read_only.php";
+                                require_once __DIR__ . "/../../modals_processors/fournisseur_formulaire_body_read_only.php";
                                 ?>
                             </div>
                             <!-- TODO : to elete. we gonna use only JS here -->
@@ -199,29 +200,30 @@ is_logged();
                 </div>
             </div>
             <!-- end modal details fournisseurs -->
-            <!-- </div> -->
-            <!-- TOAST  -->
-            <div class="toast-container position-fixed top-0 end-0 p-3" id="toast-container"></div>
-            <!-- end TOAST  -->
-            <!-- confirmation  modal-->
+        </div>
+        <!-- TOAST  -->
+        <div class="toast-container position-fixed top-0 end-0 p-3" id="toast-container"></div>
+        <!-- end TOAST  -->
+        <!-- confirmation  modal-->
 
-            <div class="modal fade bg-confirmation" tabindex="-1" id="modal-confirmation">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm ">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Etes-vous sûr?</h5>
-                        </div>
-                        <div class="modal-body">
-                        </div>
-                        <div class="modal-footer d-flex justify-content-end">
-                            <button type="button" class="col-auto btn  btn-success" id="btn-confirmation-yes">confirmer</button>
-                            <button type="button" class="col-auto btn btn-danger" id="btn-confirmation-no">annuler</button>
-                        </div>
+        <div class="modal fade bg-confirmation" tabindex="-1" id="modal-confirmation">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Etes-vous sûr?</h5>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer d-flex justify-content-end">
+                        <button type="button" class="col-auto btn  btn-success" id="btn-confirmation-yes">confirmer</button>
+                        <button type="button" class="col-auto btn btn-danger" id="btn-confirmation-no">annuler</button>
                     </div>
                 </div>
             </div>
-            <!-- endconfirmation  modal-->
         </div>
+        <!-- endconfirmation  modal-->
+
+
 </body>
 
 </html>
