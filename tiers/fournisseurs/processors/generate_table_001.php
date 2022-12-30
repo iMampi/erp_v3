@@ -4,8 +4,9 @@ use function Session\can_visit;
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 
-require __DIR__ . "/dummy.php";
+// require __DIR__ . "/dummy.php";
 // require __DIR__ . "/../../../el";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/database/select/all_fournisseurs_name.php";
 
 $cycle_frnsr = "fournisseur";
 
@@ -27,41 +28,50 @@ $row_counter = 1;
 
 if (can_visit($cycle_frnsr)) {
     // if (can_visit($cycle_frnsr)) {
-    foreach ($dummy as $el) {
+    foreach ($all_fournisseurs_name as $fournisseur) {
         $tr_ = $tr_model->cloneNode(true);
 
-        $id_ = sprintf('%03d', $row_counter);
+        $id_ = "row-" . sprintf('%03d', $fournisseur["uid"]);
         $tr_->setAttribute("id", $id_);
+
+        if ($fournisseur["active_fournisseur"] == "0") {
+            $tr_->setAttribute("class", $tr_->getAttribute("class") . " collapse-row");
+        }
         $tbody_->appendChild($tr_);
 
 
         $nodes = $xpath->query(".//*[contains(@class,'input')]", $tr_);
-        foreach ($nodes as $el_input) {
-            $classes = $el_input->getAttribute('class');
+        foreach ($nodes as $fournisseur_input) {
+            $classes = $fournisseur_input->getAttribute('class');
             $classes_array = explode(" ", $classes);
 
             if (in_array("date", $classes_array)) {
-                $el_input->setAttribute("value", $el[1]);
+                //     $fournisseur_input->setAttribute("value", $fournisseur[1]);
             } elseif (in_array("uid", $classes_array)) {
-                $el_input->setAttribute("value", $el[0]);
-            } elseif (in_array("frnsr", $classes_array)) {
-                $el_input->setAttribute("value", $el[2]);
-            } elseif (in_array("num", $classes_array)) {
-                $el_input->setAttribute("value", $el[3]);
-            } elseif (in_array("affaire", $classes_array)) {
-                $el_input->setAttribute("value", $el[4]);
-            } elseif (in_array("total", $classes_array)) {
-                $el_input->setAttribute("value", $el[5]);
-            } elseif (in_array("detail", $classes_array)) {
-                // $el_input->setAttribute("value", $el[6]);
-            } elseif (in_array("nd", $classes_array)) {
-                $option_ = $xpath->query(".//*[(@value='" . $el[6] . "')]", $el_input);
-                $option_[0]->setAttribute("selected", "true");
+                $fournisseur_input->setAttribute("value", $fournisseur["uid"]);
+            } elseif (in_array("frnsr-name", $classes_array)) {
+                if ($fournisseur["raison_sociale"]) {
+                    $name_value = $fournisseur["nom_commercial"] . " / " . $fournisseur["raison_sociale"];
+                } else {
+                    $name_value = $fournisseur["noms"] . " " . $fournisseur["prenoms"];
+                }
+                $fournisseur_input->setAttribute("value", $name_value);
+                // } elseif (in_array("num", $classes_array)) {
+                //     $fournisseur_input->setAttribute("value", $fournisseur[3]);
+                // } elseif (in_array("affaire", $classes_array)) {
+                //     $fournisseur_input->setAttribute("value", $fournisseur[4]);
+                // } elseif (in_array("total", $classes_array)) {
+                //     $fournisseur_input->setAttribute("value", $fournisseur[5]);
+                // } elseif (in_array("detail", $classes_array)) {
+                //     // $fournisseur_input->setAttribute("value", $fournisseur[6]);
+                // } elseif (in_array("nd", $classes_array)) {
+                //     $option_ = $xpath->query(".//*[(@value='" . $fournisseur[6] . "')]", $fournisseur_input);
+                //     $option_[0]->setAttribute("selected", "true");
             }
         }
     }
 } else {
-        // TODO : fix the classs in the base
+    // TODO : fix the classs in the base
 
     // $tr_ = $tr_model->cloneNode(true);
     // $tr_2 = $tr_model->cloneNode(true);

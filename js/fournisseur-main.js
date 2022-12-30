@@ -102,24 +102,25 @@ var defaultFilterFlag = true;
 // TODO : do me
 function generateRowTableFournisseur(nodeModel, DataObj) {
 	// console.log(DataObj);
+	console.log("generate row");
 	let newNode = nodeModel.cloneNode(true);
-	newNode.id = "row" - +zeroLeftPadding(DataObj["uid"], 3, false);
+	newNode.id = "row-"+zeroLeftPadding(DataObj["uid"], 3, false);
 	newNode.querySelector("input.uid").value = DataObj["uid"];
 	if (
 		DataObj["type_personnality_uid"] == "1" ||
 		DataObj["type-personnality"] == "1"
 	) {
-		newNode.querySelector(".clt-name.input").value =
+		newNode.querySelector(".frnsr-name.input").value =
 			DataObj["noms"] + " " + DataObj["prenoms"];
 	} else if (
 		DataObj["type_personnality_uid"] == "2" ||
 		DataObj["type-personnality"] == "2"
 	) {
 		if (DataObj["nom_commercial"] !== undefined) {
-			newNode.querySelector(".clt-name").value =
+			newNode.querySelector(".frnsr-name").value =
 				DataObj["nom_commercial"] + " / " + DataObj["raison_sociale"];
 		} else {
-			newNode.querySelector(".clt-name").value =
+			newNode.querySelector(".frnsr-name").value =
 				DataObj["nom-commercial"] + " / " + DataObj["raison-sociale"];
 		}
 	}
@@ -148,8 +149,8 @@ function generateRowTableFournisseur(nodeModel, DataObj) {
 // 	// return result[0] == "success";
 // }
 
-// TODO : do me
 async function saveFournisseurNew(inputObj) {
+	console.log("saving new fr");
 	let url = "/database/save/new_fournisseur.php";
 	let response = await sendData(url, inputObj);
 	let result = await responseHandlerSaveFournisseurNew(response);
@@ -162,7 +163,7 @@ async function saveFournisseurNew(inputObj) {
 	} else {
 		throw new Error("wrong value returned");
 	}
-	return result[0] == "success";
+	return [result[0] == "success", result[1]];
 }
 
 // TODO : do me
@@ -332,18 +333,70 @@ document.addEventListener("DOMContentLoaded", () => {
 		},
 	};
 
+	const saveCreation = {
+		message:
+			"Des champs ont été modifiés.<br>\
+				Vos modifications vont être enregistrées.<br>\
+				Êtes vous sûr de vouloir sauvegarder vos modification?",
+		yes: () => {
+			console.log("called yes création");
+			bsModalConfirmation.hide();
+
+			let dataObj = getInputsValuesFournisseurNew();
+			saveFournisseurNew(dataObj).then((result) => {
+				if (result[0]) {
+					// insert uid of newly created client
+					dataObj["uid"] = result[1];
+					// console.log(dataObj);
+					// TODO : cache html
+					fetch(
+						"/elements/tiers/fournisseurs/liste_frnsrs_table_001_base.html"
+					)
+						.then((response) => {
+							let tt = response.text();
+							console.log("tt");
+							console.log(tt);
+							return tt;
+						})
+						.then((txt) => {
+							// TODO : abstract this process
+							let doc = new DOMParser().parseFromString(
+								txt,
+								"text/html"
+							);
+							let trModel = doc.querySelector("#row-001");
+
+							tableBodyFournisseur.append(
+								generateRowTableFournisseur(trModel, dataObj)
+							);
+							bsModalFournisseurNew.hide();
+							_cleanFournisseurNewForm();
+							console.log("yes saving called");
+							return false;
+						});
+				} else {
+					//TODO : show error
+					return true;
+				}
+			});
+		},
+		no: () => {
+			bsModalConfirmation.hide();
+		},
+	};
+
 	// FUNCTIONS
 	function getInputsValuesFournisseurNew() {
 		let inputObj = {};
 
 		let inputs = modalFournisseurNew.querySelectorAll(".input");
-		console.log("inputs");
-		console.log(inputs);
+		// console.log("inputs");
+		// console.log(inputs);
 		inputs.forEach((input) => {
 			inputObj[input.id] = input.value;
 		});
-		console.log("inputObj");
-		console.log(inputObj);
+		// console.log("inputObj");
+		// console.log(inputObj);
 		return inputObj;
 	}
 
@@ -361,9 +414,11 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	function _cleanFournisseurNewForm() {
+		console.log("cleaning");
 		const inputsFournisseurForm =
 			modalFournisseurNew.querySelectorAll(".tiers-form.input");
 		inputsFournisseurForm.forEach((input) => {
+			console.log(input);
 			input.value = DefaultValuesFournisseurNewFormObj[input.id];
 		});
 
@@ -451,37 +506,46 @@ document.addEventListener("DOMContentLoaded", () => {
 		btnSaveFournisseurNew.addEventListener("click", () => {
 			// TODO : add confirmation
 
-			let dataObj = getInputsValuesFournisseurNew();
-			saveFournisseurNew(dataObj).then((result) => {
-				if (result[0]) {
-					// insert uid of newly created client
-					dataObj["uid"] = result[1];
-					console.log("dataObj");
-					console.log(dataObj);
-					// TODO : use DOMParser
-					// TODO : cache html
-					fetch(
-						"/elements/tiers/fournisseurs/liste_frnsrs_table_001_base.html"
-					)
-						.then((response) => response.text())
-						.then((txt) => {
-							let doc = new DOMParser().parseFromString(
-								txt,
-								"text/html"
-							);
-							let trModel = doc.querySelector("#row-001");
-							let inputs = trModel.querySelectorAll(".input");
-							tableBodyFournisseur.append(
-								generateRowTableFournisseur(trModel, dataObj)
-							);
-						});
+			if (modificationWatcher) {
+				modificationWatcher = openModalConfirmation(
+					confirmationObj,
+					saveCreation
+				);
+			} else {
+				bsModalFournisseurNew.hide();
+			}
 
-					bsModalClientNew.hide();
-					_cleanFournisseurNewForm();
-				} else {
-					//TODO : show error
-				}
-			});
+			// let dataObj = getInputsValuesFournisseurNew();
+			// saveFournisseurNew(dataObj).then((result) => {
+			// 	if (result[0]) {
+			// 		// insert uid of newly created client
+			// 		dataObj["uid"] = result[1];
+			// 		console.log("dataObj");
+			// 		console.log(dataObj);
+			// 		// TODO : use DOMParser
+			// 		// TODO : cache html
+			// 		fetch(
+			// 			"/elements/tiers/fournisseurs/liste_frnsrs_table_001_base.html"
+			// 		)
+			// 			.then((response) => response.text())
+			// 			.then((txt) => {
+			// 				let doc = new DOMParser().parseFromString(
+			// 					txt,
+			// 					"text/html"
+			// 				);
+			// 				let trModel = doc.querySelector("#row-001");
+			// 				let inputs = trModel.querySelectorAll(".input");
+			// 				tableBodyFournisseur.append(
+			// 					generateRowTableFournisseur(trModel, dataObj)
+			// 				);
+			// 			});
+
+			// 		bsModalClientNew.hide();
+			// 		_cleanFournisseurNewForm();
+			// 	} else {
+			// 		//TODO : show error
+			// 	}
+			// });
 		});
 		//TODO : if good, clean and close, and snckbar. if bad, snackbar, then with reason.
 	} catch (error) {}

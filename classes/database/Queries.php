@@ -5,6 +5,7 @@ namespace Database;
 
 class Queries
 {
+    // TODO : change select_all_clients into select_all_clients_name
     public string $mode;
     public string $query;
     static public $filter_client = "select * from view_all_clients";
@@ -47,6 +48,9 @@ class Queries
     ";
     static public $select_all_clients = "
     call all_clients 
+    ";
+    static public $select_all_fournisseurs = "
+    call all_fournisseurs 
     ";
     static public $save_new_client = "
     SELECT new_client(?,
@@ -117,6 +121,9 @@ class Queries
                 break;
             case 'select_all_clients':
                 $this->query = self::$select_all_clients;
+                break;
+            case 'select_all_fournisseurs':
+                $this->query = self::$select_all_fournisseurs;
                 break;
             case 'select_one_client':
                 $this->query = self::$select_one_client;

@@ -57,7 +57,7 @@ type de vente : a credit /au comptant
 valeur encours : si comptant grisé et  0
 echeance (nb de jour) : si comptant grisé et 0
 
-spining while waiting treatment/loading
+spining while waiting treatment/loading (saving, querying, select...)
 
 DRY : i use 2 different template for toast (succes/failure) because of colors, bg et svg
 

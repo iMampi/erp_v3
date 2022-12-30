@@ -363,3 +363,9 @@ btncancelforunisseurnew works.
 btncancelforunisseurnew save works for saving.
 SAving works.
 keep working on fournisseur...confirmation quit modal wehn saved, add saved line...
+------------------------
+051:
+fournisseur-main.js : cancel and saving working. fixed _cleanFournisseurNewForm(). fixed typo into generateRowTableFournisseur();
+Queries.php : added "select_all_fournisseurs";
+fournisseur/generate_table_001.php : it works!! fixed the mysql SP.
+dumped database Dump20221230-erpv2.sql
