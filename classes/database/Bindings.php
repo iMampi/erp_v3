@@ -115,6 +115,11 @@ class Bindings
                 'i',
                 $this->converter->data_for_db["uid"]
             ];
+        } elseif ($this->converter::class == "Converter\SelectOneFournisseur") {
+            $this->binding = [
+                'i',
+                $this->converter->data_for_db["uid"]
+            ];
         } elseif ($this->converter::class == "Converter\DeleteClient") {
             $this->binding = [
                 'i',

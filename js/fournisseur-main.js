@@ -67,6 +67,87 @@ var modificationWatcher = false;
 const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
 
+function fillInputsDetails(valueObj) {
+	// console.log("valueObj : ");
+	// console.log(valueObj);
+	// let inputsElements = md.querySelectorAll(".input");
+	let modalFournisseurDetails_ = document.getElementById(
+		"modal-fournisseur-details"
+	);
+	let inputsElements =
+		modalFournisseurDetails_.getElementsByClassName("input");
+
+	// console.log("inputsElement :");
+	// console.log(inputsElements);
+	// let inputsElements = document.querySelectorAll(
+	// "#modal-clt-details .input"
+	// );
+	//TODO : use a DTO
+	for (let index = 0; index < inputsElements.length; index++) {
+		let element = inputsElements[index];
+		// }
+		// inputsElements.forEach((element) => {
+		if (element.id == "actif") {
+			element.value = valueObj["active_client"];
+		} else if (element.id == "adress") {
+			element.value = valueObj["adress"];
+		} else if (element.id == "cin") {
+			element.value = valueObj["cin"];
+		} else if (element.id == "cin-date") {
+			element.value = valueObj["cin_date"];
+		} else if (element.id == "cin-lieu") {
+			element.value = valueObj["cin_lieu"];
+		} else if (element.id == "commissionable") {
+			element.value = valueObj["commissionable"];
+		} else if (element.id == "declarable") {
+			element.value = valueObj["declarable"];
+		} else if (element.id == "encours") {
+			element.value = valueObj["encours"];
+		} else if (element.id == "evaluation") {
+			element.value = valueObj["evaluation"];
+		} else if (element.id == "mail1") {
+			element.value = valueObj["mail1"];
+		} else if (element.id == "mail2") {
+			element.value = valueObj["mail2"];
+		} else if (element.id == "naissance-date") {
+			element.value = valueObj["naissance_date"];
+		} else if (element.id == "naissance-lieu") {
+			element.value = valueObj["naissance_lieu"];
+		} else if (element.id == "echeance") {
+			element.value = valueObj["nb_jour"];
+		} else if (element.id == "nif") {
+			element.value = valueObj["nif"];
+		} else if (element.id == "nom-commercial") {
+			console.log("filled noms-comm");
+			element.value = valueObj["nom_commercial"];
+		} else if (element.id == "noms") {
+			console.log("filled noms");
+			element.value = valueObj["noms"];
+		} else if (element.id == "note") {
+			element.value = valueObj["note"];
+		} else if (element.id == "phone1") {
+			element.value = valueObj["phone1"];
+		} else if (element.id == "phone2") {
+			element.value = valueObj["phone2"];
+		} else if (element.id == "prenoms") {
+			element.value = valueObj["prenoms"];
+		} else if (element.id == "raison-sociale") {
+			element.value = valueObj["raison_sociale"];
+		} else if (element.id == "rcs") {
+			element.value = valueObj["rcs"];
+		} else if (element.id == "stat") {
+			element.value = valueObj["stat"];
+		} else if (element.id == "type-personnality") {
+			element.value = valueObj["type_personnality_uid"];
+		} else if (element.id == "type-vente") {
+			element.value = valueObj["type_vente"];
+		} else if (element.id == "uid") {
+			element.value = valueObj["uid"];
+		}
+		// });
+	}
+}
+
 // TODO : do me
 // async function fillTableClients(myJson, myTableBody) {
 // 	console.log("filling table");
@@ -99,12 +180,23 @@ var defaultFilterFlag = true;
 // 	return true;
 // }
 
-// TODO : do me
+// TODO:overkill
+async function responseHandlerSelectOneFournisseur(response) {
+	try {
+		// return JSON.parse(await response);
+		let myjson = JSON.parse(await response);
+		// console.log(myjson);
+		return myjson;
+	} catch (e) {
+		return "error 2";
+	}
+}
+
 function generateRowTableFournisseur(nodeModel, DataObj) {
 	// console.log(DataObj);
 	console.log("generate row");
 	let newNode = nodeModel.cloneNode(true);
-	newNode.id = "row-"+zeroLeftPadding(DataObj["uid"], 3, false);
+	newNode.id = "row-" + zeroLeftPadding(DataObj["uid"], 3, false);
 	newNode.querySelector("input.uid").value = DataObj["uid"];
 	if (
 		DataObj["type_personnality_uid"] == "1" ||
@@ -192,6 +284,12 @@ async function fecthAndAppendHTMLFournisseurForm(
 	selectedOption,
 	disabled
 ) {
+	console.log("vars here");
+	console.log(refRow);
+	console.log(selectedOption);
+	console.log(disabled);
+	console.log("--------");
+
 	disabled = disabled || false;
 	if (![false, true].includes(disabled)) {
 		throw new Error("third param is neither 'true' or 'false'.");
@@ -265,6 +363,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	// DEFINITION
 
 	const tableBodyFournisseur = document.getElementById("ze-tbody");
+	const table001 = document.getElementById("table-001");
 	const btnFournisseurNew = document.getElementById("btn-fournisseur-new");
 
 	const btnFournisseurFilter = document.getElementById(
@@ -278,17 +377,30 @@ document.addEventListener("DOMContentLoaded", () => {
 	const modalFournisseurNew = document.getElementById(
 		"modal-fournisseur-new"
 	);
+	const modalFournisseurDetails = document.getElementById(
+		"modal-fournisseur-details"
+	);
 
 	const bsModalFournisseurNew = new bootstrap.Modal(modalFournisseurNew, {
 		backdrop: "static",
 		keyboard: false,
 		focus: true,
 	});
+	const bsModalFournisseurDetails = new bootstrap.Modal(
+		modalFournisseurDetails,
+		{
+			backdrop: "static",
+			keyboard: false,
+			focus: true,
+		}
+	);
 
 	const selectTypePersonnality =
 		modalFournisseurNew.querySelector("#type-personnality");
 
 	const refRowFournisseurNew = modalFournisseurNew.querySelector("#ref-row");
+	const refRowFournisseurDetails =
+		modalFournisseurDetails.querySelector("#ref-row");
 
 	//confirmation modal
 	const modalConfirmation = document.getElementById("modal-confirmation");
@@ -386,6 +498,55 @@ document.addEventListener("DOMContentLoaded", () => {
 	};
 
 	// FUNCTIONS
+
+	async function showDetails(event) {
+		// TODO : refactor
+		// console.log("called here");
+		let parent = event.target.parentNode.parentNode;
+		let myuid = parent.querySelector(".input.uid").value;
+		// console.log("myuid tr");
+		// console.log(myuid);
+		sendData("/database/select/one_fournisseur_details.php", {
+			uid: myuid,
+		})
+			.then((resp) => {
+				// console.log("shwodetail :");
+				// console.log(resp);
+				return responseHandlerSelectOneFournisseur(resp);
+			})
+			.then((result) => {
+				// console.log("result : " + JSON.stringify(result[1]));
+				// TODO : implement this part in new-client into a function cleanClass(). and optimize : if same personnality called, no nedd to recall.
+				if (result[0]) {
+					try {
+						let antiKey_ = (
+							(parseInt(result[1]["type_personnality_uid"]) % 2) +
+							1
+						).toString();
+						let classKey = "." + personnalities[antiKey_];
+						let fieldsPersonnality =
+							modalFournisseurDetails.querySelectorAll(classKey);
+						// console.log("calling removing");
+						// console.log(antiKey_);
+						fieldsPersonnality.forEach((div) => div.remove());
+					} finally {
+						fecthAndAppendHTMLFournisseurForm(
+							refRowFournisseurDetails,
+							personnalities[result[1]["type_personnality_uid"]],
+							true
+						).then((newDom) => {
+							setTimeout(() => {
+								fillInputsDetails(result[1]);
+							}, 200);
+							// bsModalClientDetails.show();
+						});
+
+						//must use time out. because when we update the DOM with appendAndFill, it does not update directly
+					}
+				}
+			});
+	}
+
 	function getInputsValuesFournisseurNew() {
 		let inputObj = {};
 
@@ -548,5 +709,31 @@ document.addEventListener("DOMContentLoaded", () => {
 			// });
 		});
 		//TODO : if good, clean and close, and snckbar. if bad, snackbar, then with reason.
+	} catch (error) {}
+
+	try {
+		table001.addEventListener("click", (e) => {
+			console.log("log claslist");
+			console.log(e.target.classList);
+			if (e.target.classList.contains("btn-details")) {
+				console.log("details clicked");
+				showDetails(e);
+				bsModalFournisseurDetails.show();
+			}
+		});
+	} catch (error) {}
+
+	try {
+		modalFournisseurDetails
+			.querySelector(".modal-footer")
+			.addEventListener("click", (e) => {
+				if ((e.target.id = "btn-cancel")) {
+					if (modificationWatcher) {
+						// TODO : do something
+					} else {
+						bsModalFournisseurDetails.hide();
+					}
+				}
+			});
 	} catch (error) {}
 });

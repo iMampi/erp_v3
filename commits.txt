@@ -369,3 +369,8 @@ fournisseur-main.js : cancel and saving working. fixed _cleanFournisseurNewForm(
 Queries.php : added "select_all_fournisseurs";
 fournisseur/generate_table_001.php : it works!! fixed the mysql SP.
 dumped database Dump20221230-erpv2.sql
+------------------------
+052:
+combined the logic for the "details parts directly into fournisseur-main.js.
+now all works(backend and front end) for foruniseur-details. : 'see' and 'cancel';
+gotta to still work on modification and saving modifications...

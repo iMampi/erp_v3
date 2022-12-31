@@ -46,6 +46,9 @@ class Queries
     static public $select_one_client = "
     call one_client_details(?) 
     ";
+    static public $select_one_fournisseur = "
+    call one_fournisseur_details(?) 
+    ";
     static public $select_all_clients = "
     call all_clients 
     ";
@@ -127,6 +130,9 @@ class Queries
                 break;
             case 'select_one_client':
                 $this->query = self::$select_one_client;
+                break;
+            case 'select_one_fournisseur':
+                $this->query = self::$select_one_fournisseur;
                 break;
             case 'delete_client':
                 $this->query = self::$delete_client;

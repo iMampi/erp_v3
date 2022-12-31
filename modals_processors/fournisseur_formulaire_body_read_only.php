@@ -1,6 +1,6 @@
 <?php
 // TODO grab role of user
-$base = __DIR__ . "/../elements/tiers/clients/client_formulaire_base.html";P
+$base = __DIR__ . "/../elements/tiers/fournisseurs/fournisseur_formulaire_base.html";
 
 $dom = new DOMDocument();
 //to be able to use new html5 tag with DOMDocument
@@ -13,4 +13,7 @@ $inputs = $xpath->query(".//*[contains(@class,'input')]");
 foreach ($inputs as $input) {
     $input->setAttribute("disabled", '');
 }
+// echo "<br>";
+// echo "TEST";
+// echo "<br>";
 echo utf8_decode($dom->saveHTML($dom->documentElement));
