@@ -13,6 +13,9 @@ $inputs = $xpath->query(".//*[contains(@class,'input')]");
 foreach ($inputs as $input) {
     $input->setAttribute("disabled", '');
 }
+
+$btn_save = $xpath->query(".//*[@class='btn-save')]");
+// $btn_save->setAttribute("disabled", '');
 // echo "<br>";
 // echo "TEST";
 // echo "<br>";

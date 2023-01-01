@@ -40,6 +40,34 @@ class Queries
     ?)
     ";
 
+    static public $update_fournisseur = "
+    select update_fournisseur(?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?)
+    ";
+
     static public $delete_client = "
     update clients set active_client='0' where uid=? 
     ";
@@ -137,9 +165,11 @@ class Queries
             case 'delete_client':
                 $this->query = self::$delete_client;
                 break;
-
             case 'update_client':
                 $this->query = self::$update_client;
+                break;
+            case 'update_fournisseur':
+                $this->query = self::$update_fournisseur;
                 break;
             case 'filter_clients':
                 $this->query = self::$filter_client;

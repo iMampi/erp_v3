@@ -130,7 +130,7 @@ function makeInputsEditable(inputElements) {
 	});
 }
 
-function makeClientModifyInputsEditable(inputElements) {
+function makeClientDetailsInputsEditable(inputElements) {
 	// console.log("inputElements");
 	// console.log(inputElements.values());
 	// console.log(inputElements.item());
@@ -423,7 +423,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		btnModifyClientDetails.addEventListener("click", (e) => {
 			let inputsForEdition =
 				modalClientDetails.querySelectorAll(".input");
-			makeClientModifyInputsEditable(inputsForEdition);
+			makeClientDetailsInputsEditable(inputsForEdition);
 		});
 	} catch (e) {}
 

@@ -374,3 +374,8 @@ dumped database Dump20221230-erpv2.sql
 combined the logic for the "details parts directly into fournisseur-main.js.
 now all works(backend and front end) for foruniseur-details. : 'see' and 'cancel';
 gotta to still work on modification and saving modifications...
+------------------------
+053:
+fournisseur-main.js : finalized the implementation for modification (saving, canceling). now all works good. maybe some typo to fix
+created the php object and script to handle updates on fournisseur.
+created the funciton on mysql db

@@ -67,6 +67,64 @@ var modificationWatcher = false;
 const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
 
+
+function updateFournisseurRow(mytable, dataObj) {
+	let row = mytable.querySelector(
+		"#row-" + zeroLeftPadding(parseInt(dataObj["uid"]), 3, false)
+	);
+	console.log("dataObj update frnsr row");
+	console.log(dataObj);
+	let inputsRow = row.querySelectorAll(".input");
+	inputsRow.forEach((input) => {
+		// console.log(input.classList);
+		if (input.classList.contains("frnsr-name", "input")) {
+			if (
+				dataObj["noms"] == undefined &&
+				dataObj["prenoms"] == undefined
+			) {
+				input.value =
+					dataObj["nom-commercial"] +
+					" / " +
+					dataObj["raison-sociale"];
+			} else if (
+				dataObj["nom-commercial"] == undefined &&
+				dataObj["raison-sociale"] == undefined
+			) {
+				input.value = dataObj["noms"] + " " + dataObj["prenoms"];
+			}
+		}
+	});
+}
+
+function disableInputs(inputNodeList) {
+	inputNodeList.forEach((element) => {
+		disableInput(element);
+	});
+}
+function disableInput(input) {
+	input.setAttribute("disabled", "true");
+}
+
+function makeFournisseurDetailsInputsEditable(inputElements) {
+	// console.log("inputElements");
+	// console.log(inputElements.values());
+	// console.log(inputElements.item());
+	let typeVenteFlag = false;
+	inputElements.forEach((input) => {
+		if (!["uid", "type-personnality"].includes(input.id)) {
+			if (input.id == "type-vente" && input.value == "0") {
+				typeVenteFlag = true;
+			}
+			input.disabled = false;
+		}
+	});
+	inputElements.forEach((input) => {
+		if (["encours", "echeance"].includes(input.id) && typeVenteFlag) {
+			input.disabled = true;
+		}
+	});
+}
+
 function fillInputsDetails(valueObj) {
 	// console.log("valueObj : ");
 	// console.log(valueObj);
@@ -88,7 +146,7 @@ function fillInputsDetails(valueObj) {
 		// }
 		// inputsElements.forEach((element) => {
 		if (element.id == "actif") {
-			element.value = valueObj["active_client"];
+			element.value = valueObj["active_fournisseur"];
 		} else if (element.id == "adress") {
 			element.value = valueObj["adress"];
 		} else if (element.id == "cin") {
@@ -185,7 +243,8 @@ async function responseHandlerSelectOneFournisseur(response) {
 	try {
 		// return JSON.parse(await response);
 		let myjson = JSON.parse(await response);
-		// console.log(myjson);
+		console.log(" selct one myjson");
+		console.log(myjson);
 		return myjson;
 	} catch (e) {
 		return "error 2";
@@ -357,6 +416,8 @@ async function fecthAndAppendHTMLFournisseurForm(
 	return refRow.parentNode;
 }
 
+
+
 //////////////////////////////////////////////
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -370,16 +431,26 @@ document.addEventListener("DOMContentLoaded", () => {
 		"btn-fournisseur-filter"
 	);
 
-	const btnSaveFournisseurNew = document.getElementById("btn-save-new");
-	const btnCancelFournisseurNew = document.getElementById("btn-cancel-new");
-
 	// creation new modal
 	const modalFournisseurNew = document.getElementById(
 		"modal-fournisseur-new"
 	);
+
+	const btnSaveFournisseurNew =
+		modalFournisseurNew.querySelector("#btn-save-new");
+	const btnCancelFournisseurNew =
+		modalFournisseurNew.querySelector("#btn-cancel-new");
+
 	const modalFournisseurDetails = document.getElementById(
 		"modal-fournisseur-details"
 	);
+
+	const btnSaveFournisseurDetails =
+		modalFournisseurDetails.querySelector("#btn-save");
+	const btnCancelFournisseurDetails =
+		modalFournisseurDetails.querySelector("#btn-cancel");
+	const btnModifyFournisseurDetails =
+		modalFournisseurDetails.querySelector("#btn-modify");
 
 	const bsModalFournisseurNew = new bootstrap.Modal(modalFournisseurNew, {
 		backdrop: "static",
@@ -429,7 +500,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		clonedBtnNo: clonedBtnConfirmationNo,
 	};
 
-	const quitCreation = {
+	const quitCreationObj = {
 		message:
 			"Des champs ont été modifiés.<br>\
 		Vos modifications vont être perdus.<br>\
@@ -445,7 +516,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		},
 	};
 
-	const saveCreation = {
+	const saveCreationObj = {
 		message:
 			"Des champs ont été modifiés.<br>\
 				Vos modifications vont être enregistrées.<br>\
@@ -497,7 +568,111 @@ document.addEventListener("DOMContentLoaded", () => {
 		},
 	};
 
+	const quitDetailsObj = {
+		message:
+			"Des champs ont été modifiés.<br>\
+			Vos modifications vont être perdus.<br>\
+			Êtes vous sûr de vouloir quitter ce formulaire?",
+		yes: () => {
+			console.log("cancelFournisseurDetailsForm");
+			bsModalConfirmation.hide();
+			cancelFournisseurDetailsForm();
+			
+		},
+		no: () => {
+			bsModalConfirmation.hide();
+		},
+	};
+
+	const saveDetailsObj = {
+		message:
+			"Des champs ont été modifiés.<br>\
+			Vos modifications vont être enregistrés.<br>\
+			Êtes vous sûr de vouloir sauvegarder ces changements?",
+		yes: () => {
+			let inputsValuesObj = getInputsValuesFournisseurDetails();
+			let updated_succesfully=!saveModificationFournisseurDetails(inputsValuesObj);
+			if (updated_succesfully){
+				btnSaveFournisseurDetails.disabled = true;
+				btnModifyFournisseurDetails.disabled = false;
+
+			}
+			bsModalConfirmation.hide();
+			return updated_succesfully;
+		},
+		no: () => {
+			bsModalConfirmation.hide();
+		},
+	};
+
 	// FUNCTIONS
+	function getInputsValuesFournisseurDetails() {
+		//TODO : add paramater "modal", to delimit the dom. and take it out
+		let inputObj = {};
+		let inputs = modalFournisseurDetails.querySelectorAll(".input");
+		inputs.forEach((input) => {
+			inputObj[input.id] = input.value;
+		});
+		// console.log(inputObj);
+		return inputObj;
+	}
+
+	function cancelFournisseurDetailsForm(){
+		let inputsForEdition =
+		modalFournisseurDetails.querySelectorAll(".input");
+		disableInputs(inputsForEdition);
+
+		bsModalFournisseurDetails.hide();
+		btnSaveFournisseurDetails.disabled = true;
+		btnModifyFournisseurDetails.disabled = false;
+		modificationWatcher=false;
+
+	}
+
+	async function saveModificationFournisseurDetails(inputsValuesObj) {
+
+		console.log("saving update called");
+		let myurl = "/database/save/update_fournisseur.php";
+		let response = await sendData(myurl, inputsValuesObj);
+		console.log(response);
+		// TODO : we dont use await response.json because it is already handled in senData () as respones.text(). so we have to call JSON method manually;
+		let myjson = await JSON.parse(response);
+		// console.log("myjson");
+		if (Array.isArray(myjson)) {
+			// note : structure particuliere retourné par la funciton sql
+			if (myjson[0] && myjson[1][0] >= 1) {
+				console.log("succc");
+				console.log(JSON.stringify(myjson));
+				ToastShowClosured("success", "Client mis à jour avec succès.");
+				let inputsForEdition =
+					modalFournisseurDetails.querySelectorAll(".input");
+				disableInputs(inputsForEdition);
+				updateFournisseurRow(table001, inputsValuesObj);
+				btnSaveFournisseurDetails.disabled = true;
+				btnModifyFournisseurDetails.disabled = false;
+				// return false for modificationWatcher
+				return false;
+			} else {
+				console.log("faileeddd");
+				console.log(JSON.stringify(myjson));
+				ToastShowClosured("failure", "Echec de la mise à jour.");
+				// return true for modificationWatcher
+
+				return true;
+			}
+		} else {
+			console.log("faileeddd2");
+
+			ToastShowClosured(
+				"failure",
+				"Echec de la mise à jour, contactez l'administrateur système."
+			);
+
+			// return true for modificationWatcher
+
+			return true;
+		}
+	}
 
 	async function showDetails(event) {
 		// TODO : refactor
@@ -649,7 +824,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (modificationWatcher) {
 				modificationWatcher = openModalConfirmation(
 					confirmationObj,
-					quitCreation
+					quitCreationObj
 				);
 			} else {
 				bsModalFournisseurNew.hide();
@@ -670,43 +845,13 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (modificationWatcher) {
 				modificationWatcher = openModalConfirmation(
 					confirmationObj,
-					saveCreation
+					saveCreationObj
 				);
 			} else {
 				bsModalFournisseurNew.hide();
 			}
 
-			// let dataObj = getInputsValuesFournisseurNew();
-			// saveFournisseurNew(dataObj).then((result) => {
-			// 	if (result[0]) {
-			// 		// insert uid of newly created client
-			// 		dataObj["uid"] = result[1];
-			// 		console.log("dataObj");
-			// 		console.log(dataObj);
-			// 		// TODO : use DOMParser
-			// 		// TODO : cache html
-			// 		fetch(
-			// 			"/elements/tiers/fournisseurs/liste_frnsrs_table_001_base.html"
-			// 		)
-			// 			.then((response) => response.text())
-			// 			.then((txt) => {
-			// 				let doc = new DOMParser().parseFromString(
-			// 					txt,
-			// 					"text/html"
-			// 				);
-			// 				let trModel = doc.querySelector("#row-001");
-			// 				let inputs = trModel.querySelectorAll(".input");
-			// 				tableBodyFournisseur.append(
-			// 					generateRowTableFournisseur(trModel, dataObj)
-			// 				);
-			// 			});
 
-			// 		bsModalClientNew.hide();
-			// 		_cleanFournisseurNewForm();
-			// 	} else {
-			// 		//TODO : show error
-			// 	}
-			// });
 		});
 		//TODO : if good, clean and close, and snckbar. if bad, snackbar, then with reason.
 	} catch (error) {}
@@ -725,13 +870,63 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	try {
 		modalFournisseurDetails
+			.addEventListener("input", (e) => {
+				console.log("modification input details");
+				modificationWatcher=true;
+			})
+		} catch (error) {}
+
+
+		try {
+		modalFournisseurDetails
 			.querySelector(".modal-footer")
 			.addEventListener("click", (e) => {
-				if ((e.target.id = "btn-cancel")) {
+				let target = e.target;
+				if (target.id == "btn-cancel") {
+					console.log("cancelling details");
 					if (modificationWatcher) {
 						// TODO : do something
+						// TODO : confirmation
+						// .then()
+						modificationWatcher = openModalConfirmation(
+							confirmationObj,
+							quitDetailsObj
+						);
+		
+					} else {
+						cancelFournisseurDetailsForm();
+					}
+				} else if (target.id == "btn-modify") {
+					console.log("entering modification");
+					let inputsForEdition =
+						modalFournisseurDetails.querySelectorAll(".input");
+					makeFournisseurDetailsInputsEditable(inputsForEdition);
+					btnModifyFournisseurDetails.disabled = true;
+					btnSaveFournisseurDetails.disabled = false;
+
+				} else if (target.id == "btn-save") {
+					console.log("clieck save details");
+
+					if (modificationWatcher) {
+						// TODO : do something
+
+						modificationWatcher = openModalConfirmation(
+							confirmationObj,
+							saveDetailsObj
+						);
+						// bsModalFournisseurDetails.hide();
+						// btnSaveFournisseurDetails.disabled = true;
+						// btnModifyFournisseurDetails.disabled = false;
+						// TODO : change modification watcher when succesful
+						// modificationWatcher=false;
+
 					} else {
 						bsModalFournisseurDetails.hide();
+						btnSaveFournisseurDetails.disabled = true;
+						btnModifyFournisseurDetails.disabled = false;
+						modificationWatcher=false;
+
+
 					}
 				}
 			});
