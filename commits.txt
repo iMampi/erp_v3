@@ -388,3 +388,15 @@ btn-fournisseur-filter is working;
 btn-cancel-filter is working;
 DefaultValuesFournisseurFilter is correct.
 working on filter fournisseur...
+------------------------
+055:
+in fournisseur-main.js:
+fournisseur_filter_basic and fournisseur_filter_advanced 's html created.
+appendHTMLFilterAdvanced();
+filterPersonnalityHandler();
+changeStateFieldClientFilter();
+resetFilter();
+generateEmptyRowTableFournisseur() : because a display problem occurs when the table is empty;
+filterFournisseur();
+insertButtonRemoveFilter();
+removeFilter();

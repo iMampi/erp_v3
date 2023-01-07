@@ -102,3 +102,6 @@ mysql : when using new_fourniseur and new_client : in insert into tiers, doublon
 to do : forniseur if not authorized, dont show the modifiy button in view
 
 some operation on client and fournisseur have the same operations. DRY some code
+
+dans les filters:
+pour tout ce qui est date, implémenter un fourchette

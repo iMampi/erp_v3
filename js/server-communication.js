@@ -9,8 +9,8 @@ async function sendData(url, inputObj) {
 
 	//note: change response.text() to const data = await response.json() If we return JSON we must also use .json() instead of .text() in JavaScript:
 	let resp = await response.text();
-	console.log("resp local");
-	console.log(resp);
+	// console.log("resp local");
+	// console.log(resp);
 	return resp;
 }
 

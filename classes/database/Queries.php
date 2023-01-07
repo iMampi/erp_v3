@@ -9,6 +9,7 @@ class Queries
     public string $mode;
     public string $query;
     static public $filter_client = "select * from view_all_clients";
+    static public $filter_fournisseur = "select * from view_all_fournisseurs";
 
     static public $update_client = "
     select update_client(?,
@@ -179,6 +180,9 @@ class Queries
                 break;
             case 'filter_clients':
                 $this->query = self::$filter_client;
+                break;
+            case 'filter_fournisseurs':
+                $this->query = self::$filter_fournisseur;
                 break;
 
             default:

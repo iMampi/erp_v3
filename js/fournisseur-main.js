@@ -119,7 +119,7 @@ function makeFournisseurDetailsInputsEditable(inputElements) {
 		}
 	});
 	inputElements.forEach((input) => {
-		if (["encours", "echeance"].includes(input.id) && typeVenteFlag) {
+		if (["encours", "echeance"].includes(input.id)) {
 			input.disabled = true;
 		}
 	});
@@ -206,37 +206,59 @@ function fillInputsDetails(valueObj) {
 	}
 }
 
-// TODO : do me
-// async function fillTableClients(myJson, myTableBody) {
-// 	console.log("filling table");
-// 	try {
-// 		// TODO : to cache
-// 		let response = await fetch(
-// 			"/elements/tiers/clients/liste_clts_table_001_base.html"
-// 		);
-// 		let rowBaseText = await response.text();
-// 		let doc = new DOMParser().parseFromString(rowBaseText, "text/html");
-// 		let trModel = doc.querySelector("#row-001");
+async function filterFournisseur(inputObj, tableBodyClients) {
+	let url = "/database/select/select_filtered_fournisseurs.php";
+	let response = await sendData(url, inputObj);
 
-// 		myTableBody.innerHTML = "";
-// 		console.log("myJson");
-// 		console.log(myJson);
-// 		myJson.forEach((elementObj) => {
-// 			let newRow = generateRowTableClient(trModel, elementObj);
-// 			myTableBody.appendChild(newRow);
-// 		});
-// 	} catch (error) {
-// 		console.log("filling table err");
-// 		console.log(error);
-// 		return false;
-// 	}
-// 	if (myJson == { personnality: "all", actif: "1" }) {
-// 		defaultFilterFlag = true;
-// 	} else {
-// 		defaultFilterFlag = false;
-// 	}
-// 	return true;
-// }
+	console.log("error?");
+	console.log(response);
+	let myjson = JSON.parse(response);
+
+	return await fillTableFournisseurs(myjson, tableBodyClients);
+
+
+}
+
+// TODO : do me
+async function fillTableFournisseurs(myJson, myTableBody) {
+	console.log("filling table");
+	try {
+		// TODO : to cache
+		let response = await fetch(
+			"/elements/tiers/fournisseurs/liste_frnsrs_table_001_base.html"
+		);
+		let rowBaseText = await response.text();
+		let doc = new DOMParser().parseFromString(rowBaseText, "text/html");
+		let trModel = doc.querySelector("#row-001");
+
+		myTableBody.innerHTML = "";
+		console.log("myJson");
+		console.log(myJson);
+		if(myJson.length>0){
+
+			myJson.forEach((elementObj) => {
+				let newRow = generateRowTableFournisseur(trModel, elementObj);
+				myTableBody.appendChild(newRow);
+
+			});
+		}else{
+			let emptyRow = generateEmptyRowTableFournisseur(trModel);
+			myTableBody.appendChild(emptyRow);
+		}
+
+
+	} catch (error) {
+		console.log("filling table err");
+		console.log(error);
+		return false;
+	}
+	if (myJson == { personnality: "all", actif: "1" }) {
+		defaultFilterFlag = true;
+	} else {
+		defaultFilterFlag = false;
+	}
+	return true;
+}
 
 // TODO:overkill
 async function responseHandlerSelectOneFournisseur(response) {
@@ -251,11 +273,14 @@ async function responseHandlerSelectOneFournisseur(response) {
 	}
 }
 
+
+
+
 function generateRowTableFournisseur(nodeModel, DataObj) {
 	// console.log(DataObj);
-	console.log("generate row");
 	let newNode = nodeModel.cloneNode(true);
-	newNode.id = "row-" + zeroLeftPadding(DataObj["uid"], 3, false);
+	
+	newNode.id = "row-"+zeroLeftPadding(DataObj["uid"], 3, false);
 	newNode.querySelector("input.uid").value = DataObj["uid"];
 	if (
 		DataObj["type_personnality_uid"] == "1" ||
@@ -277,28 +302,18 @@ function generateRowTableFournisseur(nodeModel, DataObj) {
 	}
 	return newNode;
 }
+function generateEmptyRowTableFournisseur(nodeModel) {
+	// console.log(DataObj);
+	let newNode = nodeModel.cloneNode(true);
+	let newId="row-000";
+	newNode.id = newId;
+	newNode.querySelector("input.uid").value = "Néant";
+	newNode.querySelector(".frnsr-name.input").value ="Néant";
+	newNode.querySelector(".btn-details").disabled =true;
+	
+	return newNode;
+}
 
-// TODO : do me
-// async function filterClient(inputObj, tableBodyClients) {
-// 	let url = "/database/select/select_filtered_clients.php";
-// 	let response = await sendData(url, inputObj);
-
-// 	// console.log("error?");
-// 	// console.log(response);
-// 	let myjson = JSON.parse(response);
-
-// 	return await fillTableClients(myjson, tableBodyClients);
-
-// 	// console.log(myjson);
-// 	// if (result[0] == "success") {
-// 	// 	ToastShowClosured(result[0], "Nouveau client créé avec succès");
-// 	// } else if (result[0] == "failure") {
-// 	// 	ToastShowClosured(result[0], "Echec de la création du client");
-// 	// } else {
-// 	// 	throw new Error("wrong value returned");
-// 	// }
-// 	// return result[0] == "success";
-// }
 
 async function saveFournisseurNew(inputObj) {
 	console.log("saving new fr");
@@ -423,6 +438,8 @@ async function fecthAndAppendHTMLFournisseurForm(
 
 document.addEventListener("DOMContentLoaded", () => {
 	// DEFINITION
+	const divBtns = document.getElementById("div-btns");
+
 
 	const tableBodyFournisseur = document.getElementById("ze-tbody");
 	const table001 = document.getElementById("table-001");
@@ -434,6 +451,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	const btnCancelModalFournisseurFilter = document.getElementById(
 		"btn-cancel-filter"
 	);
+
+
 
 	// creation new modal
 	const modalFournisseurNew = document.getElementById(
@@ -474,12 +493,15 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	);
 	const modalFournisseurFilter = document.getElementById("modal-fournisseur-filter");
+	const btnResetFilter = document.getElementById("btn-reset-filter");
 	const bsModalFournisseurFilter = new bootstrap.Modal(modalFournisseurFilter, {
 		backdrop: "static",
 		keyboard: false,
 		focus: true,
 	});
 
+	const btnApplyFournisseurFilter =
+	modalFournisseurFilter.querySelector("#btn-apply-filter");
 	const selectTypePersonnality =
 		modalFournisseurNew.querySelector("#type-personnality");
 
@@ -637,6 +659,131 @@ document.addEventListener("DOMContentLoaded", () => {
 	};
 
 	// FUNCTIONS
+
+	function insertButtonRemoveFilter() {
+		let myHtml =
+			'<button id="btn-remove-filter" class="col-auto btn btn-danger me-auto">supprimer le filtre</button>';
+		let mydiv = divBtns.lastElementChild;
+		let myNode = new DOMParser().parseFromString(myHtml, "text/html");
+		mydiv.prepend(myNode.body.childNodes[0]);
+	}
+
+	function getDataFournisseurFilter() {
+		let dataFilterObj = {};
+		let checkboxes = modalFournisseurFilter.querySelectorAll(
+			"input[type=checkbox]:checked"
+		);
+
+		checkboxes.forEach((checkboxe) => {
+			let fieldName = checkboxe.id.split("--")[1];
+			let inputs = modalFournisseurFilter.querySelectorAll("." + fieldName);
+			inputs.forEach((myinput) => {
+				dataFilterObj[myinput.id] = myinput.value;
+			});
+		});
+
+		return dataFilterObj;
+	}
+
+	function changeStateFieldClientFilter(target) {
+		let checked = target.checked;
+		let fieldName = target.id.split("--")[1];
+		let inputs = modalFournisseurFilter.querySelectorAll("." + fieldName);
+		inputs.forEach((myinput) => {
+			if (checked) {
+				myinput.disabled = false;
+			} else {
+				myinput.disabled = true;
+			}
+		});
+	}
+
+	function filterPersonnalityHandler() {
+		let inputPersonnalityFilter =
+			modalFournisseurFilter.querySelector("#personnality");
+
+		let checkboxNomCommercial = modalFournisseurFilter.querySelector(
+			"#checkbox--nom-commercial"
+		);
+		let checkboxRaisonSociale = modalFournisseurFilter.querySelector(
+			"#checkbox--raison-sociale"
+		);
+		let checkboxNoms = modalFournisseurFilter.querySelector("#checkbox--noms");
+		let checkboxPrenoms =
+		modalFournisseurFilter.querySelector("#checkbox--prenoms");
+
+		let inputNomCommercial =
+		modalFournisseurFilter.querySelector("#nom-commercial");
+		let inputRaisonSociale =
+		modalFournisseurFilter.querySelector("#raison-sociale");
+		let inputNoms = modalFournisseurFilter.querySelector("#noms");
+		let inputPrenoms = modalFournisseurFilter.querySelector("#prenoms");
+
+		inputPersonnalityFilter.addEventListener("input", (e) => {
+			console.log("called");
+			if (e.target.value == "1") {
+				checkboxNomCommercial.disabled = true;
+				checkboxRaisonSociale.disabled = true;
+				checkboxNomCommercial.checked = false;
+				checkboxRaisonSociale.checked = false;
+				inputRaisonSociale.value = "";
+				inputNomCommercial.value = "";
+				inputRaisonSociale.disabled = true;
+				inputNomCommercial.disabled = true;
+				checkboxNoms.disabled = false;
+				checkboxPrenoms.disabled = false;
+			} else if (e.target.value == "2") {
+				checkboxNomCommercial.disabled = false;
+				checkboxRaisonSociale.disabled = false;
+				checkboxNoms.disabled = true;
+				checkboxPrenoms.disabled = true;
+				checkboxNoms.checked = false;
+				checkboxPrenoms.checked = false;
+				inputNoms.value = "";
+				inputPrenoms.value = "";
+				inputNoms.disabled = true;
+				inputPrenoms.disabled = true;
+			} else if (e.target.value == "all") {
+				checkboxNomCommercial.disabled = false;
+				checkboxRaisonSociale.disabled = false;
+				checkboxNoms.disabled = false;
+				checkboxPrenoms.disabled = false;
+			}
+		});
+	}
+
+	function appendHTMLFilterAdvanced() {
+		let name = "filter_advanced";
+		let modalFilterBody = modalFournisseurFilter.querySelector(".modal-body ");
+
+		modalFilterBody.querySelector(".container").remove();
+
+		if (listDOM[name]) {
+			// The HTML code of this file has already been fetched.
+			// It is available as 'files[selectedOption]'.
+			let doc = new DOMParser().parseFromString(
+				listDOM[name],
+				"text/html"
+			);
+			modalFilterBody.appendChild(doc.body.childNodes[0]);
+		} else {
+			// Fetch the HTML code of this file.
+			fetch("/elements/tiers/fournisseurs/fournisseur_" + name + ".html")
+				.then((resp) => resp.text())
+				.then((txt) => {
+					let doc = new DOMParser().parseFromString(txt, "text/html");
+
+					listDOM[name] = doc.body.innerHTML;
+					// The file is now available as 'listDOM[selectedOption]'.
+					// we do this before appending because for some reason, doc becomes empty
+
+					// Save the HTML code of this file in the files array,
+					// so we won't need to fetch it again.
+
+					modalFilterBody.appendChild(doc.body.childNodes[0]);
+				});
+		}
+	}
 
 	function resetFilter() {
 		let inputs = modalFournisseurFilter.querySelectorAll(".input");
@@ -834,6 +981,8 @@ document.addEventListener("DOMContentLoaded", () => {
 						// console.log(antiKey_);
 						fieldsPersonnality.forEach((div) => div.remove());
 					} finally {
+						console.log("result[1]");
+						console.log(result[1]);
 						fecthAndAppendHTMLFournisseurForm(
 							refRowFournisseurDetails,
 							personnalities[result[1]["type_personnality_uid"]],
@@ -1027,6 +1176,11 @@ document.addEventListener("DOMContentLoaded", () => {
 						cancelFournisseurDetailsForm();
 					}
 				} else if (target.id == "btn-modify") {
+					let inputsForEdition =
+					modalFournisseurDetails.querySelectorAll(".input");
+					makeFournisseurDetailsInputsEditable(inputsForEdition);
+					btnSaveFournisseurDetails.disabled = false;
+
 				} else if (target.id == "btn-delete") {
 					console.log("entering delete me");
 					openModalConfirmation(
@@ -1072,6 +1226,79 @@ document.addEventListener("DOMContentLoaded", () => {
 			appendHTMLFilterBasic();
 			resetFilter();
 			bsModalFournisseurFilter.hide();
+		});
+	} catch (error) {}
+
+	try {
+		modalFournisseurFilter.addEventListener("click", (event) => {
+			let target = event.target;
+			if (target.id == "btn-filter-basic") {
+				appendHTMLFilterBasic();
+			} else if (target.id == "btn-filter-advanced") {
+				appendHTMLFilterAdvanced();
+			}
+
+			if (target.id == "personnality") {
+				filterPersonnalityHandler();
+			}
+		});
+	} catch (error) {}
+
+	try {
+		modalFournisseurFilter.addEventListener("input", (event) => {
+			let target = event.target;
+			if (target.type == "checkbox") {
+				changeStateFieldClientFilter(target);
+			}
+		});
+	} catch (error) {}
+
+	try {
+		btnResetFilter.addEventListener("click", () => {
+			resetFilter();
+		});
+	} catch (error) {}
+
+	try {
+		btnApplyFournisseurFilter.addEventListener("click", () => {
+			let myobj = getDataFournisseurFilter();
+			Object.entries(myobj).forEach((arr_) => {
+				if (
+					FieldsWithNumberValues.includes(arr_[0]) &
+					(arr_[0] === "")
+				) {
+					myobj[arr_[0]] = 0;
+				}
+			});
+			console.log(myobj);
+			filterFournisseur(myobj, tableBodyFournisseur);
+			bsModalFournisseurFilter.hide();
+			// let testing =
+				// !defaultFilterFlag &
+				// !divBtns.querySelector("#btn-remove-filter");
+			// console.log("testing");
+			// console.log(!defaultFilterFlag);
+			// console.log(!divBtns.querySelector("#btn-remove-filter"));
+			// console.log(testing);
+			if (!divBtns.querySelector("#btn-remove-filter")) {
+				insertButtonRemoveFilter();
+			}
+			// filterClients(getDataClientFilter());
+			// bsModalClientFilter.hide();
+		});
+	} catch (error) {}
+
+	try {
+		divBtns.addEventListener("click", (e) => {
+			if (e.target.id == "btn-remove-filter") {
+				e.target.remove();
+				resetFilter();
+				filterFournisseur(
+					{ personnality: "all", actif: "1" },
+					tableBodyFournisseur
+				);
+				defaultFilterFlag = true;
+			}
 		});
 	} catch (error) {}
 
