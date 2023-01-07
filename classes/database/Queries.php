@@ -71,6 +71,9 @@ class Queries
     static public $delete_client = "
     update clients set active_client='0' where uid=? 
     ";
+    static public $delete_fournisseur = "
+    update fournisseurs set active_fournisseur='0' where uid=? 
+    ";
     static public $select_one_client = "
     call one_client_details(?) 
     ";
@@ -164,6 +167,9 @@ class Queries
                 break;
             case 'delete_client':
                 $this->query = self::$delete_client;
+                break;
+            case 'delete_fournisseur':
+                $this->query = self::$delete_fournisseur;
                 break;
             case 'update_client':
                 $this->query = self::$update_client;

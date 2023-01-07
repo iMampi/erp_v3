@@ -26,7 +26,7 @@ const DefaultValuesFournisseurNewFormObj = {
 	"nom-commercial": "",
 	"raison-sociale": "",
 };
-const DefaultValuesClientFilter = {
+const DefaultValuesFournisseurFilter = {
 	uid: "",
 	personnality: "all",
 	actif: "1",
@@ -302,11 +302,12 @@ function generateRowTableFournisseur(nodeModel, DataObj) {
 
 async function saveFournisseurNew(inputObj) {
 	console.log("saving new fr");
+	console.log(inputObj);
 	let url = "/database/save/new_fournisseur.php";
 	let response = await sendData(url, inputObj);
-	let result = await responseHandlerSaveFournisseurNew(response);
-	console.log("result");
+	console.log("result!");
 	console.log(response);
+	let result = await responseHandlerSaveFournisseurNew(response);
 	if (result[0] == "success") {
 		ToastShowClosured(result[0], "Nouveau client créé avec succès");
 	} else if (result[0] == "failure") {
@@ -430,6 +431,9 @@ document.addEventListener("DOMContentLoaded", () => {
 	const btnFournisseurFilter = document.getElementById(
 		"btn-fournisseur-filter"
 	);
+	const btnCancelModalFournisseurFilter = document.getElementById(
+		"btn-cancel-filter"
+	);
 
 	// creation new modal
 	const modalFournisseurNew = document.getElementById(
@@ -445,10 +449,14 @@ document.addEventListener("DOMContentLoaded", () => {
 		"modal-fournisseur-details"
 	);
 
+
+
 	const btnSaveFournisseurDetails =
 		modalFournisseurDetails.querySelector("#btn-save");
 	const btnCancelFournisseurDetails =
 		modalFournisseurDetails.querySelector("#btn-cancel");
+	const btnDeleteFournisseurDetails =
+		modalFournisseurDetails.querySelector("#btn-delete");
 	const btnModifyFournisseurDetails =
 		modalFournisseurDetails.querySelector("#btn-modify");
 
@@ -465,6 +473,12 @@ document.addEventListener("DOMContentLoaded", () => {
 			focus: true,
 		}
 	);
+	const modalFournisseurFilter = document.getElementById("modal-fournisseur-filter");
+	const bsModalFournisseurFilter = new bootstrap.Modal(modalFournisseurFilter, {
+		backdrop: "static",
+		keyboard: false,
+		focus: true,
+	});
 
 	const selectTypePersonnality =
 		modalFournisseurNew.querySelector("#type-personnality");
@@ -481,10 +495,10 @@ document.addEventListener("DOMContentLoaded", () => {
 		focus: true,
 	});
 
-	const btnConfirmationYes = modalConfirmation.querySelector(
+	var btnConfirmationYes = modalConfirmation.querySelector(
 		"#btn-confirmation-yes"
 	);
-	const btnConfirmationNo = modalConfirmation.querySelector(
+	var btnConfirmationNo = modalConfirmation.querySelector(
 		"#btn-confirmation-no"
 	);
 	const clonedBtnConfirmationYes = btnConfirmationYes.cloneNode(true);
@@ -522,7 +536,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				Vos modifications vont être enregistrées.<br>\
 				Êtes vous sûr de vouloir sauvegarder vos modification?",
 		yes: () => {
-			console.log("called yes création");
+			console.log("called 	const saveCreationObj ");
 			bsModalConfirmation.hide();
 
 			let dataObj = getInputsValuesFournisseurNew();
@@ -590,6 +604,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			Vos modifications vont être enregistrés.<br>\
 			Êtes vous sûr de vouloir sauvegarder ces changements?",
 		yes: () => {
+			console.log("clicked saveDetailsObj" );
+
 			let inputsValuesObj = getInputsValuesFournisseurDetails();
 			let updated_succesfully=!saveModificationFournisseurDetails(inputsValuesObj);
 			if (updated_succesfully){
@@ -605,7 +621,120 @@ document.addEventListener("DOMContentLoaded", () => {
 		},
 	};
 
+	const deleteFournisseurObj = {
+		message: "Etes vous sûr de vouloir supprimer ce fournisseur?",
+		yes: () => {
+			console.log("clicked deleteFournisseurObj" );
+			deleteFournisseur();
+			bsModalConfirmation.hide();
+			// btnConfirmationYes=clonedBtnConfirmationYes;
+			// for modificationWatcher
+			return false;
+		},
+		no: () => {
+			bsModalConfirmation.hide();
+		},
+	};
+
 	// FUNCTIONS
+
+	function resetFilter() {
+		let inputs = modalFournisseurFilter.querySelectorAll(".input");
+		let checkboxes = modalFournisseurFilter.querySelectorAll(
+			"input[type=checkbox]"
+		);
+		checkboxes.forEach((checkbox) => {
+			if (
+				["checkbox--personnality", "checkbox--actif"].includes(
+					checkbox.id
+				)
+			) {
+				checkbox.checked = true;
+			} else {
+				checkbox.checked = false;
+			}
+		});
+		inputs.forEach((myinput) => {
+			myinput.value = DefaultValuesFournisseurFilter[myinput.id];
+			if (["personnality", "actif"].includes(myinput.id)) {
+				myinput.disabled = false;
+			} else {
+				myinput.disabled = true;
+			}
+		});
+	}
+
+	function appendHTMLFilterBasic() {
+		let name = "filter_basic";
+		let modalFilterBody = modalFournisseurFilter.querySelector(".modal-body ");
+
+		modalFilterBody.querySelector(".container").remove();
+
+		if (listDOM[name]) {
+			// The HTML code of this file has already been fetched.
+			// It is available as 'files[selectedOption]'.
+			let doc = new DOMParser().parseFromString(
+				listDOM[name],
+				"text/html"
+			);
+
+			modalFilterBody.appendChild(doc.body.childNodes[0]);
+		} else {
+			// Fetch the HTML code of this file.
+			fetch("/elements/tiers/fournisseurs/fournisseur_" + name + ".html")
+				.then((resp) => resp.text())
+				.then((txt) => {
+					let doc = new DOMParser().parseFromString(txt, "text/html");
+					listDOM[name] = doc.body.innerHTML;
+
+					// Save the HTML code of this file in the files array,
+					// so we won't need to fetch it again.
+
+					modalFilterBody.appendChild(doc.body.childNodes[0]);
+
+					// The file is now available as 'listDOM[selectedOption]'.
+				});
+		}
+
+		// add eventlistener to inputpersonnalityfilter
+	}
+
+	function removeTableRow(frnsrUid) {
+		console.log("collapsing " + frnsrUid);
+		try {
+			let trToDelete = document.getElementById(
+				"row-" + zeroLeftPadding(frnsrUid, 3, false)
+			);
+			trToDelete.classList.add("collapse-row");
+			return true;
+		} catch (err) {
+			return false;
+		}
+	}
+
+    async function deleteFournisseur() {
+		let myurl = "/database/delete/delete_one_fournisseur.php";
+		let frnsrUid = modalFournisseurDetails.querySelector("#uid").value;
+		let response = await sendData(myurl, { uid: frnsrUid });
+		console.log("response");
+		console.log(response);
+		// TODO : we dont use await response.json because it is already handled in senData () as respones.text(). so we have to call JSON method manually;
+		let myjson = JSON.parse(response);
+		// let myjson = await response.json();
+		if (Array.isArray(myjson)) {
+			if (myjson[0] && myjson[1]["nb_affected_row"] == "1") {
+				let x = removeTableRow(frnsrUid);
+				console.log(x);
+				ToastShowClosured("success", "Fournisseur effacé avec succès");
+				bsModalFournisseurDetails.hide();
+			} else {
+				ToastShowClosured("failure", "Echec suppression frounisseur");
+			}
+		} else {
+			ToastShowClosured(myjson[0], "Echec suppression frounisseur.");
+		}
+	}
+
 	function getInputsValuesFournisseurDetails() {
 		//TODO : add paramater "modal", to delimit the dom. and take it out
 		let inputObj = {};
@@ -643,7 +772,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (myjson[0] && myjson[1][0] >= 1) {
 				console.log("succc");
 				console.log(JSON.stringify(myjson));
-				ToastShowClosured("success", "Client mis à jour avec succès.");
+				ToastShowClosured("success", "Fournisseur mis à jour avec succès.");
 				let inputsForEdition =
 					modalFournisseurDetails.querySelectorAll(".input");
 				disableInputs(inputsForEdition);
@@ -877,6 +1006,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		} catch (error) {}
 
 
+
 		try {
 		modalFournisseurDetails
 			.querySelector(".modal-footer")
@@ -897,13 +1027,12 @@ document.addEventListener("DOMContentLoaded", () => {
 						cancelFournisseurDetailsForm();
 					}
 				} else if (target.id == "btn-modify") {
-					console.log("entering modification");
-					let inputsForEdition =
-						modalFournisseurDetails.querySelectorAll(".input");
-					makeFournisseurDetailsInputsEditable(inputsForEdition);
-					btnModifyFournisseurDetails.disabled = true;
-					btnSaveFournisseurDetails.disabled = false;
-
+				} else if (target.id == "btn-delete") {
+					console.log("entering delete me");
+					openModalConfirmation(
+						confirmationObj,
+						deleteFournisseurObj
+					);
 				} else if (target.id == "btn-save") {
 					console.log("clieck save details");
 
@@ -931,4 +1060,19 @@ document.addEventListener("DOMContentLoaded", () => {
 				}
 			});
 	} catch (error) {}
+
+	try {
+		btnFournisseurFilter.addEventListener("click", () => {
+			bsModalFournisseurFilter.show();
+		});
+	} catch (error) {}
+
+	try {
+		btnCancelModalFournisseurFilter.addEventListener("click", () => {
+			appendHTMLFilterBasic();
+			resetFilter();
+			bsModalFournisseurFilter.hide();
+		});
+	} catch (error) {}
+
 });

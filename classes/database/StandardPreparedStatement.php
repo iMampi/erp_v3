@@ -13,6 +13,7 @@ class StandardPreparedStatement
     public array $binding;
     function __construct(Queries $queries, ?Bindings $bindings)
     {
+        // \var_dump($queries);
         $this->query = $queries->query;
         if ($bindings) {
 

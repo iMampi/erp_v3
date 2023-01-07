@@ -14,7 +14,7 @@ session_start();
 
 new DbHandler();
 
-if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_update("client"))) {
+if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_update("fournisseur"))) {
     $data = json_decode(file_get_contents('php://input'), true);
     // var_dump($data);
     $UpdateFournisseurObj = new UpdateFournisseur($data);

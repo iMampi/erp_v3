@@ -241,7 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		message: "Etes vous sûr de vouloir supprimer ce client?",
 		yes: () => {
 			deleteClient();
-			// for modificationWatcher
+			bsModalConfirmation.hide();
 			return false;
 		},
 		no: () => {

@@ -379,3 +379,12 @@ gotta to still work on modification and saving modifications...
 fournisseur-main.js : finalized the implementation for modification (saving, canceling). now all works good. maybe some typo to fix
 created the php object and script to handle updates on fournisseur.
 created the funciton on mysql db
+------------------------
+054:
+added can_xxx() to fournisseur cycle.
+working on supprimer for fournisseur: converter\DeleteClient, Queries, Binding;
+FINALLY!! the previous commit to fix the confirmation  eventhandler stacking and giving bad stacking snackbar. it actually also stacked the eventhandlerfunction assigned without actually removing it. now it is fixed. it all is centerd in the confirmation.js. so no need to change it in the confirmationObjs.
+btn-fournisseur-filter is working;
+btn-cancel-filter is working;
+DefaultValuesFournisseurFilter is correct.
+working on filter fournisseur...

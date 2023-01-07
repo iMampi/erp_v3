@@ -153,8 +153,6 @@ is_logged();
                             <?php
                             require_once __DIR__ . "/../../modals_processors/buttons_footer_new.php";
                             ?>
-                            <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel-client-new">annuler</button>
-                            <button type="button" class="btn btn-primary" id="btn-save-client-new">Save</button> -->
                         </div>
                     </div>
                 </div>
@@ -171,7 +169,6 @@ is_logged();
                             <h5 class="modal-title" id="staticBackdropLabel">Fiche client</h5>
                         </div>
                         <div class="modal-body">
-
                             <div id="modal-body-heads">
                                 <?php
                                 //TODO : make the header of factures in details readonly. 
@@ -181,17 +178,9 @@ is_logged();
                             </div>
                             <!-- TODO : to elete. we gonna use only JS here -->
                             <div id="modal-body-table">
-                                <?php
-                                //TODO : change to require once.
-                                // require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_table_details_base.html";
-                                ?>
                             </div>
                         </div>
                         <div class="modal-footer d-flex justify-content-between">
-                            <!-- <button type="button" class="btn btn-info">modifier</button>
-                            <button type="button" class="btn btn-info">statistique</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
-                            <button type="button" class="btn btn-primary">save</button> -->
                             <?php
                             require_once __DIR__ . "/../../modals_processors/btns_footer_v1.php";
                             ?>
@@ -200,28 +189,28 @@ is_logged();
                 </div>
             </div>
             <!-- end modal details clts -->
-        </div>
-        <!-- TOAST  -->
-        <div class="toast-container position-fixed top-0 end-0 p-3" id="toast-container"></div>
-        <!-- end TOAST  -->
-        <!-- confirmation  modal-->
-
-        <div class="modal fade bg-confirmation" tabindex="-1" id="modal-confirmation">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm ">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Etes-vous sûr?</h5>
-                    </div>
-                    <div class="modal-body">
-                    </div>
-                    <div class="modal-footer d-flex justify-content-end">
-                        <button type="button" class="col-auto btn  btn-success" id="btn-confirmation-yes">confirmer</button>
-                        <button type="button" class="col-auto btn btn-danger" id="btn-confirmation-no">annuler</button>
+            <!-- TOAST  -->
+            <div class="toast-container position-fixed top-0 end-0 p-3" id="toast-container">
+            </div>
+            <!-- end TOAST  -->
+            <!-- confirmation  modal-->
+            <div class="modal fade bg-confirmation" tabindex="-1" id="modal-confirmation">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Etes-vous sûr?</h5>
+                        </div>
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer d-flex justify-content-end">
+                            <button type="button" class="col-auto btn  btn-success" id="btn-confirmation-yes">confirmer</button>
+                            <button type="button" class="col-auto btn btn-danger" id="btn-confirmation-no">annuler</button>
+                        </div>
                     </div>
                 </div>
             </div>
+            <!-- endconfirmation  modal-->
         </div>
-        <!-- endconfirmation  modal-->
 
 
 </body>

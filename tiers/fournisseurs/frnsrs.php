@@ -109,7 +109,7 @@ is_logged();
                         <div class="modal-body">
 
                             <?php
-                            // require_once __DIR__ . "/../../elements/tiers/fournisseurs/fournisseur_filter_basic.html" 
+                            require_once __DIR__ . "/../../elements/tiers/fournisseurs/fournisseur_filter_basic.html"
                             ?>
                         </div>
                         <div class="modal-footer">

@@ -98,3 +98,7 @@ input fieds pram for confirmation (ss et cs)
 class DTO newforunisseur and newclient are literraly the same. refactor this
 
 mysql : when using new_fourniseur and new_client : in insert into tiers, doublon might happen. think about it
+
+to do : forniseur if not authorized, dont show the modifiy button in view
+
+some operation on client and fournisseur have the same operations. DRY some code

@@ -1,4 +1,5 @@
 async function sendData(url, inputObj) {
+	console.log("sending data here");
 	let strObj = JSON.stringify(inputObj);
 
 	const response = await fetch(url, {
@@ -8,7 +9,8 @@ async function sendData(url, inputObj) {
 
 	//note: change response.text() to const data = await response.json() If we return JSON we must also use .json() instead of .text() in JavaScript:
 	let resp = await response.text();
-	// console.log(resp);
+	console.log("resp local");
+	console.log(resp);
 	return resp;
 }
 
