@@ -144,6 +144,10 @@ class Queries
         ?
     )";
 
+    static public $save_new_categorie = "
+    select new_categorie(?,?)
+";
+
     public function __construct($mode)
     {
         $this->mode = $mode;
@@ -153,6 +157,9 @@ class Queries
                 break;
             case 'save_new_fournisseur':
                 $this->query = self::$save_new_fournisseur;
+                break;
+            case 'save_new_categorie':
+                $this->query = self::$save_new_categorie;
                 break;
             case 'select_all_clients':
                 $this->query = self::$select_all_clients;

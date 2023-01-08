@@ -1054,6 +1054,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 		// console.log(inputsClientForm);
 	}
+	
 	// EVENT HANDLER
 
 	try {
@@ -1118,8 +1119,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	try {
 		btnSaveFournisseurNew.addEventListener("click", () => {
-			// TODO : add confirmation
-
 			if (modificationWatcher) {
 				modificationWatcher = openModalConfirmation(
 					confirmationObj,

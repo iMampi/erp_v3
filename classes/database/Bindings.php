@@ -79,6 +79,12 @@ class Bindings
                 $arr["evaluation"],
                 $arr["declarable"]
             ];
+        } else if ($this->converter::class == "Converter\NewCategorie") {
+            $this->binding = [
+                'si',
+                $arr["name"],
+                $arr["active"],
+            ];
         } elseif ($this->converter::class == "Converter\UpdateClient") {
             $this->binding = [
                 'iissssssssissssssssssidiiii',

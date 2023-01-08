@@ -400,3 +400,12 @@ generateEmptyRowTableFournisseur() : because a display problem occurs when the t
 filterFournisseur();
 insertButtonRemoveFilter();
 removeFilter();
+------------------------
+056:
+we start working on categorie...
+#categorie-main.js:
+did a lot. to shorten, everything needed were implemented for the actions below:
+    btn-main-new : works great 
+    btn-cancel-new : works great
+    btn-save-new : work perfectly
+#categories_formulaire_base.html: fixed. ok now
