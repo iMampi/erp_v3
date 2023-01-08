@@ -144,8 +144,8 @@ function makeClientDetailsInputsEditable(inputElements) {
 		}
 	});
 	inputElements.forEach((input) => {
-		if (["encours", "echeance"].includes(input.id) && typeVenteFlag) {
-			input.disabled = true;
+		if (["encours", "echeance"].includes(input.id)) {
+			input.disabled = typeVenteFlag;
 		}
 	});
 }

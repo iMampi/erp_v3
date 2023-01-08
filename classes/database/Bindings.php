@@ -145,12 +145,24 @@ class Bindings
                 $arr["evaluation"],
                 $arr["declarable"]
             ];
+        } elseif ($this->converter::class == "Converter\UpdateCategorie") {
+            $this->binding = [
+                'sii',
+                $arr["name"],
+                $arr["active"],
+                $arr["uid"]
+            ];
         } elseif ($this->converter::class == "Converter\SelectOneClient") {
             $this->binding = [
                 'i',
                 $this->converter->data_for_db["uid"]
             ];
         } elseif ($this->converter::class == "Converter\SelectOneFournisseur") {
+            $this->binding = [
+                'i',
+                $this->converter->data_for_db["uid"]
+            ];
+        } elseif ($this->converter::class == "Converter\SelectOneCategorie") {
             $this->binding = [
                 'i',
                 $this->converter->data_for_db["uid"]

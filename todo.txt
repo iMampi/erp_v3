@@ -105,3 +105,9 @@ some operation on client and fournisseur have the same operations. DRY some code
 
 dans les filters:
 pour tout ce qui est date, implémenter un fourchette
+
+confirmation in js:
+clean the code . sometimes i made obj.yes/no return bool, sometime i made them retunr nothing
+
+confirmation in js :
+maybe use promises instead? study the possiblity

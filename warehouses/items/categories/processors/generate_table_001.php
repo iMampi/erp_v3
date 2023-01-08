@@ -1,12 +1,14 @@
 <?php
 //TODO :delete me
-require __DIR__ . "/dummy.php";
-// require __DIR__ . "/../../../el";
+use function Session\can_visit;
 
+require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 
+require_once $_SERVER["DOCUMENT_ROOT"] . "/database/select/all_categories_name.php";
 
-// require __DIR__ . "/../../../../elements/warehouses/items/categories/liste_categories_table_001_base.html";
 $base = __DIR__ . "/../../../../elements/warehouses/items/categories/liste_categories_table_001_base.html";
+
+$cycle_categorie = "categorie";
 //create first DOM to handle base file
 $dom = new DOMDocument();
 //to be able to use new html5 tag with DOMDocument
@@ -18,37 +20,33 @@ $tbody_->removeChild($tr_model);
 $xpath = new DOMXPath($dom);
 
 $row_counter = 1;
+if (can_visit($cycle_categorie)) {
 
-foreach ($dummy as $el) {
-    $tr_ = $tr_model->cloneNode(true);
+    foreach ($all_categories_name as $categorie) {
+        $tr_ = $tr_model->cloneNode(true);
 
-    $id_ = sprintf('%03d', $row_counter);
-    $tr_->setAttribute("id", $id_);
-    $tbody_->appendChild($tr_);
+        $id_ = sprintf('%03d', $categorie["uid"]);
+        $tr_->setAttribute("id", $id_);
+
+        if ($categorie["active"] == "0") {
+            $tr_->setAttribute("class", $tr_->getAttribute("class") . " collapse-row");
+        }
+
+        $tbody_->appendChild($tr_);
 
 
-    $nodes = $xpath->query(".//*[contains(@class,'input')]", $tr_);
-    foreach ($nodes as $el_input) {
-        $classes = $el_input->getAttribute('class');
-        $classes_array = explode(" ", $classes);
+        $nodes = $xpath->query(".//*[contains(@class,'input')]", $tr_);
+        foreach ($nodes as $el_input) {
+            $classes = $el_input->getAttribute('class');
+            $classes_array = explode(" ", $classes);
 
-        if (in_array("date", $classes_array)) {
-            $el_input->setAttribute("value", $el[1]);
-        } elseif (in_array("uid", $classes_array)) {
-            $el_input->setAttribute("value", $el[0]);
-        } elseif (in_array("frnsr", $classes_array)) {
-            $el_input->setAttribute("value", $el[2]);
-        } elseif (in_array("num", $classes_array)) {
-            $el_input->setAttribute("value", $el[3]);
-        } elseif (in_array("affaire", $classes_array)) {
-            $el_input->setAttribute("value", $el[4]);
-        } elseif (in_array("total", $classes_array)) {
-            $el_input->setAttribute("value", $el[5]);
-        } elseif (in_array("detail", $classes_array)) {
-            // $el_input->setAttribute("value", $el[6]);
-        } elseif (in_array("nd", $classes_array)) {
-            $option_ = $xpath->query(".//*[(@value='" . $el[6] . "')]", $el_input);
-            $option_[0]->setAttribute("selected", "true");
+            if (in_array("uid", $classes_array)) {
+                $el_input->setAttribute("value", $categorie["uid"]);
+            } elseif (in_array("name", $classes_array)) {
+                $el_input->setAttribute("value", $categorie["name"]);
+            } elseif (in_array("active", $classes_array)) {
+                $el_input->setAttribute("value", $categorie["active"]);
+            }
         }
     }
 }

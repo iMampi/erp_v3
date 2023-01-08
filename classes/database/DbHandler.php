@@ -56,6 +56,23 @@ class DbHandler
             return new Result(\null);
         }
     }
+    static function update_query(string $myquery)
+    {
+        try {
+
+            $result = self::$connection->query($myquery);
+            if (!$result) die([\false, "Problem with your query"]);
+            // echo "<br>called 1<br>";
+            // print_r($result_->dataArray);
+            return [\true, [$result]];
+        } catch (\Exception $e) {
+            echo "<br>error <br>";
+            \var_dump($e);
+
+            // TODO : err will be logged
+            return new Result(\null);
+        }
+    }
 
 
     static function execute_prepared_statement(StandardPreparedStatement $prepared_statement, $fetch_mode = \MYSQLI_BOTH)
@@ -77,15 +94,23 @@ class DbHandler
 
                 try {
 
-                    $stmt->execute();
+                    $stmt_execution = $stmt->execute();
                     // echo 'step1 is ';
                     // echo ($step1);
-                    $res = $stmt->get_result();
+                    try {
 
-                    $results = $res->fetch_array($fetch_mode);
-                    // echo "result is : <br> ";
-                    $result_array = [\true, $results];
-                    $ouput_final = $result_array;
+                        $res = $stmt->get_result();
+
+                        $results = $res->fetch_array($fetch_mode);
+                    } catch (\Throwable $th) {
+                        $results = [$stmt_execution];
+                    } finally {
+                        // $results = $stmt->affected_rows;
+
+                        // echo "result is : <br> ";
+                        $result_array = [\true, $results];
+                        $ouput_final = $result_array;
+                    }
                 } catch (\Throwable $th) {
 
                     try {

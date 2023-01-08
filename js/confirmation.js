@@ -26,7 +26,7 @@ function openModalConfirmation(modalObj, modeObj) {
 			// modalObj.btnYes = modalObj["clonedBtnYes"];
 			// modalObj.btnNo = modalObj["clonedBtnNo"];
 		}
-		return result};
+		modificationWatcher=false};
 	function noListener(){
 		console.log("lieck no");
 		modalObj.bsModal.hide();
@@ -34,6 +34,7 @@ function openModalConfirmation(modalObj, modeObj) {
 			modalObj.btnNo.removeEventListener("click", noListener);
 			// modalObj.btnYes = modalObj["clonedBtnYes"];
 			// modalObj.btnNo = modalObj["clonedBtnNo"];
+			modificationWatcher= true;
 		}
 
 	modalObj.btnYes.addEventListener("click", yesListener);

@@ -119,7 +119,7 @@ is_logged();
             </div>
             <!-- end modal filter -->
             <!-- modal categorie détails -->
-            <div class="modal fade" id="modal-details" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="modal-categorie-details" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
                     <div class="modal-content">
@@ -131,8 +131,8 @@ is_logged();
                             <div id="modal-body-heads">
                                 <?php
                                 //TODO : make the header of factures in details readonly. 
-                                //TODO : change to require once. 
-                                // require __DIR__ . "/../../../elements/warehouses/items/categories/categories_formulaire_base.html";
+
+                                require_once __DIR__ . "/../../../modals_processors/categorie_formulaire_body_read_only.php";
                                 ?>
                             </div>
                             <!-- TODO : to elete. we gonna use only JS here -->
@@ -143,11 +143,10 @@ is_logged();
                                 ?>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger">supprimer</button>
-                            <button type="button" class="btn btn-info">statistique</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
-                            <button type="button" class="btn btn-primary">Save</button>
+                        <div class="modal-footer d-flex justify-content-between">
+                            <?php
+                            require_once __DIR__ . "/../../../modals_processors/btns_footer_v1.php";
+                            ?>
                         </div>
                     </div>
                 </div>

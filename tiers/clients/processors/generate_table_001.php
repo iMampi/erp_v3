@@ -4,7 +4,6 @@ use function Session\can_visit;
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 
-// require __DIR__ . "/dummy.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/database/select/all_clients_name.php";
 
 $cycle_clt = "client";

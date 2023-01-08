@@ -403,9 +403,21 @@ removeFilter();
 ------------------------
 056:
 we start working on categorie...
-#categorie-main.js:
+/categorie-main.js:
 did a lot. to shorten, everything needed were implemented for the actions below:
     btn-main-new : works great 
     btn-cancel-new : works great
     btn-save-new : work perfectly
 #categories_formulaire_base.html: fixed. ok now
+still working on categorie...
+------------------------
+057:
+generate_table_001.php for categories;
+/categorie-main.js>details:
+    btn-details : ok, works great.
+    btn-save: ok, works great.
+    btn-cancel: ok, works great.
+    btn-delte: ...
+
+discovered a bug. bad implement tation of the relation between modificationWatcher and confirmation (openModalConfirmation()). the implementation was bad, because it returned "undefined" instead of anything when yes or no was clicked.
+so i  added modificationWatcher affection in the end of yes/noListener, since modificationWatcher is a global variable

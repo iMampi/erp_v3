@@ -118,11 +118,11 @@ function makeFournisseurDetailsInputsEditable(inputElements) {
 			input.disabled = false;
 		}
 	});
-	inputElements.forEach((input) => {
-		if (["encours", "echeance"].includes(input.id)) {
-			input.disabled = true;
-		}
-	});
+	// inputElements.forEach((input) => {
+	// 	if (["encours", "echeance"].includes(input.id)) {
+	// 		input.disabled = true;
+	// 	}
+	// });
 }
 
 function fillInputsDetails(valueObj) {
@@ -629,7 +629,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			console.log("clicked saveDetailsObj" );
 
 			let inputsValuesObj = getInputsValuesFournisseurDetails();
-			let updated_succesfully=!saveModificationFournisseurDetails(inputsValuesObj);
+			let updated_succesfully=!saveUpdatedFournisseurDetails(inputsValuesObj);
 			if (updated_succesfully){
 				btnSaveFournisseurDetails.disabled = true;
 				btnModifyFournisseurDetails.disabled = false;
@@ -905,7 +905,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	}
 
-	async function saveModificationFournisseurDetails(inputsValuesObj) {
+	async function saveUpdatedFournisseurDetails(inputsValuesObj) {
 
 		console.log("saving update called");
 		let myurl = "/database/save/update_fournisseur.php";
@@ -913,7 +913,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		console.log(response);
 		// TODO : we dont use await response.json because it is already handled in senData () as respones.text(). so we have to call JSON method manually;
 		let myjson = await JSON.parse(response);
-		// console.log("myjson");
+		console.log("myjson");
+		console.log(myjson);
 		if (Array.isArray(myjson)) {
 			// note : structure particuliere retourné par la funciton sql
 			if (myjson[0] && myjson[1][0] >= 1) {
@@ -1054,7 +1055,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 		// console.log(inputsClientForm);
 	}
-	
+
 	// EVENT HANDLER
 
 	try {
@@ -1163,9 +1164,6 @@ document.addEventListener("DOMContentLoaded", () => {
 				if (target.id == "btn-cancel") {
 					console.log("cancelling details");
 					if (modificationWatcher) {
-						// TODO : do something
-						// TODO : confirmation
-						// .then()
 						modificationWatcher = openModalConfirmation(
 							confirmationObj,
 							quitDetailsObj

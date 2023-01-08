@@ -42,7 +42,8 @@ class Queries
     ";
 
     static public $update_fournisseur = "
-    select update_fournisseur(?,
+    select update_fournisseur(
+    ?,
     ?,
     ?,
     ?,
@@ -68,85 +69,99 @@ class Queries
     ?,
     ?)
     ";
+
+    static public $update_categorie = "
+        update categories set 
+        name=?,
+        active=?
+        where uid=?
+        ";
 
     static public $delete_client = "
-    update clients set active_client='0' where uid=? 
-    ";
+        update clients set active_client='0' where uid=? 
+        ";
     static public $delete_fournisseur = "
-    update fournisseurs set active_fournisseur='0' where uid=? 
-    ";
+        update fournisseurs set active_fournisseur='0' where uid=? 
+        ";
     static public $select_one_client = "
-    call one_client_details(?) 
-    ";
+        call one_client_details(?) 
+        ";
     static public $select_one_fournisseur = "
-    call one_fournisseur_details(?) 
-    ";
+        call one_fournisseur_details(?) 
+        ";
+    static public $select_one_categorie = "
+        select * from categories where  uid=? 
+        ";
     static public $select_all_clients = "
-    call all_clients 
-    ";
+        call all_clients 
+        ";
     static public $select_all_fournisseurs = "
-    call all_fournisseurs 
-    ";
+        call all_fournisseurs 
+        ";
+    static public $select_all_categories_name = "
+        select * from categories 
+        ";
     static public $save_new_client = "
-    SELECT new_client(?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?)
-";
+        SELECT new_client(
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?)
+        ";
 
     static public $save_new_fournisseur = "
-    SELECT new_fournisseur(
-        ?,
-        ? , 
-        ? ,
-        ? ,
-        ? ,
-        ? ,
-        ? ,
-        ? ,
-        ? ,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?
-    )";
+        SELECT new_fournisseur(
+            ?,
+            ? , 
+            ? ,
+            ? ,
+            ? ,
+            ? ,
+            ? ,
+            ? ,
+            ? ,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?
+        )";
 
     static public $save_new_categorie = "
-    select new_categorie(?,?)
-";
+        select new_categorie(?,?)
+        ";
 
     public function __construct($mode)
     {
@@ -167,11 +182,17 @@ class Queries
             case 'select_all_fournisseurs':
                 $this->query = self::$select_all_fournisseurs;
                 break;
+            case 'select_all_categories_name':
+                $this->query = self::$select_all_categories_name;
+                break;
             case 'select_one_client':
                 $this->query = self::$select_one_client;
                 break;
             case 'select_one_fournisseur':
                 $this->query = self::$select_one_fournisseur;
+                break;
+            case 'select_one_categorie':
+                $this->query = self::$select_one_categorie;
                 break;
             case 'delete_client':
                 $this->query = self::$delete_client;
@@ -184,6 +205,9 @@ class Queries
                 break;
             case 'update_fournisseur':
                 $this->query = self::$update_fournisseur;
+                break;
+            case 'update_categorie':
+                $this->query = self::$update_categorie;
                 break;
             case 'filter_clients':
                 $this->query = self::$filter_client;

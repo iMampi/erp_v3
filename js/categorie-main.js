@@ -8,6 +8,51 @@ var modificationWatcher = false;
 const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
 
+function makeCategorieDetailsInputsEditable(inputElements) {
+	// console.log("inputElements");
+	// console.log(inputElements.values());
+	// console.log(inputElements.item());
+	let typeVenteFlag = false;
+	inputElements.forEach((input) => {
+		if (input.id!="uid") {
+
+			input.disabled = false;
+		}else{
+            input.disabled = true;
+
+        }
+	});
+}
+function fillInputsDetails(valueObj) {
+	console.log("valueObj : ");
+	console.log(valueObj);
+	// let inputsElements = md.querySelectorAll(".input");
+	let modalCategorieDetails_ = document.getElementById(
+		"modal-categorie-details"
+	);
+	let inputsElements =
+    modalCategorieDetails_.getElementsByClassName("input");
+
+	// console.log("inputsElement :");
+	// console.log(inputsElements);
+	// let inputsElements = document.querySelectorAll(
+	// "#modal-clt-details .input"
+	// );
+	//TODO : use a DTO
+	for (let index = 0; index < inputsElements.length; index++) {
+		let element = inputsElements[index];
+		// }
+		// inputsElements.forEach((element) => {
+		if (element.id == "actif") {
+			element.value = valueObj["active"];
+		} else if (element.id == "uid") {
+			element.value = valueObj["uid"];
+		} else if (element.id == "name") {
+			element.value = valueObj["name"];
+		} 
+	}
+}
+
 function generateRowTableCategorie(nodeModel, DataObj) {
 	// console.log(DataObj);
 	let newNode = nodeModel.cloneNode(true);
@@ -40,6 +85,25 @@ async function responseHandlerSaveCategorieNew(response) {
 		console.log(myjson);
 		if (myjson[0]) {
 			return ["success", Object.values(myjson[1])[0]];
+		} else {
+			return ["failure", Object.values(myjson[1])[0]];
+		}
+	} catch (e) {
+		// TODO : comment me
+		return "error js: " + e;
+	}
+}
+async function responseHandlerSelectOneCategorieNew(response) {
+	try {
+		let myjson = JSON.parse(await response);
+		//NOTE : the correct way for save. not correct for select query
+		//NOTE : works for error also
+		// TODO : handle for when it is an error
+        // TODO : all seems to use the same logic. DRY in all others occurence
+		console.log("myjson");
+		console.log(myjson);
+		if (myjson[0]) {
+			return ["success", myjson[1]];
 		} else {
 			return ["failure", Object.values(myjson[1])[0]];
 		}
@@ -82,6 +146,17 @@ document.addEventListener("DOMContentLoaded",()=>{
     const btnSaveCategorieNew=modalCategorieNew.querySelector("#btn-save-new");
     const btnCancelCategorieNew=modalCategorieNew.querySelector("#btn-cancel-new");
 
+    ////modal details
+    const modalCategorieDetails=document.getElementById('modal-categorie-details');
+    const bsModalCategorieDetails = new bootstrap.Modal(modalCategorieDetails, {
+		backdrop: "static",
+		keyboard: false,
+		focus: true,
+	});
+    const btnSaveCategorieDetails=modalCategorieDetails.querySelector("#btn-save");
+    const btnCancelCategorieDetails=modalCategorieDetails.querySelector("#btn-cancel");
+    const btnModifyCategorieDetails=modalCategorieDetails.querySelector("#btn-modify");
+
 
     ////modal confirmation
     const modalConfirmation=document.getElementById("modal-confirmation");
@@ -113,7 +188,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 			console.log("called saveCreationObj ");
 			bsModalConfirmation.hide();
 
-			let dataObj = getInputsValuesNew();
+			let dataObj = getFormInputsValues(modalCategorieNew);
 			saveNew(dataObj).then((result) => {
 				if (result[0]) {
 					// insert uid of newly created client
@@ -153,6 +228,8 @@ document.addEventListener("DOMContentLoaded",()=>{
 		},
 		no: () => {
 			bsModalConfirmation.hide();
+            return false;
+
 		},
 	};
 
@@ -172,7 +249,141 @@ document.addEventListener("DOMContentLoaded",()=>{
 		},
 	};
 
+    const cancelDetailsObj = {
+		message:
+			"Des champs ont été modifiés.<br>\
+			Vos modifications vont être perdus.<br>\
+			Êtes vous sûr de vouloir quitter ce formulaire?",
+		yes: () => {
+			console.log("cancelDetailsObj");
+			bsModalConfirmation.hide();
+			cancelCategorieDetailsForm();
+            return false;
+			
+		},
+		no: () => {
+			bsModalConfirmation.hide();
+            return true;
+		},
+	};
+
+    const saveDetailsObj = {
+		message:
+			"Des champs ont été modifiés.<br>\
+				Vos modifications vont être enregistrées.<br>\
+				Êtes vous sûr de vouloir sauvegarder vos modification?",
+		yes: () => {
+			console.log("called yes");
+			bsModalConfirmation.hide();
+
+			let inputsValuesObj = getFormInputsValues(modalCategorieDetails);
+			saveUpdatedCategorie(inputsValuesObj);
+            console.log("modificationWatcher");
+            console.log(modificationWatcher);
+			return false;
+		},
+		no: () => {
+			bsModalConfirmation.hide();
+            console.log("modificationWatcher");
+            console.log(modificationWatcher);
+
+            return true;
+		},
+	};
+
     //FUNCTION
+
+    async function saveUpdatedCategorie(inputsValuesObj) {
+		console.log("saving update called");
+		let myurl = "/database/save/update_categorie.php";
+		let response = await sendData(myurl, inputsValuesObj);
+		console.log(response);
+		// TODO : we dont use await response.json because it is already handled in senData () as respones.text(). so we have to call JSON method manually;
+		let myjson = await JSON.parse(response);
+		console.log("myjson");
+		console.log(myjson);
+		console.log("Array.isArray(myjson)");
+		console.log(Array.isArray(myjson));
+		if (Array.isArray(myjson)) {
+			// note : structure particuliere retourné par la funciton sql
+			if (myjson[0] && myjson[1][0] == true) {
+				console.log("succc");
+				console.log(JSON.stringify(myjson));
+				ToastShowClosured("success", "Categorie mis à jour avec succès.");
+				let inputsForEdition =
+					modalCategorieDetails.querySelectorAll(".input");
+				disableInputs(inputsForEdition);
+				// updateClientRow(table001, inputsValuesObj);
+				btnSaveCategorieDetails.disabled = true;
+				btnModifyCategorieDetails.disabled = false;
+				return false;
+			} else {
+				console.log("faileeddd");
+				console.log(JSON.stringify(myjson));
+				ToastShowClosured("failure", "Echec de la mise à jour.");
+				return true;
+			}
+		} else {
+			console.log("faileeddd2");
+
+			ToastShowClosured(
+				"failure",
+				"Echec de la mise à jour, contactez l'administrateur système."
+			);
+			return true;
+		}
+	}
+
+    function disableInputs(inputNodeList) {
+        inputNodeList.forEach((element) => {
+            disableInput(element);
+        });
+    }
+    function disableInput(input) {
+        input.setAttribute("disabled", "true");
+    }
+
+    function cancelCategorieDetailsForm(){
+		let inputsForEdition =
+		modalCategorieDetails.querySelectorAll(".input");
+		disableInputs(inputsForEdition);
+
+		bsModalCategorieDetails.hide();
+		btnSaveCategorieDetails.disabled = true;
+		btnModifyCategorieDetails.disabled = false;
+		modificationWatcher=false;
+
+	}
+
+    async function showDetails(event) {
+		// TODO : refactor
+		// console.log("called here");
+		let parent = event.target.parentNode.parentNode;
+		let myuid = parent.querySelector(".input.uid").value;
+		// console.log("myuid tr");
+		// console.log(myuid);
+		sendData("/database/select/one_categorie_details.php", {
+			uid: myuid,
+		})
+			.then((resp) => {
+				// console.log("shwodetail :");
+				// console.log(resp);
+				return responseHandlerSelectOneCategorieNew(resp);
+			})
+			.then((result) => {
+				// console.log("result : " + JSON.stringify(result[1]));
+				// TODO : implement this part in new-client into a function cleanClass(). and optimize : if same personnality called, no nedd to recall.
+                console.log("result++");
+                console.log(result);
+				if (result[0]) {
+
+						console.log("result[1]");
+						console.log(result[1]);
+						fillInputsDetails(result[1]);
+				}
+			});
+	}
+
     function cleanCategorieNewForm() {
 		//check if authorized to create, should i bother to clean if form is empty?
 		fetchSessionAuthorizationValue(
@@ -196,10 +407,10 @@ document.addEventListener("DOMContentLoaded",()=>{
 		});
 	}
 
-    function getInputsValuesNew() {
+    function getFormInputsValues(modalRef) {
         let inputObj = {};
 
-        let inputs = modalCategorieNew.querySelectorAll(".input");
+        let inputs = modalRef.querySelectorAll(".input");
         // console.log("inputs");
         // console.log(inputs);
         inputs.forEach((input) => {
@@ -220,7 +431,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     try {
         btnSaveCategorieNew.addEventListener("click",()=>{
 			if (modificationWatcher) {
-				modificationWatcher = openModalConfirmation(
+				openModalConfirmation(
 					confirmationObj,
 					saveCreationObj
 				);
@@ -231,7 +442,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     try {
         btnCancelCategorieNew.addEventListener("click",()=>{
 			if (modificationWatcher) {
-				modificationWatcher = openModalConfirmation(
+				openModalConfirmation(
 					confirmationObj,
 					cancelCreationObj
 				);
@@ -250,4 +461,64 @@ document.addEventListener("DOMContentLoaded",()=>{
             }
         })
     } catch (error) {}
+
+    try {
+        tableBodyCategorie.addEventListener('click',(event)=>{
+            if(event.target.classList.contains("btn-details")){
+                showDetails(event);
+				bsModalCategorieDetails.show();
+            }
+        })
+    } catch (error) {
+        
+    }
+
+    try {
+        modalCategorieDetails.querySelector('.modal-footer').addEventListener('click',(event)=>{
+            if (event.target.id=="btn-cancel"){
+                console.log("cancelling details");
+                if (modificationWatcher) {
+                    openModalConfirmation(
+                        confirmationObj,
+                        cancelDetailsObj
+                    );
+                } else {
+                    cancelCategorieDetailsForm();
+                }
+            }else if (event.target.id=="btn-modify"){
+                let inputsForEdition =
+                modalCategorieDetails.querySelectorAll(".input");
+                makeCategorieDetailsInputsEditable(inputsForEdition);
+                btnSaveCategorieDetails.disabled = false;
+            }else if (event.target.id=="btn-save"){
+                console.log("btn details save clicked");
+                if (modificationWatcher) {
+                    // console.log(modificationWatcher);
+    
+                    openModalConfirmation(
+                        confirmationObj,
+                        saveDetailsObj
+                    );
+
+                    // modificationWatcher = result;
+                } else {
+                    ToastShowClosured("success", "Client mis à jour avec succès.");
+                    let inputsForEdition =
+                        modalCategorieDetails.querySelectorAll(".input");
+                    disableInputs(inputsForEdition);
+                }
+            }else if (event.target.id=="btn-delete"){
+
+            }           
+        })
+    } catch (error) {
+    }
+
+    try {
+        modalCategorieDetails.addEventListener('input',()=>{
+            modificationWatcher=true;
+        })
+    } catch (error) {
+    }
+
 })
