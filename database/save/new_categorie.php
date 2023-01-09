@@ -18,7 +18,7 @@ new DbHandler();
 // print "<br>TESTED<br>";
 
 
-if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("fournisseur"))) {
+if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("categorie"))) {
     $data = json_decode(file_get_contents('php://input'), true);
     // var_dump($data);
     // echo 'here we are';

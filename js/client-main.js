@@ -677,7 +677,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		btnCancelClientNew.addEventListener("click", () => {
 			//TODO : finish me , clean inputs
 			if (modificationWatcher) {
-				modificationWatcher = openModalConfirmation(
+				openModalConfirmation(
 					confirmationObj,
 					quitCreation
 				);

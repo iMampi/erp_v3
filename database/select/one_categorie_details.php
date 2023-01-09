@@ -17,7 +17,7 @@ new DbHandler();
 
 
 
-if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_visit("fournisseur"))) {
+if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_visit("categorie"))) {
     $data = json_decode(file_get_contents('php://input'), true);
     // var_dump($data);
 

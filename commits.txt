@@ -417,7 +417,19 @@ generate_table_001.php for categories;
     btn-details : ok, works great.
     btn-save: ok, works great.
     btn-cancel: ok, works great.
-    btn-delte: ...
+    btn-delete: ...
 
 discovered a bug. bad implement tation of the relation between modificationWatcher and confirmation (openModalConfirmation()). the implementation was bad, because it returned "undefined" instead of anything when yes or no was clicked.
-so i  added modificationWatcher affection in the end of yes/noListener, since modificationWatcher is a global variable
+so i  added modificationWatcher affection in the end of yes/noListener, since modificationWatcher is a global variable;
+implementing btn-delete: ...
+------------------------
+058:
+openModalConfirmation(): removeEventeListener for both yes and no in both yesListener and No listener;
+the bug discovered in commit 057, fixed the implementation in fournisseur-main.js, client-main.js and details-client.js;
+implementing btn-delete: ...
+------------------------
+059:
+/categorie-main.js>details:
+    btn-delete:  implemented, works great
+
+implementing filter for cycle categorie...

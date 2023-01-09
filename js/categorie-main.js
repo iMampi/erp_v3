@@ -170,6 +170,15 @@ document.addEventListener("DOMContentLoaded",()=>{
     const btnConfirmationNo=modalConfirmation.querySelector(		"#btn-confirmation-no"
     );
 
+	////modal filter
+	const modalFilter=document.getElementById("modal-filter");
+    const bsmodalFilter = new bootstrap.Modal(modalConfirmation, {
+		backdrop: "static",
+		keyboard: false,
+		focus: true,
+	});	
+
+
     //CONFIRMATION OBJ
 
     const confirmationObj = {
@@ -291,10 +300,63 @@ document.addEventListener("DOMContentLoaded",()=>{
 		},
 	};
 
+	const deleteCategorieObj = {
+		message: "Etes vous sûr de vouloir supprimer cette catégorie?",
+		yes: () => {
+			console.log("clicked deleteFournisseurObj" );
+			deleteCategorie();
+			bsModalConfirmation.hide();
+		},
+		no: () => {
+			bsModalConfirmation.hide();
+		},
+	};
     //FUNCTION
+
+	function removeTableRow(myUid) {
+		console.log("collapsing " + myUid);
+		try {
+			let trToDelete = document.getElementById(
+				"row-" + zeroLeftPadding(myUid, 3, false)
+			);
+			trToDelete.classList.add("collapse-row");
+			return true;
+		} catch (err) {
+			return false;
+		}
+	}
+
+	async function deleteCategorie() {
+		let myurl = "/database/delete/delete_one_categorie.php";
+		let myUid = modalCategorieDetails.querySelector("#uid").value;
+		let response = await sendData(myurl, { uid: myUid });
+		console.log("response");
+		console.log(response);
+		// TODO : we dont use await response.json because it is already handled in senData () as respones.text(). so we have to call JSON method manually;
+		let myjson = JSON.parse(response);
+		// let myjson = await response.json();
+		if (Array.isArray(myjson)) {
+							console.log("x");
+				console.log(myjson);
+
+			if (myjson[0] && myjson[1][0]) {
+				removeTableRow(myUid);
+				// console.log(x);
+				// console.log(myjson);
+				ToastShowClosured("success", "Catégorie effacée avec succès");
+				bsModalCategorieDetails.hide();
+			} else {
+				ToastShowClosured("failure", "Echec suppression catégorie");
+			}
+		} else {
+			ToastShowClosured(myjson[0], "Echec suppression catégorie.");
+		}
+	}
+
 
     async function saveUpdatedCategorie(inputsValuesObj) {
 		console.log("saving update called");
+		console.log(inputsValuesObj);
 		let myurl = "/database/save/update_categorie.php";
 		let response = await sendData(myurl, inputsValuesObj);
 		console.log(response);
@@ -457,7 +519,7 @@ document.addEventListener("DOMContentLoaded",()=>{
             if(target.id=="btn-main-new"){
                     bsModalCategorieNew.show();
             }else if(target.id=="btn-main-filter"){
-                bsModalCategorieFilter.show();
+                bsmodalFilter.show();
             }
         })
     } catch (error) {}
@@ -508,7 +570,7 @@ document.addEventListener("DOMContentLoaded",()=>{
                     disableInputs(inputsForEdition);
                 }
             }else if (event.target.id=="btn-delete"){
-
+				openModalConfirmation(confirmationObj,deleteCategorieObj)
             }           
         })
     } catch (error) {

@@ -402,7 +402,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	try {
 		btnDelClient.addEventListener("click", () => {
-			modificationWatcher = openModalConfirmation(
+			openModalConfirmation(
 				confirmationDetailsObj,
 				deteleClientObj
 			);
@@ -433,11 +433,10 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (modificationWatcher) {
 				// console.log(modificationWatcher);
 
-				let result = openModalConfirmation(
+				openModalConfirmation(
 					confirmationDetailsObj,
 					saveDetailsObj
 				);
-				modificationWatcher = result;
 			} else {
 				ToastShowClosured("success", "Client mis à jour avec succès.");
 				let inputsForEdition =
@@ -455,7 +454,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		btnCancelModalClientDetails.addEventListener("click", () => {
 			//TODO : finish me , clean inputs
 			if (modificationWatcher) {
-				modificationWatcher = openModalConfirmation(
+				openModalConfirmation(
 					confirmationDetailsObj,
 					quitDetailsObj
 				);

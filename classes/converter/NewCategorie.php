@@ -15,7 +15,7 @@ class NewCategorie extends Converter
     public function converter_for_db()
     {
         $input = $this->data_from_user;
-        $this->data_for_db["uid"] = $input["uid"] || \null;
+        $this->data_for_db["uid"] = \intval($input["uid"]) || \null;
         $this->data_for_db["name"] = $input["name"];
         $this->data_for_db["active"] = \intval($input["actif"]);
     }

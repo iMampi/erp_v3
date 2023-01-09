@@ -545,7 +545,6 @@ document.addEventListener("DOMContentLoaded", () => {
 			bsModalFournisseurNew.hide();
 			cleanFormFournisseurNew();
 			bsModalConfirmation.hide();
-			modificationWatcher = false;
 		},
 		no: () => {
 			bsModalConfirmation.hide();
@@ -568,6 +567,7 @@ document.addEventListener("DOMContentLoaded", () => {
 					dataObj["uid"] = result[1];
 					// console.log(dataObj);
 					// TODO : cache html
+					// TODO : handle fails for confirmation
 					fetch(
 						"/elements/tiers/fournisseurs/liste_frnsrs_table_001_base.html"
 					)
@@ -1102,7 +1102,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			//TODO : finish me , clean inputs
 			console.log("cacnel clickd");
 			if (modificationWatcher) {
-				modificationWatcher = openModalConfirmation(
+				openModalConfirmation(
 					confirmationObj,
 					quitCreationObj
 				);
@@ -1121,7 +1121,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	try {
 		btnSaveFournisseurNew.addEventListener("click", () => {
 			if (modificationWatcher) {
-				modificationWatcher = openModalConfirmation(
+				openModalConfirmation(
 					confirmationObj,
 					saveCreationObj
 				);
@@ -1164,7 +1164,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				if (target.id == "btn-cancel") {
 					console.log("cancelling details");
 					if (modificationWatcher) {
-						modificationWatcher = openModalConfirmation(
+						 openModalConfirmation(
 							confirmationObj,
 							quitDetailsObj
 						);
@@ -1190,7 +1190,7 @@ document.addEventListener("DOMContentLoaded", () => {
 					if (modificationWatcher) {
 						// TODO : do something
 
-						modificationWatcher = openModalConfirmation(
+						openModalConfirmation(
 							confirmationObj,
 							saveDetailsObj
 						);

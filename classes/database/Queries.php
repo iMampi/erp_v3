@@ -12,63 +12,63 @@ class Queries
     static public $filter_fournisseur = "select * from view_all_fournisseurs";
 
     static public $update_client = "
-    select update_client(?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?)
-    ";
+        select update_client(?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?)
+        ";
 
     static public $update_fournisseur = "
-    select update_fournisseur(
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?)
-    ";
+        select update_fournisseur(
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?)
+        ";
 
     static public $update_categorie = "
         update categories set 
@@ -82,6 +82,9 @@ class Queries
         ";
     static public $delete_fournisseur = "
         update fournisseurs set active_fournisseur='0' where uid=? 
+        ";
+    static public $delete_categorie = "
+        update categories set active='0' where uid=? 
         ";
     static public $select_one_client = "
         call one_client_details(?) 
@@ -199,6 +202,9 @@ class Queries
                 break;
             case 'delete_fournisseur':
                 $this->query = self::$delete_fournisseur;
+                break;
+            case 'delete_categorie':
+                $this->query = self::$delete_categorie;
                 break;
             case 'update_client':
                 $this->query = self::$update_client;
