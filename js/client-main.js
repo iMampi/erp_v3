@@ -68,6 +68,7 @@ var listDOM = {};
 var modificationWatcher = false;
 const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
+
 async function fillTableClients(myJson, myTableBody) {
 	console.log("filling table");
 	try {

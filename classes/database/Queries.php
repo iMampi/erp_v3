@@ -10,6 +10,7 @@ class Queries
     public string $query;
     static public $filter_client = "select * from view_all_clients";
     static public $filter_fournisseur = "select * from view_all_fournisseurs";
+    static public $filter_categorie = "select * from categories";
 
     static public $update_client = "
         select update_client(?,
@@ -220,6 +221,9 @@ class Queries
                 break;
             case 'filter_fournisseurs':
                 $this->query = self::$filter_fournisseur;
+                break;
+            case 'filter_categories':
+                $this->query = self::$filter_categorie;
                 break;
 
             default:

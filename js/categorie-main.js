@@ -3,6 +3,11 @@ const DefaultValuesCategorieNewFormObj = {
 	actif: "1",
     name:""
 };
+const DefaultValuesCategorieFilterObj = {
+	uid: "",
+	actif: "1",
+	name: ""
+};
 var listDOM = {};
 var modificationWatcher = false;
 const ToastShowClosured = showMe();
@@ -93,6 +98,7 @@ async function responseHandlerSaveCategorieNew(response) {
 		return "error js: " + e;
 	}
 }
+
 async function responseHandlerSelectOneCategorieNew(response) {
 	try {
 		let myjson = JSON.parse(await response);
@@ -172,11 +178,15 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 	////modal filter
 	const modalFilter=document.getElementById("modal-filter");
-    const bsmodalFilter = new bootstrap.Modal(modalConfirmation, {
+    const bsModalFilter = new bootstrap.Modal(modalFilter, {
 		backdrop: "static",
 		keyboard: false,
 		focus: true,
 	});	
+
+	const btnApplyFilter=modalFilter.querySelector("#btn-apply-filter")
+	const btnCancelFilter=modalFilter.querySelector("#btn-cancel-filter")
+	const btnResetFilter=modalFilter.querySelector("#btn-reset-filter")
 
 
     //CONFIRMATION OBJ
@@ -312,6 +322,122 @@ document.addEventListener("DOMContentLoaded",()=>{
 		},
 	};
     //FUNCTION
+
+	function changeStateFieldFilter(target) {
+		let checked = target.checked;
+		let fieldName = target.id.split("--")[1];
+		let inputs = modalFilter.querySelectorAll("." + fieldName);
+		inputs.forEach((myinput) => {
+			if (checked) {
+				myinput.disabled = false;
+			} else {
+				myinput.disabled = true;
+			}
+		});
+	}
+
+	async function fillMainTable(myJson, myTableBody) {
+		console.log("filling table");
+		try {
+			// TODO : to cache
+			let response = await fetch(
+				"/elements/warehouses/items/categories/liste_categories_table_001_base.html"
+			);
+			let rowBaseText = await response.text();
+			let doc = new DOMParser().parseFromString(rowBaseText, "text/html");
+			let trModel = doc.querySelector("#row-001");
+	
+			myTableBody.innerHTML = "";
+			console.log("myJson");
+			console.log(myJson);
+			myJson.forEach((elementObj) => {
+				let newRow = generateRowTableCategorie(trModel, elementObj);
+				myTableBody.appendChild(newRow);
+			});
+		} catch (error) {
+			console.log("filling table err");
+			console.log(error);
+			return false;
+		}
+		if (myJson == { actif: "1"}) {
+			defaultFilterFlag = true;
+		} else {
+			defaultFilterFlag = false;
+		}
+		return true;
+	}
+
+	async function filterCategorie(inputObj, tableBodyCategorie) {
+		let url = "/database/select/select_filtered_categories.php";
+		let response = await sendData(url, inputObj);
+	
+		console.log("error?");
+		console.log(response);
+		let myjson = JSON.parse(response);
+	
+		return await fillMainTable(myjson, tableBodyCategorie);
+	
+		// console.log(myjson);
+		// if (result[0] == "success") {
+		// 	ToastShowClosured(result[0], "Nouveau client créé avec succès");
+		// } else if (result[0] == "failure") {
+		// 	ToastShowClosured(result[0], "Echec de la création du client");
+		// } else {
+		// 	throw new Error("wrong value returned");
+		// }
+		// return result[0] == "success";
+	}
+
+	function getDataFilter() {
+		let dataFilterObj = {};
+		let checkboxes = modalFilter.querySelectorAll(
+			"input[type=checkbox]:checked"
+		);
+
+		checkboxes.forEach((checkboxe) => {
+			let fieldName = checkboxe.id.split("--")[1];
+			let inputs = modalFilter.querySelectorAll("." + fieldName);
+			inputs.forEach((myinput) => {
+				dataFilterObj[myinput.id] = myinput.value;
+			});
+		});
+
+		return dataFilterObj;
+	}
+
+	function insertButtonRemoveFilter() {
+		let myHtml =
+			'<button id="btn-remove-filter" class="col-auto btn btn-danger me-auto">supprimer le filtre</button>';
+		let mydiv = divBtns.lastElementChild;
+		let myNode = new DOMParser().parseFromString(myHtml, "text/html");
+		mydiv.prepend(myNode.body.childNodes[0]);
+	}
+
+	function resetFilter() {
+		let inputs = modalFilter.querySelectorAll(".input");
+		let checkboxes = modalFilter.querySelectorAll(
+			"input[type=checkbox]"
+		);
+		checkboxes.forEach((checkbox) => {
+			if (
+				["checkbox--personnality", "checkbox--actif"].includes(
+					checkbox.id
+				)
+			) {
+				checkbox.checked = true;
+			} else {
+				checkbox.checked = false;
+			}
+		});
+		inputs.forEach((myinput) => {
+			myinput.value = DefaultValuesCategorieFilterObj[myinput.id];
+			if ([ "actif"].includes(myinput.id)) {
+				myinput.disabled = false;
+			} else {
+				myinput.disabled = true;
+			}
+		});
+	}
 
 	function removeTableRow(myUid) {
 		console.log("collapsing " + myUid);
@@ -519,9 +645,20 @@ document.addEventListener("DOMContentLoaded",()=>{
             if(target.id=="btn-main-new"){
                     bsModalCategorieNew.show();
             }else if(target.id=="btn-main-filter"){
-                bsmodalFilter.show();
-            }
-        })
+				console.log("filter me");
+                bsModalFilter.show();
+            }else if(target.id=="btn-remove-filter"){
+				console.log("remove filter ");
+				event.target.remove();
+
+				resetFilter();
+				filterCategorie(
+					{ actif: "1" },
+					tableBodyCategorie
+				);
+				defaultFilterFlag = true;
+			}        
+		})
     } catch (error) {}
 
     try {
@@ -582,5 +719,47 @@ document.addEventListener("DOMContentLoaded",()=>{
         })
     } catch (error) {
     }
+
+	try {
+		btnApplyFilter.addEventListener("click", () => {
+			let myobj = getDataFilter();
+			
+			console.log(myobj);
+			filterCategorie(myobj, tableBodyCategorie);
+			bsModalFilter.hide();
+			let testing =
+				!defaultFilterFlag &
+				!divBtns.querySelector("#btn-remove-filter");
+			console.log("testing");
+			console.log(!defaultFilterFlag);
+			console.log(!divBtns.querySelector("#btn-remove-filter"));
+			console.log(testing);
+			if (!divBtns.querySelector("#btn-remove-filter")) {
+				insertButtonRemoveFilter();
+			}
+		});
+	} catch (error) {}
+
+	try {
+		btnCancelFilter.addEventListener('click',()=>{
+			resetFilter();
+			bsModalFilter.hide();
+		})
+	} catch (error) {}
+
+	try {
+		btnResetFilter.addEventListener('click',()=>{
+			resetFilter();
+		})
+	} catch (error) {}
+
+	try {
+		modalFilter.addEventListener("input", (event) => {
+			let target = event.target;
+			if (target.type == "checkbox") {
+				changeStateFieldFilter(target);
+			}
+		});
+	} catch (error) {}
 
 })

@@ -97,9 +97,7 @@ is_logged();
 
                             <div id="modal-body-heads">
                                 <?php
-                                //TODO : make the header of factures in details readonly
-
-                                require_once __DIR__ . "/../../../elements/warehouses/items/categories/categories_formulaire_base.html";
+                                require_once __DIR__ . "/../../../elements/warehouses/items/categories/categories_filter_basic.html";
                                 ?>
                             </div>
                             <!-- TODO : to elete. we gonna use only JS here -->
@@ -111,8 +109,9 @@ is_logged();
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">annuler</button>
-                            <button type="button" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-secondary" id="btn-reset-filter">paramètre par défaut</button>
+                            <button type="button" class="btn btn-secondary" id="btn-cancel-filter">annuler</button>
+                            <button type="button" class="btn btn-primary" id="btn-apply-filter">appliquer</button>
                         </div>
                     </div>
                 </div>

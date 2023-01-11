@@ -93,7 +93,7 @@ is_logged();
                     </div>
                 </div>
             </div>
-            <!-- modal filter TEST -->
+            <!-- modal filter -->
             <div class="modal fade" id="modal-fournisseur-filter" tabindex="-1">
                 <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Close">
                 </button>

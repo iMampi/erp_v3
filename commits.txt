@@ -433,3 +433,8 @@ implementing btn-delete: ...
     btn-delete:  implemented, works great
 
 implementing filter for cycle categorie...
+------------------------
+060:
+done implementing all filtering actions into categorie-main.js.
+the serverside is also good. DTo are ok, scripts to query db is ok.
+we start working on a new cycle
