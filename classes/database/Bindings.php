@@ -85,6 +85,12 @@ class Bindings
                 $arr["name"],
                 $arr["active"],
             ];
+        } else if ($this->converter::class == "Converter\NewFamille") {
+            $this->binding = [
+                'si',
+                $arr["name"],
+                $arr["active"],
+            ];
         } elseif ($this->converter::class == "Converter\UpdateClient") {
             $this->binding = [
                 'iissssssssissssssssssidiiii',

@@ -166,6 +166,9 @@ class Queries
     static public $save_new_categorie = "
         select new_categorie(?,?)
         ";
+    static public $save_new_famille = "
+        select new_famille(?,?)
+        ";
 
     public function __construct($mode)
     {
@@ -179,6 +182,9 @@ class Queries
                 break;
             case 'save_new_categorie':
                 $this->query = self::$save_new_categorie;
+                break;
+            case 'save_new_famille':
+                $this->query = self::$save_new_famille;
                 break;
             case 'select_all_clients':
                 $this->query = self::$select_all_clients;

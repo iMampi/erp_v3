@@ -438,3 +438,8 @@ implementing filter for cycle categorie...
 done implementing all filtering actions into categorie-main.js.
 the serverside is also good. DTo are ok, scripts to query db is ok.
 we start working on a new cycle
+------------------------
+061:
+we start working on "famille"
+working on the save new famille...
+save : works great.

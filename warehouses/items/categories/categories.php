@@ -9,6 +9,7 @@ session_start();
 is_logged();
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,7 +25,7 @@ is_logged();
     <script src="/js/server-communication.js"></script>
     <script src="/js/confirmation.js"></script>
     <script src="/js/toast.js"></script>
-    <script src="/js/categorie-main.js"></script>
+    <script src="/js/famille-main.js"></script>
     <link rel="stylesheet" href="/style/mampi.css">
     <title>catégories</title>
 
@@ -59,7 +60,7 @@ is_logged();
                         // TODO : IMPLEMENT ME CORRECTLY
                         // TODO : create a global variable for those message. maybe a constant to autoload
                         // ob_start();
-                        require_once require_once $_SERVER["DOCUMENT_ROOT"] . '/elements/sub_header_cannot_visit.html';
+                        require_once $_SERVER["DOCUMENT_ROOT"] . '/elements/sub_header_cannot_visit.html';
                     } else {
                         require_once $_SERVER["DOCUMENT_ROOT"] . '/elements/sub_header_categories.html';
                         require_once $_SERVER["DOCUMENT_ROOT"] . '/elements/sub_header_div_btns.html';
