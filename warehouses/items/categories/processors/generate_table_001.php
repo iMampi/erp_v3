@@ -26,7 +26,7 @@ if (can_visit($cycle_categorie)) {
         $tr_ = $tr_model->cloneNode(true);
 
         $id_ = sprintf('%03d', $categorie["uid"]);
-        $tr_->setAttribute("id", $id_);
+        $tr_->setAttribute("id", "row-" . $id_);
 
         if ($categorie["active"] == "0") {
             $tr_->setAttribute("class", $tr_->getAttribute("class") . " collapse-row");

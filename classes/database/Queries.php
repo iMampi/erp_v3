@@ -77,6 +77,12 @@ class Queries
         active=?
         where uid=?
         ";
+    static public $update_famille = "
+        update familles set 
+        name=?,
+        active=?
+        where uid=?
+        ";
 
     static public $delete_client = "
         update clients set active_client='0' where uid=? 
@@ -87,6 +93,9 @@ class Queries
     static public $delete_categorie = "
         update categories set active='0' where uid=? 
         ";
+    static public $delete_famille = "
+        update familles set active='0' where uid=? 
+        ";
     static public $select_one_client = "
         call one_client_details(?) 
         ";
@@ -96,6 +105,9 @@ class Queries
     static public $select_one_categorie = "
         select * from categories where  uid=? 
         ";
+    static public $select_one_famille = "
+        select * from familles where  uid=? 
+        ";
     static public $select_all_clients = "
         call all_clients 
         ";
@@ -104,6 +116,9 @@ class Queries
         ";
     static public $select_all_categories_name = "
         select * from categories 
+        ";
+    static public $select_all_familles_name = "
+        select * from familles 
         ";
     static public $save_new_client = "
         SELECT new_client(
@@ -195,6 +210,9 @@ class Queries
             case 'select_all_categories_name':
                 $this->query = self::$select_all_categories_name;
                 break;
+            case 'select_all_familles_name':
+                $this->query = self::$select_all_familles_name;
+                break;
             case 'select_one_client':
                 $this->query = self::$select_one_client;
                 break;
@@ -203,6 +221,9 @@ class Queries
                 break;
             case 'select_one_categorie':
                 $this->query = self::$select_one_categorie;
+                break;
+            case 'select_one_famille':
+                $this->query = self::$select_one_famille;
                 break;
             case 'delete_client':
                 $this->query = self::$delete_client;
@@ -213,6 +234,9 @@ class Queries
             case 'delete_categorie':
                 $this->query = self::$delete_categorie;
                 break;
+            case 'delete_famille':
+                $this->query = self::$delete_famille;
+                break;
             case 'update_client':
                 $this->query = self::$update_client;
                 break;
@@ -221,6 +245,9 @@ class Queries
                 break;
             case 'update_categorie':
                 $this->query = self::$update_categorie;
+                break;
+            case 'update_famille':
+                $this->query = self::$update_famille;
                 break;
             case 'filter_clients':
                 $this->query = self::$filter_client;

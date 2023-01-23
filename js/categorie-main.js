@@ -13,6 +13,22 @@ var modificationWatcher = false;
 const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
 
+function updateCategorieRow(mytable, dataObj) {
+	let row = mytable.querySelector(
+		"#row-" + zeroLeftPadding(parseInt(dataObj["uid"]), 3, false)
+	);
+	console.log("dataObj update frnsr row");
+	console.log(dataObj);
+	console.log(mytable);
+	let inputsRow = row.querySelectorAll(".input");
+	inputsRow.forEach((input) => {
+		// console.log(input.classList);
+		if (input.classList.contains("name", "input")) {
+			input.value=dataObj["name"]
+		}
+	});
+}
+
 function makeCategorieDetailsInputsEditable(inputElements) {
 	// console.log("inputElements");
 	// console.log(inputElements.values());
@@ -32,11 +48,11 @@ function fillInputsDetails(valueObj) {
 	console.log("valueObj : ");
 	console.log(valueObj);
 	// let inputsElements = md.querySelectorAll(".input");
-	let modalCategorieDetails_ = document.getElementById(
-		"modal-categorie-details"
+	let modalDetails_ = document.getElementById(
+		"modal-famille-details"
 	);
 	let inputsElements =
-    modalCategorieDetails_.getElementsByClassName("input");
+    modalDetails_.getElementsByClassName("input");
 
 	// console.log("inputsElement :");
 	// console.log(inputsElements);
@@ -321,6 +337,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 			bsModalConfirmation.hide();
 		},
 	};
+	
     //FUNCTION
 
 	function changeStateFieldFilter(target) {
@@ -501,7 +518,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 				let inputsForEdition =
 					modalCategorieDetails.querySelectorAll(".input");
 				disableInputs(inputsForEdition);
-				// updateClientRow(table001, inputsValuesObj);
+				updateCategorieRow(table001, inputsValuesObj);
 				btnSaveCategorieDetails.disabled = true;
 				btnModifyCategorieDetails.disabled = false;
 				return false;
@@ -761,5 +778,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 			}
 		});
 	} catch (error) {}
+
+
 
 })

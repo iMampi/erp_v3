@@ -443,3 +443,8 @@ we start working on a new cycle
 we start working on "famille"
 working on the save new famille...
 save : works great.
+------------------------
+062:
+generate_table_001.php  for famille : works great.
+working on  famille>details... showing is ok. now btns...
+modify, save and cancel for famille works fine.

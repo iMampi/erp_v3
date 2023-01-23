@@ -158,6 +158,13 @@ class Bindings
                 $arr["active"],
                 $arr["uid"]
             ];
+        } elseif ($this->converter::class == "Converter\UpdateFamille") {
+            $this->binding = [
+                'sii',
+                $arr["name"],
+                $arr["active"],
+                $arr["uid"]
+            ];
         } elseif ($this->converter::class == "Converter\SelectOneClient") {
             $this->binding = [
                 'i',
@@ -173,6 +180,11 @@ class Bindings
                 'i',
                 $this->converter->data_for_db["uid"]
             ];
+        } elseif ($this->converter::class == "Converter\SelectOneFamille") {
+            $this->binding = [
+                'i',
+                $this->converter->data_for_db["uid"]
+            ];
         } elseif ($this->converter::class == "Converter\DeleteClient") {
             $this->binding = [
                 'i',
@@ -184,6 +196,11 @@ class Bindings
                 $this->converter->data_for_db["uid"]
             ];
         } elseif ($this->converter::class == "Converter\DeleteCategorie") {
+            $this->binding = [
+                'i',
+                $this->converter->data_for_db["uid"]
+            ];
+        } elseif ($this->converter::class == "Converter\DeleteFamille") {
             $this->binding = [
                 'i',
                 $this->converter->data_for_db["uid"]
