@@ -14,6 +14,15 @@ var modificationWatcher = false;
 const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
 
+function generateRowTable(nodeModel, DataObj) {
+	// console.log(DataObj);
+	let newNode = nodeModel.cloneNode(true);
+	newNode.id = "row-"+zeroLeftPadding(DataObj["uid"], 3, false);
+	newNode.querySelector("input.uid").value = DataObj["uid"];
+	newNode.querySelector(".name.input").value=DataObj["name"];
+	return newNode;
+}
+
 function updateFamilleRow(mytable, dataObj) {
 	let row = mytable.querySelector(
 		"#row-" + zeroLeftPadding(parseInt(dataObj["uid"]), 3, false)
@@ -104,14 +113,7 @@ async function responseHandlerSelectOneFamille(response) {
 	}
 }
 
-function generateRowTableCategorie(nodeModel, DataObj) {
-	// console.log(DataObj);
-	let newNode = nodeModel.cloneNode(true);
-	newNode.id = "row-"+zeroLeftPadding(DataObj["uid"], 3, false);
-	newNode.querySelector("input.uid").value = DataObj["uid"];
-	newNode.querySelector(".name.input").value=DataObj["name"];
-	return newNode;
-}
+
 
 function generateEmptyRowTableCategorie(nodeModel) {
 	// console.log(DataObj);
@@ -196,6 +198,19 @@ document.addEventListener("DOMContentLoaded",()=>{
     const btnModifyFamilleDetails=modalFamilleDetails.querySelector("#btn-modify"
     );
 
+
+	////modal filter
+    const modalFilter=document.getElementById("modal-filter");
+    const bsModalFilter = new bootstrap.Modal(modalFilter, {
+		backdrop: "static",
+		keyboard: false,
+		focus: true,
+	});
+	const btnApplyFilter=modalFilter.querySelector("#btn-apply-filter")
+	const btnCancelFilter=modalFilter.querySelector("#btn-cancel-filter")
+	const btnResetFilter=modalFilter.querySelector("#btn-reset-filter")
+	const footerModalFilter=modalFilter.querySelector(".modal-footer");
+
     //CONFIRMATION OBJ
     
     const confirmationObj = {
@@ -239,7 +254,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 							let trModel = doc.querySelector("#row-001");
 
 							tableBody.append(
-								generateRowTableCategorie(trModel, dataObj)
+								generateRowTable(trModel, dataObj)
 							);
 							bsModalNew.hide();
 							_cleanNewForm();
@@ -325,6 +340,112 @@ document.addEventListener("DOMContentLoaded",()=>{
 	};
 
     //FUNCTIONS
+	function changeStateFieldFilter(target) {
+		let checked = target.checked;
+		let fieldName = target.id.split("--")[1];
+		let inputs = modalFilter.querySelectorAll("." + fieldName);
+		inputs.forEach((myinput) => {
+			if (checked) {
+				myinput.disabled = false;
+			} else {
+				myinput.disabled = true;
+			}
+		});
+	}
+
+	function resetFilter() {
+		let inputs = modalFilter.querySelectorAll(".input");
+		let checkboxes = modalFilter.querySelectorAll(
+			"input[type=checkbox]"
+		);
+		checkboxes.forEach((checkbox) => {
+			if (
+				["checkbox--personnality", "checkbox--actif"].includes(
+					checkbox.id
+				)
+			) {
+				checkbox.checked = true;
+			} else {
+				checkbox.checked = false;
+			}
+		});
+		inputs.forEach((myinput) => {
+			myinput.value = DefaultValuesFamilleFilterObj[myinput.id];
+			if ([ "actif"].includes(myinput.id)) {
+				myinput.disabled = false;
+			} else {
+				myinput.disabled = true;
+			}
+		});
+	}
+
+	function insertButtonRemoveFilter() {
+		let myHtml =
+			'<button id="btn-remove-filter" class="col-auto btn btn-danger me-auto">supprimer le filtre</button>';
+		let mydiv = divBtns.lastElementChild;
+		let myNode = new DOMParser().parseFromString(myHtml, "text/html");
+		mydiv.prepend(myNode.body.childNodes[0]);
+	}
+
+	async function filterFamille(inputObj, tableBodyCategorie) {
+		let url = "/database/select/select_filtered_familles.php";
+		let response = await sendData(url, inputObj);
+	
+		console.log("error?");
+		console.log(response);
+		let myjson = JSON.parse(response);
+	
+		return await fillMainTable(myjson, tableBodyCategorie);
+	
+	}
+
+	async function fillMainTable(myJson, myTableBody) {
+		console.log("filling table");
+		try {
+			// TODO : to cache
+			let response = await fetch(
+				"/elements/warehouses/items/familles/liste_familles_table_001_base.html"
+			);
+			let rowBaseText = await response.text();
+			let doc = new DOMParser().parseFromString(rowBaseText, "text/html");
+			let trModel = doc.querySelector("#row-001");
+	
+			myTableBody.innerHTML = "";
+			console.log("myJson");
+			console.log(myJson);
+			myJson.forEach((elementObj) => {
+				let newRow = generateRowTable(trModel, elementObj);
+				myTableBody.appendChild(newRow);
+			});
+		} catch (error) {
+			console.log("filling table err");
+			console.log(error);
+			return false;
+		}
+		if (myJson == { actif: "1"}) {
+			defaultFilterFlag = true;
+		} else {
+			defaultFilterFlag = false;
+		}
+		return true;
+	}
+
+	function getDataFilter() {
+		let dataFilterObj = {};
+		let checkboxes = modalFilter.querySelectorAll(
+			"input[type=checkbox]:checked"
+		);
+
+		checkboxes.forEach((checkboxe) => {
+			let fieldName = checkboxe.id.split("--")[1];
+			let inputs = modalFilter.querySelectorAll("." + fieldName);
+			inputs.forEach((myinput) => {
+				dataFilterObj[myinput.id] = myinput.value;
+			});
+		});
+
+		return dataFilterObj;
+	}
 
 	async function deleteFamille() {
 		// TODO : DRY
@@ -505,7 +626,20 @@ document.addEventListener("DOMContentLoaded",()=>{
             if(event.target.id=="btn-main-new"){
                 
                 bsModalNew.show();
-            }else if(event.target.id=="btn-main-filter"){}
+            }else if(event.target.id=="btn-main-filter"){
+				console.log("filter me");
+			bsModalFilter.show();
+		}else if(event.target.id=="btn-remove-filter"){
+			console.log("remove filter ");
+			event.target.remove();
+
+			resetFilter();
+			filterFamille(
+				{ actif: "1" },
+				tableBody
+			);
+			defaultFilterFlag = true;
+		} 
         })
     } catch (error) {}
 
@@ -594,6 +728,36 @@ document.addEventListener("DOMContentLoaded",()=>{
 			modificationWatcher=true;
 		})
 		} catch (error) {}
+
+	try {
+		footerModalFilter.addEventListener("click", (event) => {
+			if (event.target.id=="btn-apply-filter"){
+				let myobj = getDataFilter();
+			
+				console.log(myobj);
+				filterFamille(myobj, tableBody);
+				bsModalFilter.hide();
+				if (!divBtns.querySelector("#btn-remove-filter")) {
+					insertButtonRemoveFilter();
+				}
+			}else if (event.target.id=="btn-cancel-filter"){
+				resetFilter();
+				bsModalFilter.hide();
+			}else if (event.target.id=="btn-reset-filter"){
+				resetFilter();
+			}
+
+		})
+	} catch (error) {}
+
+	try {
+		modalFilter.addEventListener("input", (event) => {
+			let target = event.target;
+			if (target.type == "checkbox") {
+				changeStateFieldFilter(target);
+			}
+		});
+	} catch (error) {}
 
 
 

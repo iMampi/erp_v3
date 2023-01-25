@@ -88,7 +88,7 @@ is_logged();
                                 <?php
                                 //TODO : make the header of factures in details readonly
                                 //TODO : change to require once.
-                                // require __DIR__ . "/../../../elements/warehouses/items/familles/familles_formulaire_base.html";
+                                require_once __DIR__ . "/../../../elements/warehouses/items/familles/familles_filter_basic.html";
                                 ?>
                             </div>
                             <!-- TODO : to elete. we gonna use only JS here -->
@@ -100,8 +100,9 @@ is_logged();
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">annuler</button>
-                            <button type="button" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-secondary" id="btn-reset-filter">paramètre par défaut</button>
+                            <button type="button" class="btn btn-secondary" id="btn-cancel-filter">annuler</button>
+                            <button type="button" class="btn btn-primary" id="btn-apply-filter">appliquer</button>
                         </div>
                     </div>
                 </div>

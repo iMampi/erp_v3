@@ -448,3 +448,12 @@ save : works great.
 generate_table_001.php  for famille : works great.
 working on  famille>details... showing is ok. now btns...
 modify, save and cancel for famille works fine.
+------------------------
+063:
+lets work on filter for famille now...
+btn-cancel-filter : ok
+btn-reset-filter : ok
+btn-fitler:ok
+now working on apply... must implement the code for backend...
+btn-apply-filter : ok
+btn-remove-filter : ok

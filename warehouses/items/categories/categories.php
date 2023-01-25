@@ -25,7 +25,7 @@ is_logged();
     <script src="/js/server-communication.js"></script>
     <script src="/js/confirmation.js"></script>
     <script src="/js/toast.js"></script>
-    <script src="/js/famille-main.js"></script>
+    <script src="/js/categorie-main.js"></script>
     <link rel="stylesheet" href="/style/mampi.css">
     <title>catégories</title>
 
