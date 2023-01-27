@@ -131,7 +131,7 @@ async function saveNewclient(inputObj) {
 	let response = await sendData(url, inputObj);
 	let result = await responseHandlerSaveNewClient(response);
 	console.log("result is : ");
-	console.log(result);
+	console.log(response);
 	if (result[0] == "success") {
 		ToastShowClosured(result[0], "Nouveau client créé avec succès");
 	} else if (result[0] == "failure") {

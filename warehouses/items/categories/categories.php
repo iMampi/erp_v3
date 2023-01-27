@@ -35,17 +35,7 @@ is_logged();
     <div id="main-container" class="container-fluid px-0">
         <div id="header-top" class=" bg-light-blue">
             <?php
-            // $base = __DIR__ . "/../../../elements/header.html";
-            // $tag_id = "link-cats";
-            // $dom = new DOMDocument();
-            // libxml_use_internal_errors(true);
-            // $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
-            // $link = $dom->getElementById($tag_id);
-            // $classes = $link->getAttribute("class");
-            // $classes .= " active";
-            // $link->setAttribute("class", $classes);
-            // echo utf8_decode($dom->saveHTML($dom->documentElement));
-
+            
             // generate headers
             require_once $_SERVER["DOCUMENT_ROOT"] . '/utilities/login_utils.php';
             $header = generate_logged_header($_SESSION['user']->name, "link-cats");

@@ -271,6 +271,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		let cltUid = modalClientDetails.querySelector("#uid").value;
 		let response = await sendData(myurl, { uid: cltUid });
 		// TODO : we dont use await response.json because it is already handled in senData () as respones.text(). so we have to call JSON method manually;
+		console.log("response");
+		console.log(response);
 		let myjson = JSON.parse(response);
 		// let myjson = await response.json();
 		if (Array.isArray(myjson)) {

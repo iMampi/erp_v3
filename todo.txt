@@ -111,3 +111,6 @@ clean the code . sometimes i made obj.yes/no return bool, sometime i made them r
 
 confirmation in js :
 maybe use promises instead? study the possiblity
+
+in queries:
+convert "" into NULL

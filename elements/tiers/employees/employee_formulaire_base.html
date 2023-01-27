@@ -3,72 +3,75 @@
 		<span class="col-form-label col-2 my-auto">matricule</span>
 
 		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" disabled />
+			<input type="text" class="input form-control form-control-sm" disabled />
 		</div>
 		<span class="col-form-label col-2 my-auto">statut</span>
 
 		<div class="col-2 my-auto">
-			<select disabled class="nd input form-control form-control-sm">
+			<select class="actif input form-control form-control-sm">
 				<option value="1">actif</option>
 				<option value="0">inactif</option>
 			</select>
 		</div>
-		<div class="col-2 my-auto"></div>
-		<div class="col-2 my-auto"></div>
 		<span class="col-form-label col-2 my-auto">sexe</span>
 		<div class="col-2 my-auto">
-			<select disabled class="nd input form-control form-control-sm">
+			<select class="sexe input form-control form-control-sm">
 				<option value="1">homme</option>
 				<option value="0">femme</option>
 			</select>
 		</div>
 
 		<span class="col-form-label col-2 my-auto">date de début</span>
-		<div class="col-2 my-auto">
-			<input type="date" class="form-control form-control-sm" disabled />
+		<div class="col-4 my-auto">
+			<input type="date" class="input debut form-control form-control-sm" />
 		</div>
 		<span class="col-form-label col-2 my-auto">date de fin</span>
-		<div class="col-2 my-auto">
-			<input type="date" class="form-control form-control-sm" disabled />
+		<div class="col-4 my-auto">
+			<input type="date" class="input fin form-control form-control-sm" />
 		</div>
+
 		<span class="col-form-label col-2 my-auto">noms</span>
 		<div class="col-4 my-auto">
-			<input type="text" class="form-control form-control-sm" disabled />
+			<input type="text" class="input noms form-control form-control-sm" />
 		</div>
 		<span class="col-form-label col-2 my-auto">prénoms</span>
 		<div class="col-4 my-auto">
-			<input type="text" class="form-control form-control-sm" disabled />
+			<input type="text" class="input prenoms form-control form-control-sm" />
 		</div>
 		<span class="col-form-label col-2 my-auto">cin</span>
-		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" disabled />
+		<div class="col-4 my-auto">
+			<input type="text" class="cin input form-control form-control-sm" />
 		</div>
+		<div class="col-2 my-auto"></div>
+		<div class="col-2 my-auto"></div>
+		<div class="col-2 my-auto"></div>
+
 		<span class="col-form-label col-2 my-auto">date de délivrance</span>
 
-		<div class="col-2 my-auto">
-			<input type="date" class="form-control form-control-sm" disabled />
+		<div class="col-4 my-auto">
+			<input type="date" class="cin-date input form-control form-control-sm"  />
 		</div>
+
 		<span class="col-form-label col-2 my-auto">lieu de délivrance</span>
-		<div class="col-2 my-auto">
-			<input type="date" class="form-control form-control-sm" disabled />
+		<div class="col-4 my-auto">
+			<input type="text" class="cin-lieu input form-control form-control-sm"  />
 		</div>
 
 		<span class="col-form-label col-2 my-auto">date de naissance</span>
-		<div class="col-2 my-auto">
-			<input type="date" class="form-control form-control-sm" disabled />
+		<div class="col-4 my-auto">
+			<input type="date" class="naissance-date input form-control form-control-sm"  />
 		</div>
 		<span class="col-form-label col-2 my-auto">lieu de naissance</span>
-		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" disabled />
+		<div class="col-4 my-auto">
+			<input type="text" class="input naissance-lieu form-control form-control-sm" />
 		</div>
-		<div class="col-4 my-auto"></div>
 		<span class="col-form-label col-2 my-auto">titre</span>
 		<div class="col-6 my-auto">
-			<input type="text" class="form-control form-control-sm" disabled />
+			<input type="text" class="input titre form-control form-control-sm" />
 		</div>
 		<span class="col-form-label col-2 my-auto">catégorie</span>
 		<div class="col-2 my-auto">
-			<select disabled class="nd input form-control form-control-sm">
+			<select class="csp input form-control form-control-sm">
 				<option value="0">4a</option>
 				<option value="1">4b</option>
 				<option value="2">1a</option>
@@ -80,39 +83,38 @@
 
 		<span class="col-form-label col-2 my-auto">adresse</span>
 		<div class="col-10 my-auto">
-			<input type="text" class="form-control form-control-sm" />
+			<input type="text" class="input adress form-control form-control-sm" />
 		</div>
 		<span class="col-form-label col-2">telephone pro</span>
-		<div class="col-2 my-auto">
-			<input type="text" class="phone form-control form-control-sm" />
+		<div class="col-4 my-auto">
+			<input type="text" class="phone input form-control form-control-sm" id="phone-pro"/>
+		</div>
+		<span class="col-form-label col-2">email pro</span>
+		<div class="col-4 my-auto">
+			<input type="text" class="mail input form-control form-control-sm" id="mail-pro"/>
 		</div>
 		<span class="col-form-label col-2 my-auto">telephone perso 1</span>
-		<div class="col-2 my-auto">
-			<input type="text" class="phone form-control form-control-sm" />
-		</div>
-		<span class="col-form-label col-2">telephone perso 2</span>
-		<div class="col-2 my-auto">
-			<input type="text" class="phone form-control form-control-sm" />
-		</div>
-
-		<span class="col-form-label col-2">email pro</span>
-		<div class="col-2 my-auto">
-			<input type="text" class="mail form-control form-control-sm" />
+		<div class="col-4 my-auto">
+			<input type="text" class="phone input form-control form-control-sm" id="phone-1"/>
 		</div>
 		<span class="col-form-label col-2">email perso 1</span>
-		<div class="col-2 my-auto">
-			<input type="text" class="mail form-control form-control-sm" />
+		<div class="col-4 my-auto">
+			<input type="text" class="mail input form-control form-control-sm" id="mail-1"/>
+		</div>
+		<span class="col-form-label col-2">telephone perso 2</span>
+		<div class="col-4 my-auto">
+			<input type="text" class="phone input form-control form-control-sm" />
 		</div>
 		<span class="col-form-label col-2">email perso 2</span>
-		<div class="col-2 my-auto">
-			<input type="text" class="mail form-control form-control-sm" />
+		<div class="col-4 my-auto">
+			<input type="text" class="mail input form-control form-control-sm" id="mail-2"/>
 		</div>
 	</div>
 	<div class="row my-auto">
 		<span class="col-form-label col-2 my-auto">marié(e)</span>
 
 		<div class="col-2 my-auto">
-			<select disabled class="mariage input form-control form-control-sm">
+			<select class="mariage input form-control form-control-sm">
 				<option value="0">non</option>
 				<option value="1">oui</option>
 			</select>
@@ -122,90 +124,73 @@
 		<div class="col-2 my-auto">
 			<input
 				type="number"
-				disabled
-				class="mail form-control form-control-sm"
-				value="2"
+				class="nb-enfants input form-control form-control-sm"
+				value="0"
 			/>
-		</div>
-	</div>
-	<div class="row my-auto">
-		<span class="col-form-label col-2 my-auto">salaire de base</span>
-
-		<div class="col-2 my-auto">
-			<input
-				type="number"
-				disabled
-				class="form-control form-control-sm"
-			/>
-		</div>
-
-		<div class="col-4 my-auto">
-			<div class="form-check mb-0">
-				<input
-					class="form-check-input nowrap"
-					type="checkbox"
-					value="variable"
-					id="sal-variable"
-				/>
-				<!-- </div> -->
-				<!-- <div class="col"> -->
-				<label class="form-check-label nowrap" for="use-pourcentag">
-					primes variables
-				</label>
-			</div>
-		</div>
-		<div class="col-4 my-auto">
-			<div class="form-check mb-0">
-				<input
-					class="form-check-input"
-					type="checkbox"
-					value="hs"
-					id="hs"
-				/>
-				<label class="form-check-label nowrap" for="use-pourcentag">
-					heures supplémentaires
-				</label>
-			</div>
-		</div>
-	</div>
-	<div class="row my-auto">
-		<span class="col-form-label col-2 my-auto">numéro cnaps</span>
-
-		<div class="col-2 my-auto">
-			<input
-				type="number"
-				disabled
-				class="form-control form-control-sm"
-			/>
-		</div>
-		<span class="col-form-label col-2 my-auto">allocation familliale</span>
-
-		<div class="col-2 my-auto">
-			<select disabled class="alloc input form-control form-control-sm">
-				<!-- TODO : values to change to uid for smie -->
-				<option value="0">non</option>
-				<option value="1">oui</option>
-			</select>
 		</div>
 		<span class="col-form-label col-2 my-auto">réduction irsa enfant</span>
 
 		<div class="col-2 my-auto">
 			<select
-				disabled
 				class="reduc-irsa input form-control form-control-sm"
+			>
+				<option value="0">non</option>
+				<option value="1">oui</option>
+			</select>
+		</div>
+	</div>
+	
+	<div class="row my-auto">
+		<span class="col-form-label col-2 my-auto">salaire de base</span>
+		<div class="col-4 my-auto">
+			<input
+				type="number"
+				class="input sal-base form-control form-control-sm" id="sal-base"
+			/>
+		</div>
+		<div class="col-6 my-auto">		</div>
+		<span class="col-form-label col-2 my-auto">primes variables</span>
+
+		<div class="col-4 my-auto">
+			<select
+				class="primes input form-control form-control-sm"
+			>
+				<option value="0">non</option>
+				<option value="1">oui</option>
+			</select>
+		</div>
+		<span class="col-form-label col-2 my-auto">heures suplémentaires</span>
+
+		<div class="col-4 my-auto">
+			<select
+								class="hs input form-control form-control-sm"
 			>
 				<!-- TODO : values to change to uid for smie -->
 				<option value="0">non</option>
 				<option value="1">oui</option>
 			</select>
 		</div>
-	</div>
+		<span class="col-form-label col-2 my-auto">numéro cnaps</span>
 
+		<div class="col-4 my-auto">
+			<input
+				type="text"
+				class="cnaps input form-control form-control-sm"
+			/>
+		</div>
+		<span class="col-form-label col-2 my-auto">allocation familliale</span>
+
+		<div class="col-4 my-auto">
+			<select  class="alloc input form-control form-control-sm">
+				<!-- TODO : values to change to uid for smie -->
+				<option value="0">non</option>
+				<option value="1">oui</option>
+			</select>
+		</div>
 	<div class="row my-auto">
 		<span class="col-form-label col-2 my-auto">smie</span>
-
 		<div class="col-2 my-auto">
-			<select disabled class="smie input form-control form-control-sm">
+			<select class="smie input form-control form-control-sm">
 				<!-- TODO : values to change to uid for smie -->
 				<option value="0">aucun</option>
 				<option value="1">ostie</option>
@@ -219,15 +204,14 @@
 		<div class="col-2 my-auto">
 			<input
 				type="number"
-				disabled
-				class="num-smie form-control form-control-sm"
+				class="num-smie input form-control form-control-sm"
 			/>
 		</div>
 	</div>
 	<div class="row my-auto">
 		<label for="note" class="form-label">note</label>
 		<div class="col-12 my-auto">
-			<textarea class="form-control" id="note" rows="3"></textarea>
+			<textarea class="input form-control" id="note" rows="3"></textarea>
 		</div>
 	</div>
 </div>

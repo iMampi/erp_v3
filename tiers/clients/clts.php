@@ -42,7 +42,6 @@ is_logged();
             require_once $_SERVER["DOCUMENT_ROOT"] . '/utilities/login_utils.php';
             $header = generate_logged_header($_SESSION['user']->name, "link-clts");
             echo $header;
-
             ?>
             <div id="sub-header" class="container-fluid sticky-top py-2 bordered bg-light-blue
             ">

@@ -97,39 +97,38 @@ class DbHandler
                     $stmt_execution = $stmt->execute();
                     // echo 'step1 is ';
                     // echo ($step1);
+
+                    //////////
                     try {
 
                         $res = $stmt->get_result();
 
                         $results = $res->fetch_array($fetch_mode);
-                    } catch (\Throwable $th) {
-                        $results = [$stmt_execution];
-                    } finally {
-                        // $results = $stmt->affected_rows;
-
-                        // echo "result is : <br> ";
-                        $result_array = [\true, $results];
-                        $ouput_final = $result_array;
-                    }
+                        } catch (\Throwable $th) {
+                        // on a utilisait ca avant. on laisse juste a cas où
+                        ////$results = [$stmt_execution];
+                            $nb_affected_row = $stmt->affected_rows;
+                            if ($nb_affected_row > 0) {
+                                $results=["nb_affected_row" => $nb_affected_row];
+                            } else {
+                                throw $th;
+                            }
+                        } finally {
+                            $result_array = [\true, $results];
+                            $ouput_final = $result_array;
+                        }
+                        //////////
                 } catch (\Throwable $th) {
 
-                    try {
-                        $nb_affected_row = $stmt->affected_rows;
-                        if ($nb_affected_row > 0) {
-                            $ouput_final = [true, ["nb_affected_row" => $nb_affected_row]];
-                        } else {
-                            throw $th;
-                        }
-                    } catch (\Throwable $th) {
+                    
 
                         $error_arr_ = ["error" => $th->getMessage(), "nb" => $stmt->affected_rows, "res" => $res];
                         // $error_arr_ = ["error" => $th->getMessage(), "step1" => $step1];
                         $result_array = [\false, $error_arr_];
                         // return "err2 : " . $th->getMessage();
                         $ouput_final = $result_array;
-                    }
                 } finally {
-                    return ($ouput_final);
+                    return $ouput_final;
                 }
 
 
