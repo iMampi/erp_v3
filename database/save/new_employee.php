@@ -18,13 +18,13 @@ new DbHandler();
 
 
 
-if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("client"))) {
+if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("employee"))) {
     $data = json_decode(file_get_contents('php://input'), true);
     // var_dump($data);
 
-    $NewObj = new NewEmployee($data);
+    $NewObj = new NewClient($data);
     // var_dump($NewClientObj);
-    $Query = new Queries("save_new_client");
+    $Query = new Queries("save_new_employee");
     $Binding = new Bindings($NewObj);
     $Statement = new StandardPreparedStatement($Query, $Binding);
     $temp_array_result = DbHandler::execute_prepared_statement($Statement, MYSQLI_NUM);

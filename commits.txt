@@ -465,3 +465,9 @@ employee_formulaire_base.html : modifié...ajout des id sur les inputs
 NewClients.php : changed to replace "" to \null. beaause mysql consider "" as a value, which put a problem for uniqueness. gotta do the same for all the other Updatexxx et Newxxx sub class of Converter;
 UpdateClients.php : did the same;
 DbHandler.php : the fix we did before to handle query that did not return a reseult, had some issue disturbing delete operations. we fixed it. new : ok , update : ok, delete:ok, filter :ok.
+------------------------
+065:
+NewEmployee.php : working on it;
+employee-main.js : DefaultValuesEmployeeNewFormObj;
+employee_formulaire_base.html :
+harmonizing the names and fields with the 3 files above and the database...

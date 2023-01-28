@@ -49,7 +49,7 @@ function fillInputsDetails(valueObj) {
 	console.log(valueObj);
 	// let inputsElements = md.querySelectorAll(".input");
 	let modalDetails_ = document.getElementById(
-		"modal-famille-details"
+		"modal-categorie-details"
 	);
 	let inputsElements =
     modalDetails_.getElementsByClassName("input");
