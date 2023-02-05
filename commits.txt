@@ -471,3 +471,13 @@ NewEmployee.php : working on it;
 employee-main.js : DefaultValuesEmployeeNewFormObj;
 employee_formulaire_base.html :
 harmonizing the names and fields with the 3 files above and the database...
+------------------------
+066:
+in all my DTO, must use array_keys_exist() in the ternary if
+working on newclient.php : nif last worked on.
+
+change filter...
+change client and fournisseur...
+fixed employee_formulaire_base.html : missing last </div>
+backend save new employee works.
+fixed NewEmployee.php. there was a problem with data validation and treatement, because of how mmysql treat 0 or null in some specific field.

@@ -23,7 +23,7 @@ class Bindings
         // $this->converter->data_for_db;
         if ($this->converter::class == "Converter\NewClient") {
             $this->binding = [
-                'issssssssissssssssssidiiii',
+                'issssssssissssssssssiidiiii',
                 $this->converter->data_for_db["type_personnality_uid"],
                 $arr["adress"],
                 $arr["nif"],
@@ -44,6 +44,7 @@ class Bindings
                 $arr["cin_lieu"],
                 $arr["naissance_date"],
                 $arr["naissance_lieu"],
+                $arr["sexe"],
                 $arr["type_vente"],
                 $arr["encours"],
                 $arr["nb_jour"],
@@ -53,7 +54,7 @@ class Bindings
             ];
         } else if ($this->converter::class == "Converter\NewFournisseur") {
             $this->binding = [
-                'issssssssissssssssssdiii',
+                'issssssssissssssssssidiii',
                 $this->converter->data_for_db["type_personnality_uid"],
                 $arr["adress"],
                 $arr["nif"],
@@ -74,6 +75,7 @@ class Bindings
                 $arr["cin_lieu"],
                 $arr["naissance_date"],
                 $arr["naissance_lieu"],
+                $arr["sexe"],
                 $arr["encours"],
                 $arr["nb_jour"],
                 $arr["evaluation"],
@@ -90,6 +92,47 @@ class Bindings
                 'si',
                 $arr["name"],
                 $arr["active"],
+            ];
+        } else if ($this->converter::class == "Converter\NewEmployee") {
+            $this->binding = [
+                'iisssssssiisisssssssissssidiiiiiissii',
+                $arr["uid"],
+                \null,
+                $arr["adress"],
+                $arr["phone1"],
+                $arr["phone2"],
+                $arr["phonepro"],
+                $arr["mail1"],
+                $arr["mail2"],
+                $arr["mailpro"],
+                $arr["active_employee"],
+                $arr["active_employee"],
+                $arr["note"],
+                $arr["evaluation"],
+                $arr["noms"],
+                $arr["prenoms"],
+                $arr["cin"],
+                $arr["cin_date"],
+                $arr["cin_lieu"],
+                $arr["naissance_date"],
+                $arr["naissance_lieu"],
+                $arr["sexe"],
+                $arr["debut"],
+                $arr["fin"],
+                $arr["poste"],
+                $arr["categorie"],
+                $arr["principal_magasin_uid"],
+                $arr["sal_base"],
+                $arr["sal_variable"],
+                $arr["smie_uid"],
+                $arr["matrimonial"],
+                $arr["nb_enfants"],
+                $arr["reduc_irsa"],
+                $arr["heures_supp"],
+                $arr["cnaps_num"],
+                $arr["smie_num"],
+                $arr["alloc_fam"],
+                $arr["avantages"]
             ];
         } elseif ($this->converter::class == "Converter\UpdateClient") {
             $this->binding = [

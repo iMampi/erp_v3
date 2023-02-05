@@ -114,3 +114,6 @@ maybe use promises instead? study the possiblity
 
 in queries:
 convert "" into NULL
+
+indatabase:
+magasins : put back the NN opttion on filed adresss resp user

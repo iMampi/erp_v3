@@ -3,7 +3,7 @@
 		<span class="col-form-label col-2 my-auto">matricule</span>
 
 		<div class="col-2 my-auto">
-			<input type="text" class="input form-control form-control-sm" disabled id="uid"/>
+			<input type="text" class="input form-control form-control-sm" disabled id="matricule"/>
 		</div>
 		<span class="col-form-label col-2 my-auto">statut</span>
 
@@ -17,7 +17,7 @@
 		<div class="col-2 my-auto">
 			<select class="sexe input form-control form-control-sm" id="sexe">
 				<option value="1">homme</option>
-				<option value="0">femme</option>
+				<option value="2">femme</option>
 			</select>
 		</div>
 
@@ -72,16 +72,15 @@
 		<span class="col-form-label col-2 my-auto">affectation</span>
 		<div class="col-6 my-auto">
 			<select class="magasin input form-control form-control-sm" id="magasin">
-				<option value="0">en attente</option>
-				<option value="1">principal</option>
+				<option value="1">en attente</option>
+				<option value="2">principal</option>
 			</select>
 		</div>
 		<span class="col-form-label col-2 my-auto">catégorie</span>
 		<div class="col-2 my-auto">
 			<select class="csp input form-control form-control-sm" id="csp">
-				<option value="0">4a</option>
-				<option value="1">4b</option>
-				<option value="2">1a</option>
+				<option value="1">4a</option>
+				<option value="2">4b</option>
 				<option value="3">1b</option>
 				<option value="4">2a</option>
 				<option value="5">2b</option>
@@ -154,7 +153,7 @@
 		<div class="col-4 my-auto">
 			<input
 				type="number"
-				class="input sal-base form-control form-control-sm" id="sal-base"
+				class="input sal-base form-control form-control-sm" id="sal-base" value="0"
 			/>
 		</div>
 		<span class="col-form-label col-2 my-auto">avantages</span>
@@ -171,8 +170,8 @@
 
 		<div class="col-4 my-auto">
 			<select
-				class="prime input form-control form-control-sm"
-				id="prime"
+				class="sal-variable input form-control form-control-sm"
+				id="sal-variable"
 			>
 				<option value="0">non</option>
 				<option value="1">oui</option>
@@ -212,8 +211,8 @@
 		<div class="col-4 my-auto">
 			<select class="smie input form-control form-control-sm" id="smie">
 				<!-- TODO : values to change to uid for smie -->
-				<option value="0">aucun</option>
-				<option value="1">ostie</option>
+				<option value="1">aucun</option>
+				<option value="7">ostie</option>
 				<option value="2">amit</option>
 				<option value="3">smimo</option>
 				<option value="4">omsi</option>
@@ -251,4 +250,5 @@
 			<textarea class="input form-control" id="note" rows="3"></textarea>
 		</div>
 	</div>
+</div>
 </div>

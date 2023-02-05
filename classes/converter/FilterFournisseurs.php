@@ -128,6 +128,10 @@ class FilterFournisseurs extends Converter
                     case 'rcs':
                     case 'note':
                         $column_name = self::$correspondances[$key];
+                        if (\trim($value) == "") {
+                            $this->conditions .= " $column_name IS NULL and";
+                            break;
+                        }
                         $this->conditions .= " $column_name LIKE '%$value%'and";
                         break;
 
@@ -143,14 +147,25 @@ class FilterFournisseurs extends Converter
                         }
 
                         break;
+
                     case 'phone':
-                        $this->conditions .= " phone1 LIKE '%$value%' and";
-                        $this->conditions .= " or phone2 LIKE '%$value%' and";
+                        if (\trim($value) == "") {
+                            $this->conditions .= " phone1 IS NULL or";
+                            $this->conditions .= " phone2 IS NULL and";
+                            break;
+                        }
+                        $this->conditions .= " phone1 LIKE '%$value%' or";
+                        $this->conditions .= " phone2 LIKE '%$value%' and";
                         break;
 
                     case 'mail':
-                        $this->conditions .= " mail1 LIKE '%$value%' and";
-                        $this->conditions .= " or mail2 LIKE '%$value%' and";
+                        if (\trim($value) == "") {
+                            $this->conditions .= " mail1 IS NULL or";
+                            $this->conditions .= " mail2 IS NULL and";
+                            break;
+                        }
+                        $this->conditions .= " mail1 LIKE '%$value%' or";
+                        $this->conditions .= " mail2 LIKE '%$value%' and";
                         break;
 
                     case 'echeance-min':

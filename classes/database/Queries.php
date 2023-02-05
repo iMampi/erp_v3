@@ -185,6 +185,46 @@ class Queries
     static public $save_new_famille = "
         select new_famille(?,?)
         ";
+    static public $save_new_employee = "
+        select new_employee(
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?)
+        ";
 
     public function __construct($mode)
     {
@@ -201,6 +241,9 @@ class Queries
                 break;
             case 'save_new_famille':
                 $this->query = self::$save_new_famille;
+                break;
+            case 'save_new_employee':
+                $this->query = self::$save_new_employee;
                 break;
             case 'select_all_clients':
                 $this->query = self::$select_all_clients;

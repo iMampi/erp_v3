@@ -93,7 +93,7 @@ class DbHandler
                 $stmt->bind_param(...$prepared_statement->binding);
 
                 try {
-
+                    // echo 'calling';
                     $stmt_execution = $stmt->execute();
                     // echo 'step1 is ';
                     // echo ($step1);

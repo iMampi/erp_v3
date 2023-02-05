@@ -17,6 +17,7 @@ const DefaultValuesEmployeeNewFormObj = {
 	mail2: "",
 	mailpro: "",
 	matrimonial: "0",
+	matricule: "",
 	"naissance-date": "",
 	"naissance-lieu": "",
 	"nb-enfants": "0",
@@ -27,7 +28,7 @@ const DefaultValuesEmployeeNewFormObj = {
 	phonepro: "",
 	poste: "",
 	prenoms: "",
-	prime: "0",
+	"sal-variable": "0",
 	"reduc-irsa": "0",
 	"sal-base": "",
 	sexe: "1",
@@ -55,6 +56,26 @@ async function saveNew(inputObj) {
 		throw new Error("wrong value returned");
 	}
 	return [result[0] == "success", result[1]];
+}
+
+async function responseHandlerSaveEmployeeNew(response) {
+	try {
+		let myjson = JSON.parse(await response);
+		//NOTE : the correct way for save. not correct for select query
+		//NOTE : works for error also
+		// TODO : handle for when it is an error
+        // TODO : all seems to use the same logic. DRY in all others occurence
+		console.log("myjson");
+		console.log(myjson);
+		if (myjson[0]) {
+			return ["success", Object.values(myjson[1])[0]];
+		} else {
+			return ["failure", Object.values(myjson[1])[0]];
+		}
+	} catch (e) {
+		// TODO : comment me
+		return "error js: " + e;
+	}
 }
 
 function generateRowTable(nodeModel, DataObj) {
@@ -178,6 +199,8 @@ document.addEventListener("DOMContentLoaded",()=>{
     //FUNCTIONS
 
 	function getFormInputsValues(modalRef) {
+		console.log("modalRef");
+		console.log(modalRef);
         let inputObj = {};
 
         let inputs = modalRef.querySelectorAll(".input");
