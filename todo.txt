@@ -117,3 +117,8 @@ convert "" into NULL
 
 indatabase:
 magasins : put back the NN opttion on filed adresss resp user
+
+fixed NewEmployee.php. there was a problem with data validation and treatement, because of how mmysql treat 0 or null in some specific field. should do the same for other DTOs
+forgot to add "sexe" field in database>humans.
+fixed it with employee.
+should fix it with client and fournisseur of any DTO with linked to Humans table.

@@ -112,6 +112,9 @@ class Queries
     static public $select_all_clients = "
         call all_clients 
         ";
+    static public $select_all_employees_name = "
+        call all_employees_active_only 
+        ";
     static public $select_all_fournisseurs = "
         call all_fournisseurs 
         ";
@@ -256,6 +259,9 @@ class Queries
                 break;
             case 'select_all_familles_name':
                 $this->query = self::$select_all_familles_name;
+                break;
+            case 'select_all_employees_name':
+                $this->query = self::$select_all_employees_name;
                 break;
             case 'select_one_client':
                 $this->query = self::$select_one_client;

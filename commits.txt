@@ -481,3 +481,9 @@ change client and fournisseur...
 fixed employee_formulaire_base.html : missing last </div>
 backend save new employee works.
 fixed NewEmployee.php. there was a problem with data validation and treatement, because of how mmysql treat 0 or null in some specific field.
+------------------------
+067:
+now, working on filling the table for employeses on first load
+...
+edited liste_emps_table_001_base.html;
+finished generate_table_001 for employees;
