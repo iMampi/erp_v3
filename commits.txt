@@ -487,3 +487,15 @@ now, working on filling the table for employeses on first load
 ...
 edited liste_emps_table_001_base.html;
 finished generate_table_001 for employees;
+------------------------
+068:
+changing db>employees maricule to beecome the primary key.
+but there is a foreign key somewhere that prevent me from removing PK on uid.
+trying to find it>>>solved. recreated the table
+caisses
+------------------------
+069:
+created "emp_formulaire_body_new.php","emp_formulaire_body_read_only.php". inserted them in emps.php;
+DeleteEmployee.php;
+working on filter...
+

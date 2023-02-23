@@ -213,6 +213,11 @@ class Bindings
                 'i',
                 $this->converter->data_for_db["uid"]
             ];
+        } elseif ($this->converter::class == "Converter\SelectOneEmployee") {
+            $this->binding = [
+                'i',
+                $this->converter->data_for_db["matricule"]
+            ];
         } elseif ($this->converter::class == "Converter\SelectOneFournisseur") {
             $this->binding = [
                 'i',
@@ -247,6 +252,11 @@ class Bindings
             $this->binding = [
                 'i',
                 $this->converter->data_for_db["uid"]
+            ];
+        } elseif ($this->converter::class == "Converter\DeleteEmployee") {
+            $this->binding = [
+                'i',
+                $this->converter->data_for_db["matricule"]
             ];
         } else {
             echo "NOT VALID";

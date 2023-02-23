@@ -8,11 +8,11 @@ const DefaultValuesEmployeeNewFormObj = {
 	"cin-date": "",
 	"cin-lieu": "",
 	"cnaps-num": "",
-	csp: "0",
+	csp: "1",
 	debut: "",
 	fin: "",
 	hs: "0",
-	magasin: "0",
+	magasin: "1",
 	mail1: "",
 	mail2: "",
 	mailpro: "",
@@ -30,14 +30,52 @@ const DefaultValuesEmployeeNewFormObj = {
 	prenoms: "",
 	"sal-variable": "0",
 	"reduc-irsa": "0",
-	"sal-base": "",
+	"sal-base": "0",
 	sexe: "1",
-	smie: "0",
+	smie: "1",
 	"smie-num": "",
 	uid: "",
 	evaluation:"0",
 };
-
+const DTOFillInputsObj={
+	uid:"uid",
+	matricule:"matricule",
+	adress:"adress",
+	phone1:"phone1",
+	phone2:'phone2',
+	phonepro:"phonepro",
+	mail1:'mail1',
+	mail2:"mail2",
+	mailpro:"mailpro",
+	"actif": 'active_employee',
+	note:'note',
+	evaluation:"evaluation",
+	noms:'noms',
+	prenoms:"prenoms",
+	cin:'cin',
+	'cin-date':'cin_date',
+	'cin-lieu': 'cin_lieu',
+	'naissance-date':'naissance_date',
+	'naissace-lieu':'naissance_lieu',
+	debut:'debut',
+	fin:"fin",
+	poste:'poste',
+	"csp":"categorie",
+	'magasin':"principal_magasin_uid",
+	'sal-base':"sal_base",
+	'sal-variable':'sal_variable',
+	'smie':"smie_uid",
+	matrimonial:"matrimonial",
+	"nb-enfants":'nb_enfants',
+	"reduc-irsa":"reduc_irsa",
+	"hs":"heures_supp",
+	"cnaps-num":"cnaps_num",
+	"smie-num":"smie_num",
+	"alloc":"alloc_fam",
+	avantages:"avantages",
+	sexe:"sexe"
+}
+const ToastShowClosured = showMe();
 var modificationWatcher= false;
 
 async function saveNew(inputObj) {
@@ -78,12 +116,75 @@ async function responseHandlerSaveEmployeeNew(response) {
 	}
 }
 
+async function responseHandlerSelectOneEmployee(response) {
+	try {
+		console.log("response++");
+		console.log(response);
+		let myjson = JSON.parse(await response);
+		//NOTE : the correct way for save. not correct for select query
+		//NOTE : works for error also
+		// TODO : handle for when it is an error
+        // TODO : all seems to use the same logic. DRY in all others occurence
+		console.log("myjson select");
+		console.log(myjson);
+		if (myjson[0]) {
+			return ["success", myjson[1]];
+		} else {
+			return ["failure", Object.values(myjson[1])[0]];
+		}
+	} catch (e) {
+		// TODO : comment me
+		return "error js: " + e;
+	}
+}
+
+function makeEmployeeDetailsInputsEditable(inputElements) {
+	inputElements.forEach((input) => {
+		if (input.id!="matricule") {
+			input.disabled = false;
+		}else{
+            input.disabled = true;
+
+        }
+	});
+}
+
+function fillInputsDetails(valueObj) {
+	console.log("valueObj : ");
+	console.log(valueObj);
+	// let inputsElements = md.querySelectorAll(".input");
+	let modalDetails_ = document.getElementById(
+		"modal-employee-details"
+	);
+	let inputsElements =
+    modalDetails_.getElementsByClassName("input");
+
+	// console.log("inputsElement :");
+	// console.log(inputsElements);
+	// let inputsElements = document.querySelectorAll(
+	// "#modal-clt-details .input"
+	// );
+	//TODO : use a DTO
+	for (let index = 0; index < inputsElements.length; index++) {
+		let element = inputsElements[index];
+		// console.log(element.id+ " -- " +DTOFillInputsObj[element.id]);
+		element.value = valueObj[DTOFillInputsObj[element.id]];
+
+	}
+}
+
 function generateRowTable(nodeModel, DataObj) {
-	// console.log(DataObj);
+	console.log(DataObj);
 	let newNode = nodeModel.cloneNode(true);
-	newNode.id = "row-"+zeroLeftPadding(DataObj["uid"], 3, false);
-	newNode.querySelector("input.uid").value = DataObj["uid"];
-	newNode.querySelector(".name.input").value=DataObj["name"];
+	newNode.id = "row-"+zeroLeftPadding(DataObj["matricule"], 3, false);
+	DataObj["matricule"] = zeroLeftPadding(DataObj["matricule"], 4, false);
+	newNode.querySelector("input.matricule").value = DataObj["matricule"];
+	newNode.querySelector(".noms.input").value=DataObj["noms"];
+	newNode.querySelector(".prenoms.input").value=DataObj["prenoms"];
+	newNode.querySelector(".debut.input").value=DataObj["debut"];
+	newNode.querySelector(".fin.input").value=DataObj["fin"];
+	newNode.querySelector(".poste.input").value=DataObj["poste"];
+	newNode.querySelector(".matricule.input").value=DataObj["matricule"];
 	return newNode;
 }
 
@@ -101,6 +202,18 @@ document.addEventListener("DOMContentLoaded",()=>{
 	});
     const btnSaveNew=modalNew.querySelector("#btn-save-new");
     const btnCancelNew=modalNew.querySelector("#btn-cancel-new");
+
+    ////modal details
+	
+    const modalEmployeeDetails=document.getElementById("modal-employee-details");
+    const bsModalEmployeeDetails = new bootstrap.Modal(modalEmployeeDetails, {
+		backdrop: "static",
+		keyboard: false,
+		focus: true,
+	});
+    const btnSaveDetails=modalEmployeeDetails.querySelector("#btn-save");
+    const btnCancelDetails=modalEmployeeDetails.querySelector("#btn-cancel");
+    const btnModifyDetails=modalEmployeeDetails.querySelector("#btn-modify");
 
     ////modal confirmation
     const modalConfirmation=document.getElementById("modal-confirmation");
@@ -153,7 +266,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 			saveNew(dataObj).then((result) => {
 				if (result[0]) {
 					// insert uid of newly created client
-					dataObj["uid"] = result[1];
+					dataObj["matricule"] = result[1];
 					// console.log(dataObj);
 					// TODO : cache html
 					fetch(
@@ -194,9 +307,118 @@ document.addEventListener("DOMContentLoaded",()=>{
 		},
 	};
 
+	const cancelDetailsObj = {
+		message:
+			"Des champs ont été modifiés.<br>\
+			Vos modifications vont être perdus.<br>\
+			Êtes vous sûr de vouloir quitter ce formulaire?",
+		yes: () => {
+			console.log("cancelDetailsObj");
+			bsModalConfirmation.hide();
+			cancelFamilleDetailsForm();
+            return false;
+			
+		},
+		no: () => {
+			bsModalConfirmation.hide();
+            return true;
+		},
+	};
+
+	const deleteEmployeeObj = {
+		message: "Etes vous sûr de vouloir supprimer cette catégorie?",
+		yes: () => {
+			console.log("clicked deleteFournisseurObj" );
+			deleteEmployee();
+			bsModalConfirmation.hide();
+		},
+		no: () => {
+			bsModalConfirmation.hide();
+		},
+	};
+
 
 
     //FUNCTIONS
+
+	async function deleteEmployee() {
+		// TODO : DRY
+		let myurl = "/database/delete/delete_one_employee.php";
+		let myUid = modalEmployeeDetails.querySelector("#matricule").value;
+		let response = await sendData(myurl, { matricule: myUid });
+		console.log("response");
+		console.log(response);
+		// TODO : we dont use await response.json because it is already handled in senData () as respones.text(). so we have to call JSON method manually;
+		let myjson = JSON.parse(response);
+		// let myjson = await response.json();
+		if (Array.isArray(myjson)) {
+				console.log("x");
+				console.log(myjson);
+
+			if (myjson[0] && myjson[1]["nb_affected_row"] == "1") {
+				removeTableRow(myUid);
+				// console.log(x);
+				// console.log(myjson);
+				ToastShowClosured("success", "Employé effacé avec succès");
+				bsModalFamilleDetails.hide();
+			} else {
+				ToastShowClosured("failure", "Echec suppression employé");
+			}
+		} else {
+			ToastShowClosured(myjson[0], "Echec suppression employé.");
+		}
+	}
+
+	function disableInputs(inputNodeList) {
+        inputNodeList.forEach((element) => {
+            disableInput(element);
+        });
+    }
+    function disableInput(input) {
+        input.setAttribute("disabled", "true");
+    }
+
+	function cancelEmployeeDetailsForm(){
+		// TODO : DRY
+		let inputsForEdition =
+		modalEmployeeDetails.querySelectorAll(".input");
+		disableInputs(inputsForEdition);
+
+		bsModalEmployeeDetails.hide();
+		btnSaveDetails.disabled = true;
+		btnModifyDetails.disabled = false;
+		modificationWatcher=false;
+
+	}
+
+	async function showDetails(event) {
+		// TODO : refactor
+		console.log("called here");
+		let parent = event.target.parentNode.parentNode;
+		let myuid = zeroLeftPadding(parent.querySelector(".input.matricule").value,4,false);
+		// console.log("myuid tr");
+		// console.log(myuid);
+		sendData("/database/select/one_employee_details.php", {
+			matricule: myuid,
+		})
+			.then((resp) => {
+				console.log("shwodetail :");
+				console.log(resp);
+				return responseHandlerSelectOneEmployee(resp);
+			})
+			.then((result) => {
+				// console.log("result : " + JSON.stringify(result[1]));
+				// TODO : implement this part in new-client into a function cleanClass(). and optimize : if same personnality called, no nedd to recall.
+                console.log("result++");
+                console.log(result);
+				if (result[0]) {
+
+						console.log("result[1]");
+						console.log(result[1]);
+						fillInputsDetails(result[1]);
+				}
+			});
+	}
 
 	function getFormInputsValues(modalRef) {
 		console.log("modalRef");
@@ -232,12 +454,13 @@ document.addEventListener("DOMContentLoaded",()=>{
 		const inputsForm =
 			modalNew.querySelectorAll(".input");
             inputsForm.forEach((input) => {
-			console.log(input);
+			// console.log(input);
 			input.value = DefaultValuesEmployeeNewFormObj[input.id];
 		});
 	}
 
     //EVENTHANDLER
+
     try {
         divBtns.addEventListener('click',(event)=>{
             if(event.target.id=="btn-main-new"){
@@ -258,6 +481,15 @@ document.addEventListener("DOMContentLoaded",()=>{
 		} 
         })    } catch (error) {}
 
+	try {
+			tableBody.addEventListener("click", (event) => {
+				if(event.target.classList.contains("btn-details")){
+					console.log("see");
+					showDetails(event);
+					bsModalEmployeeDetails.show();
+				}
+			});
+		} catch (error) {}
     try {
         modalNew.querySelector(".modal-footer").addEventListener('click',(event)=>{
             if(event.target.id=="btn-cancel-new"){
@@ -287,4 +519,37 @@ document.addEventListener("DOMContentLoaded",()=>{
 			modificationWatcher=true;
 		})
 	} catch (error) {}
+
+	try {
+		modalEmployeeDetails.addEventListener("click",(event)=>{
+			if(event.target.id=="btn-modify"){
+				let inputsForEdition =
+                modalEmployeeDetails.querySelectorAll(".input");
+                makeEmployeeDetailsInputsEditable(inputsForEdition);
+                btnSaveDetails.disabled = false;
+			}else if(event.target.id=="btn-cancel"){
+                console.log("cancelling details");
+                if (modificationWatcher) {
+                    openModalConfirmation(
+                        confirmationObj,
+                        cancelDetailsObj
+                    );
+                } else {
+                    cancelEmployeeDetailsForm();
+                }
+			}else if(event.target.id=="btn-delete"){
+				openModalConfirmation(confirmationObj,deleteEmployeeObj)
+			}
+		})
+	} catch (error) {
+		
+	}
+
+	try {
+		modalEmployeeDetails.addEventListener("input",()=>{
+			modificationWatcher=true
+		})
+	} catch (error) {
+		
+	}
 })

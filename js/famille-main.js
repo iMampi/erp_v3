@@ -94,13 +94,14 @@ async function responseHandlerSaveFamilleNew(response) {
 
 async function responseHandlerSelectOneFamille(response) {
 	try {
+		console.log("response++");
 		console.log(response);
 		let myjson = JSON.parse(await response);
 		//NOTE : the correct way for save. not correct for select query
 		//NOTE : works for error also
 		// TODO : handle for when it is an error
         // TODO : all seems to use the same logic. DRY in all others occurence
-		console.log("myjson");
+		console.log("myjson select");
 		console.log(myjson);
 		if (myjson[0]) {
 			return ["success", myjson[1]];
@@ -565,8 +566,8 @@ document.addEventListener("DOMContentLoaded",()=>{
 			uid: myuid,
 		})
 			.then((resp) => {
-				// console.log("shwodetail :");
-				// console.log(resp);
+				console.log("shwodetail :");
+				console.log(resp);
 				return responseHandlerSelectOneFamille(resp);
 			})
 			.then((result) => {

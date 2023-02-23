@@ -102,7 +102,7 @@ is_logged();
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">annuler</button>
+                            <button type="button" class="btn btn-secondary">annuler</button>
                             <button type="button" class="btn btn-primary">Save</button>
                         </div>
                     </div>
@@ -124,7 +124,7 @@ is_logged();
                             <div id="new-modal-body-heads">
                                 <?php
                                 //TODO : make the header of factures in details readonly
-                                require __DIR__ . "/../../elements/tiers/employees/employee_formulaire_base.html";
+                                require __DIR__ . "/../../modals_processors/emp_formulaire_body_new.php"
                                 ?>
                             </div>
                             <!-- TODO : to elete. we gonna use only JS here -->
@@ -144,8 +144,8 @@ is_logged();
                 </div>
             </div>
             <!-- end modal employee new -->
-            <!-- modal détails facture -->
-            <div class="modal fade" id="modal-emp-detail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <!-- modal détails employee -->
+            <div class="modal fade" id="modal-employee-details" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
                     <div class="modal-content">
@@ -158,21 +158,21 @@ is_logged();
                                 <?php
                                 //TODO : make the header of factures in details readonly. 
                                 //TODO : change to require once. 
-                                require __DIR__ . "/../../elements/tiers/employees/employee_formulaire_base.html";
+                                require_once __DIR__ . "/../../modals_processors/emp_formulaire_body_read_only.php"
                                 ?>
                             </div>
                             <!-- TODO : to elete. we gonna use only JS here -->
                             <div id="modal-body-table">
                                 <?php
                                 //TODO : change to require once.
-                                // require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_table_details_base.html";
+                                // require __DIR__ . "/../../modals_processors/emp_formulaire_body_read_only.php";
                                 ?>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-info">Statistique</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
-                            <button type="button" class="btn btn-primary">Save</button>
+                            <?php
+                            require_once __DIR__ . "/../../modals_processors/btns_footer_v1.php";
+                            ?>
                         </div>
                     </div>
                 </div>

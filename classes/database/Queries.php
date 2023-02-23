@@ -97,8 +97,14 @@ class Queries
     static public $delete_famille = "
         update familles set active='0' where uid=? 
         ";
+    static public $delete_employee = "
+        update employees set active_employee='0' where matricule=? 
+        ";
     static public $select_one_client = "
         call one_client_details(?) 
+        ";
+    static public $select_one_employee = "
+        select * from view_all_employees where matricule=? 
         ";
     static public $select_one_fournisseur = "
         call one_fournisseur_details(?) 
@@ -275,6 +281,9 @@ class Queries
             case 'select_one_famille':
                 $this->query = self::$select_one_famille;
                 break;
+            case 'select_one_employee':
+                $this->query = self::$select_one_employee;
+                break;
             case 'delete_client':
                 $this->query = self::$delete_client;
                 break;
@@ -286,6 +295,9 @@ class Queries
                 break;
             case 'delete_famille':
                 $this->query = self::$delete_famille;
+                break;
+            case 'delete_employee':
+                $this->query = self::$delete_employee;
                 break;
             case 'update_client':
                 $this->query = self::$update_client;
