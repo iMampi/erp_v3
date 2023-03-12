@@ -93,6 +93,24 @@ class Bindings
                 $arr["name"],
                 $arr["active"],
             ];
+        } else if ($this->converter::class == "Converter\NewItem") {
+            $this->binding = [
+                'issiiiiddiiiis',
+                $arr["uid"],
+                $arr["code"],
+                $arr["name"],
+                $arr["type_item"],
+                $arr["declarable"],
+                $arr["category_uid"],
+                $arr["family_uid"],
+                $arr["prix_vente"],
+                $arr["prix_achat_mp"],
+                $arr["stockable"],
+                $arr["identifiable"],
+                $arr["unite_mesure_uid"],
+                $arr["active"],
+                $arr["note"]
+            ];
         } else if ($this->converter::class == "Converter\NewEmployee") {
             $this->binding = [
                 'iisssssssiisisssssssissssidiiiiiissii',

@@ -2,7 +2,7 @@
 	<div class="row">
 		<span class="col-form-label col-2">numéro facture</span>
 		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" />
+			<input type="text" class="form-control form-control-sm" disabled/>
 		</div>
 	</div>
 	<div id="frnsr-selection" class="row nowrap">
@@ -14,6 +14,7 @@
 				name="frnsr-choice"
 				class="form-control form-control-sm"
 				placeholder="Choississez un fournisseur"
+				disabled
 			/>
 			<!-- </div> -->
 			<!-- <div class="col-1 my-auto pe-1"> -->
@@ -21,13 +22,14 @@
 				class="mytbn btn btn-sm btn-success text-center"
 				data-bs-toggle="modal"
 				data-bs-target="#modal-creer-frnsr"
+				disabled
 			>
 				+
 			</button>
 			<!-- </div> -->
 
 			<!-- <div class="col-1 my-auto ps-1"> -->
-			<button class="mytbn btn btn-sm btn-success text-center">se</button>
+			<button class="mytbn btn btn-sm btn-success text-center" disabled>see</button>
 		</div>
 		<datalist id="frnsr-list">
 			<option value="001">001-biens</option>
@@ -37,11 +39,11 @@
 	<div class="row my-auto">
 		<span class="col-form-label col-2 my-auto">date</span>
 		<div class="col-2 my-auto">
-			<input type="date" class="form-control form-control-sm" />
+			<input type="date" class="form-control form-control-sm" disabled/>
 		</div>
 		<!-- <span class="col-form-label col-2">numéro facture</span>
 		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" />
+			<input type="text" class="form-control form-control-sm" disabled/>
 		</div> -->
 		<span class="col-form-label col-2 my-auto">total TTC</span>
 		<div class="col-2 my-auto">
@@ -61,6 +63,7 @@
 					class="btn btn-sm btn-success text-center"
 					data-bs-toggle="modal"
 					data-bs-target="#modal-affect-affaire"
+					disabled
 				>
 					->
 				</button>
@@ -69,7 +72,7 @@
 		<!-- <div class="col-4 my-auto"></div> -->
 		<span class="col-form-label col-2">déclarable</span>
 		<div class="col-2 my-auto">
-			<select disabled class="nd input form-control form-control-sm">
+			<select disabled class="nd input form-control form-control-sm" disabled>
 				<option value="0">déclarable</option>
 				<option value="1">non déclarable</option>
 			</select>

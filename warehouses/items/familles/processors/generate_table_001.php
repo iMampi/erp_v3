@@ -22,13 +22,13 @@ $xpath = new DOMXPath($dom);
 $row_counter = 1;
 if (can_visit($cycle_categorie)) {
 
-    foreach ($all_categories_name as $categorie) {
+    foreach ($all_familles_name as $famille) {
         $tr_ = $tr_model->cloneNode(true);
 
-        $id_ = sprintf('%03d', $categorie["uid"]);
+        $id_ = sprintf('%03d', $famille["uid"]);
         $tr_->setAttribute("id", "row-" . $id_);
 
-        if ($categorie["active"] == "0") {
+        if ($famille["active"] == "0") {
             $tr_->setAttribute("class", $tr_->getAttribute("class") . " collapse-row");
         }
 
@@ -41,11 +41,11 @@ if (can_visit($cycle_categorie)) {
             $classes_array = explode(" ", $classes);
 
             if (in_array("uid", $classes_array)) {
-                $el_input->setAttribute("value", $categorie["uid"]);
+                $el_input->setAttribute("value", $famille["uid"]);
             } elseif (in_array("name", $classes_array)) {
-                $el_input->setAttribute("value", $categorie["name"]);
+                $el_input->setAttribute("value", $famille["name"]);
             } elseif (in_array("active", $classes_array)) {
-                $el_input->setAttribute("value", $categorie["active"]);
+                $el_input->setAttribute("value", $famille["active"]);
             }
         }
     }

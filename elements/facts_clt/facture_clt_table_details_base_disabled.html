@@ -8,7 +8,7 @@
 			<td>quantité</td>
 			<td>total HT</td>
 			<td class="pe-0">
-				<button type="button" class="btn btn-sm btn-success w-100" id="btn-add-item">
+				<button type="button" class="btn btn-sm btn-success w-100" id="btn-add-item" disabled>
 					+
 				</button>
 			</td>
@@ -23,12 +23,14 @@
 					name="item-choice"
 					class="form-control form-control-sm"
 					placeholder="Choississez un article"
+					disabled
 				/>
 				<button
 					type="button"
 					class="btn btn-sm btn-success"
 					data-bs-toggle="modal"
 					data-bs-target="#modal-creer-item"
+					disabled
 				>
 					+
 				</button>
@@ -45,6 +47,7 @@
 					type="text"
 					list="num-serie-list"
 					class="num-serie form-control form-control-sm"
+					disabled
 				/>
 				<datalist id="num-serie-list">
 					<option value="KJFIOORTT001">KJFIOORTT001</option>
@@ -59,7 +62,7 @@
 				/>
 			</td>
 			<td>
-				<input type="number" class="qty form-control form-control-sm" />
+				<input type="number" class="qty form-control form-control-sm" disabled/>
 			</td>
 			<td>
 				<input
@@ -69,7 +72,7 @@
 				/>
 			</td>
 			<td class="pe-0">
-				<button type="button" class="btn btn-sm btn-danger btn-del">del</button>
+				<button type="button" class="btn btn-sm btn-danger btn-del" disabled>del</button>
 			</td>
 		</tr>
 	</tbody>

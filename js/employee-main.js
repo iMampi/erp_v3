@@ -193,15 +193,16 @@ document.addEventListener("DOMContentLoaded",()=>{
     const divBtns=document.getElementById("div-btns");
     const tableBody=document.getElementById("ze-tbody");
     
-    ////modal new
-    const modalNew=document.getElementById("modal-employee-new");
-    const bsModalNew = new bootstrap.Modal(modalNew, {
+	////modal new
+	const modalNew=document.getElementById("modal-employee-new");
+	const bsModalNew = new bootstrap.Modal(modalNew, {
 		backdrop: "static",
 		keyboard: false,
 		focus: true,
 	});
-    const btnSaveNew=modalNew.querySelector("#btn-save-new");
-    const btnCancelNew=modalNew.querySelector("#btn-cancel-new");
+	const btnSaveNew=modalNew.querySelector("#btn-save-new");
+	const btnCancelNew=modalNew.querySelector("#btn-cancel-new");
+
 
     ////modal details
 	
@@ -226,6 +227,16 @@ document.addEventListener("DOMContentLoaded",()=>{
     );
     const btnConfirmationNo=modalConfirmation.querySelector(		"#btn-confirmation-no"
     );
+
+	////modal filter
+	const modalFilter=document.getElementById("modal-filter");
+	const bsModalFilter = new bootstrap.Modal(modalFilter, {
+		backdrop: "static",
+		keyboard: false,
+		focus: true,
+	});
+	// const btnSaveNew=modalNew.querySelector("#btn-save-new");
+	// const btnCancelNew=modalNew.querySelector("#btn-cancel-new");
 
     //CONFIRMATION OBJ
     

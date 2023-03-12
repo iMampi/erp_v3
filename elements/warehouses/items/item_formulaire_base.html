@@ -3,13 +3,13 @@
 		<span class="col-form-label col-2">code article</span>
 
 		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" />
+			<input type="text" class="form-control form-control-sm input" id="code"/>
 		</div>
 
 		<span class="col-form-label col-2">actif</span>
 
 		<div class="col-2 my-auto">
-			<select disabled class="nd input form-control form-control-sm">
+			<select disabled class="form-control form-control-sm actif input " id="actif">
 				<option value="1">actif</option>
 				<option value="0">inactif</option>
 			</select>
@@ -17,7 +17,7 @@
 		<span class="col-form-label col-2">déclarable</span>
 
 		<div class="col-2 my-auto">
-			<select disabled class="nd input form-control form-control-sm">
+			<select class=" form-control form-control-sm declarable input" id="declarable">
 				<option value="1">oui</option>
 				<option value="0">non</option>
 			</select>
@@ -27,14 +27,14 @@
 		<span class="col-form-label col-2">nom</span>
 
 		<div class="col-6 my-auto">
-			<input type="text" class="form-control form-control-sm name" />
+			<input type="text" class="form-control form-control-sm name input" id="name"/>
 		</div>
 	</div>
 
 	<div class="row">
 		<span class="col-form-label col-2">type</span>
 		<div class="col-2 my-auto">
-			<select disabled class="type input form-control form-control-sm">
+			<select class="form-control form-control-sm type input " id="type">
 				<option value="1">bien</option>
 				<option value="0">service</option>
 			</select>
@@ -42,18 +42,42 @@
 
 		<span class="col-form-label col-2">famille</span>
 		<div class="col-2 my-auto">
-			<select
-				disabled
-				class="fam input form-control form-control-sm"
-			></select>
+			<!-- <select
+				class="form-control form-control-sm famille input" id="famille"
+			>
+		<option value="1">Socolait</option>
+		</select> -->
+		<input
+				list="famille-list"
+				type="text"
+				name="famille"
+				class="form-control form-control-sm input famille"
+				placeholder="Choississez une famille"
+				
+			/>
+			<datalist id="famille-list">
+			  </datalist>	
 		</div>
 
 		<span class="col-form-label col-2">catégorie</span>
 		<div class="col-2 my-auto">
-			<select
-				disabled
-				class="cat input form-control form-control-sm"
-			></select>
+			<!-- <select
+				
+				class="form-control form-control-sm category input " id="category"
+			>
+			<option value="2">biscuit</option>
+
+		</select> -->
+		<input
+				list="category-list"
+				type="text"
+				name="famille"
+				class="form-control form-control-sm input category"
+				placeholder="Choississez une catégorie"
+				
+			/>
+			<datalist id="category-list">
+			  </datalist>	
 		</div>
 	</div>
 	<div class="row">
@@ -61,8 +85,8 @@
 
 		<div class="col-2 my-auto btn-group">
 			<select
-				disabled
-				class="stockable input form-control form-control-sm"
+				
+				class="form-control form-control-sm measurement input " id="measurement"
 			>
 				<option value="1">unité</option>
 				<option value="2">surface</option>
@@ -74,8 +98,9 @@
 
 		<div class="col-2 my-auto">
 			<select
-				disabled
-				class="stockable input form-control form-control-sm"
+				
+				class="form-control form-control-sm stockable input "
+				id="stockable"
 			>
 				<option value="0">non</option>
 				<option value="1">oui</option>
@@ -85,8 +110,9 @@
 
 		<div class="col-2 my-auto">
 			<select
-				disabled
-				class="stockable input form-control form-control-sm"
+				
+				class="form-control form-control-sm identifiable input "
+				id="identifiable"
 			>
 				<option value="0">non</option>
 				<option value="1">oui</option>
@@ -96,20 +122,20 @@
 	<div class="row my-auto">
 		<span class="col-form-label col-2 my-auto">prix de vente</span>
 		<div class="col-2 my-auto">
-			<input type="number" class="form-control form-control-sm pv" />
+			<input type="number" class="form-control form-control-sm pv input" id="prix-vente"/>
 		</div>
 		<span class="col-form-label col-2 my-auto"
 			>prix d'achat moyen pondéré</span
 		>
 		<div class="col-2 my-auto">
-			<input type="number" class="form-control form-control-sm pv" />
+			<input type="number" class="form-control form-control-sm input pv" id="pamp" disabled/>
 		</div>
 	</div>
 
 	<div class="row">
 		<label for="note" class="form-label">note</label>
 		<div class="col-12 my-auto">
-			<textarea class="form-control" id="note" rows="3"></textarea>
+			<textarea class="form-control input" id="note" rows="3"></textarea>
 		</div>
 	</div>
 </div>

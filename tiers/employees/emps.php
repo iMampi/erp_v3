@@ -90,7 +90,7 @@ is_logged();
                                 <?php
                                 //TODO : make the header of factures in details readonly
                                 //TODO : change to require once.
-                                // require __DIR__ . "/../elements/treso_affectation_affaire_header_base.html";
+                                require __DIR__ . "/../../elements/tiers/employees/employee_filter_advanced.html";
                                 ?>
                             </div>
                             <!-- TODO : to elete. we gonna use only JS here -->

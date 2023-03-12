@@ -1,22 +1,18 @@
 <table class="table table-hover" id="table-001">
 	<thead id="ze-thead" class="bg-dark sticky-top">
 		<tr>
-			<td class="ps-5 td-uid"><div class="ps-4">uid</div></td>
+			<td class="ps-5 td-uid"><div class="ps-4">code</div></td>
 			<td class="">nom</td>
 			<td>type</td>
 			<td>catégorie</td>
 			<td>famille</td>
-			<td>stockable</td>
-			<td>identifiable</td>
 			<td>prix de vente</td>
 			<td>
 				prix d'achat <br />
 				moyen pondéré
 			</td>
-			<td>actif</td>
 			<td>déclarable</td>
-			<td>détails</td>
-			<td class="pe-5 td-uid text-end"><div class="pe-4">del</div></td>
+			<td class="pe-5 td-uid text-end"><div class="pe-4">détails</div></td>
 		</tr>
 	</thead>
 	<tbody id="ze-tbody" class="bg-light position-relative">
@@ -26,7 +22,7 @@
 					<input
 						type="text"
 						disabled
-						class="uid input form-control form-control-sm"
+						class="form-control form-control-sm code input"
 					/>
 				</div>
 			</td>
@@ -41,47 +37,28 @@
 				<input
 					type="text"
 					disabled
-					class="type input form-control form-control-sm"
+					class="form-control form-control-sm type input "
 				/>
 			</td>
 			<td>
 				<input
 					type="text"
 					disabled
-					class="cat input form-control form-control-sm"
+					class="category input form-control form-control-sm"
 				/>
 			</td>
 			<td>
 				<input
 					type="text"
 					disabled
-					class="fam input form-control form-control-sm"
+					class="famille input form-control form-control-sm"
 				/>
 			</td>
-			<td class="">
-				<select
-					class="stockable form-control form-control-sm text-capitalize"
-					disabled
-				>
-					<option value="1">oui</option>
-					<option value="0">non</option>
-				</select>
-			</td>
-			<td class="">
-				<select
-					class="identifiable form-control form-control-sm text-capitalize"
-					disabled
-				>
-					<option value="1">oui</option>
-					<option value="0">non</option>
-				</select>
-			</td>
-
 			<td>
 				<input
 					type="text"
 					disabled
-					class="pv input form-control form-control-sm"
+					class="prix-vente input form-control form-control-sm"
 				/>
 			</td>
 			<td>
@@ -93,24 +70,17 @@
 			</td>
 			<td>
 				<select
-					class="actif form-control form-control-sm text-capitalize"
+					class=" form-control form-control-sm text-capitalize declarable input"
 					disabled
 				>
-					<option value="1">actif</option>
-					<option value="0">inactif</option>
-				</select>
-			</td>
-			<td>
-				<select
-					class="nd form-control form-control-sm text-capitalize"
-					disabled
-				>
-					<option value="0">déclarable</option>
-					<option value="1">non déclarable</option>
+					<option value="1">déclarable</option>
+					<option value="0">non déclarable</option>
 				</select>
 			</td>
 
-			<td class="">
+			<td class="text-end pe-5">
+				<div class="pe-4">
+
 				<button
 					type="button"
 					class="btn btn-primary btn-sm btn-details"
@@ -119,13 +89,8 @@
 				>
 					see
 				</button>
-			</td>
-			<td class="text-end pe-5">
-				<div class="pe-4">
-					<button class="btn btn-primary btn-sm btn-details">
-						DEL
-					</button>
-				</div>
+			</div>
+
 			</td>
 		</tr>
 	</tbody>

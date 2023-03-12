@@ -14,40 +14,17 @@
 			<input
 				class="form-check-input"
 				type="checkbox"
-				id="checkbox--uid"
+				id="checkbox--matricule"
 			/>
-			<span class="col-form-label col-2">client id</span>
+			<span class="col-form-label col-2">matricule</span>
 		</div>
 		<div class="col my-auto">
 			<input
 				type="text"
-				class="form-control form-control-sm input uid client-form"
-				id="uid"
+				class="form-control form-control-sm input matricule "
+				id="matricule"
 				disabled
 			/>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-3 form-check form-switch my-auto">
-			<input
-				class="form-check-input"
-				type="checkbox"
-				id="checkbox--personnality"
-				checked
-			/>
-
-			<span class="col-form-label col-2">personnalité</span>
-		</div>
-		<div class="col my-auto">
-			<select
-				class="personnality input form-control form-control-sm client-form"
-				id="personnality"
-				required
-			>
-				<option value="all">tous</option>
-				<option value="1">physique</option>
-				<option value="2">morale</option>
-			</select>
 		</div>
 	</div>
 	<div class="row">
@@ -64,7 +41,7 @@
 
 		<div class="col my-auto">
 			<select
-				class="actif input form-control form-control-sm client-form"
+				class="actif input form-control form-control-sm "
 				required
 				id="actif"
 			>
@@ -74,50 +51,31 @@
 			</select>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--sexe"
+				checked
+			/>
+
+			<span class="col-form-label col-2">sexe</span>
+		</div>
+
+		<div class="col my-auto">
+			<select
+				class="sexe input form-control form-control-sm "
+				required
+				id="sexe"
+			>
+			    <option value="all">tous</option>
+				<option value="1">oui</option>
+				<option value="0">non</option>
+			</select>
+		</div>
+	</div>
 	<!-- <div class="row" id="div-modulable"></div> -->
-	<!-- COMPANY -->
-
-	<div class="row company">
-		<div class="col-3 form-check form-switch my-auto">
-			<input
-				class="form-check-input"
-				type="checkbox"
-				id="checkbox--nom-commercial"
-			/>
-			<span class="col-form-label col-2">nom commercial</span>
-		</div>
-
-		<div class="col my-auto">
-			<input
-				type="text"
-				class="form-control form-control-sm input nom-commercial client-form"
-				id="nom-commercial"
-				disabled
-			/>
-		</div>
-	</div>
-	<div class="row company">
-		<div class="col-3 form-check form-switch my-auto">
-			<input
-				class="form-check-input"
-				type="checkbox"
-				id="checkbox--raison-sociale"
-			/>
-
-			<span class="col-form-label col-2">raison social</span>
-		</div>
-
-		<div class="col my-auto">
-			<input
-				type="text"
-				class="form-control form-control-sm input raison-sociale client-form"
-				id="raison-sociale"
-				disabled
-			/>
-		</div>
-	</div>
-	<!-- END COMPANY -->
-
 	<!-- HUMAN -->
 	<div class="row human">
 		<div class="col-3 form-check form-switch my-auto">
@@ -133,7 +91,7 @@
 		<div class="col my-auto">
 			<input
 				type="text"
-				class="noms form-control form-control-sm input client-form"
+				class="noms form-control form-control-sm input "
 				id="noms"
 				disabled
 			/>
@@ -154,12 +112,152 @@
 		<div class="col my-auto">
 			<input
 				type="text"
-				class="prenoms input form-control form-control-sm client-form"
+				class="prenoms input form-control form-control-sm "
 				id="prenoms"
 				disabled
 			/>
 		</div>
 	</div>
+	<div class="row human">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--poste"
+			/>
+
+			<span class="col-form-label col-2">poste</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="text"
+				class=" input form-control form-control-sm poste"
+				id="poste"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--csp"
+			/>
+
+			<span class="col-form-label col-2">catégorie</span>
+		</div>
+
+		<div class="col my-auto">
+			<select
+				class=" input csp form-control form-control-sm "
+				required
+				id="csp"
+				disabled
+			>
+				<option value="0">non</option>
+
+				<option value="1">oui</option>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--sal-base"
+			/>
+			<span class="col-form-label col-2">salaire de base</span>
+		</div>
+		<div class="col my-auto">
+			<input
+				type="number"
+				class="form-control encours form-control-sm input sal-base"
+				id="sal-base-min"
+				disabled
+			/>
+		</div>
+		<div class="col my-auto">
+			<input
+				type="number"
+				class="form-control encours form-control-sm input sal-base"
+				id="sal-base-max"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--avantages"
+			/>
+
+			<span class="col-form-label col-2">avantages</span>
+		</div>
+
+		<div class="col my-auto">
+			<select
+				class="input avantages form-control form-control-sm "
+				required
+				id="avantages"
+				disabled
+			>
+			<option value="0">non</option>
+				<option value="1">oui</option>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--primes"
+			/>
+
+			<span class="col-form-label col-2">primes</span>
+		</div>
+
+		<div class="col my-auto">
+			<select
+				class="input primes form-control form-control-sm "
+				required
+				id="primes"
+				disabled
+			>
+			<option value="0">non</option>
+				<option value="1">oui</option>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--hs"
+			/>
+
+			<span class="col-form-label col-2">heures supplémentaires</span>
+		</div>
+
+		<div class="col my-auto">
+			<select
+				class="input hs form-control form-control-sm "
+				required
+				id="hs"
+				disabled
+			>
+			<option value="0">non</option>
+				<option value="1">oui</option>
+			</select>
+		</div>
+	</div>
+	
 	<div class="row human">
 		<div class="col-3 form-check form-switch my-auto">
 			<input
@@ -173,7 +271,7 @@
 		<div class="col my-auto">
 			<input
 				type="text"
-				class="form-control form-control-sm input cin client-form"
+				class="form-control form-control-sm input cin "
 				id="cin"
 				disabled
 			/>
@@ -193,7 +291,7 @@
 		<div class="col my-auto">
 			<input
 				type="date"
-				class="form-control form-control-sm input cin-date client-form"
+				class="form-control form-control-sm input cin-date "
 				id="cin-date"
 				disabled
 			/>
@@ -213,7 +311,7 @@
 		<div class="col my-auto">
 			<input
 				type="text"
-				class="form-control form-control-sm input cin-lieu client-form"
+				class="form-control form-control-sm input cin-lieu "
 				id="cin-lieu"
 				disabled
 			/>
@@ -233,7 +331,7 @@
 		<div class="col my-auto">
 			<input
 				type="date"
-				class="form-control form-control-sm input naissance-date client-form"
+				class="form-control form-control-sm input naissance-date "
 				id="naissance-date"
 				disabled
 			/>
@@ -253,7 +351,7 @@
 		<div class="col my-auto">
 			<input
 				type="text"
-				class="form-control form-control-sm input naissance-lieu client-form"
+				class="form-control form-control-sm input naissance-lieu "
 				id="naissance-lieu"
 				disabled
 			/>
@@ -261,7 +359,7 @@
 	</div>
 	<!-- END HUMAN -->
 
-	<div class="row" id="ref-row">
+	<div class="row">
 		<div class="col-3 form-check form-switch my-auto">
 			<input
 				class="form-check-input"
@@ -274,7 +372,7 @@
 
 		<div class="col my-auto">
 			<select
-				class="evaluation input form-control form-control-sm client-form"
+				class="evaluation input form-control form-control-sm "
 				required
 				id="evaluation"
 				disabled
@@ -287,6 +385,7 @@
 			</select>
 		</div>
 	</div>
+
 	<div class="row">
 		<div class="col-3 form-check form-switch my-auto">
 			<input
@@ -300,7 +399,7 @@
 
 		<div class="col my-auto">
 			<select
-				class="declarable input form-control form-control-sm client-form"
+				class="declarable input form-control form-control-sm "
 				required
 				id="declarable"
 				disabled
@@ -311,8 +410,61 @@
 				<option value="0">non</option>
 			</select>
 		</div>
+
+	</div>
 		<!-- <div class="row" id="ref-row"> -->
 		<!-- name according to personnaly type -->
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--debut"
+			/>
+			<span class="col-form-label col-2">date de début</span>
+		</div>
+		<div class="col my-auto">
+			<input
+				type="date"
+				class="debut form-control encours form-control-sm input "
+				id="debut-min"
+				disabled
+			/>
+		</div>
+		<div class="col my-auto">
+			<input
+				type="date"
+				class="debut form-control encours form-control-sm input "
+				id="debut-max"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--fin"
+			/>
+			<span class="col-form-label col-2">date de fin</span>
+		</div>
+		<div class="col my-auto">
+			<input
+				type="date"
+				class="fin form-control encours form-control-sm input "
+				id="fin-min"
+				disabled
+			/>
+		</div>
+		<div class="col my-auto">
+			<input
+				type="date"
+				class="fin form-control encours form-control-sm input "
+				id="fin-max"
+				disabled
+			/>
+		</div>
 	</div>
 	<div class="row">
 		<div class="col-3 form-check form-switch my-auto">
@@ -327,7 +479,7 @@
 		<div class="col my-auto">
 			<input
 				type="text"
-				class="adress form-control form-control-sm input client-form"
+				class="adress form-control form-control-sm input "
 				id="adress"
 				disabled
 			/>
@@ -345,7 +497,7 @@
 		<div class="col my-auto">
 			<input
 				type="text"
-				class="phone form-control form-control-sm input client-form"
+				class="phone form-control form-control-sm input "
 				id="phone"
 				disabled
 			/>
@@ -365,34 +517,33 @@
 		<div class="col my-auto">
 			<input
 				type="text"
-				class="mail form-control form-control-sm input client-form"
+				class="mail form-control form-control-sm input "
 				id="mail"
 				disabled
 			/>
 		</div>
 	</div>
-
 	<div class="row">
 		<div class="col-3 form-check form-switch my-auto">
 			<input
 				class="form-check-input"
 				type="checkbox"
-				id="checkbox--type-vente"
+				id="checkbox--affectation"
 			/>
 
-			<span class="col-form-label col-2">type de vente</span>
+			<span class="col-form-label col-2">affectation</span>
 		</div>
 
 		<div class="col my-auto">
 			<select
-				class="type-vente input form-control form-control-sm input client-form"
-				id="type-vente"
+				class=" input affectation form-control form-control-sm "
+				required
+				id="affectation"
 				disabled
 			>
-				<option value="all">tous</option>
+				<option value="0">non</option>
 
-				<option value="0">au comptant</option>
-				<option value="1">à crédit</option>
+				<option value="1">oui</option>
 			</select>
 		</div>
 	</div>
@@ -401,26 +552,17 @@
 			<input
 				class="form-check-input"
 				type="checkbox"
-				id="checkbox--encours"
+				id="checkbox--nb-enfants"
 			/>
-			<span class="col-form-label col-2">encours</span>
-		</div>
-		<div class="col my-auto">
-			<input
-				type="number"
-				class="encours form-control encours form-control-sm input client-form"
-				id="encours-min"
-				value="0"
-				disabled
-			/>
-		</div>
-		<div class="col my-auto">
-			<input
-				type="number"
-				class="encours form-control encours form-control-sm input client-form"
-				id="encours-max"
-				value="0"
 
+			<span class="col-form-label col-2">nombre d'enfants</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="number"
+				class="form-control form-control-sm input nb-enfants"
+				id="nb-enfants"
 				disabled
 			/>
 		</div>
@@ -430,111 +572,88 @@
 			<input
 				class="form-check-input"
 				type="checkbox"
-				id="checkbox--echeance"
-			/>
-			<span class="col-form-label col-2">échéance</span>
-		</div>
-
-		<div class="col my-auto">
-			<input
-				type="number"
-				class="echeance form-control echeance form-control-sm input client-form"
-				id="echeance-min"
-				value="0"
-				disabled
-			/>
-		</div>
-
-		<div class="col my-auto">
-			<input
-				type="number"
-				class="echeance form-control echeance form-control-sm input client-form"
-				id="echeance-max"
-				value="0"
-				disabled
-			/>
-		</div>
-	</div>
-	<div class="row my-auto">
-		<div class="col-3 form-check form-switch my-auto">
-			<input
-				class="form-check-input"
-				type="checkbox"
-				id="checkbox--nif"
+				id="checkbox--matrimonial"
 			/>
 
-			<span class="col-form-label col-2">nif</span>
-		</div>
-
-		<div class="col my-auto">
-			<input
-				type="text"
-				class="nif form-control form-control-sm input client-form"
-				id="nif"
-				disabled
-			/>
-		</div>
-	</div>
-	<div class="row my-auto">
-		<div class="col-3 form-check form-switch my-auto">
-			<input
-				class="form-check-input"
-				type="checkbox"
-				id="checkbox--stat"
-			/>
-
-			<span class="col-form-label col-2">stat</span>
-		</div>
-
-		<div class="col my-auto">
-			<input
-				type="text"
-				class="stat form-control form-control-sm input client-form"
-				id="stat"
-				disabled
-			/>
-		</div>
-	</div>
-	<div class="row my-auto">
-		<div class="col-3 form-check form-switch my-auto">
-			<input
-				class="form-check-input"
-				type="checkbox"
-				id="checkbox--rcs"
-			/>
-
-			<span class="col-form-label col-2">rcs</span>
-		</div>
-
-		<div class="col my-auto">
-			<input
-				type="text"
-				class="rcs form-control form-control-sm input client-form"
-				id="rcs"
-				disabled
-			/>
-		</div>
-	</div>
-	<div class="row my-auto">
-		<div class="col-3 form-check form-switch my-auto">
-			<input
-				class="form-check-input"
-				type="checkbox"
-				id="checkbox--commissionable"
-			/>
-
-			<span class="col-form-label col-2">commissionable</span>
+			<span class="col-form-label col-2">marié</span>
 		</div>
 
 		<div class="col my-auto">
 			<select
-				class="commissionable input form-control form-control-sm client-form"
-				id="commissionable"
+				class=" input matrimonial form-control form-control-sm "
+				required
+				id="matrimonial"
 				disabled
 			>
-				<option value="all">tous</option>
-
 				<option value="0">non</option>
+
+				<option value="1">oui</option>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--cnaps-num"
+			/>
+			<span class="col-form-label col-2">numéro cnaps</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="text"
+				class="form-control form-control-sm input cnaps-num "
+				id="cnaps-num"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--alloc"
+			/>
+
+			<span class="col-form-label col-2">allocation familliale</span>
+		</div>
+
+		<div class="col my-auto">
+			<select
+				class=" input alloc form-control form-control-sm "
+				required
+				id="alloc"
+				disabled
+			>
+				<option value="0">non</option>
+
+				<option value="1">oui</option>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--reduc-irsa"
+			/>
+
+			<span class="col-form-label col-2">réduction irsa enfant</span>
+		</div>
+
+		<div class="col my-auto">
+			<select
+				class=" input reduc-irsa form-control form-control-sm "
+				required
+				id="reduc-irsa"
+				disabled
+			>
+				<option value="0">non</option>
+
 				<option value="1">oui</option>
 			</select>
 		</div>
@@ -551,7 +670,7 @@
 
 		<div class="col my-auto">
 			<textarea
-				class="note form-control input client-form"
+				class="note form-control input "
 				id="note"
 				rows="3"
 				disabled

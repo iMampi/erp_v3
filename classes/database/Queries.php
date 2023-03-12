@@ -124,11 +124,20 @@ class Queries
     static public $select_all_fournisseurs = "
         call all_fournisseurs 
         ";
-    static public $select_all_categories_name = "
-        select * from categories 
+    static public $select_all_categories_name_limit = "
+        select * from categories limit 20
         ";
-    static public $select_all_familles_name = "
-        select * from familles 
+    static public $select_all_categories_name_nolimit = "
+        select * from categories
+        ";
+    static public $select_all_familles_name_limit = "
+        select * from familles limit 20
+        ";
+    static public $select_all_familles_name_nolimit = "
+        select * from familles
+        ";
+    static public $select_all_items_name_limit = "
+        select * from items where active=1 limit 20
         ";
     static public $save_new_client = "
         SELECT new_client(
@@ -189,7 +198,24 @@ class Queries
         )";
 
     static public $save_new_categorie = "
-        select new_categorie(?,?)
+    select new_categorie(?,?)
+    ";
+    static public $save_new_item = "
+        select new_item(?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?
+        )
         ";
     static public $save_new_famille = "
         select new_famille(?,?)
@@ -235,6 +261,7 @@ class Queries
             ?)
         ";
 
+
     public function __construct($mode)
     {
         $this->mode = $mode;
@@ -254,20 +281,32 @@ class Queries
             case 'save_new_employee':
                 $this->query = self::$save_new_employee;
                 break;
+            case 'save_new_item':
+                $this->query = self::$save_new_item;
+                break;
             case 'select_all_clients':
                 $this->query = self::$select_all_clients;
                 break;
             case 'select_all_fournisseurs':
                 $this->query = self::$select_all_fournisseurs;
                 break;
-            case 'select_all_categories_name':
-                $this->query = self::$select_all_categories_name;
+            case 'select_all_categories_name_limit':
+                $this->query = self::$select_all_categories_name_limit;
                 break;
-            case 'select_all_familles_name':
-                $this->query = self::$select_all_familles_name;
+            case 'select_all_categories_name_nolimit':
+                $this->query = self::$select_all_categories_name_nolimit;
+                break;
+            case 'select_all_familles_name_limit':
+                $this->query = self::$select_all_familles_name_limit;
+                break;
+            case 'select_all_familles_name_nolimit':
+                $this->query = self::$select_all_familles_name_nolimit;
                 break;
             case 'select_all_employees_name':
                 $this->query = self::$select_all_employees_name;
+                break;
+            case 'select_all_items_name_limit':
+                $this->query = self::$select_all_items_name_limit;
                 break;
             case 'select_one_client':
                 $this->query = self::$select_one_client;

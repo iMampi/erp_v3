@@ -8,8 +8,7 @@
 			<td>affaire</td>
 			<td>total</td>
 			<td>détails</td>
-			<td>nd</td>
-			<td>del</td>
+			<td class="pe-5 td-uid text-end">nd</td>
 		</tr>
 	</thead>
 	<tbody id="ze-tbody" class="bg-light position-relative">
@@ -29,7 +28,7 @@
 					disabled
 					class="date input form-control form-control-sm"
 				/>
-liste			<td class="">
+			<td class="">
 				<input
 					type="text"
 					disabled
@@ -52,8 +51,6 @@ liste			<td class="">
 				<button
 					type="button"
 					class="btn btn-primary btn-sm btn-details"
-					data-bs-toggle="modal"
-					data-bs-target="#modal-affect-affaire"
 				>
 					see
 				</button>
@@ -70,24 +67,15 @@ liste			<td class="">
 				<button
 					type="button"
 					class="btn btn-primary btn-sm btn-details"
-					data-bs-toggle="modal"
-					data-bs-target="#modal-fact-detail"
 				>
 					see
 				</button>
 			</td>
-			<td class="">
+			<td class="text-end pe-5">
 				<select disabled class="nd input form-control form-control-sm">
 					<option value="0">déclarable</option>
 					<option value="1">non déclarable</option>
 				</select>
-			</td>
-			<td class="text-end pe-5">
-				<div class="pe-4">
-					<button class="btn btn-danger btn-sm btn-details">
-						DEL
-					</button>
-				</div>
 			</td>
 		</tr>
 	</tbody>
