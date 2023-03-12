@@ -115,6 +115,9 @@ class Queries
     static public $select_one_famille = "
         select * from familles where  uid=? 
         ";
+    static public $select_one_item = "
+        select * from view_all_items where code=? 
+        ";
     static public $select_all_clients = "
         call all_clients 
         ";
@@ -319,6 +322,9 @@ class Queries
                 break;
             case 'select_one_famille':
                 $this->query = self::$select_one_famille;
+                break;
+            case 'select_one_item':
+                $this->query = self::$select_one_item;
                 break;
             case 'select_one_employee':
                 $this->query = self::$select_one_employee;

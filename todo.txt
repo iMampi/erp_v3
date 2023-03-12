@@ -124,3 +124,8 @@ fixed it with employee.
 should fix it with client and fournisseur of any DTO with linked to Humans table.
 
 if element is inanctive >> disable "supprimer"
+
+
+dans la base,
+pour les select one avec des table avec des FK, au lieu de faire des view pour tout, faisons direct une query qui join tout.
+je pense qu'on peut faire ca aussi avec les filtre...masi a étudier. ca m'a lair compliquer à construire.ou pas.

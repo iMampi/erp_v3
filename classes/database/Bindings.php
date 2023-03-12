@@ -251,6 +251,11 @@ class Bindings
                 'i',
                 $this->converter->data_for_db["uid"]
             ];
+        } elseif ($this->converter::class == "Converter\SelectOneItem") {
+            $this->binding = [
+                's',
+                $this->converter->data_for_db["code"]
+            ];
         } elseif ($this->converter::class == "Converter\DeleteClient") {
             $this->binding = [
                 'i',

@@ -120,7 +120,7 @@ require __DIR__ . '/../../database/select/all_familles_name_nolimit.php';
             </div>
             <!-- end modal item new -->
             <!-- modal détails article -->
-            <div class="modal fade" id="modal-item-detail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="modal-item-details" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
                     <div class="modal-content">

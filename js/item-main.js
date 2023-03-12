@@ -13,11 +13,74 @@ const DefaultValuesItemNewFormObj = {
 };
 const TYPE_ITEM=["service","bien"];
 
+const DTO_FILL_INPUT={
+	"code":"code",
+	"actif":"active",
+	"declarable":"declarable",
+	"name":"name",
+	"type":"type_item",
+	"famille":"famille",
+	"categorie":"categorie",
+	"measurement":"unite_mesure_uid",
+	"stockable":"stockable",
+	"identifiable":"identifiable",
+	"prix-vente":"prix_vente",
+	"pamp":"prix_achat_mp",
+	"note":"note"
+}
+
 var modificationWatcher = false;
 const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
 
 
+function fillInputsDetails(valueObj) {
+	console.log("valueObj : ");
+	console.log(valueObj);
+	// let inputsElements = md.querySelectorAll(".input");
+	let modalDetails_ = document.getElementById(
+		"modal-item-details"
+	);
+	let inputsElements =
+    modalDetails_.getElementsByClassName("input");
+
+	// console.log("inputsElement :");
+	// console.log(inputsElements);
+	// let inputsElements = document.querySelectorAll(
+	// "#modal-clt-details .input"
+	// );
+	//TODO : use a DTO>> TO DUPLICATE EVERYWHERE ELSE
+	for (let index = 0; index < inputsElements.length; index++) {
+		let element = inputsElements[index];
+		element.value=valueObj[DTO_FILL_INPUT[element.id]];
+		// console.log(element.id);
+		// console.log(DTO_FILL_INPUT[element.id]);
+		// console.log(valueObj[DTO_FILL_INPUT[element.id]]);
+		
+	}
+}
+
+async function responseHandlerSelectOneItem(response) {
+	try {
+		console.log("response++");
+		console.log(response);
+		let myjson = JSON.parse(await response);
+		//NOTE : the correct way for save. not correct for select query
+		//NOTE : works for error also
+		// TODO : handle for when it is an error
+        // TODO : all seems to use the same logic. DRY in all others occurence
+		console.log("myjson select");
+		console.log(myjson);
+		if (myjson[0]) {
+			return ["success", myjson[1]];
+		} else {
+			return ["failure", Object.values(myjson[1])[0]];
+		}
+	} catch (e) {
+		// TODO : comment me
+		return "error js: " + e;
+	}
+}
 
 async function responseHandlerSaveItemNew(response) {
 	try {
@@ -95,6 +158,15 @@ document.addEventListener("DOMContentLoaded",()=>{
     ////modal new
     const modalNew=document.getElementById("modal-item-new");
     const bsModalNew = new bootstrap.Modal(modalNew, {
+		backdrop: "static",
+		keyboard: false,
+		focus: true,
+	});
+    // const btnSaveNew=modalNew.querySelector("#btn-save-new");
+    // const btnCancelNew=modalNew.querySelector("#btn-cancel-new");
+    ////modal item detail
+    const modalItemDetails=document.getElementById("modal-item-details");
+    const bsModalItemDetails = new bootstrap.Modal(modalItemDetails, {
 		backdrop: "static",
 		keyboard: false,
 		focus: true,
@@ -193,6 +265,36 @@ document.addEventListener("DOMContentLoaded",()=>{
 	};
 
     //FUNCTIONS
+	async function showDetails(event) {
+		// TODO : refactor
+		console.log("called here");
+		let parent = event.target.parentNode.parentNode.parentNode;
+		console.log("parent");
+		console.log(parent);
+		let mycode = parent.querySelector(".input.code").value;
+		// console.log("myuid tr");
+		// console.log(myuid);
+		sendData("/database/select/one_item_details.php", {
+			code: mycode,
+		})
+			.then((resp) => {
+				console.log("shwodetail :");
+				console.log(resp);
+				return responseHandlerSelectOneItem(resp);
+			})
+			.then((result) => {
+				// console.log("result : " + JSON.stringify(result[1]));
+				// TODO : implement this part in new-client into a function cleanClass(). and optimize : if same personnality called, no nedd to recall.
+                console.log("result++");
+                console.log(result);
+				if (result[0]) {
+
+						console.log("result[1]");
+						console.log(result[1]);
+						fillInputsDetails(result[1]);
+				}
+			});
+	}
 
 
     function cleanNewForm() {
@@ -254,6 +356,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     } catch (error) {
         
     }
+
     try {
         modalNew.addEventListener('input',(event)=>{
             modificationWatcher=true;
@@ -261,4 +364,19 @@ document.addEventListener("DOMContentLoaded",()=>{
     } catch (error) {
         
     }
+
+	try {
+		modalItemDetails.addEventListener("input", () => {
+			modificationWatcher=true;
+		})
+		} catch (error) {}
+
+	try {
+		tableBody.addEventListener("click", (event) => {
+			if (event.target.classList.contains("btn-details")){
+				showDetails(event);
+				bsModalItemDetails.show();
+			}
+		})
+		} catch (error) {}
 })

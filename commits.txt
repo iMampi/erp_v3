@@ -512,4 +512,7 @@ add grabing list of all category and famille to add to coresponding datalist.
 created the js file.
 NEW-> cancel and create works.
 SEE-> in progress...
-
+-------------------------
+072:
+SEE-> works great.
+-------------------------

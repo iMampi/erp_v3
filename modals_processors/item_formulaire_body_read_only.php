@@ -37,4 +37,7 @@ foreach ($datalists as $datalist) {
         }
     }
 }
+
+$btns_add_plus = $dom->getElementById("get")
+
 echo utf8_decode($dom->saveHTML($dom->documentElement));
