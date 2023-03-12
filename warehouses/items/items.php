@@ -141,15 +141,14 @@ require __DIR__ . '/../../database/select/all_familles_name_nolimit.php';
                             <div id="modal-body-table">
                                 <?php
                                 //TODO : change to require once.
-                                // require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_table_details_base.html";
+
                                 ?>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger">supprimer</button>
-                            <button type="button" class="btn btn-info">statistique</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
-                            <button type="button" class="btn btn-primary">Save</button>
+                            <?php
+                            require __DIR__ . "/../../modals_processors/btns_footer_v1.php"
+                            ?>
                         </div>
                     </div>
                 </div>

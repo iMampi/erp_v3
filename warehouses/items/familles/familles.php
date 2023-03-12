@@ -109,7 +109,7 @@ is_logged();
             </div>
             <!-- end modal filter -->
             <!-- modal détails  -->
-            <div class="modal fade" id="modal-famille-details" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="modal-famille-details" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
                     <div class="modal-content">
@@ -135,7 +135,7 @@ is_logged();
                         </div>
                         <div class="modal-footer">
                             <?php
-                            require_once __DIR__ . "/../../../modals_processors/btns_footer_v1.php";
+                            require_once __DIR__ . "/../../../modals_processors/btns_footer_v1.php"
                             ?>
                         </div>
                     </div>

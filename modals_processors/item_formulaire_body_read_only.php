@@ -38,6 +38,7 @@ foreach ($datalists as $datalist) {
     }
 }
 
-$btns_add_plus = $dom->getElementById("get")
+$btns_add_plus = $dom->getElementById("btn-create-measurement");
+$btns_add_plus->setAttribute("disabled", "");
 
 echo utf8_decode($dom->saveHTML($dom->documentElement));

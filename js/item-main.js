@@ -33,6 +33,19 @@ var modificationWatcher = false;
 const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
 
+function makeDetailsInputsEditable(inputElements) {
+	// console.log("inputElements");
+	// console.log(inputElements.values());
+	// console.log(inputElements.item());
+	inputElements.forEach((input) => {
+		if ( !["uid","code","pamp"].includes(input.id)) {
+			input.disabled = false;
+		}else{
+            input.disabled = true;
+
+        }
+	});
+}
 
 function fillInputsDetails(valueObj) {
 	console.log("valueObj : ");
@@ -164,6 +177,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 	});
     // const btnSaveNew=modalNew.querySelector("#btn-save-new");
     // const btnCancelNew=modalNew.querySelector("#btn-cancel-new");
+
     ////modal item detail
     const modalItemDetails=document.getElementById("modal-item-details");
     const bsModalItemDetails = new bootstrap.Modal(modalItemDetails, {
@@ -171,8 +185,9 @@ document.addEventListener("DOMContentLoaded",()=>{
 		keyboard: false,
 		focus: true,
 	});
-    // const btnSaveNew=modalNew.querySelector("#btn-save-new");
-    // const btnCancelNew=modalNew.querySelector("#btn-cancel-new");
+    const btnSaveItemDetails=modalItemDetails.querySelector("#btn-save");
+    const btnCancelItemDetails=modalItemDetails.querySelector("#btn-cancel");
+    const btnModifyItemDetails=modalItemDetails.querySelector("#btn-modify");
 
     ////modal confirmation
     const modalConfirmation=document.getElementById("modal-confirmation");
@@ -264,7 +279,47 @@ document.addEventListener("DOMContentLoaded",()=>{
 		},
 	};
 
+	const cancelDetailsObj = {
+		message:
+			"Des champs ont été modifiés.<br>\
+			Vos modifications vont être perdus.<br>\
+			Êtes vous sûr de vouloir quitter ce formulaire?",
+		yes: () => {
+			console.log("cancelDetailsObj");
+			bsModalConfirmation.hide();
+			cancelItemDetailsForm();
+            return false;
+			
+		},
+		no: () => {
+			bsModalConfirmation.hide();
+            return true;
+		},
+	};
+
+
     //FUNCTIONS
+	function disableInputs(inputNodeList) {
+        inputNodeList.forEach((element) => {
+            disableInput(element);
+        });
+    }
+    function disableInput(input) {
+        input.setAttribute("disabled", "true");
+    }
+
+	function cancelItemDetailsForm(){
+		// TODO : DRY
+		let inputsForEdition =
+		modalItemDetails.querySelectorAll(".input");
+		disableInputs(inputsForEdition);
+
+		bsModalItemDetails.hide();
+		btnSaveItemDetails.disabled = true;
+		btnModifyItemDetails.disabled = false;
+		modificationWatcher=false;
+	}
+
 	async function showDetails(event) {
 		// TODO : refactor
 		console.log("called here");
@@ -368,6 +423,27 @@ document.addEventListener("DOMContentLoaded",()=>{
 	try {
 		modalItemDetails.addEventListener("input", () => {
 			modificationWatcher=true;
+		})
+		} catch (error) {}
+
+		try {
+		modalItemDetails.addEventListener("click", (event) => {
+			if(event.target.id=="btn-cancel"){
+                console.log("cancelling details");
+                if (modificationWatcher) {
+                    openModalConfirmation(
+                        confirmationObj,
+                        cancelDetailsObj
+                    );
+                } else {
+                    cancelItemDetailsForm();
+                }			
+			}else if(event.target.id=="btn-modify"){
+                let inputsForEdition =
+                modalItemDetails.querySelectorAll(".input");
+                makeDetailsInputsEditable(inputsForEdition);
+                btnSaveItemDetails.disabled = false;
+			}
 		})
 		} catch (error) {}
 

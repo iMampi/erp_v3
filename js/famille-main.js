@@ -54,6 +54,7 @@ function makeCategorieDetailsInputsEditable(inputElements) {
         }
 	});
 }
+
 async function saveNew(inputObj) {
 	console.log("saving new fr");
 	console.log(inputObj);

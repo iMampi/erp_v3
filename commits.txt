@@ -516,3 +516,6 @@ SEE-> in progress...
 072:
 SEE-> works great.
 -------------------------
+073:
+changed btns footer for details form (item) to php generated (the standard file)
+Details-> modify btn works. cancel btn works. start to work on saving modification ...
