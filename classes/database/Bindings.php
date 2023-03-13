@@ -226,6 +226,23 @@ class Bindings
                 $arr["active"],
                 $arr["uid"]
             ];
+        } elseif ($this->converter::class == "Converter\UpdateItem") {
+            $this->binding = [
+                'siissiiiiddss',
+                $arr["name"],
+                $arr["type_item"],
+                $arr["active"],
+                $arr["famille"],
+                $arr["category"],
+                $arr["unite_mesure_uid"],
+                $arr["stockable"],
+                $arr["identifiable"],
+                $arr["declarable"],
+                $arr["prix_vente"],
+                $arr["prix_achat_mp"],
+                $arr["note"],
+                $arr["code"]
+            ];
         } elseif ($this->converter::class == "Converter\SelectOneClient") {
             $this->binding = [
                 'i',

@@ -44,7 +44,7 @@ function makeCategorieDetailsInputsEditable(inputElements) {
 	// console.log(inputElements.values());
 	// console.log(inputElements.item());
 	let typeVenteFlag = false;
-	inputElements.forEach((input) => {
+	inputE                                                                                                                                                                                                                                                                  lements.forEach((input) => {
 		if (input.id!="uid") {
 
 			input.disabled = false;

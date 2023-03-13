@@ -84,6 +84,39 @@ class Queries
         active=?
         where uid=?
         ";
+    static public $update_item =
+    // "
+    //     select update_item(
+    //         ?,
+    //         ?,
+    //         ?,
+    //         ?,
+    //         ?,
+    //         ?,
+    //         ?,
+    //         ?,
+    //         ?,
+    //         ?,
+    //         ?,
+    //         ?,
+    //         ?
+    //     )
+    //     ";
+    "update items set
+    name=?,
+    type_item=?,
+    active=?,
+    family_uid=(select uid from familles where name=?),
+    category_uid=(select uid from categories where name=?),
+    unite_mesure_uid=?,
+    stockable=?,
+    identifiable=?,
+    declarable=?,
+    prix_vente=?,
+    prix_achat_mp=?,
+    note=?
+    where code=?
+    ";
 
     static public $delete_client = "
         update clients set active_client='0' where uid=? 
@@ -355,6 +388,9 @@ class Queries
                 break;
             case 'update_famille':
                 $this->query = self::$update_famille;
+                break;
+            case 'update_item':
+                $this->query = self::$update_item;
                 break;
             case 'filter_clients':
                 $this->query = self::$filter_client;

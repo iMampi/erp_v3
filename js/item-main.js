@@ -297,8 +297,72 @@ document.addEventListener("DOMContentLoaded",()=>{
 		},
 	};
 
+	const saveDetailsObj = {
+		message:
+			"Des champs ont été modifiés.<br>\
+				Vos modifications vont être enregistrées.<br>\
+				Êtes vous sûr de vouloir sauvegarder vos modification?",
+		yes: () => {
+			console.log("called yes");
+			bsModalConfirmation.hide();
+
+			let inputsValuesObj = getFormInputsValues(modalItemDetails);
+			saveUpdatedItem(inputsValuesObj);
+			return false;
+		},
+		no: () => {
+			bsModalConfirmation.hide();
+            return true;
+		},
+	};
+
 
     //FUNCTIONS
+	async function saveUpdatedItem(inputsValuesObj) {
+		console.log("succ1");
+
+		console.log("saving update called");
+		console.log(inputsValuesObj);
+		let myurl = "/database/save/update_item.php";
+		let response = await sendData(myurl, inputsValuesObj);
+		console.log(response);
+		// TODO : we dont use await response.json because it is already handled in senData () as respones.text(). so we have to call JSON method manually;
+		let myjson = await JSON.parse(response);
+		console.log("myjson");
+		console.log(myjson);
+		console.log("Array.isArray(myjson)");
+		console.log(Array.isArray(myjson));
+		if (Array.isArray(myjson)) {
+			// note : structure particuliere retourné par la funciton sql
+			if (myjson[0] && myjson[1][0] == true) {
+				console.log("succc");
+				console.log(JSON.stringify(myjson));
+				ToastShowClosured("success", "Article mis à jour avec succès.");
+				let inputsForEdition =
+					modalItemDetails.querySelectorAll(".input");
+				disableInputs(inputsForEdition);
+				updateFamilleRow(tableBody, inputsValuesObj);
+				btnSaveItemDetails.disabled = true;
+				btnModifyItemDetails.disabled = false;
+				return false;
+			} else {
+				console.log("faileeddd");
+				console.log(JSON.stringify(myjson));
+				ToastShowClosured("failure", "Echec de la mise à jour.");
+				return true;
+			}
+		} else {
+			console.log("faileeddd2");
+
+			ToastShowClosured(
+				"failure",
+				"Echec de la mise à jour, contactez l'administrateur système."
+			);
+			return true;
+		}
+	}
+
+
 	function disableInputs(inputNodeList) {
         inputNodeList.forEach((element) => {
             disableInput(element);
@@ -426,7 +490,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 		})
 		} catch (error) {}
 
-		try {
+	try {
 		modalItemDetails.addEventListener("click", (event) => {
 			if(event.target.id=="btn-cancel"){
                 console.log("cancelling details");
@@ -443,7 +507,24 @@ document.addEventListener("DOMContentLoaded",()=>{
                 modalItemDetails.querySelectorAll(".input");
                 makeDetailsInputsEditable(inputsForEdition);
                 btnSaveItemDetails.disabled = false;
-			}
+			}else if(event.target.id=="btn-save"){
+				console.log("btn details save clicked");
+                if (modificationWatcher) {
+                    openModalConfirmation(
+                        confirmationObj,
+                        saveDetailsObj
+                    );
+
+                    // modificationWatcher = result;
+                } else {
+					console.log("succ2");
+                    ToastShowClosured("success", "Client mis à jour avec succès.");
+                    let inputsForEdition =
+                        modalFamilleDetails.querySelectorAll(".input");
+                    disableInputs(inputsForEdition);
+                }
+			}else if(event.target.id=="btn-delete"){
+				openModalConfirmation(confirmationObj,deleteCategorieObj)			}
 		})
 		} catch (error) {}
 
