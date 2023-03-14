@@ -298,6 +298,11 @@ class Bindings
                 'i',
                 $this->converter->data_for_db["matricule"]
             ];
+        } elseif ($this->converter::class == "Converter\DeleteItem") {
+            $this->binding = [
+                's',
+                $this->converter->data_for_db["code"]
+            ];
         } else {
             echo "NOT VALID";
         }

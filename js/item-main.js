@@ -33,6 +33,50 @@ var modificationWatcher = false;
 const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
 
+function updateFamilleRow(mytable, dataObj) {
+	// let row = mytable.querySelector(
+		// "#row-" + zeroLeftPadding(parseInt(dataObj["uid"]), 3, false)
+	// );
+	let row = mytable.querySelector(
+		"#row-" + dataObj["code"]
+	);
+	console.log("dataObj update frnsr row");
+	console.log(dataObj);
+	console.log(mytable);
+	let inputsRow = row.querySelectorAll(".input");
+	// TODO : use a DTO
+	inputsRow.forEach((input) => {
+		// console.log(input.classList);
+		if (input.classList.contains("name", "input")) {
+			input.value=dataObj["name"];
+		}else if(input.classList.contains("code", "input")){
+			input.value=dataObj["code"];
+		}else if(input.classList.contains("actif", "input")){
+			input.value=dataObj["actif"];
+		}else if(input.classList.contains("declarable", "input")){
+			input.value=dataObj["declarable"];
+		}else if(input.classList.contains("type", "input")){
+			input.value=TYPE_ITEM[dataObj["type"]];
+		}else if(input.classList.contains("famille", "input")){
+			input.value=dataObj["famille"];
+		}else if(input.classList.contains("categorie", "input")){
+			input.value=dataObj["categorie"];
+		}else if(input.classList.contains("measurement", "input")){
+			input.value=dataObj["measurement"];
+		}else if(input.classList.contains("stockable", "input")){
+			input.value=dataObj["stockable"];
+		}else if(input.classList.contains("identifiable", "input")){
+			input.value=dataObj["identifiable"];
+		}else if(input.classList.contains("prix-vente", "input")){
+			input.value=dataObj["prix-vente"];
+		}else if(input.classList.contains("pamp", "input")){
+			input.value=dataObj["pamp"];
+		}else if(input.classList.contains("note", "input")){
+			input.value=dataObj["note"];
+		}
+	});
+}
+
 function makeDetailsInputsEditable(inputElements) {
 	// console.log("inputElements");
 	// console.log(inputElements.values());
@@ -136,7 +180,7 @@ async function saveNew(inputObj) {
 function generateRowTable(nodeModel, DataObj) {
 	console.log(DataObj);
 	let newNode = nodeModel.cloneNode(true);
-	newNode.id = "row-"+zeroLeftPadding(DataObj["uid"], 3, false);
+	newNode.id = "row-"+DataObj["code"];
 	// newNode.querySelector("input.uid").value = DataObj["uid"];
 	newNode.querySelector("input.code").value = DataObj["code"];
 	newNode.querySelector(".name.input").value=DataObj["name"];
@@ -316,8 +360,60 @@ document.addEventListener("DOMContentLoaded",()=>{
 		},
 	};
 
+	const deleteItemObj = {
+		message: "Etes vous sûr de vouloir supprimer cette article?",
+		yes: () => {
+			console.log("clicked deleteFournisseurObj" );
+			deleteItem();
+			bsModalConfirmation.hide();
+		},
+		no: () => {
+			bsModalConfirmation.hide();
+		},
+	};
+
 
     //FUNCTIONS
+	function removeTableRow(myUid) {
+		console.log("collapsing " + myUid);
+		try {
+			let trToDelete = document.getElementById(
+				"row-" + myUid
+			);
+			trToDelete.classList.add("collapse-row");
+			return true;
+		} catch (err) {
+			return false;
+		}
+	}
+
+	async function deleteItem() {
+		// TODO : DRY
+		let myurl = "/database/delete/delete_one_item.php";
+		let myUid = modalItemDetails.querySelector("#code").value;
+		let response = await sendData(myurl, { code: myUid });
+		console.log("response");
+		console.log(response);
+		// TODO : we dont use await response.json because it is already handled in senData () as respones.text(). so we have to call JSON method manually;
+		let myjson = JSON.parse(response);
+		// let myjson = await response.json();
+		if (Array.isArray(myjson)) {
+							console.log("x");
+				console.log(myjson);
+
+			if (myjson[0] && myjson[1]["nb_affected_row"]=="1") {
+				removeTableRow(myUid);
+				// console.log(x);
+				// console.log(myjson);
+				ToastShowClosured("success", "Article effacé avec succès");
+				bsModalItemDetails.hide();
+			} else {
+				ToastShowClosured("failure", "Échec suppression article");
+			}
+		} else {
+			ToastShowClosured(myjson[0], "Echec suppression article.");
+		}
+	}
 	async function saveUpdatedItem(inputsValuesObj) {
 		console.log("succ1");
 
@@ -334,7 +430,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 		console.log(Array.isArray(myjson));
 		if (Array.isArray(myjson)) {
 			// note : structure particuliere retourné par la funciton sql
-			if (myjson[0] && myjson[1][0] == true) {
+			if (myjson[0] && myjson[1]["nb_affected_row"] == "1") {
 				console.log("succc");
 				console.log(JSON.stringify(myjson));
 				ToastShowClosured("success", "Article mis à jour avec succès.");
@@ -520,11 +616,11 @@ document.addEventListener("DOMContentLoaded",()=>{
 					console.log("succ2");
                     ToastShowClosured("success", "Client mis à jour avec succès.");
                     let inputsForEdition =
-                        modalFamilleDetails.querySelectorAll(".input");
+                        modalItemDetails.querySelectorAll(".input");
                     disableInputs(inputsForEdition);
                 }
 			}else if(event.target.id=="btn-delete"){
-				openModalConfirmation(confirmationObj,deleteCategorieObj)			}
+				openModalConfirmation(confirmationObj,deleteItemObj)			}
 		})
 		} catch (error) {}
 

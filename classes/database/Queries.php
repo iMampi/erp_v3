@@ -85,23 +85,6 @@ class Queries
         where uid=?
         ";
     static public $update_item =
-    // "
-    //     select update_item(
-    //         ?,
-    //         ?,
-    //         ?,
-    //         ?,
-    //         ?,
-    //         ?,
-    //         ?,
-    //         ?,
-    //         ?,
-    //         ?,
-    //         ?,
-    //         ?,
-    //         ?
-    //     )
-    //     ";
     "update items set
     name=?,
     type_item=?,
@@ -132,6 +115,9 @@ class Queries
         ";
     static public $delete_employee = "
         update employees set active_employee='0' where matricule=? 
+        ";
+    static public $delete_item = "
+        update items set active='0' where code=? 
         ";
     static public $select_one_client = "
         call one_client_details(?) 
@@ -376,6 +362,9 @@ class Queries
                 break;
             case 'delete_employee':
                 $this->query = self::$delete_employee;
+                break;
+            case 'delete_item':
+                $this->query = self::$delete_item;
                 break;
             case 'update_client':
                 $this->query = self::$update_client;

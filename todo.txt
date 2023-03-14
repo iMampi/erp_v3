@@ -129,3 +129,8 @@ if element is inanctive >> disable "supprimer"
 dans la base,
 pour les select one avec des table avec des FK, au lieu de faire des view pour tout, faisons direct une query qui join tout.
 je pense qu'on peut faire ca aussi avec les filtre...masi a étudier. ca m'a lair compliquer à construire.ou pas.
+
+gestion des erreur suite à une rponse sql.
+'column' must be unisue, duplicate, not valid;,, et.. ce genre de truc
+
+PHP qui render les page et qui ne support pas les é

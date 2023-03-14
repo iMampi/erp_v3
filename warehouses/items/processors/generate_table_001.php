@@ -31,7 +31,11 @@ if (can_visit($cycle_item)) {
         // var_dump($item);
         $tr_ = $tr_model->cloneNode(true);
 
-        $id_ = "row-" . sprintf('%03d', $item["uid"]);
+
+        //using uid here
+        // $id_ = "row-" . sprintf('%03d', $item["uid"]);
+        //but for item we prefer using code
+        $id_ = "row-" . $item["code"];
         $tr_->setAttribute("id", $id_);
 
         $tbody_->appendChild($tr_);

@@ -521,3 +521,7 @@ changed btns footer for details form (item) to php generated (the standard file)
 Details-> modify btn works. cancel btn works. start to work on saving modification ...
 Queries and binding and converter updated. (not optimal but it works).
 implement treatement of response...
+-------------------------
+074:
+item > modify>save changes : nickel, works great.
+working on delete...> delete works great.
