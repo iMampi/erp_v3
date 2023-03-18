@@ -14,27 +14,28 @@ $xpath = new DOMXPath($dom);
 //     $input->setAttribute("disabled", '');
 // }
 
-$datalists = $xpath->query(".//datalist");
-foreach ($datalists as $datalist) {
-    if ($datalist->getAttribute("id") == "famille-list") {
-        foreach ($all_familles_name as $array) {
-            $option_ = $dom->createElement("option");
-            $option_->setAttribute("value", $array["name"]);
-            $option_->appendChild(
-                $dom->createTextNode($array["uid"] . " - " . $array["name"])
-            );
-            $datalist->appendChild($option_);
-        }
-    };
-    if ($datalist->getAttribute("id") == "category-list") {
-        foreach ($all_categories_name as $array) {
-            $option_ = $dom->createElement("option");
-            $option_->setAttribute("value", $array["name"]);
-            $option_->appendChild(
-                $dom->createTextNode($array["uid"] . " - " . $array["name"])
-            );
-            $datalist->appendChild($option_);
-        }
-    }
-}
+// we test something
+// $datalists = $xpath->query(".//datalist");
+// foreach ($datalists as $datalist) {
+//     if ($datalist->getAttribute("id") == "famille-list") {
+//         foreach ($all_familles_name as $array) {
+//             $option_ = $dom->createElement("option");
+//             $option_->setAttribute("value", $array["name"]);
+//             $option_->appendChild(
+//                 $dom->createTextNode($array["uid"] . " - " . $array["name"])
+//             );
+//             $datalist->appendChild($option_);
+//         }
+//     };
+//     if ($datalist->getAttribute("id") == "category-list") {
+//         foreach ($all_categories_name as $array) {
+//             $option_ = $dom->createElement("option");
+//             $option_->setAttribute("value", $array["name"]);
+//             $option_->appendChild(
+//                 $dom->createTextNode($array["uid"] . " - " . $array["name"])
+//             );
+//             $datalist->appendChild($option_);
+//         }
+//     }
+// }
 echo utf8_decode($dom->saveHTML($dom->documentElement));

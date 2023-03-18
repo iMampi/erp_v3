@@ -406,6 +406,20 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 
     //FUNCTIONS
+
+	function changeStateFieldFilter(target) {
+		let checked = target.checked;
+		let fieldName = target.id.split("--")[1];
+		let inputs = modalFilter.querySelectorAll("." + fieldName);
+		inputs.forEach((myinput) => {
+			if (checked) {
+				myinput.disabled = false;
+			} else {
+				myinput.disabled = true;
+			}
+		});
+	}
+
 	function insertButtonRemoveFilter() {
 		let myHtml =
 			'<button id="btn-remove-filter" class="col-auto btn btn-danger me-auto">supprimer le filtre</button>';
@@ -486,6 +500,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 		return dataFilterObj;
 	}
 
+
 	function appendHTMLFilterBasic() {
 		let name = "filter_basic";
 		let modalFilterBody = modalFilter.querySelector(".modal-body ");
@@ -518,6 +533,8 @@ document.addEventListener("DOMContentLoaded",()=>{
 				});
 		}
 	}
+
+
 
 	function appendHTMLFilterAdvanced() {
 		let name = "filter_advanced";
@@ -741,12 +758,28 @@ document.addEventListener("DOMContentLoaded",()=>{
 		});
 	}
     //EVENTHANDLER
+	try {
+		modalFilter.addEventListener('hidden.bs.modal',()=>{
+			let datalists=document.querySelectorAll("datalist");
+			datalists.forEach(element => {
+				element.querySelector("#all").remove();
+			});
+		})
+	} catch (error) {
+		
+	}
     try {
         divBtns.addEventListener('click',(event)=>{
             if (event.target.id=="btn-main-new"){
                 bsModalNew.show();
             }else if (event.target.id=="btn-main-filter"){
                 bsModalFilter.show();
+				//since we use a common datalist for new and filter, we add "all" when needed.
+				let innerHTMLAll_="<option id='all'>all - Tous</option>";
+				let datalists=document.querySelectorAll('datalist');
+				datalists.forEach(element => {
+					element.innerHTML+=innerHTMLAll_
+				});
 			}else if(event.target.id=="btn-remove-filter"){
 				console.log("remove filter ");
 				event.target.remove();
@@ -874,4 +907,13 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 		})
 		} catch (error) {}	
+
+	try {
+		modalFilter.addEventListener("input", (event) => {
+			let target = event.target;
+			if (target.type == "checkbox") {
+				changeStateFieldFilter(target);
+			}
+		});
+	} catch (error) {}
 })

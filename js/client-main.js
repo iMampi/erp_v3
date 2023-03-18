@@ -192,7 +192,7 @@ async function fecthAndAppendHTMLClientForm(refRow, selectedOption, disabled) {
 	) {
 		return false;
 	}
-	// function to cache fetched result
+	// function to cache fetched rpesult
 
 	if (listDOM[selectedOption]) {
 		// The HTML code of this file has already been fetched.

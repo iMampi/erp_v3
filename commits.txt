@@ -529,3 +529,10 @@ working on delete...> delete works great.
 075:
 starting to work on filter...
 filter: all works great.
+-------------------------
+076:
+did a little restructuring.
+now there is a common data list for all fields that needs one (famille-list, categorie-list). So all input use a datalist  refer to those datalist now.
+when opening filter, an option "all" is added to all datalist.
+when Modalfilter disappears, the option all is removed.
+SO i changed the structure of all the input that used datalist. i removed them.

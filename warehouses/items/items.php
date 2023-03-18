@@ -97,6 +97,7 @@ require __DIR__ . '/../../database/select/all_familles_name_nolimit.php';
                                 <?php
                                 //TODO : make the header of factures in details readonly
                                 //TODO : change to require once.
+                                // require_once __DIR__ . "/../../modals_processors/item_filter_body_basic.php";
                                 require_once __DIR__ . "/../../elements/warehouses/items/item_filter_basic.html";
                                 ?>
                             </div>
@@ -213,6 +214,43 @@ require __DIR__ . '/../../database/select/all_familles_name_nolimit.php';
             </div>
         </div>
         <!-- endconfirmation  modal-->
+        <!-- datalists  -->
+        <datalist id="famille-list">
+            <?php
+            $domfamille = new DOMDocument();
+            // //to be able to use new html5 tag with DOMDocument
+            libxml_use_internal_errors(true);
+
+            foreach ($all_familles_name as $array) {
+                $option_ = $domfamille->createElement("option");
+                $option_->setAttribute("value", $array["name"]);
+                $option_->appendChild(
+                    $domfamille->createTextNode($array["uid"] . " - " . $array["name"])
+                );
+                $domfamille->appendChild($option_);
+            }
+            echo $domfamille->saveHTML();
+            ?>
+        </datalist>
+        <datalist id="category-list">
+            <?php
+            $domcategory = new DOMDocument();
+            // //to be able to use new html5 tag with DOMDocument
+            libxml_use_internal_errors(true);
+
+            foreach ($all_categories_name as $array) {
+                $option_ = $domcategory->createElement("option");
+                $option_->setAttribute("value", $array["name"]);
+                $option_->appendChild(
+                    $domcategory->createTextNode($array["uid"] . " - " . $array["name"])
+                );
+                $domcategory->appendChild($option_);
+            }
+            echo $domcategory->saveHTML();
+            ?>
+        </datalist>
+        <!-- end of datalists  -->
+
     </div>
 </body>
 
