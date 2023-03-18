@@ -8,9 +8,28 @@ const DefaultValuesItemNewFormObj = {
     stockable:"0",
     identifiable:"0",
     "prix-vente":"",
+	"famille":"",
+	"category":"",
     pamp:"",
     note:""
 };
+const DefaultValuesItemFilterObj ={
+	code: "",
+	actif: "1",
+    declarable:"all",
+    name:"",
+    type:"all",
+    measurement:"all",
+    stockable:"all",
+    identifiable:"all",
+	"famille":"",
+	"category":"",
+    "prix-vente-min":"0",
+    "prix-vente-max":"0",
+    "pamp-min":"0",
+    "pamp-max":"0",
+    note:""
+}
 const TYPE_ITEM=["service","bien"];
 
 const DTO_FILL_INPUT={
@@ -29,6 +48,7 @@ const DTO_FILL_INPUT={
 	"note":"note"
 }
 
+var listDOM = {};
 var modificationWatcher = false;
 const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
@@ -184,11 +204,11 @@ function generateRowTable(nodeModel, DataObj) {
 	// newNode.querySelector("input.uid").value = DataObj["uid"];
 	newNode.querySelector("input.code").value = DataObj["code"];
 	newNode.querySelector(".name.input").value=DataObj["name"];
-	newNode.querySelector(".type.input").value=TYPE_ITEM[DataObj["type"]];
-	newNode.querySelector(".category.input").value=DataObj["category"];
+	newNode.querySelector(".type.input").value=TYPE_ITEM[DataObj["type"]] || TYPE_ITEM[DataObj["type_item"]];
+	newNode.querySelector(".category.input").value=DataObj["category"]||DataObj["categorie"];
 	newNode.querySelector(".famille.input").value=DataObj["famille"];
-	newNode.querySelector(".prix-vente.input").value=DataObj["prix-vente"];
-	newNode.querySelector(".pamp.input").value=DataObj["pamp"];
+	newNode.querySelector(".prix-vente.input").value=DataObj["prix-vente"]||DataObj["prix_vente"];
+	newNode.querySelector(".pamp.input").value=DataObj["pamp"]||DataObj["prix_achat_mp"];
 	newNode.querySelector(".declarable.input").value=DataObj["declarable"];
 	return newNode;
 }
@@ -244,6 +264,18 @@ document.addEventListener("DOMContentLoaded",()=>{
     );
     const btnConfirmationNo=modalConfirmation.querySelector(		"#btn-confirmation-no"
     );
+
+	////modal filter
+	const modalFilter=document.getElementById("modal-filter");
+	const bsModalFilter = new bootstrap.Modal(modalFilter, {
+		backdrop: "static",
+		keyboard: false,
+		focus: true,
+	});
+	const btnApplyFilter=modalFilter.querySelector("#btn-apply-filter")
+	const btnCancelFilter=modalFilter.querySelector("#btn-cancel-filter")
+	const btnResetFilter=modalFilter.querySelector("#btn-reset-filter")
+	const footerModalFilter=modalFilter.querySelector(".modal-footer");
 
     //CONFIRMATION OBJ
     const confirmationObj = {
@@ -374,6 +406,178 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 
     //FUNCTIONS
+	function insertButtonRemoveFilter() {
+		let myHtml =
+			'<button id="btn-remove-filter" class="col-auto btn btn-danger me-auto">supprimer le filtre</button>';
+		let mydiv = divBtns.lastElementChild;
+		let myNode = new DOMParser().parseFromString(myHtml, "text/html");
+		mydiv.prepend(myNode.body.childNodes[0]);
+	}
+
+	async function filterFamille(inputObj, tableBodyCategorie) {
+		let url = "/database/select/select_filtered_familles.php";
+		let response = await sendData(url, inputObj);
+	
+		console.log("error?");
+		console.log(response);
+		let myjson = JSON.parse(response);
+	
+		return await fillMainTable(myjson, tableBodyCategorie);
+	
+	}
+
+	async function fillMainTable(myJson, myTableBody) {
+		console.log("filling table");
+		try {
+			// TODO : to cache
+			let response = await fetch(
+				"/elements/warehouses/items/liste_items_table_001_base.html"
+			);
+			let rowBaseText = await response.text();
+			let doc = new DOMParser().parseFromString(rowBaseText, "text/html");
+			let trModel = doc.querySelector("#row-001");
+	
+			myTableBody.innerHTML = "";
+			console.log("myJson");
+			console.log(myJson);
+			myJson.forEach((elementObj) => {
+				let newRow = generateRowTable(trModel, elementObj);
+				myTableBody.appendChild(newRow);
+			});
+		} catch (error) {
+			console.log("filling table err");
+			console.log(error);
+			return false;
+		}
+		if (myJson == { actif: "1"}) {
+			defaultFilterFlag = true;
+		} else {
+			defaultFilterFlag = false;
+		}
+		return true;
+	}
+
+	async function filterItem(inputObj, tableBodyCategorie) {
+		let url = "/database/select/select_filtered_items.php";
+		let response = await sendData(url, inputObj);
+	
+		console.log("error?");
+		console.log(response);
+		let myjson = JSON.parse(response);
+	
+		return await fillMainTable(myjson, tableBodyCategorie);
+	
+	}
+
+	function getDataFilter() {
+		let dataFilterObj = {};
+		let checkboxes = modalFilter.querySelectorAll(
+			"input[type=checkbox]:checked"
+		);
+
+		checkboxes.forEach((checkboxe) => {
+			let fieldName = checkboxe.id.split("--")[1];
+			let inputs = modalFilter.querySelectorAll("." + fieldName);
+			inputs.forEach((myinput) => {
+				dataFilterObj[myinput.id] = myinput.value;
+			});
+		});
+
+		return dataFilterObj;
+	}
+
+	function appendHTMLFilterBasic() {
+		let name = "filter_basic";
+		let modalFilterBody = modalFilter.querySelector(".modal-body ");
+
+		modalFilterBody.querySelector(".container").remove();
+
+		if (listDOM[name]) {
+			// The HTML code of this file has already been fetched.
+			// It is available as 'files[selectedOption]'.
+			let doc = new DOMParser().parseFromString(
+				listDOM[name],
+				"text/html"
+			);
+			modalFilterBody.appendChild(doc.body.childNodes[0]);
+		} else {
+			// Fetch the HTML code of this file.
+			fetch("/elements/warehouses/items/item_" + name + ".html")
+				.then((resp) => resp.text())
+				.then((txt) => {
+					let doc = new DOMParser().parseFromString(txt, "text/html");
+
+					listDOM[name] = doc.body.innerHTML;
+					// The file is now available as 'listDOM[selectedOption]'.
+					// we do this before appending because for some reason, doc becomes empty
+
+					// Save the HTML code of this file in the files array,
+					// so we won't need to fetch it again.
+
+					modalFilterBody.appendChild(doc.body.childNodes[0]);
+				});
+		}
+	}
+
+	function appendHTMLFilterAdvanced() {
+		let name = "filter_advanced";
+		let modalFilterBody = modalFilter.querySelector(".modal-body ");
+
+		modalFilterBody.querySelector(".container").remove();
+
+		if (listDOM[name]) {
+			// The HTML code of this file has already been fetched.
+			// It is available as 'files[selectedOption]'.
+			let doc = new DOMParser().parseFromString(
+				listDOM[name],
+				"text/html"
+			);
+			modalFilterBody.appendChild(doc.body.childNodes[0]);
+		} else {
+			// Fetch the HTML code of this file.
+			fetch("/elements/warehouses/items/item_" + name + ".html")
+				.then((resp) => resp.text())
+				.then((txt) => {
+					let doc = new DOMParser().parseFromString(txt, "text/html");
+
+					listDOM[name] = doc.body.innerHTML;
+					// The file is now available as 'listDOM[selectedOption]'.
+					// we do this before appending because for some reason, doc becomes empty
+
+					// Save the HTML code of this file in the files array,
+					// so we won't need to fetch it again.
+
+					modalFilterBody.appendChild(doc.body.childNodes[0]);
+				});
+		}
+	}
+
+	function resetFilter() {
+		let inputs = modalFilter.querySelectorAll(".input");
+		let checkboxes = modalFilter.querySelectorAll(
+			"input[type=checkbox]"
+		);
+		checkboxes.forEach((checkbox) => {
+			if (
+				["checkbox--actif","checkbox--declarable", "checkbox--name"].includes(
+					checkbox.id
+				)
+			) {
+				checkbox.checked = true;
+			} else {
+				checkbox.checked = false;
+			}
+		});
+		inputs.forEach((myinput) => {
+			myinput.value = DefaultValuesItemFilterObj[myinput.id];
+			if (["declarable","name", "actif"].includes(myinput.id)) {
+				myinput.disabled = false;
+			} else {
+				myinput.disabled = true;
+			}
+		});
+	}
+
 	function removeTableRow(myUid) {
 		console.log("collapsing " + myUid);
 		try {
@@ -541,6 +745,17 @@ document.addEventListener("DOMContentLoaded",()=>{
         divBtns.addEventListener('click',(event)=>{
             if (event.target.id=="btn-main-new"){
                 bsModalNew.show();
+            }else if (event.target.id=="btn-main-filter"){
+                bsModalFilter.show();
+			}else if(event.target.id=="btn-remove-filter"){
+				console.log("remove filter ");
+				event.target.remove();
+				resetFilter();
+				filterItem(
+					{ actif: "1" },
+					tableBody
+				);
+				defaultFilterFlag = true;
             }
         })
     } catch (error) {
@@ -632,4 +847,31 @@ document.addEventListener("DOMContentLoaded",()=>{
 			}
 		})
 		} catch (error) {}
+	
+	try {
+		modalFilter.addEventListener("click", (event) => {
+			if (event.target.id=="btn-apply-filter"){
+				let myobj = getDataFilter();
+			
+				console.log(myobj);
+				filterItem(myobj, tableBody);
+				bsModalFilter.hide();
+				if (!divBtns.querySelector("#btn-remove-filter")) {
+					insertButtonRemoveFilter();
+				}
+			}else if (event.target.id=="btn-cancel-filter"){
+				appendHTMLFilterBasic();
+				resetFilter();
+				bsModalFilter.hide();
+			}else if (event.target.id=="btn-reset-filter"){
+				resetFilter();
+			}else if (event.target.id=="btn-filter-advanced"){
+				appendHTMLFilterAdvanced();
+			}else if (event.target.id=="btn-filter-basic"){
+				appendHTMLFilterBasic();
+
+			}
+
+		})
+		} catch (error) {}	
 })

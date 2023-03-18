@@ -525,3 +525,7 @@ implement treatement of response...
 074:
 item > modify>save changes : nickel, works great.
 working on delete...> delete works great.
+-------------------------
+075:
+starting to work on filter...
+filter: all works great.

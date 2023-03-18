@@ -80,6 +80,43 @@ require __DIR__ . '/../../database/select/all_familles_name_nolimit.php';
                     </div>
                 </div>
             </div>
+            <!-- modal filter -->
+            <div class="modal fade" id="modal-filter" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+                <div class="modal-dialog modal-dialog-scrollable modal-lg">
+
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Filtrer</h5>
+                        </div>
+                        <div class="modal-body">
+
+                            <div id="modal-body-heads">
+                                <?php
+                                //TODO : make the header of factures in details readonly
+                                //TODO : change to require once.
+                                require_once __DIR__ . "/../../elements/warehouses/items/item_filter_basic.html";
+                                ?>
+                            </div>
+                            <!-- TODO : to elete. we gonna use only JS here -->
+                            <div id="modal-body-table">
+                                <?php
+                                //TODO : change to require once.
+                                // require __DIR__ . "/../elements/treso_affectation_affaire_details_base.html";
+                                ?>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="btn-reset-filter">paramètre par défaut</button>
+                            <button type="button" class="btn btn-secondary" id="btn-cancel-filter">annuler</button>
+                            <button type="button" class="btn btn-primary" id="btn-apply-filter">appliquer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end modal filter -->
             <!-- modal item new -->
             <div class="modal fade" id="modal-item-new" tabindex="-1">
                 <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">

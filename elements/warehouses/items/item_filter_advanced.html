@@ -56,7 +56,7 @@
 			<select
 				class=" form-control form-control-sm declarable input"
 				required
-				id="actif"
+				id="declarable"
 			>
 			<option value="all">tous</option>
 				<option value="1">oui</option>
@@ -71,6 +71,7 @@
 				class="form-check-input"
 				type="checkbox"
 				id="checkbox--name"
+				checked
 			/>
 			<span class="col-form-label col-2">nom</span>
 		</div>
@@ -80,7 +81,7 @@
 				type="text"
 				class="form-control form-control-sm input name"
 				id="name"
-				disabled
+				
 			/>
 		</div>
 	</div>
@@ -114,21 +115,21 @@
 			<input
 				class="form-check-input"
 				type="checkbox"
-				id="checkbox--family"
+				id="checkbox--famille"
 			/>
 
-			<span class="col-form-label col-2">family</span>
+			<span class="col-form-label col-2">famille</span>
 		</div>
 
 		<div class="col my-auto">
 			<input
 				type="text"
-				list="family-list"
-				class="form-control form-control-sm input family"
-				id="family"
+				list="famille-list"
+				class="form-control form-control-sm input famille"
+				id="famille"
 				disabled
 			/>
-			<datalist id="family-list">
+			<datalist id="famille-list">
 				<option value="all">tous</option>
 			</datalist>	
 		</div>
