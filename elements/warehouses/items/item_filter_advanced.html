@@ -1,0 +1,315 @@
+<div class="container">
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--code"
+			/>
+			<span class="col-form-label col-2">code</span>
+		</div>
+		<div class="col my-auto">
+			<input
+				type="text"
+				class="form-control form-control-sm input code"
+				id="code"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--actif"
+				checked
+			/>
+
+			<span class="col-form-label col-2">actif</span>
+		</div>
+		<div class="col my-auto">
+			<select
+				class=" form-control form-control-sm client-form input actif"
+				id="actif"
+				required
+			>
+			<option value="1">actif</option>
+			<option value="0">inactif</option>
+				<option value="all">tous</option>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--declarable"
+				checked
+			/>
+
+			<span class="col-form-label col-2">déclarable</span>
+		</div>
+
+		<div class="col my-auto">
+			<select
+				class=" form-control form-control-sm declarable input"
+				required
+				id="actif"
+			>
+			<option value="all">tous</option>
+				<option value="1">oui</option>
+				<option value="0">non</option>
+			</select>
+		</div>
+	</div>
+
+	<div class="row ">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--name"
+			/>
+			<span class="col-form-label col-2">nom</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="text"
+				class="form-control form-control-sm input name"
+				id="name"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row company">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--type"
+			/>
+
+			<span class="col-form-label col-2">type</span>
+		</div>
+
+		<div class="col my-auto">
+			<select
+				class="form-control form-control-sm type input "
+				required
+				id="measurement"
+				disabled
+			>
+			<option value="all">tous</option>
+			<option value="1">bien</option>
+			<option value="0">service</option>
+		</select>
+		</div>
+	</div>
+
+	<div class="row human">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--family"
+			/>
+
+			<span class="col-form-label col-2">family</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="text"
+				list="family-list"
+				class="form-control form-control-sm input family"
+				id="family"
+				disabled
+			/>
+			<datalist id="family-list">
+				<option value="all">tous</option>
+			</datalist>	
+		</div>
+	</div>
+
+	<div class="row human">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--category"
+			/>
+
+			<span class="col-form-label col-2">catégorie</span>
+		</div>
+
+		<div class="col my-auto">
+			<input
+				type="text"
+				list="category-list"
+				class="form-control form-control-sm category input "
+				id="category"
+				disabled
+			/>
+			<datalist id="category-list">
+			</datalist>	
+		</div>
+	</div>
+	<div class="row" id="ref-row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--measurement"
+			/>
+
+			<span class="col-form-label col-2">unité de mesure</span>
+		</div>
+
+		<div class="col my-auto">
+			<select
+				class="form-control form-control-sm measurement input "
+				required
+				id="measurement"
+				disabled
+			>
+				<option value="all">tous</option>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--stockable"
+			/>
+
+			<span class="col-form-label col-2">stockable</span>
+		</div>
+
+		<div class="col my-auto">
+			<select
+				class="form-control form-control-sm stockable input "
+				required
+				id="stockable"
+				disabled
+			>
+				<option value="all">tous</option>
+				<option value="1">oui</option>
+				<option value="0">non</option>
+			</select>
+		</div>
+		<!-- name according to personnaly type -->
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--identifiable"
+			/>
+
+			<span class="col-form-label col-2">identifiable</span>
+		</div>
+
+		<div class="col my-auto">
+			<select
+				class="form-control form-control-sm identifiable input "
+				required
+				id="identifiable"
+				disabled
+			>
+				<option value="all">tous</option>
+				<option value="1">oui</option>
+				<option value="0">non</option>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--prix-vente"
+			/>
+			<span class="col-form-label col-2">prix de vente</span>
+		</div>
+		<div class="col my-auto">
+			<input
+				type="number"
+				class="form-control encours form-control-sm input prix-vente"
+				id="prix-vente-min"
+				value="0"
+				disabled
+			/>
+		</div>
+		<div class="col my-auto">
+			<input
+			type="number"
+			class="form-control encours form-control-sm input prix-vente"
+			id="prix-vente-max"
+			value="0"
+			disabled
+		/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--pamp"
+			/>
+			<span class="col-form-label col-2">prix d'achat moyen pondéré</span>
+		</div>
+		<div class="col my-auto">
+			<input
+				type="number"
+				class="form-control encours form-control-sm input pamp"
+				id="pamp-min"
+				value="0"
+				disabled
+			/>
+		</div>
+		<div class="col my-auto">
+			<input
+				type="number"
+				class="form-control encours form-control-sm input pamp"
+				id="pamp-max"
+				value="0"
+				disabled
+			/>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-3 form-check form-switch my-auto">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="checkbox--note"
+			/>
+			<label for="note" class="form-label">note</label>
+		</div>
+
+		<div class="col my-auto">
+			<textarea
+				class="note form-control input client-form"
+				id="note"
+				rows="3"
+				disabled
+			></textarea>
+		</div>
+	</div>
+	<div class="row">
+		<button
+			type="button"
+			class="btn btn-outline-success btn-sm"
+			id="btn-filter-basic"
+		>
+			filtre basic
+		</button>
+	</div>
+</div>
