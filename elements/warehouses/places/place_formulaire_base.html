@@ -2,12 +2,12 @@
 	<div class="row my-auto">
 		<span class="col-form-label col-2">uid</span>
 		<div class="col-2 my-auto">
-			<input type="text" class="uid form-control form-control-sm" />
+			<input type="text" class=" form-control form-control-sm input uid" id="uid"/>
 		</div>
 
 		<span class="col-form-label col-2">actif</span>
 		<div class="col-2 my-auto">
-			<select disabled class="nd input form-control form-control-sm">
+			<select disabled class="  form-control form-control-sm actif input" id="actif">
 				<option value="1">actif</option>
 				<option value="0">inactif</option>
 			</select>
@@ -20,8 +20,9 @@
 		<div class="col-6 my-auto">
 			<input
 				type="text"
-				class="form-control form-control-sm name"
-				value="magasin super mega de la mort qui tue mec!"
+				class="form-control form-control-sm input name"
+				placeholder="magasin super mega de la mort qui tue mec!"
+				id="name"
 			/>
 		</div>
 		<div class="col-4 my-auto"></div>
@@ -30,7 +31,7 @@
 		<span class="col-form-label col-2">adresse</span>
 
 		<div class="col-10 my-auto">
-			<input type="text" class="form-control form-control-sm adressse" />
+			<input type="text" class="form-control form-control-sm input adress" id="adress"/>
 		</div>
 	</div>
 	<div class="row">
@@ -39,24 +40,17 @@
 		<div class="col-2 my-auto">
 			<input
 				type="text"
-				class="form-control form-control-sm phone"
-				value="0349772868"
+				class="form-control form-control-sm input phone"
+				id="phone"
 			/>
 		</div>
 		<div class="col-8 my-auto"></div>
-	</div>
-	<div class="row">
-		<span class="col-form-label col-2">responsable</span>
-
-		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm resp" />
-		</div>
 	</div>
 
 	<div class="row">
 		<label for="note" class="form-label">note</label>
 		<div class="col-12 my-auto">
-			<textarea class="form-control" id="note" rows="3"></textarea>
+			<textarea class="form-control input note" id="note" rows="3"></textarea>
 		</div>
 	</div>
 </div>

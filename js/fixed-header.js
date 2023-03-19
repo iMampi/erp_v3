@@ -14,12 +14,23 @@ document.addEventListener("DOMContentLoaded", () => {
 	console.log(offsetHeader);
 
 	// subheader
-	subHeader.style.top = offsetHeader + "px";
+	try {
+		subHeader.style.top = offsetHeader + "px";
+	}catch(err){
 
+	}
 	const tableContainer = document.getElementById("table-container");
 
-	const subHeaderRect = subHeader.getBoundingClientRect();
+	let subHeaderRect;
+	try {
+		subHeaderRect = subHeader.getBoundingClientRect();
+		
+	} catch (error) {
+		subHeaderRect = {"top":0,
+	"height":0};
+	}
 
+	// console.log(subHeaderRect);
 	let val = subHeaderRect.top;
 	// console.log("val is ; " + val);
 	// tableContainer.style.top = val + "px";
@@ -29,9 +40,13 @@ document.addEventListener("DOMContentLoaded", () => {
 	const zeTbody = document.getElementById("ze-tbody");
 
 	let aval = subHeaderRect.top + subHeaderRect.height;
-	tableContainer.style.top = subHeaderRect.top + "px";
-	zeThead.style.top = aval + "px";
-	let baval = aval + zeThead.getBoundingClientRect().height;
+	try {
+		tableContainer.style.top = subHeaderRect.top + "px";
+		zeThead.style.top = aval + "px";
+		let baval = aval + zeThead.getBoundingClientRect().height;
+	} catch (error) {
+		
+	}
 	// zeTbody.style.marginTop = baval + "px";
 
 	window.onresize = () => {

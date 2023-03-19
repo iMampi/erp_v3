@@ -111,6 +111,15 @@ class Bindings
                 $arr["active"],
                 $arr["note"]
             ];
+        } else if ($this->converter::class == "Converter\NewPlace") {
+            $this->binding = [
+                'sssis',
+                $arr["name"],
+                $arr["adresse"],
+                $arr["phone"],
+                $arr["active"],
+                $arr["note"]
+            ];
         } else if ($this->converter::class == "Converter\NewEmployee") {
             $this->binding = [
                 'iisssssssiisisssssssissssidiiiiiissii',

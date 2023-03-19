@@ -536,3 +536,7 @@ now there is a common data list for all fields that needs one (famille-list, cat
 when opening filter, an option "all" is added to all datalist.
 when Modalfilter disappears, the option all is removed.
 SO i changed the structure of all the input that used datalist. i removed them.
+-------------------------
+077:
+(thnik about goin back to employee sometime)
+starting to work on places...working on save. the backend part is ok. now the front end to handle response...

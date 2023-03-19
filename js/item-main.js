@@ -757,6 +757,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 			input.value = DefaultValuesItemNewFormObj[input.id];
 		});
 	}
+	
     //EVENTHANDLER
 	try {
 		modalFilter.addEventListener('hidden.bs.modal',()=>{

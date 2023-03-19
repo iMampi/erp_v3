@@ -223,6 +223,9 @@ class Queries
     static public $save_new_categorie = "
     select new_categorie(?,?)
     ";
+    static public $save_new_place = "
+    select new_magasin(?,?,?,?,?)
+    ";
     static public $save_new_item = "
         select new_item(?,
         ?,
@@ -306,6 +309,9 @@ class Queries
                 break;
             case 'save_new_item':
                 $this->query = self::$save_new_item;
+                break;
+            case 'save_new_place':
+                $this->query = self::$save_new_place;
                 break;
             case 'select_all_clients':
                 $this->query = self::$select_all_clients;

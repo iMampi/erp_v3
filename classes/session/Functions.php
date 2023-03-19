@@ -2,6 +2,10 @@
 
 namespace Session;
 
+use Authorizations\UserAuthorizations;
+
+require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
+
 function is_logged()
 {
     // FIXME : double usage. get rid of "logged" and just use "user"-> active

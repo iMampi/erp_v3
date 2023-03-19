@@ -47,7 +47,6 @@ require __DIR__ . '/../../database/select/all_familles_name_nolimit.php';
             $header = generate_logged_header($_SESSION['user']->name, "link-items");
             echo $header;
             ?>
-            "link-items"
             <div id="sub-header" class="container-fluid sticky-top py-2 bordered bg-light-blue
             ">
                 <div class="px-5">
