@@ -5,10 +5,9 @@
 			<td class="">nom</td>
 			<td>adresse</td>
 			<td>phone</td>
-			<td>responsable</td>
-			<td>actif</td>
-			<td>détails</td>
-			<td class="pe-5 td-uid text-end"><div class="pe-4">del</div></td>
+			<!-- <td>responsable</td> -->
+			<!-- <td>actif</td> -->
+			<td class="pe-5 td-uid text-end"><div class="pe-4">détails</div></td>
 		</tr>
 	</thead>
 	<tbody id="ze-tbody" class="bg-light position-relative">
@@ -33,7 +32,7 @@
 				<input
 					type="text"
 					disabled
-					class="adresse input form-control form-control-sm"
+					class="adress input form-control form-control-sm"
 				/>
 			</td>
 			<td>
@@ -43,14 +42,14 @@
 					class="phone input form-control form-control-sm"
 				/>
 			</td>
-			<td>
+			<!-- <td>
 				<input
 					type="text"
 					disabled
 					class="resp input form-control form-control-sm"
 				/>
-			</td>
-			<td>
+			</td> -->
+			<!-- <td>
 				<select
 					class="actif form-control form-control-sm text-capitalize"
 					disabled
@@ -58,24 +57,18 @@
 					<option value="1">actif</option>
 					<option value="0">inactif</option>
 				</select>
-			</td>
-			<td class="">
+			</td> -->
+			<td class="text-end pe-5">
+				<div class="pe-4">
 				<button
 					type="button"
 					class="btn btn-primary btn-sm btn-details"
-					data-bs-toggle="modal"
-					data-bs-target="#modal-place-detail"
 				>
 					see
 				</button>
-			</td>
-			<td class="text-end pe-5">
-				<div class="pe-4">
-					<button class="btn btn-danger btn-sm btn-details">
-						DEL
-					</button>
 				</div>
 			</td>
+
 		</tr>
 	</tbody>
 </table>

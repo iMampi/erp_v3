@@ -7,7 +7,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 
 session_start();
 
-$cycle_places = "item";
+$cycle_places = "magasin";
 is_logged();
 
 ?>

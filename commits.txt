@@ -540,3 +540,7 @@ SO i changed the structure of all the input that used datalist. i removed them.
 077:
 (thnik about goin back to employee sometime)
 starting to work on places...working on save. the backend part is ok. now the front end to handle response...
+-------------------------
+078:
+starting to work on places. front end after saving is ok.
+working on places/generate_table_001.php...works great. remember, now we limit filling to 20

@@ -20,6 +20,21 @@ var modificationWatcher = false;
 const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
 
+
+function generateRowTable(nodeModel, DataObj) {
+	console.log(DataObj);
+	let newNode = nodeModel.cloneNode(true);
+	// Naming <tr>
+	newNode.id = "row-"+zeroLeftPadding(DataObj["uid"], 3, false);
+		// newNode.querySelector("input.uid").value = DataObj["uid"];
+	// TODO : use a dto or something
+	newNode.querySelector("input.uid").value = DataObj["uid"];
+	newNode.querySelector(".name.input").value=DataObj["name"];
+	newNode.querySelector(".adress.input").value=DataObj["adress"];
+	newNode.querySelector(".phone.input").value=DataObj["phone"];
+	return newNode;
+}
+
 async function responseHandlerSavePlaceNew(response) {
 	try {
 		let myjson = JSON.parse(await response);
@@ -138,7 +153,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 					// console.log(dataObj);
 					// TODO : cache html
 					fetch(
-						"/elements/warehouses/items/liste_items_table_001_base.html"
+						"/elements/warehouses/places/liste_places_table_001_base.html"
 					)
 						.then((response) => {
 							let tt = response.text();

@@ -202,6 +202,7 @@ function generateRowTable(nodeModel, DataObj) {
 	let newNode = nodeModel.cloneNode(true);
 	newNode.id = "row-"+DataObj["code"];
 	// newNode.querySelector("input.uid").value = DataObj["uid"];
+	// TODO : use a dto or something
 	newNode.querySelector("input.code").value = DataObj["code"];
 	newNode.querySelector(".name.input").value=DataObj["name"];
 	newNode.querySelector(".type.input").value=TYPE_ITEM[DataObj["type"]] || TYPE_ITEM[DataObj["type_item"]];

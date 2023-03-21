@@ -134,3 +134,5 @@ gestion des erreur suite à une rponse sql.
 'column' must be unisue, duplicate, not valid;,, et.. ce genre de truc
 
 PHP qui render les page et qui ne support pas les é
+
+when filling table on first visit of a page, we need pagination

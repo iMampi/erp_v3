@@ -87,20 +87,20 @@ class Queries
         ";
     static public $update_item =
     "update items set
-    name=?,
-    type_item=?,
-    active=?,
-    family_uid=(select uid from familles where name=?),
-    category_uid=(select uid from categories where name=?),
-    unite_mesure_uid=?,
-    stockable=?,
-    identifiable=?,
-    declarable=?,
-    prix_vente=?,
-    prix_achat_mp=?,
-    note=?
-    where code=?
-    ";
+        name=?,
+        type_item=?,
+        active=?,
+        family_uid=(select uid from familles where name=?),
+        category_uid=(select uid from categories where name=?),
+        unite_mesure_uid=?,
+        stockable=?,
+        identifiable=?,
+        declarable=?,
+        prix_vente=?,
+        prix_achat_mp=?,
+        note=?
+        where code=?
+        ";
 
     static public $delete_client = "
         update clients set active_client='0' where uid=? 
@@ -161,6 +161,9 @@ class Queries
         ";
     static public $select_all_items_name_limit = "
         select * from items where active=1 limit 20
+        ";
+    static public $select_all_places_name_limit = "
+        select uid,name,adresse,phone from magasins limit 20
         ";
     static public $save_new_client = "
         SELECT new_client(
@@ -336,6 +339,9 @@ class Queries
                 break;
             case 'select_all_items_name_limit':
                 $this->query = self::$select_all_items_name_limit;
+                break;
+            case 'select_all_places_name_limit':
+                $this->query = self::$select_all_places_name_limit;
                 break;
             case 'select_one_client':
                 $this->query = self::$select_one_client;
