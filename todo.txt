@@ -136,3 +136,5 @@ gestion des erreur suite à une rponse sql.
 PHP qui render les page et qui ne support pas les é
 
 when filling table on first visit of a page, we need pagination
+
+when user is unauthorized to update, just do not generate it. make it so it doesnt show

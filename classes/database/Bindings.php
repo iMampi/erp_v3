@@ -235,6 +235,16 @@ class Bindings
                 $arr["active"],
                 $arr["uid"]
             ];
+        } elseif ($this->converter::class == "Converter\UpdatePlace") {
+            $this->binding = [
+                'ssssii',
+                $arr["name"],
+                $arr["adresse"],
+                $arr["phone"],
+                $arr["note"],
+                $arr["active"],
+                $arr["uid"]
+            ];
         } elseif ($this->converter::class == "Converter\UpdateItem") {
             $this->binding = [
                 'siissiiiiddss',
@@ -273,6 +283,11 @@ class Bindings
                 $this->converter->data_for_db["uid"]
             ];
         } elseif ($this->converter::class == "Converter\SelectOneFamille") {
+            $this->binding = [
+                'i',
+                $this->converter->data_for_db["uid"]
+            ];
+        } elseif ($this->converter::class == "Converter\SelectOnePlace") {
             $this->binding = [
                 'i',
                 $this->converter->data_for_db["uid"]

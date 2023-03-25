@@ -20,7 +20,7 @@ $tr_model = $dom->getElementById("row-001");
 $tbody_->removeChild($tr_model);
 $xpath = new DOMXPath($dom);
 
-$row_counter = 1;
+// $row_counter = 1;
 
 // var_dump($all_places_name_limit);
 if (can_visit($cycle_places)) {
@@ -28,13 +28,18 @@ if (can_visit($cycle_places)) {
     foreach ($all_places_name_limit as $el) {
         $tr_ = $tr_model->cloneNode(true);
 
-        $id_ = sprintf('%03d', $row_counter);
-        $tr_->setAttribute("id", $id_);
+        // $id_ = "row-" . sprintf('%03d', $row_counter);
+        // $tr_->setAttribute("id", $id_);
         $tbody_->appendChild($tr_);
 
 
         $nodes = $xpath->query(".//*[contains(@class,'input')]", $tr_);
         foreach ($nodes as $el_input) {
+
+            $id_ = "row-" . sprintf('%03d', $el["uid"]);
+            $tr_->setAttribute("id", $id_);
+
+
             $classes = $el_input->getAttribute('class');
             $classes_array = explode(" ", $classes);
 

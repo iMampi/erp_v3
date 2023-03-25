@@ -163,7 +163,7 @@ is_logged();
                                 //TODO : make the header of factures in details readonly. 
                                 //TODO : change to require once. 
 
-                                // require __DIR__ . '/../../modals_processors/item_formulaire_body_read_only.php'
+                                require __DIR__ . '/../../modals_processors/place_formulaire_body_read_only.php'
                                 ?>
                             </div>
                             <!-- TODO : to elete. we gonna use only JS here -->

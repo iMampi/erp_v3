@@ -85,6 +85,15 @@ class Queries
         active=?
         where uid=?
         ";
+    static public $update_place = "
+        update magasins set 
+        name=?,
+        adresse=?,
+        phone=?,
+        note=?,
+        active=?
+        where uid=?
+        ";
     static public $update_item =
     "update items set
         name=?,
@@ -134,6 +143,9 @@ class Queries
         ";
     static public $select_one_famille = "
         select * from familles where  uid=? 
+        ";
+    static public $select_one_place = "
+        select * from magasins where  uid=? 
         ";
     static public $select_one_item = "
         select * from view_all_items where code=? 
@@ -224,11 +236,11 @@ class Queries
         )";
 
     static public $save_new_categorie = "
-    select new_categorie(?,?)
-    ";
+        select new_categorie(?,?)
+        ";
     static public $save_new_place = "
-    select new_magasin(?,?,?,?,?)
-    ";
+        select new_magasin(?,?,?,?,?)
+        ";
     static public $save_new_item = "
         select new_item(?,
         ?,
@@ -355,6 +367,9 @@ class Queries
             case 'select_one_famille':
                 $this->query = self::$select_one_famille;
                 break;
+            case 'select_one_place':
+                $this->query = self::$select_one_place;
+                break;
             case 'select_one_item':
                 $this->query = self::$select_one_item;
                 break;
@@ -393,6 +408,9 @@ class Queries
                 break;
             case 'update_item':
                 $this->query = self::$update_item;
+                break;
+            case 'update_place':
+                $this->query = self::$update_place;
                 break;
             case 'filter_clients':
                 $this->query = self::$filter_client;

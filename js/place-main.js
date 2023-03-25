@@ -21,6 +21,105 @@ const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
 
 
+
+function fillInputsDetails(valueObj) {
+	console.log("valueObj : ");
+	console.log(valueObj);
+	// let inputsElements = md.querySelectorAll(".input");
+	let modalDetails_ = document.getElementById(
+		"modal-main-details"
+	);
+	let inputsElements =
+    modalDetails_.getElementsByClassName("input");
+
+	// console.log("inputsElement :");
+	// console.log(inputsElements);
+	// let inputsElements = document.querySelectorAll(
+	// "#modal-clt-details .input"
+	// );
+	//TODO : use a DTO
+	for (let index = 0; index < inputsElements.length; index++) {
+		let element = inputsElements[index];
+		// }
+		// inputsElements.forEach((element) => {
+		if (element.id == "actif") {
+			element.value = valueObj["active"];
+		} else if (element.id == "uid") {
+			element.value = valueObj["uid"];
+		} else if (element.id == "name") {
+			element.value = valueObj["name"];
+		} else if (element.id == "adress") {
+			element.value = valueObj["adresse"];
+		} else if (element.id == "phone") {
+			element.value = valueObj["phone"];
+		} else if (element.id == "note") {
+			element.value = valueObj["note"];
+		} 
+	}
+}
+
+async function responseHandlerSelectOnePlace(response) {
+	try {
+		console.log("response++");
+		console.log(response);
+		let myjson = JSON.parse(await response);
+		//NOTE : the correct way for save. not correct for select query
+		//NOTE : works for error also
+		// TODO : handle for when it is an error
+        // TODO : all seems to use the same logic. DRY in all others occurence
+		console.log("myjson select");
+		console.log(myjson);
+		if (myjson[0]) {
+			return ["success", myjson[1]];
+		} else {
+			return ["failure", Object.values(myjson[1])[0]];
+		}
+	} catch (e) {
+		// TODO : comment me
+		return "error js: " + e;
+	}
+}
+
+function updateRow(mytable, dataObj) {
+	let row = mytable.querySelector(
+		"#row-" + zeroLeftPadding(parseInt(dataObj["uid"]), 3, false)
+	);
+	console.log("dataObj update frnsr row");
+	console.log(dataObj);
+	console.log(mytable);
+	let inputsRow = row.querySelectorAll(".input");
+	// TODO write it better
+	inputsRow.forEach((input) => {
+		// console.log(input.classList);
+		if (input.classList.contains("name", "input")) {
+			input.value=dataObj["name"]
+		}else if(input.classList.contains("adress", "input")){
+			input.value=dataObj["adress"]
+
+		}else if(input.classList.contains("phone", "input")){
+			input.value=dataObj["phone"]
+
+		}
+	});
+}
+
+function makePlaceDetailsInputsEditable(inputElements) {
+	// console.log("inputElements");
+	// console.log(inputElements.values());
+	// console.log(inputElements.item());
+	let typeVenteFlag = false;
+	inputElements.forEach((input) => {
+
+		if (input.id!="uid") {
+
+			input.disabled = false;
+		}else{
+            input.disabled = true;
+
+        }
+	});
+}
+
 function generateRowTable(nodeModel, DataObj) {
 	console.log(DataObj);
 	let newNode = nodeModel.cloneNode(true);
@@ -100,17 +199,30 @@ document.addEventListener("DOMContentLoaded",()=>{
 		focus: true,
 	});
 
-        ////modal confirmation
-        const modalConfirmation=document.getElementById("modal-confirmation");
-        const bsModalConfirmation = new bootstrap.Modal(modalConfirmation, {
-            backdrop: "static",
-            keyboard: false,
-            focus: true,
-        });
-        const btnConfirmationYes=modalConfirmation.querySelector(		"#btn-confirmation-yes"
-        );
-        const btnConfirmationNo=modalConfirmation.querySelector(		"#btn-confirmation-no"
-        );
+    ////modal details
+    const modalPlaceDetails=document.getElementById("modal-main-details");
+    const bsModalPlaceDetails = new bootstrap.Modal(modalPlaceDetails, {
+		backdrop: "static",
+		keyboard: false,
+		focus: true,
+	});
+    const btnSavePlaceDetails=modalPlaceDetails.querySelector("#btn-save");
+    const btnCancelPlaceDetails=modalPlaceDetails.querySelector("#btn-cancel");
+    const btnModifyPlaceDetails=modalPlaceDetails.querySelector("#btn-modify");
+
+	////modal confirmation
+	const modalConfirmation=document.getElementById("modal-confirmation");
+	const bsModalConfirmation = new bootstrap.Modal(modalConfirmation, {
+		backdrop: "static",
+		keyboard: false,
+		focus: true,
+	});
+	const btnConfirmationYes=modalConfirmation.querySelector(		"#btn-confirmation-yes"
+	);
+	const btnConfirmationNo=modalConfirmation.querySelector(		"#btn-confirmation-no"
+	);
+
+
 
     //CONFIRMATION OBJ
     const confirmationObj = {
@@ -190,7 +302,140 @@ document.addEventListener("DOMContentLoaded",()=>{
 		},
 	};
 
+	const cancelDetailsObj = {
+		message:
+			"Des champs ont été modifiés.<br>\
+			Vos modifications vont être perdus.<br>\
+			Êtes vous sûr de vouloir quitter ce formulaire?",
+		yes: () => {
+			console.log("cancelDetailsObj");
+			bsModalConfirmation.hide();
+			cancelPlaceDetailsForm();
+            return false;
+			
+		},
+		no: () => {
+			bsModalConfirmation.hide();
+            return true;
+		},
+	};
+
+	const saveDetailsObj = {
+		message:
+			"Des champs ont été modifiés.<br>\
+				Vos modifications vont être enregistrées.<br>\
+				Êtes vous sûr de vouloir sauvegarder vos modification?",
+		yes: () => {
+			console.log("called yes");
+			bsModalConfirmation.hide();
+
+			let inputsValuesObj = getFormInputsValues(modalPlaceDetails);
+			saveUpdatedPlace(inputsValuesObj);
+			return false;
+		},
+		no: () => {
+			bsModalConfirmation.hide();
+            return true;
+		},
+	};
+
     //FUNCTIONS
+	async function showDetails(event) {
+		// TODO : refactor
+		console.log("called here");
+		let parent = event.target.parentNode.parentNode.parentNode;
+		let myuid = parent.querySelector(".input.uid").value;
+		// console.log("myuid tr");
+		// console.log(myuid);
+		sendData("/database/select/one_place_details.php", {
+			uid: myuid,
+		})
+			.then((resp) => {
+				console.log("shwodetail :");
+				console.log(resp);
+				return responseHandlerSelectOnePlace(resp);
+			})
+			.then((result) => {
+				// console.log("result : " + JSON.stringify(result[1]));
+				// TODO : implement this part in new-client into a function cleanClass(). and optimize : if same personnality called, no nedd to recall.
+                console.log("result++");
+                console.log(result);
+				if (result[0]) {
+
+						console.log("result[1]");
+						console.log(result[1]);
+						fillInputsDetails(result[1]);
+				}
+			});
+	}
+
+	async function saveUpdatedPlace(inputsValuesObj) {
+		console.log("succ1");
+
+		console.log("saving update called");
+		console.log(inputsValuesObj);
+		let myurl = "/database/save/update_place.php";
+		let response = await sendData(myurl, inputsValuesObj);
+		console.log(response);
+		// TODO : we dont use await response.json because it is already handled in senData () as respones.text(). so we have to call JSON method manually;
+		let myjson = await JSON.parse(response);
+		console.log("myjson");
+		console.log(myjson);
+		console.log("Array.isArray(myjson)");
+		console.log(Array.isArray(myjson));
+		if (Array.isArray(myjson)) {
+			// note : structure particuliere retourné par la funciton sql
+			if (myjson[0] && myjson[1]["nb_affected_row"] == 1) {
+				console.log("succc");
+				console.log(JSON.stringify(myjson));
+				ToastShowClosured("success", "Categorie mis à jour avec succès.");
+				let inputsForEdition =
+					modalPlaceDetails.querySelectorAll(".input");
+				disableInputs(inputsForEdition);
+				updateRow(tableBody, inputsValuesObj);
+				btnSavePlaceDetails.disabled = true;
+				btnModifyPlaceDetails.disabled = false;
+				return false;
+			} else {
+				console.log("faileeddd");
+				console.log(JSON.stringify(myjson));
+				ToastShowClosured("failure", "Echec de la mise à jour.");
+				return true;
+			}
+		} else {
+			console.log("faileeddd2");
+
+			ToastShowClosured(
+				"failure",
+				"Echec de la mise à jour, contactez l'administrateur système."
+			);
+			return true;
+		}
+	}
+
+	function disableInputs(inputNodeList) {
+        inputNodeList.forEach((element) => {
+            disableInput(element);
+        });
+    }
+
+    function disableInput(input) {
+        input.setAttribute("disabled", "true");
+    }
+
+	function cancelPlaceDetailsForm(){
+		// TODO : DRY
+		let inputsForEdition =
+		modalPlaceDetails.querySelectorAll(".input");
+		disableInputs(inputsForEdition);
+
+		bsModalPlaceDetails.hide();
+		btnSavePlaceDetails.disabled = true;
+		btnModifyPlaceDetails.disabled = false;
+		modificationWatcher=false;
+
+	}
+
     function cleanNewForm() {
 		//check if authorized to create, should i bother to clean if form is empty?
 		fetchSessionAuthorizationValue(
@@ -265,7 +510,8 @@ document.addEventListener("DOMContentLoaded",()=>{
                 } else {
                     bsModalNew.hide();
                 } 
-            }        })
+            }        
+		})
     } catch (error) {
         
     }
@@ -277,5 +523,65 @@ document.addEventListener("DOMContentLoaded",()=>{
     } catch (error) {
         
     }
+
+	try {
+        tableBody.addEventListener('click',(event)=>{
+			if (event.target.classList.contains("btn-details")){
+				console.log("see");
+				showDetails(event);
+				bsModalPlaceDetails.show();
+			}
+        })
+    } catch (error) {
+        
+    }
+	
+	try {
+		modalPlaceDetails.addEventListener('input',(event)=>{
+			modificationWatcher=true;
+		})
+	} catch (error) {
+		
+	}
+
+	try {
+		modalPlaceDetails.addEventListener("click",(event)=>{
+			if (event.target.id=="btn-cancel"){
+				console.log("cancelling details");
+                if (modificationWatcher) {
+                    openModalConfirmation(
+                        confirmationObj,
+                        cancelDetailsObj
+                    );
+                } else {
+                    cancelPlaceDetailsForm();
+                }
+			}else if(event.target.id=="btn-modify"){
+                let inputsForEdition =
+                modalPlaceDetails.querySelectorAll(".input");
+                makePlaceDetailsInputsEditable(inputsForEdition);
+                btnSavePlaceDetails.disabled = false;	
+                btnModifyPlaceDetails.disabled = true;	
+
+			}else if(event.target.id=="btn-save"){
+				console.log("btn details save clicked");
+                if (modificationWatcher) {
+                    openModalConfirmation(
+                        confirmationObj,
+                        saveDetailsObj
+                    );
+                    // modificationWatcher = result;
+                } else {
+					console.log("succ2");
+                    ToastShowClosured("success", "Client mis à jour avec succès.");
+                    let inputsForEdition =
+                        modalPlaceDetails.querySelectorAll(".input");
+                    disableInputs(inputsForEdition);
+                }
+			}
+		})
+	} catch (error) {
+		
+	}
 
 })

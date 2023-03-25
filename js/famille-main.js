@@ -44,7 +44,7 @@ function makeCategorieDetailsInputsEditable(inputElements) {
 	// console.log(inputElements.values());
 	// console.log(inputElements.item());
 	let typeVenteFlag = false;
-	inputE                                                                                                                                                                                                                                                                  lements.forEach((input) => {
+	inputElements.forEach((input) => {
 		if (input.id!="uid") {
 
 			input.disabled = false;
@@ -155,6 +155,12 @@ function fillInputsDetails(valueObj) {
 			element.value = valueObj["uid"];
 		} else if (element.id == "name") {
 			element.value = valueObj["name"];
+		} else if (element.id == "adress") {
+			element.value = valueObj["adresse"];
+		} else if (element.id == "phone") {
+			element.value = valueObj["phone"];
+		} else if (element.id == "note") {
+			element.value = valueObj["note"];
 		} 
 	}
 }
