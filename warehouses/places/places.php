@@ -90,7 +90,7 @@ is_logged();
                                 //TODO : make the header of factures in details readonly
                                 //TODO : change to require once.
                                 // require_once __DIR__ . "/../../modals_processors/item_filter_body_basic.php";
-                                require_once __DIR__ . "/../../elements/warehouses/items/item_filter_basic.html";
+                                require_once __DIR__ . "/../../elements/warehouses/places/place_filter_basic.html";
                                 ?>
                             </div>
                             <!-- TODO : to elete. we gonna use only JS here -->

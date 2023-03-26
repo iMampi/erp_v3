@@ -7,7 +7,7 @@ use Exception;
 
 class UserAuthorizations
 {
-    public int $length = 73;
+    public int $length = 76;
     public int $active;
     public Authorization $client;
     public Authorization $fournisseur;
@@ -27,6 +27,7 @@ class UserAuthorizations
     public Authorization $nd_client;
     public Authorization $mvt_interne;
     public Authorization $magasin;
+    public Authorization $commande;
 
     function __construct(array $auth_data)
     {
@@ -146,6 +147,12 @@ class UserAuthorizations
             $data[70],
             $data[71],
             $data[72]
+        );
+        $this->commande = new Authorization(
+            $data[73],
+            $data[74],
+            $data[75],
+            $data[76]
         );
     }
 }

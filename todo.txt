@@ -138,3 +138,10 @@ PHP qui render les page et qui ne support pas les é
 when filling table on first visit of a page, we need pagination
 
 when user is unauthorized to update, just do not generate it. make it so it doesnt show
+
+when filtering. now we return all the selection, non limit. we must put limit. and a way to handle pagination and fetch next batch of data.
+
+HEY!! filter query are not prepared statmemnt. they have no binding. change that  for security reason.
+
+when deleting an entry, we set it to active=0. and it is updated int the table list. but if we do it manually (changeing the select to "inactif"), the table isnot updated. fix that.
+>>>hold in the key data a js var ["name_of_query",{"object of criteria"},"pagination number"]

@@ -214,10 +214,10 @@ document.addEventListener("DOMContentLoaded",()=>{
 		keyboard: false,
 		focus: true,
 	});
-	const btnApplyFilter=modalFilter.querySelector("#btn-apply-filter")
-	const btnCancelFilter=modalFilter.querySelector("#btn-cancel-filter")
-	const btnResetFilter=modalFilter.querySelector("#btn-reset-filter")
-	const footerModalFilter=modalFilter.querySelector(".modal-footer");
+	// const btnApplyFilter=modalFilter.querySelector("#btn-apply-filter")
+	// const btnCancelFilter=modalFilter.querySelector("#btn-cancel-filter")
+	// const btnResetFilter=modalFilter.querySelector("#btn-reset-filter")
+	// const footerModalFilter=modalFilter.querySelector(".modal-footer");
 
     //CONFIRMATION OBJ
     

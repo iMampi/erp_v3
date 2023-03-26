@@ -129,7 +129,7 @@ function generateRowTable(nodeModel, DataObj) {
 	// TODO : use a dto or something
 	newNode.querySelector("input.uid").value = DataObj["uid"];
 	newNode.querySelector(".name.input").value=DataObj["name"];
-	newNode.querySelector(".adress.input").value=DataObj["adress"];
+	newNode.querySelector(".adress.input").value=DataObj["adress"]||DataObj["adresse"];
 	newNode.querySelector(".phone.input").value=DataObj["phone"];
 	return newNode;
 }
@@ -221,6 +221,18 @@ document.addEventListener("DOMContentLoaded",()=>{
 	);
 	const btnConfirmationNo=modalConfirmation.querySelector(		"#btn-confirmation-no"
 	);
+
+	////modal filter
+	const modalFilter=document.getElementById("modal-filter");
+	const bsModalFilter = new bootstrap.Modal(modalFilter, {
+		backdrop: "static",
+		keyboard: false,
+		focus: true,
+	});
+	// const btnApplyFilter=modalFilter.querySelector("#btn-apply-filter")
+	// const btnCancelFilter=modalFilter.querySelector("#btn-cancel-filter")
+	// const btnResetFilter=modalFilter.querySelector("#btn-reset-filter")
+	// const footerModalFilter=modalFilter.querySelector(".modal-footer");
 
 
 
@@ -340,6 +352,115 @@ document.addEventListener("DOMContentLoaded",()=>{
 	};
 
     //FUNCTIONS
+	function insertButtonRemoveFilter() {
+		let myHtml =
+			'<button id="btn-remove-filter" class="col-auto btn btn-danger me-auto">supprimer le filtre</button>';
+		let mydiv = divBtns.lastElementChild;
+		let myNode = new DOMParser().parseFromString(myHtml, "text/html");
+		mydiv.prepend(myNode.body.childNodes[0]);
+	}
+
+	async function fillMainTable(myJson, myTableBody) {
+		console.log("filling table");
+		try {
+			// TODO : to cache
+			let response = await fetch(
+				"/elements/warehouses/places/liste_places_table_001_base.html"
+			);
+			let rowBaseText = await response.text();
+			let doc = new DOMParser().parseFromString(rowBaseText, "text/html");
+			let trModel = doc.querySelector("#row-001");
+	
+			myTableBody.innerHTML = "";
+			console.log("myJson");
+			console.log(myJson);
+			myJson.forEach((elementObj) => {
+				let newRow = generateRowTable(trModel, elementObj);
+				myTableBody.appendChild(newRow);
+			});
+		} catch (error) {
+			console.log("filling table err");
+			console.log(error);
+			return false;
+		}
+		if (myJson == { actif: "1"}) {
+			defaultFilterFlag = true;
+		} else {
+			defaultFilterFlag = false;
+		}
+		return true;
+	}
+
+	async function filterPlace(inputObj, tableBodyCategorie) {
+		let url = "/database/select/select_filtered_places.php";
+		let response = await sendData(url, inputObj);
+	
+		console.log("error?");
+		console.log(response);
+		let myjson = JSON.parse(response);
+	
+		return await fillMainTable(myjson, tableBodyCategorie);
+	
+	}
+
+	function getDataFilter() {
+		let dataFilterObj = {};
+		let checkboxes = modalFilter.querySelectorAll(
+			"input[type=checkbox]:checked"
+		);
+
+		checkboxes.forEach((checkboxe) => {
+			let fieldName = checkboxe.id.split("--")[1];
+			let inputs = modalFilter.querySelectorAll("." + fieldName);
+			inputs.forEach((myinput) => {
+				dataFilterObj[myinput.id] = myinput.value;
+			});
+		});
+
+		return dataFilterObj;
+	}
+
+	function resetFilter() {
+		console.log("reseting");
+		let inputs = modalFilter.querySelectorAll(".input");
+		let checkboxes = modalFilter.querySelectorAll(
+			"input[type=checkbox]"
+		);
+		checkboxes.forEach((checkbox) => {
+			if (
+				[ "checkbox--actif"].includes(
+					checkbox.id
+				)
+			) {
+				checkbox.checked = true;
+			} else {
+				checkbox.checked = false;
+			}
+		});
+		inputs.forEach((myinput) => {
+			myinput.value = DefaultValuesPlaceFilterObj[myinput.id];
+			if ([ "actif"].includes(myinput.id)) {
+				myinput.disabled = false;
+			} else {
+				myinput.disabled = true;
+			}
+		});
+	}
+
+
+	function changeStateFieldFilter(target) {
+		let checked = target.checked;
+		let fieldName = target.id.split("--")[1];
+		let inputs = modalFilter.querySelectorAll("." + fieldName);
+		inputs.forEach((myinput) => {
+			if (checked) {
+				myinput.disabled = false;
+			} else {
+				myinput.disabled = true;
+			}
+		});
+	}
+
 	async function showDetails(event) {
 		// TODO : refactor
 		console.log("called here");
@@ -467,13 +588,7 @@ document.addEventListener("DOMContentLoaded",()=>{
             if (event.target.id=="btn-main-new"){
                 bsModalNew.show();
             }else if (event.target.id=="btn-main-filter"){
-                // bsModalFilter.show();
-				// //since we use a common datalist for new and filter, we add "all" when needed.
-				// let innerHTMLAll_="<option id='all'>all - Tous</option>";
-				// let datalists=document.querySelectorAll('datalist');
-				// datalists.forEach(element => {
-				// 	element.innerHTML+=innerHTMLAll_
-				// });
+                bsModalFilter.show();
 			}else if(event.target.id=="btn-remove-filter"){
 				// console.log("remove filter ");
 				// event.target.remove();
@@ -583,5 +698,34 @@ document.addEventListener("DOMContentLoaded",()=>{
 	} catch (error) {
 		
 	}
+
+	try {
+		modalFilter.addEventListener("input", (event) => {
+			let target = event.target;
+			if (target.type == "checkbox") {
+				changeStateFieldFilter(target);
+			}
+		});
+	} catch (error) {}
+
+	try {
+		modalFilter.addEventListener("click", (event) => {
+			if (event.target.id=="btn-apply-filter"){
+				let myobj = getDataFilter();
+				console.log(myobj);
+				filterPlace(myobj, tableBody);
+				bsModalFilter.hide();
+				if (!divBtns.querySelector("#btn-remove-filter")) {
+					insertButtonRemoveFilter();
+				}
+			}else if (event.target.id=="btn-cancel-filter"){
+				resetFilter();
+				bsModalFilter.hide();
+			}else if (event.target.id=="btn-reset-filter"){
+				resetFilter();
+			}
+
+		})
+	} catch (error) {}
 
 })

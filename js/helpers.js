@@ -33,35 +33,40 @@ function equalArray(array1, array2) {
 }
 
 function formatNumber(value) {
-	try {
-		let sVal = parseFloat(value).toFixed(2);
-		let temp = sVal.split(".");
-		let len = temp[0].length;
-		let reminder = len % 3;
-		let ab = len; //3;
+	if (value){
+		try {
+			let sVal = parseFloat(value).toFixed(2);
+			let temp = sVal.split(".");
+			let len = temp[0].length;
+			let reminder = len % 3;
+			let ab = len; //3;
 
-		let reste = temp[0].substring(reminder);
-		let debut = temp[0].substring(0, reminder);
-		let temmp = [];
-		temmp.push(debut);
-		for (let i = 0; i < reste.length; i += 3) {
-			temmp.push(reste.substring(0 + i, 3 + i));
+			let reste = temp[0].substring(reminder);
+			let debut = temp[0].substring(0, reminder);
+			let temmp = [];
+			temmp.push(debut);
+			for (let i = 0; i < reste.length; i += 3) {
+				temmp.push(reste.substring(0 + i, 3 + i)||0);
+			}
+			// console.log(temmp);
+			return temmp.join(" ") + "," + temp[1];
+		} catch (err) {
+			console.log(err);
 		}
-		// console.log(temmp);
-		return temmp.join(" ") + "," + temp[1];
-	} catch (err) {
-		console.log(err);
-	}
+}return "0,00"
 }
 
 function formatedNumberToFloat(val) {
 	// NOTE : there is option to use replaceAll, but too recent
-	if (val) {
+	if ((val) && (typeof val =="string")) {
 		let x = val.split(" ").join("");
 		let y = x.replace(",", ".");
 		return parseFloat(y);
+	} else if((val) && (typeof val =="number")){
+		return parseFloat(val);
 	} else {
-		throw new Error("args is not a string");
+		// throw new Error("args is not a string");
+		return 0.00
 	}
 }
 

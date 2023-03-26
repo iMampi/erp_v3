@@ -25,6 +25,6 @@ class NewPlace extends Converter
 
         $this->data_for_db["note"] = \array_key_exists("name", $input) ? \trim($input["note"]) != "" ?  \trim($input["note"]) : \null : \null;
 
-        $this->data_for_db["active"] = \array_key_exists("active", $input) ? \intval($input["actif"]) != 0 ?  \intval($input["actif"]) : 0 : 0;
+        $this->data_for_db["active"] = \array_key_exists("actif", $input) ? \intval($input["actif"]) != 0 ?  \intval($input["actif"]) : 0 : 0;
     }
 }

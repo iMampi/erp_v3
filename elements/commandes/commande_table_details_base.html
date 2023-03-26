@@ -1,0 +1,83 @@
+<table class="table" id="table-facture">
+	<thead>
+		<tr>
+			<td class="ps-0">ID article</td>
+			<td>désignation</td>
+			<td>numéro de série</td>
+			<td>prix unitaire HT</td>
+			<td>quantité</td>
+			<td>total HT</td>
+			<td class="pe-0">
+				<button type="button" class="btn btn-sm btn-success w-100" id="btn-add-item">
+					+
+				</button>
+			</td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr id="row-001">
+			<td class="ps-0 my-auto btn-group">
+				<input
+					list="items-list"
+					type="text"
+					name="item-choice"
+					class="form-control form-control-sm"
+					placeholder="Choississez un article"
+				/>
+				<button
+					type="button"
+					class="btn btn-sm btn-success"
+					data-bs-toggle="modal"
+					data-bs-target="#modal-creer-item"
+				>
+					+
+				</button>
+			</td>
+			<td>
+				<input
+					type="text"
+					disabled
+					class="designation form-control form-control-sm"
+				/>
+			</td>
+			<td>
+				<input
+					type="text"
+					list="num-serie-list"
+					class="num-serie form-control form-control-sm"
+				/>
+				<datalist id="num-serie-list">
+					<option value="KJFIOORTT001">KJFIOORTT001</option>
+					<option value="MQLSDFPOI002">MQLSDFPOI002</option>
+				</datalist>
+			</td>
+			<td>
+				<input
+					type="number"
+					class="pu form-control form-control-sm"
+					disabled
+				/>
+			</td>
+			<td>
+				<input type="number" class="qty form-control form-control-sm" />
+			</td>
+			<td>
+				<input
+					type="text"
+					disabled
+					class="form-control form-control-sm"
+				/>
+			</td>
+			<td class="pe-0">
+				<button type="button" class="btn btn-sm btn-danger btn-del">del</button>
+			</td>
+		</tr>
+	</tbody>
+	<datalist id="items-list">
+		<option value="Glace">001-Glace</option>
+		<option value="Gateau">002-Gateau</option>
+		<option value="Milkshake">003-Milkshake</option>
+		<option value="Crepe">004-Crepe</option>
+		<option value="Pizza">005-Pizza</option>	
+	</datalist>
+</table>

@@ -12,6 +12,7 @@ class Queries
     static public $filter_fournisseur = "select * from view_all_fournisseurs";
     static public $filter_categorie = "select * from categories";
     static public $filter_famille = "select * from familles";
+    static public $filter_place = "select * from magasins";
     static public $filter_item = "select code,name,type_item,categorie, famille,prix_vente, prix_achat_mp,declarable from view_all_items";
 
     static public $update_client = "
@@ -175,7 +176,7 @@ class Queries
         select * from items where active=1 limit 20
         ";
     static public $select_all_places_name_limit = "
-        select uid,name,adresse,phone from magasins limit 20
+        select uid,name,adresse,phone from magasins where active=1 limit 20
         ";
     static public $save_new_client = "
         SELECT new_client(
@@ -423,6 +424,9 @@ class Queries
                 break;
             case 'filter_familles':
                 $this->query = self::$filter_famille;
+                break;
+            case 'filter_places':
+                $this->query = self::$filter_place;
                 break;
             case 'filter_items':
                 $this->query = self::$filter_item;
