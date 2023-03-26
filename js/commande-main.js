@@ -63,6 +63,19 @@ document.addEventListener("DOMContentLoaded",()=>{
     const montantTTCApresRemiseInput=modalCommandeNew.querySelector("#totalTTC-apres-remise");
 
     //FUNCTION
+
+    async function searchItem(inputObj) {
+		let url = "/database/select/selection_items.php";
+		let response = await sendData(url, inputObj);
+	
+		console.log("error?");
+		console.log(response);
+		let myjson = JSON.parse(response);
+	
+		return await fillMainTable(myjson, tableBodyCategorie);
+	
+	}
+
     function addItem(){
         console.log("addding item");
         fetch("/elements/commandes/commande_table_details_base.html")
@@ -97,6 +110,15 @@ document.addEventListener("DOMContentLoaded",()=>{
     }
 
     //EVENTHANDLER
+
+    // today's date
+    try {
+        modalCommandeNew.querySelector('#date').value=luxon.DateTime.now().toFormat('yyyy-MM-dd');
+
+    } catch (error) {
+        console.log("dont know what happened");
+    }
+
     try {
         divBtns.addEventListener('click',(event)=>{
             if(event.target.id=="btn-main-new")
@@ -118,6 +140,17 @@ document.addEventListener("DOMContentLoaded",()=>{
                 removeItem(event.target);
             }
         })
+    } catch (error) {
+        
+    }
+    try {
+        modalCommandeNew.addEventListener('keyup',(event)=>{
+            if (event.target.id=="item-id"){
+                console.log("searching man");
+                const queryDB = delay(searchItem);
+            }
+        })
+
     } catch (error) {
         
     }

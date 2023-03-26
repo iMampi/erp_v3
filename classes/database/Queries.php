@@ -154,8 +154,14 @@ class Queries
     static public $select_all_clients = "
         call all_clients 
         ";
+    static public $select_all_active_clients_limit = "
+        select uid,noms,prenoms,nom_commercial,raison_sociale from view_all_clients where active_client=1 limit 20
+        ";
     static public $select_all_employees_name = "
         call all_employees_active_only 
+        ";
+    static public $select_all_employees_name_limit = "
+        call all_employees_active_only limit 20
         ";
     static public $select_all_fournisseurs = "
         call all_fournisseurs 
@@ -332,6 +338,9 @@ class Queries
             case 'select_all_clients':
                 $this->query = self::$select_all_clients;
                 break;
+            case 'select_all_active_clients_limit':
+                $this->query = self::$select_all_active_clients_limit;
+                break;
             case 'select_all_fournisseurs':
                 $this->query = self::$select_all_fournisseurs;
                 break;
@@ -349,6 +358,9 @@ class Queries
                 break;
             case 'select_all_employees_name':
                 $this->query = self::$select_all_employees_name;
+                break;
+            case 'select_all_employees_name_limit':
+                $this->query = self::$select_all_employees_name_limit;
                 break;
             case 'select_all_items_name_limit':
                 $this->query = self::$select_all_items_name_limit;

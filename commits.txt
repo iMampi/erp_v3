@@ -554,3 +554,11 @@ modify,cancel, save update details is ok. front end and back end is ok for those
 SO... i realized that i lost sight of some process. can remember why affaire instead of commande.
 so i'm strating to write a "commande" process...
 changed layout of the formulaire. NOW, we attribute discount based on total TTC. because in practice, this is what is done when negotiating. customer dotn care about TVA, just the price they gonna pay. added some field to make it easier to attribut discount. and worked on the JS part as well. it works now.
+-------------------------
+081:
+commandes.php
+on first load of page, we fill datalists with only th first 20 element of db. just for the show.
+we cleared the htmls.
+we inmplemented the php sccrip to fill the datalists.
+created some new queries derived from select_all_name...adding a limit of 20.
+now, we are working on the implementation of the delay ajax to search for an item...

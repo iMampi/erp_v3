@@ -20,6 +20,7 @@ is_logged();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/luxon.min.js"></script>
     <script src="/js/helpers.js"></script>
     <script src="/js/fixed-header.js"></script>
     <link rel="stylesheet" href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
@@ -300,7 +301,47 @@ is_logged();
             </div>
             <!-- end modal new item -->
         </div>
+        <datalist id="client-list">
+            <?php
+            require_once __DIR__ . "/../database/select/all_clients_name_limit.php";
 
+            $domclient = new DOMDocument();
+            // //to be able to use new html5 tag with DOMDocument
+            libxml_use_internal_errors(true);
+
+            foreach ($all_active_clients_limit as $array) {
+                $client_name = $array["prenoms"] . " " . $array["noms"] . " " . $array["nom_commercial"] . " / " . $array["raison_sociale"];
+                $client_name = \trim($client_name);
+                $option_ = $domclient->createElement("option");
+                $option_->setAttribute("value", $client_name);
+                $option_->appendChild(
+                    $domclient->createTextNode($array["uid"] . " - " . $client_name)
+                );
+                $domclient->appendChild($option_);
+            }
+            echo $domclient->saveHTML();
+            ?>
+        </datalist>
+        <datalist id="item-list">
+            <?php
+            require_once __DIR__ . "/../database/select/all_items_name_limit.php";
+
+            $domclient = new DOMDocument();
+            // //to be able to use new html5 tag with DOMDocument
+            libxml_use_internal_errors(true);
+
+            foreach ($all_items_name_limit as $array) {
+
+                $option_ = $domclient->createElement("option");
+                $option_->setAttribute("value", $array["name"]);
+                $option_->appendChild(
+                    $domclient->createTextNode($array["code"] . " - " . $array["name"])
+                );
+                $domclient->appendChild($option_);
+            }
+            echo $domclient->saveHTML();
+            ?>
+        </datalist>
     </div>
 </body>
 

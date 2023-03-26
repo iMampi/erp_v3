@@ -18,10 +18,10 @@
 		<tr id="row-001">
 			<td class="ps-0 my-auto btn-group">
 				<input
-					list="items-list"
+					list="item-list"
 					type="text"
-					name="item-choice"
-					class="form-control form-control-sm"
+					id="item-id"
+					class="form-control form-control-sm input item-id"
 					placeholder="Choississez un article"
 				/>
 				<button
@@ -37,35 +37,36 @@
 				<input
 					type="text"
 					disabled
-					class="designation form-control form-control-sm"
+					id="item-name"
+					class=" form-control form-control-sm input item-name"
 				/>
 			</td>
 			<td>
 				<input
 					type="text"
 					list="num-serie-list"
-					class="num-serie form-control form-control-sm"
+					class=" form-control form-control-sm num-serie input"
+					id="num-serie"
 				/>
-				<datalist id="num-serie-list">
-					<option value="KJFIOORTT001">KJFIOORTT001</option>
-					<option value="MQLSDFPOI002">MQLSDFPOI002</option>
-				</datalist>
+
 			</td>
 			<td>
 				<input
 					type="number"
-					class="pu form-control form-control-sm"
+					class="form-control form-control-sm item-pu input"
 					disabled
+					id="item-pu"
 				/>
 			</td>
 			<td>
-				<input type="number" class="qty form-control form-control-sm" />
+				<input type="number" class=" form-control form-control-sm input item-quantity" id="item-quantity" />
 			</td>
 			<td>
 				<input
 					type="text"
 					disabled
-					class="form-control form-control-sm"
+					class="form-control form-control-sm item-prix-total input"
+					id="item-prix-total"
 				/>
 			</td>
 			<td class="pe-0">
@@ -73,11 +74,4 @@
 			</td>
 		</tr>
 	</tbody>
-	<datalist id="items-list">
-		<option value="Glace">001-Glace</option>
-		<option value="Gateau">002-Gateau</option>
-		<option value="Milkshake">003-Milkshake</option>
-		<option value="Crepe">004-Crepe</option>
-		<option value="Pizza">005-Pizza</option>	
-	</datalist>
 </table>

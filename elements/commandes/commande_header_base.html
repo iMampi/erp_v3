@@ -2,75 +2,63 @@
 	<div class="row">
 		<span class="col-form-label col-2">numéro commande</span>
 		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" disabled/>
+			<input type="text" class="form-control form-control-sm input uid" disabled id="uid"/>
 		</div>
 		<span class="col-form-label col-2">état</span>
 		<div class="col-2 my-auto">
-			<select disabled class="nd input form-control form-control-sm">
-				<option value="0">impayée</option>
-				<option value="1">payée</option>
+			<select class="nd input form-control form-control-sm input state" id="state">
+				<option value="1">encours</option>
+				<option value="0">annulé</option>
+				<option value="2">validé</option>
 			</select>
 		</div>
 		<!-- TODO:delete dummy options -->
 		<span class="col-form-label col-2">commercial</span>
 		<div class="col-2 my-auto">
-			<select disabled class="nd input form-control form-control-sm">
-				<option value="0">mampi</option>
-				<option value="1">sophie</option>
-			</select>
+			<input type="text" class="form-control form-control-sm input commercial" disabled id="commercial"/>
 		</div>
 	</div>
 	<div id="clt-selection" class="row nowrap">
 		<span class="col-form-label col-2">client ID</span>
 		<div class="col my-auto btn-group">
 			<input
-				list="clt-list"
+				list="client-list"
 				type="text"
-				name="clt-choice"
-				class="form-control form-control-sm"
+				name="client"
+				class="form-control form-control-sm input client"
 				placeholder="Choississez un client"
 			/>
-			<datalist id="clt-list">
-				<option value="Glace">001-Glace</option>
-				<option value="Gateau">002-Gateau</option>
-				<option value="Milkshake">003-Milkshake</option>
-				<option value="Crepe">004-Crepe</option>
-				<option value="Pizza">005-Pizza</option>
-			  </datalist>			<!-- </div> -->
+			<!-- </div> -->
 			<!-- <div class="col-1 my-auto pe-1"> -->
 			<button
 				class="mytbn btn btn-sm btn-success text-center"
-				data-bs-toggle="modal"
-				data-bs-target="#modal-creer-client"
+				id="btn-new-client"
 			>
 				+
 			</button>
 			<!-- </div> -->
 
 			<!-- <div class="col-1 my-auto ps-1"> -->
-			<button class="mytbn btn btn-sm btn-success text-center">
+			<button class="mytbn btn btn-sm btn-success text-center" id="btn-see-client">
 				see
 			</button>
 		</div>
-		<datalist id="clt-list">
-			<option value="001">001-biens</option>
-			<option value="002">002-services</option>
-		</datalist>
+
 	</div>
 	<div class="row my-auto">
-		<span class="col-form-label col-2">date</span>
+		<span class="col-form-label col-2">date de commande</span>
 		<div class="col-2 my-auto">
-			<input type="date" class="form-control form-control-sm" />
+			<input type="date" class="form-control form-control-sm input date" disabled id="date"/>
 		</div>
-		<!-- <span class="col-form-label col-2">affaire</span>
+		<span class="col-form-label col-2">note</span>
 		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" />
-		</div> -->
+			<input type="text" class="form-control form-control-sm input note" id="note" />
+		</div>
 	</div>
 	<div class="row my-auto">
-		<span class="col-form-label col-2">total HT avant remise</span>
+		<span class="col-form-label col-2 ">total HT avant remise</span>
 		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" disabled 
+			<input type="text" class="form-control form-control-sm input totalHT-avant-remise" disabled 
 			id="totalHT-avant-remise"
 			value="1000"
 			/>
@@ -78,7 +66,7 @@
 
 		<span class="col-form-label col-2">TVA avant remise</span>
 		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" disabled 
+			<input type="text" class="form-control form-control-sm input TVA-avant-remise" disabled 
 			id="TVA-avant-remise"
 			value="200"/>
 		</div>
@@ -86,7 +74,7 @@
 		<div class="col-2 my-auto">
 			<input
 				type="text"
-				class="form-control form-control-sm"
+				class="form-control form-control-sm input totalTTC-avant-remise"
 				disabled
 				id="totalTTC-avant-remise"
 				value="1200"
@@ -98,7 +86,7 @@
 		<div class="col-2 my-auto">
 			<input
 				type="number"
-				class="form-control form-control-sm"
+				class="form-control form-control-sm input remise-taux"
 				placeholder="%"
 				id="remise-taux"
 			/>
@@ -107,7 +95,7 @@
 		<div class="col-2 my-auto">
 			<input
 				type="number"
-				class="form-control form-control-sm"
+				class="form-control form-control-sm input remise-montant"
 				placeholder="Ar"
 				id="remise-montant"
 				
@@ -117,21 +105,21 @@
 	<div class="row my-auto">
 		<span class="col-form-label col-2">total HT aprés remise</span>
 		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" disabled 
+			<input type="text" class="form-control form-control-sm input totalHT-apres-remise" disabled 
 			id="totalHT-apres-remise"
 			/>
 		</div>
 
 		<span class="col-form-label col-2">TVA aprés remise</span>
 		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" disabled 
+			<input type="text" class="form-control form-control-sm input TVA-apres-remise" disabled 
 			id="TVA-apres-remise"/>
 		</div>
-		<span class="col-form-label col-2">total TTC aprés remise</span>
+		<span class="col-form-label col-2 fw-bold">total TTC à payer</span>
 		<div class="col-2 my-auto">
 			<input
 				type="text"
-				class="form-control form-control-sm"
+				class="form-control form-control-sm fw-bold input totalTTC-apres-remise"
 				disabled
 				id="totalTTC-apres-remise"
 			/>
