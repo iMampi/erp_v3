@@ -1,4 +1,7 @@
 var counterRowItem=1;
+
+
+
 function generateRowAddItem(nodeModel, DataObj) {
 	// console.log(DataObj);
 	let newNode = nodeModel.cloneNode(true);
@@ -65,6 +68,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     //FUNCTION
 
     async function searchItem(inputObj) {
+        console.log("searching ITEM");
 		let url = "/database/select/selection_items.php";
 		let response = await sendData(url, inputObj);
 	
@@ -72,7 +76,8 @@ document.addEventListener("DOMContentLoaded",()=>{
 		console.log(response);
 		let myjson = JSON.parse(response);
 	
-		return await fillMainTable(myjson, tableBodyCategorie);
+        return myjson;
+		// return await fillMainTable(myjson, tableBodyCategorie);
 	
 	}
 
@@ -147,7 +152,9 @@ document.addEventListener("DOMContentLoaded",()=>{
         modalCommandeNew.addEventListener('keyup',(event)=>{
             if (event.target.id=="item-id"){
                 console.log("searching man");
-                const queryDB = delay(searchItem);
+                const myfunc=delay(searchItem,2000);
+                myfunc({uid:"test",name:"test"});
+
             }
         })
 

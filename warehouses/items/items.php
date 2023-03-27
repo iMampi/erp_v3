@@ -121,7 +121,7 @@ require __DIR__ . '/../../database/select/all_familles_name_nolimit.php';
             <div class="modal fade" id="modal-item-new" tabindex="-1">
                 <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
                 </button>
-                <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                <div class="modal-dialog modal-dialog-scrollable modal-xl">
 
                     <div class="modal-content">
 
@@ -222,7 +222,8 @@ require __DIR__ . '/../../database/select/all_familles_name_nolimit.php';
 
             foreach ($all_familles_name as $array) {
                 $option_ = $domfamille->createElement("option");
-                $option_->setAttribute("value", $array["name"]);
+                $option_->setAttribute("value", $array["uid"] . " - " . $array["name"]);
+                // $option_->setAttribute("data-uid", $array["uid"]);
                 $option_->appendChild(
                     $domfamille->createTextNode($array["uid"] . " - " . $array["name"])
                 );
@@ -239,7 +240,9 @@ require __DIR__ . '/../../database/select/all_familles_name_nolimit.php';
 
             foreach ($all_categories_name as $array) {
                 $option_ = $domcategory->createElement("option");
-                $option_->setAttribute("value", $array["name"]);
+                $option_->setAttribute("value", $array["uid"] . " - " . $array["name"]);
+                // $option_->setAttribute("data-uid", $array["uid"]);
+                // $option_->setAttribute("label", $array["name"]);
                 $option_->appendChild(
                     $domcategory->createTextNode($array["uid"] . " - " . $array["name"])
                 );

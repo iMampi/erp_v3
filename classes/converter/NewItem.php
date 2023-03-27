@@ -21,13 +21,13 @@ class NewItem extends Converter
 
         $this->data_for_db["name"] = \array_key_exists("name", $input) ? \trim($input["name"]) != "" ?  \trim($input["name"]) : \null : \null;
 
-        $this->data_for_db["type_item"] = \array_key_exists("type", $input) ? \intval($input["type"]) != 0 ?  \intval($input["type"]) : \null : \null;
+        $this->data_for_db["type_item"] = \array_key_exists("type", $input) ? \intval($input["type"]) != 0 ?  \intval($input["type"]) : 0 : 0;
 
-        $this->data_for_db["active"] = \array_key_exists("actif", $input) ? \intval($input["actif"]) != 0 ?  \intval($input["actif"]) : \null : \null;
+        $this->data_for_db["active"] = \array_key_exists("actif", $input) ? \intval($input["actif"]) != 0 ?  \intval($input["actif"]) : 0 : 0;
 
-        $this->data_for_db["family_uid"] = \array_key_exists("famille", $input) ? \intval($input["famille"]) != 0 ?  \intval($input["famille"]) : \null : \null;
+        $this->data_for_db["family_uid"] = \array_key_exists("famille-uid", $input) ? \intval($input["famille-uid"]) != 0 ?  \intval($input["famille-uid"]) : \null : \null;
 
-        $this->data_for_db["category_uid"] = \array_key_exists("category", $input) ? \intval($input["category"]) != 0 ?  \intval($input["category"]) : \null : \null;
+        $this->data_for_db["category_uid"] = \array_key_exists("categorie-uid", $input) ? \intval($input["categorie-uid"]) != 0 ?  \intval($input["categorie-uid"]) : \null : \null;
 
         $this->data_for_db["unite_mesure_uid"] = \array_key_exists("measurement", $input) ? \intval($input["measurement"]) != 0 ?  \intval($input["measurement"]) : \null : \null;
 
@@ -35,7 +35,7 @@ class NewItem extends Converter
 
         $this->data_for_db["identifiable"] = \array_key_exists("identifiable", $input) ? \intval($input["identifiable"]) != 0 ?  \intval($input["identifiable"]) : 0 : 0;
 
-        $this->data_for_db["declarable"] = \array_key_exists("declarable", $input) ? \intval($input["declarable"]) != 0 ?  \intval($input["declarable"]) : \null : \null;
+        $this->data_for_db["declarable"] = \array_key_exists("declarable", $input) ? \intval($input["declarable"]) != 0 ?  \intval($input["declarable"]) : 0 : 0;
 
         $this->data_for_db["prix_vente"] = \array_key_exists("prix-vente", $input) ? \floatval($input["prix-vente"]) != 0 ?  \floatval($input["prix-vente"]) : \null : \null;
 

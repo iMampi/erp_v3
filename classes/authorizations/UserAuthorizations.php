@@ -7,7 +7,7 @@ use Exception;
 
 class UserAuthorizations
 {
-    public int $length = 76;
+    public int $length = 77;
     public int $active;
     public Authorization $client;
     public Authorization $fournisseur;
@@ -34,7 +34,7 @@ class UserAuthorizations
         // TODO : chager en affectation auto par 4
         $data = func_get_arg(0);
         if ($this->length != count($data)) {
-            throw new Exception("data entered is not the correct size");
+            throw new Exception("data entered is not the correct size : " . count($data));
         }
         for ($i = 0; $i < count($data); $i++) {
             $data[$i] = intval($data[$i]);

@@ -66,67 +66,12 @@ class SelectionItems extends Converter
                 switch ($key) {
                     case 'code':
                     case 'name':
-                    case 'family':
-                    case 'category':
-                    case 'note':
                         $column_name = self::$correspondances[$key];
                         $this->conditions .= " $column_name LIKE '%$value%'or";
                         break;
-
-                    case 'actif':
-                    case 'declarable':
-                    case 'type':
-                    case 'measurement':
-                    case 'stockable':
-                    case 'identifiable':
-
-                        if ($value != "all") {
-                            $column_name = self::$correspondances[$key];
-
-                            $this->conditions .= " $column_name = $value or";
-                        }
-
-                        break;
-
-                    case 'prix-vente-min':
-                    case 'prix-vente-max':
-
-                        if ($this->echeance_counter == 0) {
-                            $mymin = $data['prix-vente-min'];
-                            $mymax = $data['prix-vente-max'];
-                            if ((\floatval($mymin) == 0) && (\floatval($mymax) == 0)) {
-                                $this->conditions .= " prix_vente = 0 and";
-                            } elseif ((\floatval($mymin) > 0) && (\floatval($mymax) > 0)) {
-                                $this->conditions .= " prix_vente BETWEEN $mymin AND $mymax and";
-                            } elseif ((\floatval($mymin) > 0) && (\floatval($mymax) == 0)) {
-                                $this->conditions .= " prix_vente >= $mymin and";
-                            } elseif ((\floatval($mymax) > 0) && (\floatval($mymin) == 0)) {
-                                $this->conditions .= " prix_vente BETWEEN 0 AND $mymax and";
-                            };
-                            $this->echeance_counter += 1;
-                        }
-                        break;
-                    case 'pamp-min':
-                    case 'pamp-max':
-
-                        if ($this->echeance_counter == 0) {
-                            $mymin = $data['pamp-min'];
-                            $mymax = $data['pamp-max'];
-                            if ((\floatval($mymin) == 0) && (\floatval($mymax) == 0)) {
-                                $this->conditions .= " prix_achat_mp = 0 and";
-                            } elseif ((\floatval($mymin) > 0) && (\floatval($mymax) > 0)) {
-                                $this->conditions .= " prix_achat_mp BETWEEN $mymin AND $mymax and";
-                            } elseif ((\floatval($mymin) > 0) && (\floatval($mymax) == 0)) {
-                                $this->conditions .= " prix_achat_mp >= $mymin and";
-                            } elseif ((\floatval($mymax) > 0) && (\floatval($mymin) == 0)) {
-                                $this->conditions .= " prix_achat_mp BETWEEN 0 AND $mymax and";
-                            };
-                            $this->echeance_counter += 1;
-                        }
-                        break;
                 }
                 if ($key == $last_key) {
-                    $this->conditions = \preg_replace('/\s*and\s*$/', "", $this->conditions);
+                    $this->conditions = \preg_replace('/\s*or\s*$/', "", $this->conditions);
                     $this->conditions = \preg_replace('/\s*where\s*$/', "", $this->conditions);
                 }
             }

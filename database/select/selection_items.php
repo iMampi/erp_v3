@@ -1,6 +1,6 @@
 <?php
 
-use Converter\FilterItems;
+use Converter\SelectionItems;
 use Database\Queries;
 use Database\Bindings;
 use Database\DbHandler;
@@ -21,10 +21,10 @@ if (($_SERVER["REQUEST_METHOD"] == "POST")) {
     $data = json_decode(file_get_contents('php://input'), true);
     // var_dump($data);
 
-    $FilterObj = new FilterItems($data);
+    $SelectionObj = new SelectionItems($data);
     // var_dump($NewClientObj);
     $Query = new Queries("filter_items");
-    $myquery = $Query->query . $FilterObj->conditions;
+    $myquery = $Query->query . $SelectionObj->conditions;
     // print($SelectOneCLientObj->conditions);
     // $Binding = new Bindings($SelectOneCLientObj);
     // $Statement = new StandardPreparedStatement($Query, $Binding);

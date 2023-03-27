@@ -9,7 +9,7 @@ const DefaultValuesItemNewFormObj = {
     identifiable:"0",
     "prix-vente":"",
 	"famille":"",
-	"category":"",
+	"categorie":"",
     pamp:"",
     note:""
 };
@@ -23,7 +23,7 @@ const DefaultValuesItemFilterObj ={
     stockable:"all",
     identifiable:"all",
 	"famille":"",
-	"category":"",
+	"categorie":"",
     "prix-vente-min":"0",
     "prix-vente-max":"0",
     "pamp-min":"0",
@@ -208,8 +208,8 @@ function generateRowTable(nodeModel, DataObj) {
 	newNode.querySelector(".type.input").value=TYPE_ITEM[DataObj["type"]] || TYPE_ITEM[DataObj["type_item"]];
 	newNode.querySelector(".category.input").value=DataObj["category"]||DataObj["categorie"];
 	newNode.querySelector(".famille.input").value=DataObj["famille"];
-	newNode.querySelector(".prix-vente.input").value=DataObj["prix-vente"]||DataObj["prix_vente"];
-	newNode.querySelector(".pamp.input").value=DataObj["pamp"]||DataObj["prix_achat_mp"];
+	newNode.querySelector(".prix-vente.input").value=DataObj["prix-vente"]||DataObj["prix_vente"]||"";
+	newNode.querySelector(".pamp.input").value=DataObj["pamp"]||DataObj["prix_achat_mp"]||"";
 	newNode.querySelector(".declarable.input").value=DataObj["declarable"];
 	return newNode;
 }
@@ -312,6 +312,13 @@ document.addEventListener("DOMContentLoaded",()=>{
 			bsModalConfirmation.hide();
 
 			let dataObj = getFormInputsValues(modalNew);
+			dataObj["categorie-uid"]=dataObj["categorie"].split(' - ')[0];
+			dataObj["categorie"]=dataObj["categorie"].split(' - ')[1];
+			dataObj["famille-uid"]=dataObj["famille"].split(' - ')[0];
+			dataObj["famille"]=dataObj["famille"].split(' - ')[1];
+			dataObj["prix-vente"]=parseFloat(dataObj["prix-vente"]).toFixed(2);
+			console.log("dataObj");
+			console.log(dataObj);
 			saveNew(dataObj).then((result) => {
 				if (result[0]) {
 					// insert uid of newly created client
