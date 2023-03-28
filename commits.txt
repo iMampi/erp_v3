@@ -564,5 +564,7 @@ created some new queries derived from select_all_name...adding a limit of 20.
 now, we are working on the implementation of the delay ajax to search for an item... created the helpers fucntion delay(). it works. implementation seems okay for first steps. gotta keep going.
 
 I find out that there was a bug with the cycle items.php. fixed the famille and categorie handler when saving new or update, and the table list update.
-
-
+-------------------------
+082:
+now, we are working on the implementation of the delay ajax to search for an item... created the helpers fucntion delay(). it works. implementation seems okay for first steps. gotta keep going...hey mampi , start to work on the query construction in js and php now.
+it all works now for the "#item-id" input. js is ok, php is ok.

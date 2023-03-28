@@ -1,4 +1,6 @@
 var counterRowItem=1;
+var typingTimer;  
+
 
 
 
@@ -48,6 +50,8 @@ document.addEventListener("DOMContentLoaded",()=>{
     const divBtns=document.getElementById("div-btns");
     const tableBody=document.getElementById("ze-tbody");
     const tableFacture=document.getElementById("modal-commande-new").querySelector("#table-facture");
+    const itemDataList=document.getElementById("item-list");
+
 
     ////modal new
     const modalCommandeNew=document.getElementById("modal-commande-new");
@@ -66,6 +70,21 @@ document.addEventListener("DOMContentLoaded",()=>{
     const montantTTCApresRemiseInput=modalCommandeNew.querySelector("#totalTTC-apres-remise");
 
     //FUNCTION
+
+    async function searchLive(inputObj,datalistNode) {
+        let result = await searchItem(inputObj);
+        addDatalistElement(datalistNode,result);
+    }
+    function addDatalistElement(datalistNode,arrayData) {
+        datalistNode.innerHTML="";
+        arrayData.forEach(element => {
+            let option_=document.createElement("option");
+            option_.value=element.code+" - "+element.name;
+            datalistNode.append(option_);
+        });
+        document.createElement("option")
+        
+    }
 
     async function searchItem(inputObj) {
         console.log("searching ITEM");
@@ -148,13 +167,18 @@ document.addEventListener("DOMContentLoaded",()=>{
     } catch (error) {
         
     }
+
     try {
         modalCommandeNew.addEventListener('keyup',(event)=>{
-            if (event.target.id=="item-id"){
+            if ((event.target.id=="item-id")&&(event.key)){
                 console.log("searching man");
-                const myfunc=delay(searchItem,2000);
-                myfunc({uid:"test",name:"test"});
-
+                itemDataList.innerHTML="";
+                clearTimeout(typingTimer);
+                if(event.target.value.trim()){
+                                    // TODO : sanitize here
+                itemDataList.innerHTML="<option value='Searching for \""+event.target.value.trim()+"\"'></option>";
+                    typingTimer = setTimeout(()=>{searchLive({code:"test",name:"test"},itemDataList)}, 1500);
+                }
             }
         })
 

@@ -337,7 +337,7 @@ function deleteArrayValue(arr, value) {
 function delay(fn, ms) {
 	let timer = 0
 	return function(...args) {
-	  clearTimeout(timer)
+	  clearTimeout(timer);
 	  timer = setTimeout(fn.bind(this, ...args), ms || 0)
 	}
   }

@@ -67,7 +67,7 @@ class SelectionItems extends Converter
                     case 'code':
                     case 'name':
                         $column_name = self::$correspondances[$key];
-                        $this->conditions .= " $column_name LIKE '%$value%'or";
+                        $this->conditions .= " $column_name LIKE '%$value%' or";
                         break;
                 }
                 if ($key == $last_key) {

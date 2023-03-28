@@ -23,7 +23,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST")) {
 
     $SelectionObj = new SelectionItems($data);
     // var_dump($NewClientObj);
-    $Query = new Queries("filter_items");
+    $Query = new Queries("selection_items");
     $myquery = $Query->query . $SelectionObj->conditions;
     // print($SelectOneCLientObj->conditions);
     // $Binding = new Bindings($SelectOneCLientObj);
