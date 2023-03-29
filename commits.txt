@@ -568,3 +568,5 @@ I find out that there was a bug with the cycle items.php. fixed the famille and 
 082:
 now, we are working on the implementation of the delay ajax to search for an item... created the helpers fucntion delay(). it works. implementation seems okay for first steps. gotta keep going...hey mampi , start to work on the query construction in js and php now.
 it all works now for the "#item-id" input. js is ok, php is ok.
+NOTE : i realized that there are some behaviors that bother me with the datalist, suggestion pop up. meanwhile, I searched some library that could help. the easiest and most secure seems to be jquery autocomplete. So i spent some time learning it. looks good and adapted for what i want. gonna implement to my code later when the whole will be functionnal.
+

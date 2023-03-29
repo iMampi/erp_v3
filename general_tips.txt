@@ -171,3 +171,20 @@ function hideModal(modalId) {
 }
 https://stackoverflow.com/questions/23677765/bootstrap-modal-hide-is-not-working
 and rad the documentation
+
+
+//jquery autocompleteu///
+
+if i use hash, autocomplete only handle those key:
+"label" and "value".
+label : what is going to be shown in the suggestion list;
+value : what is going to be put into the input
+
+add this style to get the loading icon:
+<style>
+  .ui-autocomplete-loading {
+    background: white url("images/spinner-v2-24px.gif") right center no-repeat;
+  }
+<style>
+
+base the input on the template
