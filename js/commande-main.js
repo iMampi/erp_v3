@@ -71,15 +71,42 @@ document.addEventListener("DOMContentLoaded",()=>{
 
     //FUNCTION
 
-    async function searchLive(inputObj,datalistNode) {
+    async function searchPrice(inputObj) {
+        console.log("searching PRICE");
+		let url = "/database/select/get_price.php";
+		let response = await sendData(url, inputObj);
+	
+		console.log("error?");
+		console.log(response);
+		let myjson = JSON.parse(response);
+	
+        return myjson;
+		// return await fillMainTable(myjson, tableBodyCategorie);
+	
+	}
+
+    function getName(code){
+        return document.querySelector("option[value='"+code+"']").getAttribute("label");
+    }
+
+    function fillItemName(inputCodeNode) {
+        let inputTarget =inputCodeNode.parentNode.parentNode.querySelector("#item-name");
+        let val=inputCodeNode.value;
+        inputTarget.value=getName(val);
+    }
+
+    async function searchLive(term,datalistNode) {
+        let inputObj={code:term,name:term};
         let result = await searchItem(inputObj);
         addDatalistElement(datalistNode,result);
     }
+
     function addDatalistElement(datalistNode,arrayData) {
         datalistNode.innerHTML="";
         arrayData.forEach(element => {
             let option_=document.createElement("option");
-            option_.value=element.code+" - "+element.name;
+            option_.value=element.code;
+            option_.label=element.name;
             datalistNode.append(option_);
         });
         document.createElement("option")
@@ -170,15 +197,23 @@ document.addEventListener("DOMContentLoaded",()=>{
 
     try {
         modalCommandeNew.addEventListener('keyup',(event)=>{
+            console.log("event");
+            console.log(event);
             if ((event.target.id=="item-id")&&(event.key)){
                 console.log("searching man");
                 itemDataList.innerHTML="";
                 clearTimeout(typingTimer);
-                if(event.target.value.trim()){
+                let term =event.target.value.trim();
+                if(term){
                                     // TODO : sanitize here
                 itemDataList.innerHTML="<option value='Searching for \""+event.target.value.trim()+"\"'></option>";
-                    typingTimer = setTimeout(()=>{searchLive({code:"test",name:"test"},itemDataList)}, 1500);
+                    typingTimer = setTimeout(()=>{searchLive(term,itemDataList)}, 1500);
                 }
+            }else if((event.target.id=="item-id")&&(!event.key)){
+                console.log("item selected");
+                let val=event.target.value;
+                console.log(getName(val));
+                fillItemName(event.target);
             }
         })
 
