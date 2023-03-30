@@ -145,3 +145,6 @@ HEY!! filter query are not prepared statmemnt. they have no binding. change that
 
 when deleting an entry, we set it to active=0. and it is updated int the table list. but if we do it manually (changeing the select to "inactif"), the table isnot updated. fix that.
 >>>hold in the key data a js var ["name_of_query",{"object of criteria"},"pagination number"]
+
+commande/facture:
+when searching for an item, if reurn of query is error , add a message "pas darticle correspondant"
