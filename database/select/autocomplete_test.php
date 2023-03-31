@@ -35,10 +35,10 @@ if (true) {
     // print($myquery);
 
     // print(json_encode(DbHandler::select_query($myquery, MYSQLI_ASSOC)));
-    $final=[];
-    $results=DbHandler::select_query($myquery, MYSQLI_ASSOC);
+    $final = [];
+    $results = DbHandler::select_query($myquery, MYSQLI_ASSOC);
     foreach ($results as $value) {
-        $final[]=["label"=>$value["code"]." - ".$value["name"],"value"=>$value["name"]];
+        $final[] = ["label" => $value["code"] . " - " . $value["name"], "value" => $value["name"], "prix" => $value["prix_vente"]];
     }
     print(json_encode($final));
     // print(json_encode([

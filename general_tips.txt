@@ -180,6 +180,20 @@ if i use hash, autocomplete only handle those key:
 label : what is going to be shown in the suggestion list;
 value : what is going to be put into the input
 
+if the json you use have other keys different from label and value (eg: "code"), that you still need. you can still use it on select : like this :
+
+$( "#autocomplete" ).autocomplete({
+
+	source: "http://mymanager.local/database/select/autocomplete_test.php",
+	minLength: 2,
+	select: function (event,ui) {
+		console.log("selected");
+		console.log(ui.item.label);
+		console.log(ui.item.value);
+		console.log(ui.item.code);
+	}
+});
+
 add this style to get the loading icon:
 <style>
   .ui-autocomplete-loading {
@@ -188,3 +202,81 @@ add this style to get the loading icon:
 <style>
 
 base the input on the template
+
+for more complexe things using ajax
+NOTE : change "jsonp" to "json"
+<script>
+  $(function() {
+    function log( message ) {
+      $( "<div>" ).text( message ).prependTo( "#log" );
+      $( "#log" ).scrollTop( 0 );
+    }
+
+    $( "#city" ).autocomplete({
+      source: function( request, response ) {
+        $.ajax({
+          url: "http://gd.geobytes.com/AutoCompleteCity",
+          dataType: "jsonp",
+          data: {
+            q: request.term
+          },
+          success: function( data ) {
+            response( data );
+          }
+        });
+      },
+      minLength: 3,
+      select: function( event, ui ) {
+        log( ui.item ?
+          "Selected: " + ui.item.label :
+          "Nothing selected, input was " + this.value);
+      },
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      }
+    });
+  });
+</script>
+
+something might worth exploring
+
+   $(function() {
+      $("#LookUp").autocomplete({                
+            source: function (request, response) {
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    url: "SampleWM.aspx/GetAutoCompleteData",
+                    dataType: "json",
+                    data:'{QueryFilter: "' + request.term  + '"}',
+                    success: function (data) {
+                        response($.map($.parseJSON(data.d), function (item) {                                
+                            var AC = new Object();
+
+                            //autocomplete default values REQUIRED
+                            AC.label = item.Field0;
+                            AC.value = item.Field1;
+
+                            //extend values
+                            AC.FirstName = item.Field2;
+                            AC.LastName = item.Field3;
+                            AC.Age = item.Field4;
+                            AC.Phone = item.Field5;
+
+                            return AC
+                        }));       
+                    }                                             
+                });
+            },
+            minLength: 3,
+            select: function (event, ui) {                    
+                $("#txtFirstName").val(ui.item.FirstName);
+                $("#txtLastName").val(ui.item.LastName);
+                $("#ddlAge").val(ui.item.Age);
+                $("#txtPhone").val(ui.item.Phone);
+             }                    
+        });
+     });

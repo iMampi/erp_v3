@@ -573,3 +573,9 @@ NOTE : i realized that there are some behaviors that bother me with the datalist
 083:
 on selecting the item code, fill the input "item-name" : works great. (gotta to watchout when gonna implement  jquery autocomplete)
 starting to work on filling the price on commande...
+-------------------------
+084:
+starting to work on filling the price on commande...
+fill price and default quantity on selection of item:ok;
+fixed remisehandler to refer to totalTTCavantremise:ok;
+whenever pu or quantity or itemID, or item row deleted is changed, all gets updated :ok.
