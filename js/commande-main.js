@@ -30,11 +30,11 @@ function updateItemTotalPrice(rowNode) {
 function tauxAndMontantDiscountInputHandler(baseMontantInput,tauxInput,montantInput,mode){
     let baseMontant=formatedNumberToFloat(baseMontantInput.value);
     if (mode==1){
-        montantInput.value=baseMontant*formatedNumberToFloat( tauxInput.value)/100||0;
+        montantInput.value=(baseMontant*formatedNumberToFloat( tauxInput.value)/100||0).toFixed(2);
     } else if (mode==2){
 
 
-        tauxInput.value= formatedNumberToFloat( montantInput.value)/formatedNumberToFloat( baseMontant)*100||0;
+        tauxInput.value= (formatedNumberToFloat( montantInput.value)/formatedNumberToFloat( baseMontant)*100||0).toFixed(2);
     }
 }
 
@@ -304,10 +304,11 @@ document.addEventListener("DOMContentLoaded",()=>{
                 tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInput,remiseTauxInput,remiseMontantInput,2);
 
             }
-            updateAllHeaderPrices(montantHTAvantRemiseInput,TVAAvantRemiseInput,montantTTCAvantRemiseInput,remiseTauxInput,remiseMontantInput,montantHTApresRemiseInput,TVAApresRemiseInput,montantTTCApresRemiseInput);
+            totalTTCDiscountedHandler(montantTTCAvantRemiseInput,montantTTCApresRemiseInput,remiseMontantInput);
+            TVAHandler(montantHTApresRemiseInput,TVAApresRemiseInput,montantTTCApresRemiseInput,2);
+            // updateAllHeaderPrices(montantHTAvantRemiseInput,TVAAvantRemiseInput,montantTTCAvantRemiseInput,remiseTauxInput,remiseMontantInput,montantHTApresRemiseInput,TVAApresRemiseInput,montantTTCApresRemiseInput);
             // TVAHandler(montantHTAvantRemiseInput,TVAAvantRemiseInput,montantTTCAvantRemiseInput,1);
             // totalTTCDiscountedHandler(montantTTCAvantRemiseInput,montantTTCApresRemiseInput,remiseMontantInput);
-            // TVAHandler(montantHTApresRemiseInput,TVAApresRemiseInput,montantTTCApresRemiseInput,2);
         })
 
     } catch (error) {
