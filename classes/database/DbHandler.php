@@ -49,7 +49,9 @@ class DbHandler
             // print_r($result_->dataArray);
             return $result_->dataArray;
         } catch (\Exception $e) {
-            echo "<br>error <br>";
+            echo "<br>error2 <br>";
+            echo $myquery;
+            echo "<br>";
             \var_dump($e);
 
             // TODO : err will be logged
@@ -66,7 +68,7 @@ class DbHandler
             // print_r($result_->dataArray);
             return [\true, [$result]];
         } catch (\Exception $e) {
-            echo "<br>error <br>";
+            echo "<br>error1 <br>";
             \var_dump($e);
 
             // TODO : err will be logged
@@ -104,29 +106,29 @@ class DbHandler
                         $res = $stmt->get_result();
 
                         $results = $res->fetch_array($fetch_mode);
-                        } catch (\Throwable $th) {
+                    } catch (\Throwable $th) {
                         // on a utilisait ca avant. on laisse juste a cas où
                         ////$results = [$stmt_execution];
-                            $nb_affected_row = $stmt->affected_rows;
-                            if ($nb_affected_row > 0) {
-                                $results=["nb_affected_row" => $nb_affected_row];
-                            } else {
-                                throw $th;
-                            }
-                        } finally {
-                            $result_array = [\true, $results];
-                            $ouput_final = $result_array;
+                        $nb_affected_row = $stmt->affected_rows;
+                        if ($nb_affected_row > 0) {
+                            $results = ["nb_affected_row" => $nb_affected_row];
+                        } else {
+                            throw $th;
                         }
-                        //////////
+                    } finally {
+                        $result_array = [\true, $results];
+                        $ouput_final = $result_array;
+                    }
+                    //////////
                 } catch (\Throwable $th) {
 
-                    
 
-                        $error_arr_ = ["error" => $th->getMessage(), "nb" => $stmt->affected_rows, "res" => $res];
-                        // $error_arr_ = ["error" => $th->getMessage(), "step1" => $step1];
-                        $result_array = [\false, $error_arr_];
-                        // return "err2 : " . $th->getMessage();
-                        $ouput_final = $result_array;
+
+                    $error_arr_ = ["error" => $th->getMessage(), "nb" => $stmt->affected_rows, "res" => $res];
+                    // $error_arr_ = ["error" => $th->getMessage(), "step1" => $step1];
+                    $result_array = [\false, $error_arr_];
+                    // return "err2 : " . $th->getMessage();
+                    $ouput_final = $result_array;
                 } finally {
                     return $ouput_final;
                 }

@@ -6,18 +6,23 @@ namespace Converter;
 
 use Database\Special\QueryFilterConditionsConstructor;
 
-class SelectionItems extends Converter
+class SelectionClients extends Converter
 {
     static private  array $correspondances = [
-        "code" => "code",
+        "uid" => "uid",
         "actif" => "active",
-        "name" => "name"
+        "noms" => "noms",
+        "prenoms" => "prenoms",
+        "nom-commercial" => "nom_commercial",
+        "raison-sociale" => "raison_sociale",
     ];
     static private  array $fields_types = [
-        "code" => "string",
+        "uid" => "int",
         "actif" => "int",
-        "name" => "string"
-
+        "noms" => "string",
+        "prenoms" => "string",
+        "nom-commercial" => "string",
+        "raison-sociale" => "string",
     ];
     public string $conditions;
     public int $echeance_counter = 0;
@@ -64,16 +69,20 @@ class SelectionItems extends Converter
             foreach ($data as $key => $value) {
 
                 switch ($key) {
-                    case 'code':
-                    case 'name':
+                        // case 'uid':
+                    case 'nom-commercial':
+                    case 'raison-sociale':
+                    case 'noms':
+                    case 'prenoms':
                         $column_name = self::$correspondances[$key];
                         $this->conditions .= " $column_name LIKE '%$value%' or";
                         break;
                 }
                 if ($key == $last_key) {
-                    $this->conditions .= " where active='1'";
+
                     $this->conditions = \preg_replace('/\s*or\s*$/', "", $this->conditions);
                     $this->conditions = \preg_replace('/\s*where\s*$/', "", $this->conditions);
+                    $this->conditions .= " and active_client='1';";
                 }
             }
         }

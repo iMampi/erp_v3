@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>commandes</title>
+<style>
+
+input:invalid {
+  border: red solid 3px;
+}
+</style>
+
+</head>
+
+<body >
+<span>func in html</span>
+<input type="text" pattern="\d*" onkeypress="return event.charCode>=45 && event.charCode<=57"/>
+
+<span>func in js charcode</span>
+<input id="input2" type="text" pattern="\d*" onkeydown="return nankey(event)"/>
+
+<span>func in js charcode</span>
+<input id="input3" type="text" pattern="\d*" onkeydown="return isNumberKey(event)"/>
+</body>
+<script>
+function isNumberKey(evt) {
+  console.log("called");
+  var charCode = (evt.which) ? evt.which : evt.keyCode
+  if (charCode > 31 && (charCode < 48 || charCode > 57))
+    return false;
+  return true;
+}
+function nankey(evt) {
+  console.log(evt);
+  console.log("called2");
+  if(!isNaN(evt.key)||["Backspace","Enter"].includes(evt.key)){
+    return true;
+
+  }
+  return false;
+
+}
+
+
+// document.getElementById("input2").addEventListener("keydown",(event)=>{
+//   console.log(event);
+// nankey(event)})
+</script>

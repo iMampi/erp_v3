@@ -47,7 +47,6 @@ class FilterClients extends Converter
         "raison-sociale" => "string",
         "noms" => "string",
         "prenoms" => "string",
-        "prenoms" => "string",
         "cin" => "string",
         "cin-date" => "string",
         "cin-lieu" => "string",

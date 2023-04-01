@@ -280,3 +280,50 @@ something might worth exploring
              }                    
         });
      });
+
+
+
+///////////
+input text number only
+there direferent way. those below work with keypress event. But keypress is decapreting gonna dissapear. use keydown or beforeinput
+
+<input type="text" pattern="\d*" onkeypress="return event.charCode>=45 && event.charCode<=57"/>
+
+<input id="input3" type="text" pattern="\d*" onkeypress="return isNumberKey(event)"/>
+
+function isNumberKey(evt) {
+  var charCode = (evt.which) ? evt.which : evt.keyCode
+  if (charCode > 31 && (charCode < 48 || charCode > 57))
+    return false;
+  return true;
+}
+OR
+
+function isNumberKey(evt) {
+  if(!isNaN(evt.key)||["Backspace","Enter"].includes(evt.key)){
+    return true;
+  }
+  return false;
+}
+
+when using keydown, difference is event.keyCode() treat differently num and numpad's num.
+
+U can also implement this restriction with JS eventlistener. but instea of return false, you use event.preventDefault() instead.
+
+function isNumberKey(evt) {
+  if(!isNaN(evt.key)||["Backspace","Enter"].includes(evt.key)){
+    return true;
+  }
+  evt.preventDefault();
+}
+
+document.getElementById("input2").addEventListener("keydown",(event)=>{
+console.log(event);
+isNumberKey(event)})
+
+//////////////
+when input is invalid when u use pattern, the css selector is 
+input:invalid,
+ {
+  border: red solid 3px;
+}

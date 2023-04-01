@@ -22,6 +22,7 @@ is_logged();
     <script src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/luxon.min.js"></script>
     <script src="/js/helpers.js"></script>
+
     <script src="/js/fixed-header.js"></script>
     <link rel="stylesheet" href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
     <script src="/js/server-communication.js"></script>
@@ -303,43 +304,43 @@ is_logged();
         </div>
         <datalist id="client-list">
             <?php
-            require_once __DIR__ . "/../database/select/all_clients_name_limit.php";
+            // require_once __DIR__ . "/../database/select/all_clients_name_limit.php";
 
-            $domclient = new DOMDocument();
-            // //to be able to use new html5 tag with DOMDocument
-            libxml_use_internal_errors(true);
+            // $domclient = new DOMDocument();
+            // // //to be able to use new html5 tag with DOMDocument
+            // libxml_use_internal_errors(true);
 
-            foreach ($all_active_clients_limit as $array) {
-                $client_name = $array["prenoms"] . " " . $array["noms"] . " " . $array["nom_commercial"] . " / " . $array["raison_sociale"];
-                $client_name = \trim($client_name);
-                $option_ = $domclient->createElement("option");
-                $option_->setAttribute("value", $client_name);
-                $option_->appendChild(
-                    $domclient->createTextNode($array["uid"] . " - " . $client_name)
-                );
-                $domclient->appendChild($option_);
-            }
-            echo $domclient->saveHTML();
+            // foreach ($all_active_clients_limit as $array) {
+            //     $client_name = $array["prenoms"] . " " . $array["noms"] . " " . $array["nom_commercial"] . " / " . $array["raison_sociale"];
+            //     $client_name = \trim($client_name);
+            //     $option_ = $domclient->createElement("option");
+            //     $option_->setAttribute("value", $client_name);
+            //     $option_->appendChild(
+            //         $domclient->createTextNode($array["uid"] . " - " . $client_name)
+            //     );
+            //     $domclient->appendChild($option_);
+            // }
+            // echo $domclient->saveHTML();
             ?>
         </datalist>
         <datalist id="item-list">
             <?php
-            require_once __DIR__ . "/../database/select/all_items_name_limit.php";
+            // require_once __DIR__ . "/../database/select/all_items_name_limit.php";
 
-            $domclient = new DOMDocument();
-            // //to be able to use new html5 tag with DOMDocument
-            libxml_use_internal_errors(true);
+            // $domclient = new DOMDocument();
+            // // //to be able to use new html5 tag with DOMDocument
+            // libxml_use_internal_errors(true);
 
-            foreach ($all_items_name_limit as $array) {
+            // foreach ($all_items_name_limit as $array) {
 
-                $option_ = $domclient->createElement("option");
-                $option_->setAttribute("value", $array["name"]);
-                $option_->appendChild(
-                    $domclient->createTextNode($array["code"] . " - " . $array["name"])
-                );
-                $domclient->appendChild($option_);
-            }
-            echo $domclient->saveHTML();
+            //     $option_ = $domclient->createElement("option");
+            //     $option_->setAttribute("value", $array["name"]);
+            //     $option_->appendChild(
+            //         $domclient->createTextNode($array["code"] . " - " . $array["name"])
+            //     );
+            //     $domclient->appendChild($option_);
+            // }
+            // echo $domclient->saveHTML();
             ?>
         </datalist>
     </div>

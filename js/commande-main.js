@@ -12,6 +12,7 @@ function generateRowAddItem(nodeModel, DataObj) {
 	return newNode;
 }
 
+//PRICE MANIPULATION
 function updateTotalPrice(baseMontantInput,priceListNode){
     console.log("updateTotalPrice");
     const pricesRaw=[];
@@ -70,12 +71,14 @@ function updateAllHeaderPrices(montantHTAvantRemiseInput,TVAAvantRemiseInput,mon
     TVAHandler(montantHTApresRemiseInput,TVAApresRemiseInput,montantTTCApresRemiseInput,2);
 }
 
+
 document.addEventListener("DOMContentLoaded",()=>{
     //CACHING ELEMENTS
     const divBtns=document.getElementById("div-btns");
     const tableBody=document.getElementById("ze-tbody");
     const tableFacture=document.getElementById("modal-commande-new").querySelector("#table-facture");
     const itemDataList=document.getElementById("item-list");
+    const clientDataList=document.getElementById("client-list");
 
 
     ////modal new
@@ -97,22 +100,19 @@ document.addEventListener("DOMContentLoaded",()=>{
     //FUNCTION
 
 
-    ////Price manipulation
-
-
-    // async function searchPrice(inputObj) {
-    //     console.log("searching PRICE");
-	// 	let url = "/database/select/get_price.php";
-	// 	let response = await sendData(url, inputObj);
+    async function searchClient(inputObj) {
+        console.log("searching ITEM");
+		let url = "/database/select/selection_clients.php";
+		let response = await sendData(url, inputObj);
 	
-	// 	console.log("error?");
-	// 	console.log(response);
-	// 	let myjson = JSON.parse(response);
+		console.log("error?");
+		console.log(response);
+		let myjson = JSON.parse(response);
 	
-    //     return myjson;
-	// 	// return await fillMainTable(myjson, tableBodyCategorie);
+        return myjson;
+		// return await fillMainTable(myjson, tableBodyCategorie);
 	
-	// }
+	}
 
     function getName(code){
         return document.querySelector("option[value='"+code+"']").getAttribute("label");
@@ -133,19 +133,36 @@ document.addEventListener("DOMContentLoaded",()=>{
         
     }
 
-    async function searchLive(term,datalistNode) {
-        let inputObj={code:term,name:term};
-        let result = await searchItem(inputObj);
-        addDatalistElement(datalistNode,result);
+    async function searchLive(term,datalistNode,mode) {
+        let search={"client":searchClient,"item":searchItem}
+        let inputObj={uid:term,noms:term,prenoms:term,"nom-commercial":term,"raison-sociale":term};
+        let result = await search[mode](inputObj);
+        // let result = await searchItem(inputObj);
+        addDatalistElement(datalistNode,result,mode);
     }
 
-    function addDatalistElement(datalistNode,arrayData) {
+    function addDatalistElement(datalistNode,arrayData,mode) {
+        
         datalistNode.innerHTML="";
         arrayData.forEach(element => {
             let option_=document.createElement("option");
-            option_.value=element.code;
-            option_.label=element.name;
-            option_.dataset.prix=element.prix_vente;
+            if (mode=="item"){
+                option_.value=element.code;
+                option_.label=element.name;
+                option_.dataset.prix=element.prix_vente;
+            }else if(mode=="client"){
+                let val=element.uid+" - ";
+                if (element.noms==""){
+                    console.log("client company");
+
+                    val+=(element["raison_sociale"]||"")+" / "+(element["nom_commercial"]||"");
+                }else if (element["raison_sociale"]==""){
+                    console.log("client humain");
+                    val+=element.noms+" "+element.prenoms;
+                }
+                option_.value=val;
+                option_.label=val;
+            }
             datalistNode.append(option_);
         });
         document.createElement("option")
@@ -243,17 +260,37 @@ document.addEventListener("DOMContentLoaded",()=>{
             console.log("event keyup");
             console.log(event);
             if ((event.target.id=="item-id")&&(event.key)){
-                console.log("searching man");
+                console.log("searching item");
                 itemDataList.innerHTML="";
                 clearTimeout(typingTimer);
                 let term =event.target.value.trim();
                 if(term){
                                     // TODO : sanitize here
                 itemDataList.innerHTML="<option value='Searching for \""+event.target.value.trim()+"\"'></option>";
-                    typingTimer = setTimeout(()=>{searchLive(term,itemDataList)}, 1500);
+                    typingTimer = setTimeout(()=>{searchLive(term,itemDataList,"item")}, 1500);
                 }
+            }else if ((event.target.id=="client")&&(event.key)){
+                    console.log("searching client");
+                    clientDataList.innerHTML="";
+                    clearTimeout(typingTimer);
+                    let term =event.target.value.trim();
+                    if(term){
+                        // TODO : sanitize here
+                        clientDataList.innerHTML="<option value='Searching for \""+event.target.value.trim()+"\"'></option>";
+                        typingTimer = setTimeout(()=>{searchLive(term,clientDataList,"client")}, 1500);
+                    }
             }else if((event.target.id=="item-id")&&(!event.key)){
                 console.log("item selected");
+                let val=event.target.value;
+                console.log(getName(val));
+                fillItemNameAndPrice(event.target);
+                const itemTotalPriceInputs=modalCommandeNew.querySelectorAll(".item-prix-total");
+                console.log("itemTotalPriceInputs");
+                console.log(itemTotalPriceInputs);
+                updateTotalPrice(montantHTAvantRemiseInput,itemTotalPriceInputs);
+                updateAllHeaderPrices(montantHTAvantRemiseInput,TVAAvantRemiseInput,montantTTCAvantRemiseInput,remiseTauxInput,remiseMontantInput,montantHTApresRemiseInput,TVAApresRemiseInput,montantTTCApresRemiseInput);
+            }else if((event.target.id=="client")&&(!event.key)){
+                console.log("client selected");
                 let val=event.target.value;
                 console.log(getName(val));
                 fillItemNameAndPrice(event.target);

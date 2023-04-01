@@ -582,3 +582,9 @@ whenever pu or quantity or itemID, or item row deleted is changed, all gets upda
 -------------------------
 085:
 fixed bug with handling of remmsiee update:ok;
+-------------------------
+086:
+did some reasearch on "input text number only". see geral_tips.txt;
+search and fill client input:ok;
+did some rename for consistency.
+working on a way to handle "empty resulut"...

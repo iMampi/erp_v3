@@ -14,7 +14,8 @@ class Queries
     static public $filter_famille = "select * from familles";
     static public $filter_place = "select * from magasins";
     static public $filter_item = "select code,name,type_item,categorie, famille,prix_vente, prix_achat_mp,declarable from view_all_items";
-    static public $selection_item = "select code,name,prix_vente from items";
+    static public $selection_items = "select code,name,prix_vente from items";
+    static public $selection_clients = "select uid,noms,prenoms,nom_commercial,raison_sociale from view_all_clients";
 
     static public $update_client = "
         select update_client(?,
@@ -445,7 +446,10 @@ class Queries
                 $this->query = self::$filter_item;
                 break;
             case 'selection_items':
-                $this->query = self::$selection_item;
+                $this->query = self::$selection_items;
+                break;
+            case 'selection_clients':
+                $this->query = self::$selection_clients;
                 break;
 
             default:
