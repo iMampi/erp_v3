@@ -186,6 +186,9 @@ class Queries
     static public $select_all_places_name_limit = "
         select uid,name,adresse,phone from magasins where active=1 limit 20
         ";
+    static public $select_all_places_name_nolimit = "
+        select uid,name,adresse,phone from magasins where active=1
+        ";
     static public $save_new_client = "
         SELECT new_client(
         ?,
@@ -366,6 +369,9 @@ class Queries
                 break;
             case 'select_all_items_name_limit':
                 $this->query = self::$select_all_items_name_limit;
+                break;
+            case 'select_all_places_name_nolimit':
+                $this->query = self::$select_all_places_name_nolimit;
                 break;
             case 'select_all_places_name_limit':
                 $this->query = self::$select_all_places_name_limit;

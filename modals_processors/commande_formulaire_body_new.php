@@ -1,5 +1,6 @@
 <?php
 // TODO grab role of user
+// TODO : authorization
 $base = __DIR__ . "/../elements/commandes/commande_header_base.html";
 
 $dom = new DOMDocument();
@@ -7,6 +8,19 @@ $dom = new DOMDocument();
 libxml_use_internal_errors(true);
 $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
 $xpath = new DOMXPath($dom);
+
+$commercial_input = $xpath->query(".//input[@id='commercial']");
+$val = $_SESSION["user"]->name;
+$commercial_input[0]->setAttribute("value", $val);
+
+require_once $_SERVER["DOCUMENT_ROOT"] . "/database/select/all_places_name_nolimit.php";
+$magasin_select = $xpath->query(".//select[@id='magasin']")[0];
+foreach ($all_places_name_nolimit as $values) {
+    $option_ = $dom->createElement("option");
+    $option_->setAttribute("value", $values["uid"]);
+    $option_->appendChild($dom->createTextNode($values["uid"] . "//" . $values["name"]));
+    $magasin_select->appendChild($option_);
+}
 
 // $inputs = $xpath->query(".//*[contains(@class,'input')]");
 

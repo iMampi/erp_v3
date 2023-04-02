@@ -12,6 +12,36 @@ function generateRowAddItem(nodeModel, DataObj) {
 	return newNode;
 }
 
+
+//SAVING COMMANDE NEW
+function grabCommandeDataForm(modal) {
+    let data={header:{},items:[]};
+    const headersName=["commercial","client","date","note","remise-taux","remise-montant","magasin","totalHT-avant-remise","TVA-avant-remise","totalTTC-avant-remise"];
+    //grab only essential headers data
+    let headerInputs=modal.querySelector("#new-modal-body-heads").querySelectorAll(".input");
+    headerInputs.forEach(input => {
+        try {
+            if (headersName.includes( input.id)){
+                data["header"][input.id]=input.value
+            }
+        } catch (error) {
+            console.log("ehrror : "+error);
+        }
+    });
+
+    //grab only essential item data
+    let tableBodyRows=modal.querySelector("#new-modal-body-table").querySelector('tbody').querySelectorAll("tr");
+    console.log(tableBodyRows);
+    tableBodyRows.forEach(row => {
+        console.log(row);
+        let itemID=row.querySelector("#item-id").value;
+        let quantity=row.querySelector("#item-quantity").value;
+        let numSerie=row.querySelector("#num-serie").value;
+        data["items"].push([itemID,quantity,numSerie]);
+    });
+    return data;
+}
+
 //PRICE MANIPULATION
 function updateTotalPrice(baseMontantInput,priceListNode){
     console.log("updateTotalPrice");
@@ -108,6 +138,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 		console.log("error?");
 		console.log(response);
 		let myjson = JSON.parse(response);
+		console.log(myjson);
 	
         return myjson;
 		// return await fillMainTable(myjson, tableBodyCategorie);
@@ -135,37 +166,47 @@ document.addEventListener("DOMContentLoaded",()=>{
 
     async function searchLive(term,datalistNode,mode) {
         let search={"client":searchClient,"item":searchItem}
-        let inputObj={uid:term,noms:term,prenoms:term,"nom-commercial":term,"raison-sociale":term};
-        let result = await search[mode](inputObj);
+
+        let inputObj={"client":{uid:term,noms:term,prenoms:term,"nom-commercial":term,"raison-sociale":term},
+            "item":{code:term,name:term}
+        };
+        let result = await search[mode](inputObj[mode]);
         // let result = await searchItem(inputObj);
-        addDatalistElement(datalistNode,result,mode);
+        addDatalistElement(datalistNode,result,mode,term);
     }
 
-    function addDatalistElement(datalistNode,arrayData,mode) {
-        
+    function addDatalistElement(datalistNode,arrayData,mode,term="") {
         datalistNode.innerHTML="";
-        arrayData.forEach(element => {
-            let option_=document.createElement("option");
-            if (mode=="item"){
-                option_.value=element.code;
-                option_.label=element.name;
-                option_.dataset.prix=element.prix_vente;
-            }else if(mode=="client"){
-                let val=element.uid+" - ";
-                if (element.noms==""){
-                    console.log("client company");
+        if ((Array.isArray(arrayData))&&(arrayData.length ||arrayData[0]!=undefined)){
+            console.log("array is ok");
+            arrayData.forEach(element => {
+                let option_=document.createElement("option");
+                if (mode=="item"){
+                    option_.value=element.code;
+                    option_.label=element.name;
+                    option_.dataset.prix=element.prix_vente;
+                }else if(mode=="client"){
+                    let val=element.uid+" - ";
+                    if (element.noms==""){
+                        console.log("client company");
 
-                    val+=(element["raison_sociale"]||"")+" / "+(element["nom_commercial"]||"");
-                }else if (element["raison_sociale"]==""){
-                    console.log("client humain");
-                    val+=element.noms+" "+element.prenoms;
+                        val+=(element["raison_sociale"]||"")+" / "+(element["nom_commercial"]||"");
+                    }else if (element["raison_sociale"]==""){
+                        console.log("client humain");
+                        val+=element.noms+" "+element.prenoms;
+                    }
+                    option_.value=val;
+                    option_.label=val;
                 }
-                option_.value=val;
-                option_.label=val;
-            }
+                datalistNode.append(option_);
+            });
+        }else{
+            console.log("empty arrayy");
+            let option_=document.createElement("option");
+            option_.value="Néant";
+            option_.label="aucun résultat pour \""+term+"\"";
             datalistNode.append(option_);
-        });
-        document.createElement("option")
+        }
         
     }
 
@@ -248,6 +289,9 @@ document.addEventListener("DOMContentLoaded",()=>{
                 console.log("remove");
                 updateTotalPrice(montantHTAvantRemiseInput,modalCommandeNew.querySelectorAll("#item-prix-total"))
                 updateAllHeaderPrices(montantHTAvantRemiseInput,TVAAvantRemiseInput,montantTTCAvantRemiseInput,remiseTauxInput,remiseMontantInput,montantHTApresRemiseInput,TVAApresRemiseInput,montantTTCApresRemiseInput);
+            }else if(event.target.id=="btn-save-new"){
+                let dataModalCommandeNew=grabCommandeDataForm(modalCommandeNew);
+                console.log(dataModalCommandeNew);
             }
         })
     } catch (error) {
@@ -291,14 +335,6 @@ document.addEventListener("DOMContentLoaded",()=>{
                 updateAllHeaderPrices(montantHTAvantRemiseInput,TVAAvantRemiseInput,montantTTCAvantRemiseInput,remiseTauxInput,remiseMontantInput,montantHTApresRemiseInput,TVAApresRemiseInput,montantTTCApresRemiseInput);
             }else if((event.target.id=="client")&&(!event.key)){
                 console.log("client selected");
-                let val=event.target.value;
-                console.log(getName(val));
-                fillItemNameAndPrice(event.target);
-                const itemTotalPriceInputs=modalCommandeNew.querySelectorAll(".item-prix-total");
-                console.log("itemTotalPriceInputs");
-                console.log(itemTotalPriceInputs);
-                updateTotalPrice(montantHTAvantRemiseInput,itemTotalPriceInputs);
-                updateAllHeaderPrices(montantHTAvantRemiseInput,TVAAvantRemiseInput,montantTTCAvantRemiseInput,remiseTauxInput,remiseMontantInput,montantHTApresRemiseInput,TVAApresRemiseInput,montantTTCApresRemiseInput);
             }else if (event.target.id=="item-quantity"){
                 updateItemTotalPrice(event.target.parentNode.parentNode)
                 const itemTotalPriceInputs=modalCommandeNew.querySelectorAll("#item-prix-total");

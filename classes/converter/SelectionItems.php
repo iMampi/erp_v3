@@ -71,9 +71,9 @@ class SelectionItems extends Converter
                         break;
                 }
                 if ($key == $last_key) {
-                    $this->conditions .= " where active='1'";
                     $this->conditions = \preg_replace('/\s*or\s*$/', "", $this->conditions);
                     $this->conditions = \preg_replace('/\s*where\s*$/', "", $this->conditions);
+                    $this->conditions .= " and active='1'";
                 }
             }
         }

@@ -588,3 +588,11 @@ did some reasearch on "input text number only". see geral_tips.txt;
 search and fill client input:ok;
 did some rename for consistency.
 working on a way to handle "empty resulut"...
+-------------------------
+087:
+commandes.php :
+implemented simple way to handle no result when doing live search. on item, on client.
+added input field "magasin"
+created custom footer for commande. need a btn "saving fot later".
+implementing the saving/validate commande process...
+implemented the grabData function.

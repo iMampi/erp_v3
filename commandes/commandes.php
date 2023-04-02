@@ -107,7 +107,7 @@ is_logged();
                         </div>
                         <div class="modal-footer">
                             <?php
-                            require_once __DIR__ . "/../modals_processors/buttons_footer_new.php";
+                            require_once __DIR__ . "/../modals_processors/buttons_footer_new_commande.php";
                             ?>
                         </div>
                     </div>
