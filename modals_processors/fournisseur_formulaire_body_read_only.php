@@ -2,7 +2,7 @@
 // TODO grab role of user
 $base = __DIR__ . "/../elements/tiers/fournisseurs/fournisseur_formulaire_base.html";
 
-$dom = new DOMDocument();
+$dom = new DOMDocument("1.0", "utf-8");
 //to be able to use new html5 tag with DOMDocument
 libxml_use_internal_errors(true);
 $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
@@ -19,4 +19,6 @@ $btn_save = $xpath->query(".//*[@class='btn-save')]");
 // echo "<br>";
 // echo "TEST";
 // echo "<br>";
-echo utf8_decode($dom->saveHTML($dom->documentElement));
+
+// echo utf8_decode($dom->saveHTML($dom->documentElement));
+echo $dom->saveHTML($dom->documentElement);

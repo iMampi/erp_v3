@@ -120,6 +120,36 @@ class Bindings
                 $arr["active"],
                 $arr["note"]
             ];
+        } else if ($this->converter::class == "Converter\NewCommandeHeader") {
+            $this->binding = [
+                'issiidddddi',
+                $arr["client"],
+                $arr["date"],
+                $arr["note"],
+                $arr["state"],
+                $arr["user_uid"],
+                $arr["taux_remise"],
+                $arr["montant_remise"],
+                $arr["total_ht"],
+                $arr["tva"],
+                $arr["total_ttc"],
+                $arr["magasin_uid"]
+            ];
+        } else if ($this->converter::class == "Converter\NewCommandeItem") {
+            $this->binding = [
+                'issiidddddi',
+                $arr["client"],
+                $arr["date"],
+                $arr["note"],
+                $arr["state"],
+                $arr["user_uid"],
+                $arr["taux_remise"],
+                $arr["montant_remise"],
+                $arr["total_ht"],
+                $arr["tva"],
+                $arr["total_ttc"],
+                $arr["magasin_uid"]
+            ];
         } else if ($this->converter::class == "Converter\NewEmployee") {
             $this->binding = [
                 'iisssssssiisisssssssissssidiiiiiissii',

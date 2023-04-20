@@ -15,6 +15,7 @@ is_logged();
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -35,7 +36,7 @@ is_logged();
     <div id="main-container" class="container-fluid px-0">
         <div id="header-top" class=" bg-light-blue">
             <?php
-            
+
             // generate headers
             require_once $_SERVER["DOCUMENT_ROOT"] . '/utilities/login_utils.php';
             $header = generate_logged_header($_SESSION['user']->name, "link-cats");

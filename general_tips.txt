@@ -41,6 +41,17 @@ The keydown and keyup events provide a code indicating which key is pressed, whi
 
 
 php
+
+!!!! NEW!!!!
+just add this tag at the start of of every base html file :
+
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+
+but remove "utf8_decode()" when echoing the result;
+it will also ouput the meta tag,so if you dont want to ouput the meta tag, just ouput the rest. if using DOMDocument, use the method childNodes[1];
+
+!!!!!!!!
+
 encoding problem even with
 $dom = new DOMDocument("1.0","utf-8");
 

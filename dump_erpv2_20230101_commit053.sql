@@ -1,4 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `erpv2` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE  IF NOT EXISTS `erpv2` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `erpv2`;
 -- MySQL dump 10.13  Distrib 8.0.28, for Win64 (x86_64)
 --
@@ -34,7 +34,7 @@ CREATE TABLE `affectations_achat` (
   KEY `fk_affectations_achat_facture_commande_uid_idx` (`commande_uid`),
   CONSTRAINT `fk_affectations_achat_facture_commande_uid` FOREIGN KEY (`commande_uid`) REFERENCES `commandes` (`uid`),
   CONSTRAINT `fk_affectations_achat_facture_fournisseur_uid` FOREIGN KEY (`facture_fournisseur_uid`) REFERENCES `factures_fournisseur` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +66,7 @@ CREATE TABLE `arretes_banque` (
   KEY `fk_arretes_banque_user_uid_idx` (`user_uid`),
   CONSTRAINT `fk_arretes_banque_banque_uid` FOREIGN KEY (`banque_uid`) REFERENCES `mes_banques` (`uid`),
   CONSTRAINT `fk_arretes_banque_user_uid` FOREIGN KEY (`user_uid`) REFERENCES `users` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,7 +98,7 @@ CREATE TABLE `arretes_caisse` (
   KEY `fk_arretes_caisse_user_uid_idx` (`user_uid`),
   CONSTRAINT `fk_arretes_caisse_caisse_uid` FOREIGN KEY (`caisse_uid`) REFERENCES `caisses` (`uid`),
   CONSTRAINT `fk_arretes_caisse_user_uid` FOREIGN KEY (`user_uid`) REFERENCES `users` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -130,7 +130,7 @@ CREATE TABLE `arretes_mobile_money` (
   KEY `fk_arretes_mobile_money_user_uid_idx` (`user_uid`),
   CONSTRAINT `fk_arretes_mobile_money_operateur_uid` FOREIGN KEY (`operateur_uid`) REFERENCES `operateurs` (`uid`),
   CONSTRAINT `fk_arretes_mobile_money_user_uid` FOREIGN KEY (`user_uid`) REFERENCES `users` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -165,7 +165,7 @@ CREATE TABLE `arretes_stock` (
   CONSTRAINT `fk_arrete_stock_magasin_uid` FOREIGN KEY (`magasin_uid`) REFERENCES `magasins` (`uid`),
   CONSTRAINT `fk_arretes_stock_item_uid` FOREIGN KEY (`item_uid`) REFERENCES `items` (`uid`),
   CONSTRAINT `fk_arretes_stock_user_uid` FOREIGN KEY (`user_uid`) REFERENCES `users` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -197,7 +197,7 @@ CREATE TABLE `arretes_wallet_electronic` (
   KEY `fk_arretes_wallet_electronic_user_uid_idx` (`user_uid`),
   CONSTRAINT `fk_arretes_wallet_electronic_user_uid` FOREIGN KEY (`user_uid`) REFERENCES `users` (`uid`),
   CONSTRAINT `fk_arretes_wallet_electronic_wallet_electronic_uid` FOREIGN KEY (`wallet_electronic_uid`) REFERENCES `wallets_electonic` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -230,7 +230,7 @@ CREATE TABLE `avoir_client` (
   CONSTRAINT `fk_avoir_client_client_uid` FOREIGN KEY (`client_uid`) REFERENCES `clients` (`uid`),
   CONSTRAINT `fk_avoir_client_facture_client_uid` FOREIGN KEY (`facture_client_uid`) REFERENCES `factures_client` (`num_facture`),
   CONSTRAINT `fk_avoir_client_outside_uid` FOREIGN KEY (`outside_uid`) REFERENCES `outsides` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -260,7 +260,7 @@ CREATE TABLE `banques` (
   KEY `fk_banques_devise_uid_idx` (`devise_uid`),
   CONSTRAINT `fk_banques_devise_uid` FOREIGN KEY (`devise_uid`) REFERENCES `devises` (`uid`),
   CONSTRAINT `fk_banques_tier_uid` FOREIGN KEY (`uid`) REFERENCES `tiers` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -290,7 +290,7 @@ CREATE TABLE `bons_entree` (
   CONSTRAINT `fk_bons_entree_magasin_uid` FOREIGN KEY (`magasin_uid`) REFERENCES `magasins` (`uid`),
   CONSTRAINT `fk_bons_entree_outside_uid` FOREIGN KEY (`uid`) REFERENCES `outsides` (`uid`),
   CONSTRAINT `fk_bons_entree_tier_uid` FOREIGN KEY (`sender_uid`) REFERENCES `tiers` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -320,7 +320,7 @@ CREATE TABLE `bons_sortie` (
   CONSTRAINT `fk_bons_sortie_magasin_uid` FOREIGN KEY (`magasin_uid`) REFERENCES `magasins` (`uid`),
   CONSTRAINT `fk_bons_sortie_outside_uid` FOREIGN KEY (`uid`) REFERENCES `outsides` (`uid`),
   CONSTRAINT `fk_bons_sortie_tier_uid` FOREIGN KEY (`receiver_uid`) REFERENCES `tiers` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -346,7 +346,7 @@ CREATE TABLE `caisses` (
   PRIMARY KEY (`uid`),
   UNIQUE KEY `idcaisses_UNIQUE` (`uid`),
   CONSTRAINT `fk_caisses_treso_uid` FOREIGN KEY (`uid`) REFERENCES `tresos` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -371,7 +371,7 @@ CREATE TABLE `categories` (
   `active` tinyint unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -401,7 +401,7 @@ CREATE TABLE `clients` (
   `active_client` tinyint unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`uid`),
   CONSTRAINT `fk_clients_tier_uid` FOREIGN KEY (`uid`) REFERENCES `tiers` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -435,7 +435,7 @@ CREATE TABLE `commandes` (
   KEY `fk_commandes_devis_uid_idx` (`devis_uid`),
   CONSTRAINT `fk_commandes_devis_uid` FOREIGN KEY (`devis_uid`) REFERENCES `devis` (`uid`),
   CONSTRAINT `fk_commandes_user_uid` FOREIGN KEY (`user_uid`) REFERENCES `users` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -467,7 +467,7 @@ CREATE TABLE `commandes_détails` (
   KEY `fk_commandes_details_item_uid_idx` (`item_uid`),
   CONSTRAINT `fk_commandes_details_commande_uid` FOREIGN KEY (`commande_uid`) REFERENCES `commandes` (`uid`),
   CONSTRAINT `fk_commandes_details_item_uid` FOREIGN KEY (`item_uid`) REFERENCES `items` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -492,7 +492,7 @@ CREATE TABLE `companies` (
   `raison_sociale` varchar(45) NOT NULL,
   PRIMARY KEY (`uid`),
   CONSTRAINT `fk_companies_tier_uid` FOREIGN KEY (`uid`) REFERENCES `tiers` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -517,7 +517,7 @@ CREATE TABLE `credits` (
   `name` varchar(45) NOT NULL,
   PRIMARY KEY (`uid`),
   CONSTRAINT `fk_credits_tresos` FOREIGN KEY (`uid`) REFERENCES `tresos` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='0 credit_client\n0 credit_fournisseur';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='0 credit_client\n0 credit_fournisseur';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -547,7 +547,7 @@ CREATE TABLE `devis` (
   PRIMARY KEY (`uid`),
   KEY `fk_devis_user_uid_idx` (`user_uid`),
   CONSTRAINT `fk_devis_user_uid` FOREIGN KEY (`user_uid`) REFERENCES `users` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -579,7 +579,7 @@ CREATE TABLE `devis_détails` (
   KEY `fk_devis_details_item_uid_idx` (`item_uid`),
   CONSTRAINT `fk_devis_details_commande_uid` FOREIGN KEY (`devis_uid`) REFERENCES `devis` (`uid`),
   CONSTRAINT `fk_devis_details_item_uid` FOREIGN KEY (`item_uid`) REFERENCES `items` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -607,7 +607,7 @@ CREATE TABLE `devises` (
   UNIQUE KEY `name_UNIQUE` (`name`),
   UNIQUE KEY `iso_UNIQUE` (`iso`),
   UNIQUE KEY `sigle_UNIQUE` (`sigle`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -645,7 +645,7 @@ CREATE TABLE `employees` (
   KEY `fk_employees_magasin_uid_idx` (`principal_magasin_uid`),
   CONSTRAINT `fk_employees_magasin_uid` FOREIGN KEY (`principal_magasin_uid`) REFERENCES `magasins` (`uid`),
   CONSTRAINT `fk_employees_tier_uid` FOREIGN KEY (`uid`) REFERENCES `tiers` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -676,7 +676,7 @@ CREATE TABLE `employees_avantages` (
   KEY `fk_employees_avantages_types_uid_idx` (`avantage_type`),
   CONSTRAINT `fk_employees_avantages_employees_uid` FOREIGN KEY (`employee_uid`) REFERENCES `employees` (`uid`),
   CONSTRAINT `fk_employees_avantages_types_uid` FOREIGN KEY (`avantage_type`) REFERENCES `types_avantage` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -703,7 +703,7 @@ CREATE TABLE `entries` (
   PRIMARY KEY (`uid`),
   KEY `fk_entries_user_uid_idx` (`user_uid`),
   CONSTRAINT `fk_entries_user_uid` FOREIGN KEY (`user_uid`) REFERENCES `users` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -738,7 +738,7 @@ CREATE TABLE `factures_client` (
   CONSTRAINT `fk_factures_client_commande_uid` FOREIGN KEY (`commande_uid`) REFERENCES `commandes` (`uid`),
   CONSTRAINT `fk_factures_client_commercial_uid` FOREIGN KEY (`commercial_uid`) REFERENCES `employees` (`uid`),
   CONSTRAINT `fk_factures_client_outside_uid` FOREIGN KEY (`uid`) REFERENCES `outsides` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -772,7 +772,7 @@ CREATE TABLE `factures_fournisseur` (
   CONSTRAINT `fk_factures_fournisseur_fournisseur_uid` FOREIGN KEY (`fournisseur_uid`) REFERENCES `fournisseurs` (`uid`),
   CONSTRAINT `fk_factures_fournisseur_magasin_uid` FOREIGN KEY (`magasin_uid`) REFERENCES `magasins` (`uid`),
   CONSTRAINT `fk_factures_fournisseur_outside_uid` FOREIGN KEY (`uid`) REFERENCES `outsides` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -797,7 +797,7 @@ CREATE TABLE `familles` (
   `active` tinyint unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -831,7 +831,7 @@ CREATE TABLE `fiche_de_paie` (
   KEY `fk_fiche_de_paie_employee_uid_idx` (`employee_uid`),
   CONSTRAINT `fk_fiche_de_paie_employee_uid` FOREIGN KEY (`employee_uid`) REFERENCES `employees` (`uid`),
   CONSTRAINT `fk_fiche_de_paie_outside_uid` FOREIGN KEY (`uid`) REFERENCES `outsides` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -859,7 +859,7 @@ CREATE TABLE `fournisseurs` (
   `active_fournisseur` tinyint unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`uid`),
   CONSTRAINT `fk_fournisseurs_tier_uid` FOREIGN KEY (`uid`) REFERENCES `tiers` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -890,7 +890,7 @@ CREATE TABLE `humans` (
   `naissance_lieu` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`uid`),
   CONSTRAINT `fk_humans_tier_uid` FOREIGN KEY (`uid`) REFERENCES `tiers` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -926,7 +926,7 @@ CREATE TABLE `identifiables` (
   CONSTRAINT `fk_identifiables_item_uid` FOREIGN KEY (`item_uid`) REFERENCES `magasins` (`uid`),
   CONSTRAINT `fk_identifiables_magasin_uid` FOREIGN KEY (`magasin_uid`) REFERENCES `magasins` (`uid`),
   CONSTRAINT `fk_identifiables_out_outside_uid` FOREIGN KEY (`out_outside_uid`) REFERENCES `outsides` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -955,7 +955,7 @@ CREATE TABLE `inside_details` (
   KEY `fk_inside_uid_idx` (`inside_uid`),
   CONSTRAINT `fk_inside_uid` FOREIGN KEY (`inside_uid`) REFERENCES `insides` (`uid`),
   CONSTRAINT `fk_outside_uid` FOREIGN KEY (`outside_uid`) REFERENCES `outsides` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -987,7 +987,7 @@ CREATE TABLE `insides` (
   PRIMARY KEY (`uid`),
   KEY `fk_insides_user_uid_idx` (`user_uid`),
   CONSTRAINT `fk_insides_user_uid` FOREIGN KEY (`user_uid`) REFERENCES `users` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1014,7 +1014,7 @@ CREATE TABLE `institutions` (
   KEY `fk_institutions_type_institution_uid_idx` (`type_uid`),
   CONSTRAINT `fk_institutions_tier_uid` FOREIGN KEY (`uid`) REFERENCES `tiers` (`uid`),
   CONSTRAINT `fk_institutions_type_institution_uid` FOREIGN KEY (`type_uid`) REFERENCES `types_institutions` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1053,7 +1053,7 @@ CREATE TABLE `items` (
   CONSTRAINT `fk_items_category_uid` FOREIGN KEY (`cateogry_uid`) REFERENCES `categories` (`uid`),
   CONSTRAINT `fk_items_famille_uid` FOREIGN KEY (`family_uid`) REFERENCES `familles` (`uid`),
   CONSTRAINT `fk_items_unite_mesure_uid` FOREIGN KEY (`unite_mesure_uid`) REFERENCES `unites_mesure` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1084,7 +1084,7 @@ CREATE TABLE `magasins` (
   KEY `fk_magasins_user_uid_idx` (`user_uid`),
   CONSTRAINT `fk_magasins_employee_uid` FOREIGN KEY (`responsable_uid`) REFERENCES `employees` (`uid`),
   CONSTRAINT `fk_magasins_user_uid` FOREIGN KEY (`user_uid`) REFERENCES `users` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='pre popolated with local banks';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='pre popolated with local banks';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1111,7 +1111,7 @@ CREATE TABLE `mes_banques` (
   KEY `fk_mes_banques_banques_uid_idx` (`banque_uid`),
   CONSTRAINT `fk_mes_banques_banques_uid` FOREIGN KEY (`banque_uid`) REFERENCES `banques` (`uid`),
   CONSTRAINT `fk_mes_banques_treso_uid` FOREIGN KEY (`uid`) REFERENCES `tresos` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1135,7 +1135,7 @@ CREATE TABLE `mode_pmt_bank` (
   `name` varchar(35) NOT NULL,
   PRIMARY KEY (`uid`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1168,7 +1168,7 @@ CREATE TABLE `movements` (
   CONSTRAINT `fk_movements_item_uid` FOREIGN KEY (`item_uid`) REFERENCES `items` (`uid`),
   CONSTRAINT `fk_movements_num_serie` FOREIGN KEY (`num_serie`) REFERENCES `identifiables` (`num_serie`),
   CONSTRAINT `fk_movements_outside_uid` FOREIGN KEY (`uid`) REFERENCES `outsides` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1198,7 +1198,7 @@ CREATE TABLE `mvts_bank` (
   CONSTRAINT `fk_mvts_bank_inside_uid` FOREIGN KEY (`uid`) REFERENCES `insides` (`uid`),
   CONSTRAINT `fk_mvts_bank_ma_banque_uid` FOREIGN KEY (`ma_banque_uid`) REFERENCES `mes_banques` (`uid`),
   CONSTRAINT `fk_mvts_bank_mode_pmt_uid` FOREIGN KEY (`mode_uid`) REFERENCES `mode_pmt_bank` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1228,7 +1228,7 @@ CREATE TABLE `mvts_caisse` (
   CONSTRAINT `fk_mvts_caisse_caisse_uid` FOREIGN KEY (`caisse_uid`) REFERENCES `caisses` (`uid`),
   CONSTRAINT `fk_mvts_caisse_inside_uid` FOREIGN KEY (`uid`) REFERENCES `insides` (`uid`),
   CONSTRAINT `fk_mvts_caisse_tier_uid` FOREIGN KEY (`porteur_uid`) REFERENCES `tiers` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1254,7 +1254,7 @@ CREATE TABLE `mvts_credit_client` (
   KEY `fk_mvts_credit_client_credit_uid_idx` (`treso_uid`),
   CONSTRAINT `fk_mvts_credit_client_credit_uid` FOREIGN KEY (`treso_uid`) REFERENCES `credits` (`uid`),
   CONSTRAINT `fk_mvts_credit_client_inside_uid` FOREIGN KEY (`uid`) REFERENCES `insides` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1280,7 +1280,7 @@ CREATE TABLE `mvts_credit_fournisseur` (
   KEY `fk_mvts_credit_fournisseur_credit_uid_idx` (`treso_uid`),
   CONSTRAINT `fk_mvts_credit_fournisseur_credit_uid` FOREIGN KEY (`treso_uid`) REFERENCES `credits` (`uid`),
   CONSTRAINT `fk_mvts_credit_fournisseur_inside_uid` FOREIGN KEY (`uid`) REFERENCES `insides` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1309,7 +1309,7 @@ CREATE TABLE `mvts_internes` (
   CONSTRAINT `fk_mvts_internes_destination_uid` FOREIGN KEY (`destination_uid`) REFERENCES `magasins` (`uid`),
   CONSTRAINT `fk_mvts_internes_origine_uid` FOREIGN KEY (`origin_uid`) REFERENCES `magasins` (`uid`),
   CONSTRAINT `fk_mvts_internes_outsides_uid` FOREIGN KEY (`uid`) REFERENCES `outsides` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1336,7 +1336,7 @@ CREATE TABLE `mvts_mobile_money` (
   KEY `fk_mvts_mobile_money_operateur_uid_idx` (`operateur_uid`),
   CONSTRAINT `fk_mvts_mobile_money_inside_uid` FOREIGN KEY (`uid`) REFERENCES `insides` (`uid`),
   CONSTRAINT `fk_mvts_mobile_money_operateur_uid` FOREIGN KEY (`operateur_uid`) REFERENCES `operateurs` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1363,7 +1363,7 @@ CREATE TABLE `mvts_wallet_electronic` (
   KEY `fk_mvts_wallet_electronic_wallet_electronic_uid_idx` (`wallet_electronic_uid`),
   CONSTRAINT `fk_mvts_wallet_electronic_inside_uid` FOREIGN KEY (`uid`) REFERENCES `insides` (`uid`),
   CONSTRAINT `fk_mvts_wallet_electronic_wallet_electronic_uid` FOREIGN KEY (`wallet_electronic_uid`) REFERENCES `wallets_electonic` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1395,7 +1395,7 @@ CREATE TABLE `nd_client` (
   CONSTRAINT `fk_nd_client_uid` FOREIGN KEY (`client_uid`) REFERENCES `clients` (`uid`),
   CONSTRAINT `fk_nd_commercial_uid` FOREIGN KEY (`commercial_uid`) REFERENCES `employees` (`uid`),
   CONSTRAINT `fk_nd_outside_uid` FOREIGN KEY (`outside_uid`) REFERENCES `outsides` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1422,7 +1422,7 @@ CREATE TABLE `operateurs` (
   PRIMARY KEY (`uid`),
   UNIQUE KEY `uid_UNIQUE` (`uid`),
   UNIQUE KEY `phone_number_UNIQUE` (`phone_number`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1451,7 +1451,7 @@ CREATE TABLE `outsides` (
   PRIMARY KEY (`uid`),
   KEY `fk_outsides_types_idx` (`type_uid`),
   CONSTRAINT `fk_outsides_types` FOREIGN KEY (`type_uid`) REFERENCES `types_outsides` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1481,7 +1481,7 @@ CREATE TABLE `params` (
   KEY `fk_params_devise_uid_idx` (`devise_int`),
   CONSTRAINT `fk_params_devise_uid` FOREIGN KEY (`devise_int`) REFERENCES `devises` (`uid`),
   CONSTRAINT `fk_params_tier_uid` FOREIGN KEY (`tiers_uid`) REFERENCES `tiers` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1505,7 +1505,7 @@ CREATE TABLE `sme` (
   `date` date NOT NULL,
   `montant` double(14,2) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1531,7 +1531,7 @@ CREATE TABLE `smie` (
   `rate_emp` double(4,3) unsigned NOT NULL,
   PRIMARY KEY (`uid`),
   CONSTRAINT `fk_smie_institutions_uid` FOREIGN KEY (`uid`) REFERENCES `institutions` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1554,7 +1554,7 @@ CREATE TABLE `test` (
   `uid` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1590,7 +1590,7 @@ CREATE TABLE `tiers` (
   PRIMARY KEY (`uid`),
   KEY `fk_tiers_type_personality_uid_idx` (`type_personnality_uid`),
   CONSTRAINT `fk_tiers_type_personality_uid` FOREIGN KEY (`type_personnality_uid`) REFERENCES `types_personality` (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1620,7 +1620,7 @@ CREATE TABLE `transferts_internes` (
   CONSTRAINT `fk_transferts_internes_outside_uid` FOREIGN KEY (`uid`) REFERENCES `outsides` (`uid`),
   CONSTRAINT `fk_transferts_internes_treso_destination_uid` FOREIGN KEY (`destination_uid`) REFERENCES `tresos` (`uid`),
   CONSTRAINT `fk_transferts_internes_treso_source_uid` FOREIGN KEY (`source_uid`) REFERENCES `tresos` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='pour treso';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='pour treso';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1653,7 +1653,7 @@ CREATE TABLE `tresos` (
   KEY `fkt_tresos_type_devise_uid_idx` (`devise_uid`),
   CONSTRAINT `fkt_tresos_type_devise_uid` FOREIGN KEY (`devise_uid`) REFERENCES `devises` (`uid`),
   CONSTRAINT `fkt_tresos_type_treso_uid` FOREIGN KEY (`type_treso_uid`) REFERENCES `types_treso` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1678,7 +1678,7 @@ CREATE TABLE `types_avantage` (
   `note` tinytext,
   PRIMARY KEY (`uid`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1702,7 +1702,7 @@ CREATE TABLE `types_institutions` (
   `name` varchar(45) NOT NULL,
   `note` tinytext,
   PRIMARY KEY (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='fisc, douane, santé,retraite, formation,etc,...';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='fisc, douane, santé,retraite, formation,etc,...';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1726,7 +1726,7 @@ CREATE TABLE `types_obligations` (
   `name` varchar(45) NOT NULL,
   `note` tinytext,
   PRIMARY KEY (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1751,7 +1751,7 @@ CREATE TABLE `types_outsides` (
   PRIMARY KEY (`uid`),
   UNIQUE KEY `name_UNIQUE` (`name`),
   UNIQUE KEY `uid_UNIQUE` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1775,7 +1775,7 @@ CREATE TABLE `types_personality` (
   `name` varchar(45) NOT NULL,
   PRIMARY KEY (`uid`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1800,7 +1800,7 @@ CREATE TABLE `types_tiers` (
   `name` varchar(45) NOT NULL,
   `active` tinyint unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1826,7 +1826,7 @@ CREATE TABLE `types_treso` (
   PRIMARY KEY (`uid`),
   UNIQUE KEY `uid_UNIQUE` (`uid`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1851,7 +1851,7 @@ CREATE TABLE `unites_mesure` (
   `active` tinyint unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1945,7 +1945,7 @@ CREATE TABLE `users` (
   `mvt_interne_delete` tinyint unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`uid`),
   CONSTRAINT `fk_users_tiers_uid` FOREIGN KEY (`uid`) REFERENCES `tiers` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2051,7 +2051,7 @@ CREATE TABLE `wallets_electonic` (
   UNIQUE KEY `uid_UNIQUE` (`uid`),
   UNIQUE KEY `url_UNIQUE` (`url`),
   CONSTRAINT `tk_wallets_electronic_treso_uid` FOREIGN KEY (`uid`) REFERENCES `tresos` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2076,7 +2076,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -2135,7 +2135,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -2192,7 +2192,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -2218,7 +2218,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -2318,7 +2318,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -2414,7 +2414,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -2451,7 +2451,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -2488,7 +2488,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -2522,7 +2522,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -2559,7 +2559,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -2593,7 +2593,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -2651,7 +2651,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -2701,7 +2701,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -2734,7 +2734,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -2767,7 +2767,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -2824,7 +2824,7 @@ DELIMITER ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
 /*!50003 SET character_set_client  = utf8mb4 */ ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
@@ -2899,7 +2899,7 @@ DELIMITER ;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
 /*!50001 SET character_set_client      = utf8mb4 */;
 /*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `view_all_clients` AS select `sub`.`uid` AS `uid`,`sub`.`type_personnality_uid` AS `type_personnality_uid`,`sub`.`adress` AS `adress`,`sub`.`nif` AS `nif`,`sub`.`stat` AS `stat`,`sub`.`rcs` AS `rcs`,`sub`.`phone1` AS `phone1`,`sub`.`phone2` AS `phone2`,`sub`.`mail1` AS `mail1`,`sub`.`mail2` AS `mail2`,`sub`.`active_tiers` AS `active_tiers`,`sub`.`note` AS `note`,`sub`.`type_vente` AS `type_vente`,`sub`.`encours` AS `encours`,`sub`.`nb_jour` AS `nb_jour`,`sub`.`evaluation` AS `evaluation`,`sub`.`declarable` AS `declarable`,`sub`.`commissionable` AS `commissionable`,`sub`.`noms` AS `noms`,`sub`.`prenoms` AS `prenoms`,`sub`.`cin` AS `cin`,`sub`.`cin_date` AS `cin_date`,`sub`.`cin_lieu` AS `cin_lieu`,`sub`.`naissance_date` AS `naissance_date`,`sub`.`naissance_lieu` AS `naissance_lieu`,`sub`.`nom_commercial` AS `nom_commercial`,`sub`.`raison_sociale` AS `raison_sociale`,`sub`.`active_client` AS `active_client` from (select `tiers`.`uid` AS `uid`,`tiers`.`type_personnality_uid` AS `type_personnality_uid`,`tiers`.`adress` AS `adress`,`tiers`.`nif` AS `nif`,`tiers`.`stat` AS `stat`,`tiers`.`rcs` AS `rcs`,`tiers`.`phone1` AS `phone1`,`tiers`.`phone2` AS `phone2`,`tiers`.`mail1` AS `mail1`,`tiers`.`mail2` AS `mail2`,`tiers`.`active_tiers` AS `active_tiers`,`tiers`.`note` AS `note`,`clients`.`type_vente` AS `type_vente`,`clients`.`encours` AS `encours`,`clients`.`nb_jour` AS `nb_jour`,`clients`.`evaluation` AS `evaluation`,`clients`.`declarable` AS `declarable`,`clients`.`commissionable` AS `commissionable`,`humans`.`noms` AS `noms`,`humans`.`prenoms` AS `prenoms`,`humans`.`cin` AS `cin`,`humans`.`cin_date` AS `cin_date`,`humans`.`cin_lieu` AS `cin_lieu`,`humans`.`naissance_date` AS `naissance_date`,`humans`.`naissance_lieu` AS `naissance_lieu`,'' AS `nom_commercial`,'' AS `raison_sociale`,`clients`.`active_client` AS `active_client` from ((`tiers` join `humans` on((`tiers`.`uid` = `humans`.`uid`))) join `clients` on((`tiers`.`uid` = `clients`.`uid`))) union select `tiers`.`uid` AS `uid`,`tiers`.`type_personnality_uid` AS `type_personnality_uid`,`tiers`.`adress` AS `adress`,`tiers`.`nif` AS `nif`,`tiers`.`stat` AS `stat`,`tiers`.`rcs` AS `rcs`,`tiers`.`phone1` AS `phone1`,`tiers`.`phone2` AS `phone2`,`tiers`.`mail1` AS `mail1`,`tiers`.`mail2` AS `mail2`,`tiers`.`active_tiers` AS `active_tiers`,`tiers`.`note` AS `note`,`clients`.`type_vente` AS `type_vente`,`clients`.`encours` AS `encours`,`clients`.`nb_jour` AS `nb_jour`,`clients`.`evaluation` AS `evaluation`,`clients`.`declarable` AS `declarable`,`clients`.`commissionable` AS `commissionable`,'' AS `noms`,'' AS `prenoms`,'' AS `cin`,'' AS `cin_date`,'' AS `cin_lieu`,'' AS `naissance_date`,'' AS `naissance_lieu`,`companies`.`nom_commercial` AS `nom_commercial`,`companies`.`raison_sociale` AS `raison_sociale`,`clients`.`active_client` AS `active_client` from ((`tiers` join `companies` on((`tiers`.`uid` = `companies`.`uid`))) join `clients` on((`tiers`.`uid` = `clients`.`uid`)))) `sub` order by `sub`.`uid` */;
@@ -2917,7 +2917,7 @@ DELIMITER ;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
 /*!50001 SET character_set_client      = utf8mb4 */;
 /*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `view_all_fournisseurs` AS select `sub`.`uid` AS `uid`,`sub`.`type_personnality_uid` AS `type_personnality_uid`,`sub`.`adress` AS `adress`,`sub`.`nif` AS `nif`,`sub`.`stat` AS `stat`,`sub`.`rcs` AS `rcs`,`sub`.`phone1` AS `phone1`,`sub`.`phone2` AS `phone2`,`sub`.`mail1` AS `mail1`,`sub`.`mail2` AS `mail2`,`sub`.`active_tiers` AS `active_tiers`,`sub`.`note` AS `note`,`sub`.`encours` AS `encours`,`sub`.`nb_jour` AS `nb_jour`,`sub`.`evaluation` AS `evaluation`,`sub`.`declarable` AS `declarable`,`sub`.`noms` AS `noms`,`sub`.`prenoms` AS `prenoms`,`sub`.`cin` AS `cin`,`sub`.`cin_date` AS `cin_date`,`sub`.`cin_lieu` AS `cin_lieu`,`sub`.`naissance_date` AS `naissance_date`,`sub`.`naissance_lieu` AS `naissance_lieu`,`sub`.`nom_commercial` AS `nom_commercial`,`sub`.`raison_sociale` AS `raison_sociale`,`sub`.`active_fournisseur` AS `active_fournisseur` from (select `tiers`.`uid` AS `uid`,`tiers`.`type_personnality_uid` AS `type_personnality_uid`,`tiers`.`adress` AS `adress`,`tiers`.`nif` AS `nif`,`tiers`.`stat` AS `stat`,`tiers`.`rcs` AS `rcs`,`tiers`.`phone1` AS `phone1`,`tiers`.`phone2` AS `phone2`,`tiers`.`mail1` AS `mail1`,`tiers`.`mail2` AS `mail2`,`tiers`.`active_tiers` AS `active_tiers`,`tiers`.`note` AS `note`,`fournisseurs`.`encours` AS `encours`,`fournisseurs`.`nb_jour` AS `nb_jour`,`fournisseurs`.`evaluation` AS `evaluation`,`fournisseurs`.`declarable` AS `declarable`,`humans`.`noms` AS `noms`,`humans`.`prenoms` AS `prenoms`,`humans`.`cin` AS `cin`,`humans`.`cin_date` AS `cin_date`,`humans`.`cin_lieu` AS `cin_lieu`,`humans`.`naissance_date` AS `naissance_date`,`humans`.`naissance_lieu` AS `naissance_lieu`,'' AS `nom_commercial`,'' AS `raison_sociale`,`fournisseurs`.`active_fournisseur` AS `active_fournisseur` from ((`tiers` join `humans` on((`tiers`.`uid` = `humans`.`uid`))) join `fournisseurs` on((`tiers`.`uid` = `fournisseurs`.`uid`))) union select `tiers`.`uid` AS `uid`,`tiers`.`type_personnality_uid` AS `type_personnality_uid`,`tiers`.`adress` AS `adress`,`tiers`.`nif` AS `nif`,`tiers`.`stat` AS `stat`,`tiers`.`rcs` AS `rcs`,`tiers`.`phone1` AS `phone1`,`tiers`.`phone2` AS `phone2`,`tiers`.`mail1` AS `mail1`,`tiers`.`mail2` AS `mail2`,`tiers`.`active_tiers` AS `active_tiers`,`tiers`.`note` AS `note`,`fournisseurs`.`encours` AS `encours`,`fournisseurs`.`nb_jour` AS `nb_jour`,`fournisseurs`.`evaluation` AS `evaluation`,`fournisseurs`.`declarable` AS `declarable`,'' AS `noms`,'' AS `prenoms`,'' AS `cin`,'' AS `cin_date`,'' AS `cin_lieu`,'' AS `naissance_date`,'' AS `naissance_lieu`,`companies`.`nom_commercial` AS `nom_commercial`,`companies`.`raison_sociale` AS `raison_sociale`,`fournisseurs`.`active_fournisseur` AS `active_fournisseur` from ((`tiers` join `companies` on((`tiers`.`uid` = `companies`.`uid`))) join `fournisseurs` on((`tiers`.`uid` = `fournisseurs`.`uid`)))) `sub` order by `sub`.`uid` */;

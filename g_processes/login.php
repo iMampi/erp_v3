@@ -10,6 +10,8 @@ echo "<br>";
 // $query= "select * from users";
 // var_dump(Myquery($connection,$query));
 $signing_in = login($connection, $_POST["login"], $_POST["password"]);
+
+// var_dump($signing_in);
 $host  = $_SERVER['HTTP_HOST'];
 
 

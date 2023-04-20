@@ -3,6 +3,19 @@ var typingTimer;
 
 
 
+async function saveCommande(inputObj) {
+    console.log("saving  comande");
+    let url = "/database/select/new_commande.php";
+    let response = await sendData(url, inputObj);
+
+    console.log("error?");
+    console.log(response);
+    let myjson = JSON.parse(response);
+
+    return myjson;
+    // return await fillMainTable(myjson, tableBodyCategorie);
+
+}
 
 function generateRowAddItem(nodeModel, DataObj) {
 	// console.log(DataObj);
@@ -29,6 +42,7 @@ function grabCommandeDataForm(modal) {
         }
     });
 
+
     //grab only essential item data
     let tableBodyRows=modal.querySelector("#new-modal-body-table").querySelector('tbody').querySelectorAll("tr");
     console.log(tableBodyRows);
@@ -36,8 +50,9 @@ function grabCommandeDataForm(modal) {
         console.log(row);
         let itemID=row.querySelector("#item-id").value;
         let quantity=row.querySelector("#item-quantity").value;
+        let prixUnitaire=row.querySelector("#item-pu").value;
         let numSerie=row.querySelector("#num-serie").value;
-        data["items"].push([itemID,quantity,numSerie]);
+        data["items"].push([itemID,quantity,prixUnitaire,numSerie]);
     });
     return data;
 }

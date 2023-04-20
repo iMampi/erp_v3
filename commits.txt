@@ -596,3 +596,15 @@ added input field "magasin"
 created custom footer for commande. need a btn "saving fot later".
 implementing the saving/validate commande process...
 implemented the grabData function.
+-------------------------
+088:
+discovered another way to handle the remaining "accent" problem (utf-8 eencoding). just add meta tag here and there. update general_tips. gotta implement it everywhere using DOMdocument->LoadHTML.
+-------------------------
+089:
+CHECKPOINT ;
+lost database.gotta reconstruct thedatabase;
+addingtreatement :
+if main tableisempty, generrate an empty row that says NEANT ;
+adding utf-8 handling to where i can (see general tips) 
+
+

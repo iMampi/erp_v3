@@ -11,7 +11,7 @@ $xpath = new DOMXPath($dom);
 
 $commercial_input = $xpath->query(".//input[@id='commercial']");
 $val = $_SESSION["user"]->name;
-$commercial_input[0]->setAttribute("value", $val);
+$commercial_input[0]->setAttribute("value", $_SESSION["user"]->uid . "//" . $val);
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/database/select/all_places_name_nolimit.php";
 $magasin_select = $xpath->query(".//select[@id='magasin']")[0];
@@ -52,4 +52,6 @@ foreach ($all_places_name_nolimit as $values) {
 //         }
 //     }
 // }
-echo utf8_decode($dom->saveHTML($dom->documentElement));
+
+// echo utf8_decode($dom->saveHTML($dom->documentElement));
+echo $dom->saveHTML($dom->documentElement->childNodes[1]);

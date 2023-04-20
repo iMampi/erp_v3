@@ -18,6 +18,7 @@ is_logged();
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/luxon.min.js"></script>
@@ -48,7 +49,7 @@ is_logged();
                 <div class="px-5">
                     <?php
                     // if (!can_visit($cycle_item)) {
-                    if (FALSE) {
+                    if (!can_visit($cycle_commande)) {
                         // TODO : IMPLEMENT ME CORRECTLY
                         // TODO : create a global variable for those message. maybe a constant to autoload
                         // ob_start();

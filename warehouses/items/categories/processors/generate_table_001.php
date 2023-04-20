@@ -10,7 +10,7 @@ $base = __DIR__ . "/../../../../elements/warehouses/items/categories/liste_categ
 
 $cycle_categorie = "categorie";
 //create first DOM to handle base file
-$dom = new DOMDocument();
+$dom = new DOMDocument("1.0", "utf-8");
 //to be able to use new html5 tag with DOMDocument
 libxml_use_internal_errors(true);
 $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
@@ -50,4 +50,4 @@ if (can_visit($cycle_categorie)) {
         }
     }
 }
-echo utf8_decode($dom->saveHTML($dom->documentElement));
+echo $dom->saveHTML($dom->documentElement->childNodes[1]);

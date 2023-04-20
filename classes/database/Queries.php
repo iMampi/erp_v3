@@ -273,6 +273,12 @@ class Queries
     static public $save_new_famille = "
         select new_famille(?,?)
         ";
+    static public $save_new_commande = "
+        select new_commande (NULL,?,?,?,?,?,NULL,?,?,?,?,?,?)
+        ";
+    static public $save_new_commande_row = "
+        insert into commandes_details values (NULL,?,?,?,?,?,?)
+        ";
     static public $save_new_employee = "
         select new_employee(
             ?,
@@ -339,6 +345,12 @@ class Queries
                 break;
             case 'save_new_place':
                 $this->query = self::$save_new_place;
+                break;
+            case 'save_new_commande':
+                $this->query = self::$save_new_commande;
+                break;
+            case 'save_new_commande_row':
+                $this->query = self::$save_new_commande_row;
                 break;
             case 'select_all_clients':
                 $this->query = self::$select_all_clients;

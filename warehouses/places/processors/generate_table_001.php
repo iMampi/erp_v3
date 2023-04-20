@@ -8,12 +8,13 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/database/select/all_places_name_limit
 
 $cycle_places = "magasin";
 
+
 $base = __DIR__ . "/../../../elements/warehouses/places/liste_places_table_001_base.html";
 
 //create first DOM to handle base file
-$dom = new DOMDocument();
+$dom = new DOMDocument("1.0", "utf-8");
 //to be able to use new html5 tag with DOMDocument
-libxml_use_internal_errors(true);
+// libxml_use_internal_errors(true);
 $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
 $tbody_ = $dom->getElementsByTagName("tbody")[0];
 $tr_model = $dom->getElementById("row-001");
@@ -57,4 +58,6 @@ if (can_visit($cycle_places)) {
         }
     }
 }
-echo utf8_decode($dom->saveHTML($dom->documentElement));
+// echo utf8_encode($dom->saveHTML($dom->documentElement));
+$stoper = $dom->saveHTML($dom->documentElement);
+echo $stoper;

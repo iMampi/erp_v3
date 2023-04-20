@@ -19,6 +19,7 @@ is_logged();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
     <script src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/helpers.js"></script>
     <script src="/js/fixed-header.js"></script>
@@ -61,11 +62,13 @@ is_logged();
             <!-- TABLEAU -->
             <!-- FIXME width resopnse, class of this table. prendre fact fnsr comme reeference -->
             <div id="table-container" class="row position-relative">
+
                 <div class="px-0
             ">
                     <div class="
             ">
                         <?php
+
                         require_once __DIR__ . '/processors/generate_table_001.php';
                         ?>
 
