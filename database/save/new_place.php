@@ -20,6 +20,7 @@ new DbHandler();
 
 if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("magasin"))) {
     $data = json_decode(file_get_contents('php://input'), true);
+    $data["user_uid"] = $_SESSION["user"]->uid;
     // var_dump($data);
     // echo 'here we are';
     $NewConverterObj = new NewPlace($data);

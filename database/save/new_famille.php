@@ -18,7 +18,7 @@ new DbHandler();
 // print "<br>TESTED<br>";
 
 // echo 'pre famille';
-$mysession1=$_SESSION;
+$mysession1 = $_SESSION;
 // echo 'pre famille';
 if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("famille"))) {
     $data = json_decode(file_get_contents('php://input'), true);

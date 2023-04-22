@@ -606,5 +606,9 @@ lost database.gotta reconstruct thedatabase;
 addingtreatement :
 if main tableisempty, generrate an empty row that says NEANT ;
 adding utf-8 handling to where i can (see general tips) 
-
-
+-------------------------
+089:
+typo in place-main.js>toast's mmeassage on success;
+places/generate_table_001.php : added "néant" when no data to show;
+articles/generate_table_001.php : added meta tag for utf encoding in base html. fixing database for items;
+articles/new_item.php : fixed back ened and database;

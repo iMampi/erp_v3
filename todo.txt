@@ -148,3 +148,12 @@ when deleting an entry, we set it to active=0. and it is updated int the table l
 
 commande/facture:
 when searching for an item, if reurn of query is error , add a message "pas darticle correspondant"
+
+when user cannont create NEW, implement something. now there is jsut no error, nothing
+
+handle mysql reponse :
+
+[false,{"error":"unauthorized"}]
+
+table liste:
+if néant ? get rid of néant 1 et2

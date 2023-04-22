@@ -25,24 +25,24 @@ if (can_visit($cycle_categorie)) {
 
     if (!count($all_familles_name)) {
         $tr_ = $tr_model->cloneNode();
-        // $tr_2 = $tr_model->cloneNode();
+        $tr_2 = $tr_model->cloneNode();
 
         $td_ = $dom->createElement("td");
-        // $td_2 = $dom->createElement("td");
+        $td_2 = $dom->createElement("td");
         $txt_ = $dom->createTextNode("Néant");
         // $txt_2 = $dom->createTextNode("Contact your administrator to change that.");
         $td_->appendChild($txt_);
         // $td_2->appendChild($txt_2);
         // TODO : set colspan's number dynamically;
-        $td_->setAttribute('colspan', "4");
+        $td_->setAttribute('colspan', "3");
         // $td_->setAttribute('rowspan', "2");
         $td_->setAttribute('class', "px-5 text-center");
-        // $td_2->setAttribute('colspan', "4");
-        // $td_2->setAttribute('class', "px-5 text-center");
+        $td_2->setAttribute('colspan', "3");
+        $td_2->setAttribute('class', "px-5 text-center");
         $tr_->appendChild($td_);
-        // $tr_2->appendChild($td_2);
+        $tr_2->appendChild($td_2);
         $tbody_->appendChild($tr_);
-        // $tbody_->appendChild($tr_2);
+        $tbody_->appendChild($tr_2);
     } else {
 
         foreach ($all_familles_name as $famille) {

@@ -1,12 +1,24 @@
 <?php
 // TODO grab role of user
-$base = __DIR__ . "/../elements/warehouses/items/item_formulaire_base.html";
+use function Session\can_create;
 
-$dom = new DOMDocument();
-//to be able to use new html5 tag with DOMDocument
-libxml_use_internal_errors(true);
-$dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
-$xpath = new DOMXPath($dom);
+require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
+
+$base = __DIR__ . "/../elements/warehouses/items/item_formulaire_base.html";
+if (isset($_SESSION["user"])) {
+    if (can_create("item")) {
+
+        $dom = new DOMDocument();
+        //to be able to use new html5 tag with DOMDocument
+        libxml_use_internal_errors(true);
+        $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
+        $xpath = new DOMXPath($dom);
+        echo utf8_decode($dom->saveHTML($dom->documentElement));
+    } else {
+        echo "<h2> you are not allowed to do this</h2>";
+    }
+}
+
 
 // $inputs = $xpath->query(".//*[contains(@class,'input')]");
 
@@ -38,4 +50,3 @@ $xpath = new DOMXPath($dom);
 //         }
 //     }
 // }
-echo utf8_decode($dom->saveHTML($dom->documentElement));

@@ -509,7 +509,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 			if (myjson[0] && myjson[1]["nb_affected_row"] == 1) {
 				console.log("succc");
 				console.log(JSON.stringify(myjson));
-				ToastShowClosured("success", "Categorie mis à jour avec succès.");
+				ToastShowClosured("success", "Magasin mis à jour avec succès.");
 				let inputsForEdition =
 					modalPlaceDetails.querySelectorAll(".input");
 				disableInputs(inputsForEdition);

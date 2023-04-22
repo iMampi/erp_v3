@@ -113,12 +113,14 @@ class Bindings
             ];
         } else if ($this->converter::class == "Converter\NewPlace") {
             $this->binding = [
-                'sssis',
+                'sssisi',
                 $arr["name"],
                 $arr["adresse"],
                 $arr["phone"],
                 $arr["active"],
-                $arr["note"]
+                $arr["note"],
+                $arr["user_uid"],
+
             ];
         } else if ($this->converter::class == "Converter\NewCommandeHeader") {
             $this->binding = [

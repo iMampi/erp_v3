@@ -122,8 +122,6 @@ class DbHandler
                     //////////
                 } catch (\Throwable $th) {
 
-
-
                     $error_arr_ = ["error" => $th->getMessage(), "nb" => $stmt->affected_rows, "res" => $res];
                     // $error_arr_ = ["error" => $th->getMessage(), "step1" => $step1];
                     $result_array = [\false, $error_arr_];

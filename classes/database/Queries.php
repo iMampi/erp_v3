@@ -251,7 +251,7 @@ class Queries
         select new_categorie(?,?)
         ";
     static public $save_new_place = "
-        select new_magasin(?,?,?,?,?)
+        select new_magasin(?,?,?,?,?,?)
         ";
     static public $save_new_item = "
         select new_item(?,
