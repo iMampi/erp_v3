@@ -5,7 +5,7 @@ var typingTimer;
 
 async function saveCommande(inputObj) {
     console.log("saving  comande");
-    let url = "/database/select/new_commande.php";
+    let url = "/database/save/new_commande.php";
     let response = await sendData(url, inputObj);
 
     console.log("error?");
@@ -45,9 +45,9 @@ function grabCommandeDataForm(modal) {
 
     //grab only essential item data
     let tableBodyRows=modal.querySelector("#new-modal-body-table").querySelector('tbody').querySelectorAll("tr");
-    console.log(tableBodyRows);
+    // console.log(tableBodyRows);
     tableBodyRows.forEach(row => {
-        console.log(row);
+        // console.log(row);
         let itemID=row.querySelector("#item-id").value;
         let quantity=row.querySelector("#item-quantity").value;
         let prixUnitaire=row.querySelector("#item-pu").value;
@@ -307,6 +307,7 @@ document.addEventListener("DOMContentLoaded",()=>{
             }else if(event.target.id=="btn-save-new"){
                 let dataModalCommandeNew=grabCommandeDataForm(modalCommandeNew);
                 console.log(dataModalCommandeNew);
+                saveCommande(dataModalCommandeNew);
             }
         })
     } catch (error) {
@@ -394,9 +395,6 @@ document.addEventListener("DOMContentLoaded",()=>{
             }
             totalTTCDiscountedHandler(montantTTCAvantRemiseInput,montantTTCApresRemiseInput,remiseMontantInput);
             TVAHandler(montantHTApresRemiseInput,TVAApresRemiseInput,montantTTCApresRemiseInput,2);
-            // updateAllHeaderPrices(montantHTAvantRemiseInput,TVAAvantRemiseInput,montantTTCAvantRemiseInput,remiseTauxInput,remiseMontantInput,montantHTApresRemiseInput,TVAApresRemiseInput,montantTTCApresRemiseInput);
-            // TVAHandler(montantHTAvantRemiseInput,TVAAvantRemiseInput,montantTTCAvantRemiseInput,1);
-            // totalTTCDiscountedHandler(montantTTCAvantRemiseInput,montantTTCApresRemiseInput,remiseMontantInput);
         })
 
     } catch (error) {

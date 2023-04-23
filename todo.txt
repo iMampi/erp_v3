@@ -157,3 +157,6 @@ handle mysql reponse :
 
 table liste:
 if néant ? get rid of néant 1 et2
+
+commande-main.js
+when typing in item_uid, clear the row;

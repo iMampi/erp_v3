@@ -124,33 +124,29 @@ class Bindings
             ];
         } else if ($this->converter::class == "Converter\NewCommandeHeader") {
             $this->binding = [
-                'issiidddddi',
-                $arr["client"],
+                'isisiidddddd',
+                $arr["client_uid"],
                 $arr["date"],
-                $arr["note"],
+                $arr["magasin_uid"],
+                $arr["libelle"],
                 $arr["state"],
                 $arr["user_uid"],
-                $arr["taux_remise"],
-                $arr["montant_remise"],
-                $arr["total_ht"],
-                $arr["tva"],
-                $arr["total_ttc"],
-                $arr["magasin_uid"]
+                $arr["total_ht_avant_remise"],
+                $arr["total_ttc_avant_remise"],
+                $arr["remise_taux"],
+                $arr["remise_montant"],
+                $arr["total_ht_apres_remise"],
+                $arr["total_ttc_apres_remise"]
             ];
         } else if ($this->converter::class == "Converter\NewCommandeItem") {
             $this->binding = [
-                'issiidddddi',
-                $arr["client"],
-                $arr["date"],
-                $arr["note"],
-                $arr["state"],
-                $arr["user_uid"],
-                $arr["taux_remise"],
-                $arr["montant_remise"],
-                $arr["total_ht"],
-                $arr["tva"],
-                $arr["total_ttc"],
-                $arr["magasin_uid"]
+                'issddd',
+                $arr["commande_uid"],
+                $arr["item_uid"],
+                $arr["num_serie"],
+                $arr["quantity"],
+                $arr["prix_unitaire"],
+                $arr["prix_total"]
             ];
         } else if ($this->converter::class == "Converter\NewEmployee") {
             $this->binding = [

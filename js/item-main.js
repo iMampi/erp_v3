@@ -129,7 +129,11 @@ function fillInputsDetails(valueObj) {
 	//TODO : use a DTO>> TO DUPLICATE EVERYWHERE ELSE
 	for (let index = 0; index < inputsElements.length; index++) {
 		let element = inputsElements[index];
-		element.value=valueObj[DTO_FILL_INPUT[element.id]];
+		if (["famille","categorie"].includes(element.id)){
+			element.value=valueObj[DTO_FILL_INPUT[element.id]+"_uid"]+" - "+valueObj[DTO_FILL_INPUT[element.id]];
+		}else{
+			element.value=valueObj[DTO_FILL_INPUT[element.id]];
+		}
 		// console.log(element.id);
 		// console.log(DTO_FILL_INPUT[element.id]);
 		// console.log(valueObj[DTO_FILL_INPUT[element.id]]);

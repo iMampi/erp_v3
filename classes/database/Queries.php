@@ -159,6 +159,14 @@ class Queries
     static public $select_all_active_clients_limit = "
         select uid,noms,prenoms,nom_commercial,raison_sociale from view_all_clients where active_client=1 limit 20
         ";
+    static public $select_all_commandes_header_limit = "
+        select commandes.uid as uid, commandes.date as date, commandes.total_ttc_apres_remise as total_ttc_apres_remise, commandes.state as state,
+        view_all_clients.noms as noms, view_all_clients.prenoms as prenoms, view_all_clients.nom_commercial as nom_commercial, view_all_clients.raison_sociale as raison_sociale
+        from commandes 
+        join
+        view_all_clients on view_all_clients.uid=commandes.client_uid 
+        limit 20 order by uid,date desc;
+        ";
     static public $select_all_employees_name = "
         call all_employees_active_only 
         ";
@@ -274,7 +282,7 @@ class Queries
         select new_famille(?,?)
         ";
     static public $save_new_commande = "
-        select new_commande (NULL,?,?,?,?,?,NULL,?,?,?,?,?,?)
+        select new_commande (?,?,?,?,?,?,?,?,?,?,?,?)
         ";
     static public $save_new_commande_row = "
         insert into commandes_details values (NULL,?,?,?,?,?,?)
@@ -387,6 +395,9 @@ class Queries
                 break;
             case 'select_all_places_name_limit':
                 $this->query = self::$select_all_places_name_limit;
+                break;
+            case 'select_all_commandes_header_limit':
+                $this->query = self::$select_all_commandes_header_limit;
                 break;
             case 'select_one_client':
                 $this->query = self::$select_one_client;

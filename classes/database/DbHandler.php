@@ -76,6 +76,17 @@ class DbHandler
         }
     }
 
+    static function start_transaction()
+    {
+        self::$connection->autocommit(\false);
+        // self::$connection->begin_transaction();
+    }
+    static function commit()
+    {
+        self::$connection->commit();
+        self::$connection->autocommit(\true);
+    }
+
 
     static function execute_prepared_statement(StandardPreparedStatement $prepared_statement, $fetch_mode = \MYSQLI_BOTH)
     {

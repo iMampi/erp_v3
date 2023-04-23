@@ -25,6 +25,9 @@ if (can_visit($cycle_categorie)) {
         $tr_ = $tr_model->cloneNode();
         $tr_2 = $tr_model->cloneNode();
 
+        $tr_->setAttribute("id", "row-neant1");
+        $tr_2->setAttribute("id", "row-neant2");
+
         $td_ = $dom->createElement("td");
         $td_2 = $dom->createElement("td");
         $txt_ = $dom->createTextNode("Néant");

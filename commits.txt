@@ -610,5 +610,11 @@ adding utf-8 handling to where i can (see general tips)
 089:
 typo in place-main.js>toast's mmeassage on success;
 places/generate_table_001.php : added "néant" when no data to show;
-articles/generate_table_001.php : added meta tag for utf encoding in base html. fixing database for items;
-articles/new_item.php : fixed back ened and database;
+items/generate_table_001.php : added meta tag for utf encoding in base html. fixing database for items;
+items/new_item.php : fixed back ened and database;
+-------------------------
+090:
+created view_all_items;
+items-main.js : modfied fillInputsDetails() so that the uid of famille/category also show up when seeing one items's details.
+RESUME CHECKPOINT;
+new_commande.php : saving new commande in databas is ok. transaction has been implemented correctly. rollback are ok too. database has been changed to fit our needs;

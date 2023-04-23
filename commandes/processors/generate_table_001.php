@@ -23,7 +23,7 @@ $xpath = new DOMXPath($dom);
 $row_counter = 1;
 
 if (can_visit($cycle_commande)) {
-
+    require_once __DIR__ . "/../../database/select/all_commandes_header_limit.php";
     foreach ($dummy as $el) {
         $tr_ = $tr_model->cloneNode(true);
 
