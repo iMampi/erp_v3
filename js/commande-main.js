@@ -1,7 +1,45 @@
+const DefaultValuesCommandeNewFormObj={};
 var counterRowItem=1;
 var typingTimer;  
 
+var modificationWatcher = false;
+const ToastShowClosured = showMe();
+var defaultFilterFlag = true;
 
+function generateRowTable(nodeModel, DataObj) {
+    //MARQUE PAGE
+	console.log(DataObj);
+	let newNode = nodeModel.cloneNode(true);
+	newNode.id = "row-"+DataObj["uid"];
+	// newNode.querySelector("input.uid").value = DataObj["uid"];
+	// TODO : use a dto or something
+	newNode.querySelector("input.date").value = DataObj["date"];
+	newNode.querySelector(".client.input").value=DataObj["client"];
+	newNode.querySelector(".totalTTC.input").value=DataObj["totalTTC-apres-remise"];
+	newNode.querySelector(".uid.input").value=DataObj["uid"];
+	newNode.querySelector(".state.input").value=DataObj["state"];
+	return newNode;
+}
+
+async function responseHandlerSaveCommandeNew(response) {
+	try {
+		let myjson = JSON.parse(await response);
+		//NOTE : the correct way for save. not correct for select query
+		//NOTE : works for error also
+		// TODO : handle for when it is an error
+        // TODO : all seems to use the same logic. DRY in all others occurence
+		console.log("myjson");
+		console.log(myjson);
+		if (myjson[0]) {
+			return ["success", Object.values(myjson[1])[0]];
+		} else {
+			return ["failure", Object.values(myjson[1])[0]];
+		}
+	} catch (e) {
+		// TODO : comment me
+		return "error js: " + e;
+	}
+}
 
 async function saveCommande(inputObj) {
     console.log("saving  comande");
@@ -10,11 +48,15 @@ async function saveCommande(inputObj) {
 
     console.log("error?");
     console.log(response);
-    let myjson = JSON.parse(response);
-
-    return myjson;
-    // return await fillMainTable(myjson, tableBodyCategorie);
-
+	let result = await responseHandlerSaveCommandeNew(response);
+	if (result[0] == "success") {
+		ToastShowClosured(result[0], "Commandes sauvegardées avec succès");
+	} else if (result[0] == "failure") {
+		ToastShowClosured(result[0], "Echec de la sauvegarde de commandes");
+	} else {
+		throw new Error("wrong value returned");
+	}
+	return [result[0] == "success", result[1]];
 }
 
 function generateRowAddItem(nodeModel, DataObj) {
@@ -29,7 +71,7 @@ function generateRowAddItem(nodeModel, DataObj) {
 //SAVING COMMANDE NEW
 function grabCommandeDataForm(modal) {
     let data={header:{},items:[]};
-    const headersName=["commercial","client","date","note","remise-taux","remise-montant","magasin","totalHT-avant-remise","TVA-avant-remise","totalTTC-avant-remise"];
+    const headersName=["commercial","client","date","note","remise-taux","remise-montant","magasin","totalHT-avant-remise","totalTTC-avant-remise","remise-taux","remise-montant","totalHT-apres-remise","totalTTC-apres-remise"];
     //grab only essential headers data
     let headerInputs=modal.querySelector("#new-modal-body-heads").querySelectorAll(".input");
     headerInputs.forEach(input => {
@@ -143,7 +185,15 @@ document.addEventListener("DOMContentLoaded",()=>{
     const montantTTCApresRemiseInput=modalCommandeNew.querySelector("#totalTTC-apres-remise");
 
     //FUNCTION
-
+    function _cleanNewForm() {
+		console.log("cleaning");
+		const inputsForm =
+			modalCommandeNew.querySelectorAll(".input");
+            inputsForm.forEach((input) => {
+			// console.log(input);
+			input.value = DefaultValuesCommandeNewFormObj[input.id];
+		});
+	}
 
     async function searchClient(inputObj) {
         console.log("searching ITEM");
@@ -307,7 +357,44 @@ document.addEventListener("DOMContentLoaded",()=>{
             }else if(event.target.id=="btn-save-new"){
                 let dataModalCommandeNew=grabCommandeDataForm(modalCommandeNew);
                 console.log(dataModalCommandeNew);
-                saveCommande(dataModalCommandeNew);
+                saveCommande(dataModalCommandeNew).then((result)=>{
+                    if (result[0]) {
+                        // insert uid of newly created client
+                        dataModalCommandeNew["header"]["uid"] = result[1];
+                        dataModalCommandeNew["header"]["state"] = 1;
+                        // console.log(dataObj);
+                        // TODO : cache html
+                        fetch(
+                            "/elements/commandes/liste_commandes_table_001_base.html"
+                        )
+                            .then((response) => {
+                                let tt = response.text();
+                                console.log("tt");
+                                console.log(tt);
+                                return tt;
+                            })
+                            .then((txt) => {
+                                // TODO : abstract this process
+                                let doc = new DOMParser().parseFromString(
+                                    txt,
+                                    "text/html"
+                                );
+                                let trModel = doc.querySelector("#row-001");
+    
+                                tableBody.append(
+                                    generateRowTable(trModel, dataModalCommandeNew["header"])
+                                );
+                                bsModalNew.hide();
+                                _cleanNewForm();
+                                console.log("yes saving called");
+                                return false;
+                            });
+                    } else {
+                        //TODO : show error
+                        return true;
+                    }
+                });
+                bsModalCommandeNew.hide();
             }
         })
     } catch (error) {

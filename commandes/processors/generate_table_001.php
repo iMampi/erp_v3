@@ -24,36 +24,36 @@ $row_counter = 1;
 
 if (can_visit($cycle_commande)) {
     require_once __DIR__ . "/../../database/select/all_commandes_header_limit.php";
-    foreach ($dummy as $el) {
+    foreach ($all_commandes_header_limit as $el) {
+        // var_dump($el);
+        // break;
         $tr_ = $tr_model->cloneNode(true);
 
-        $id_ = sprintf('%03d', $row_counter);
-        $tr_->setAttribute("id", $id_);
+        $tr_->setAttribute("id", $el["uid"]);
         $tbody_->appendChild($tr_);
 
 
         $nodes = $xpath->query(".//*[contains(@class,'input')]", $tr_);
         foreach ($nodes as $el_input) {
+            // TODO : refactor. since we use all inputs have id
             $classes = $el_input->getAttribute('class');
             $classes_array = explode(" ", $classes);
 
             if (in_array("date", $classes_array)) {
-                $el_input->setAttribute("value", $el[1]);
+                $el_input->setAttribute("value", $el["date"]);
             } elseif (in_array("uid", $classes_array)) {
-                $el_input->setAttribute("value", $el[0]);
-            } elseif (in_array("frnsr", $classes_array)) {
-                $el_input->setAttribute("value", $el[2]);
-            } elseif (in_array("num", $classes_array)) {
-                $el_input->setAttribute("value", $el[3]);
-            } elseif (in_array("affaire", $classes_array)) {
-                $el_input->setAttribute("value", $el[4]);
-            } elseif (in_array("total", $classes_array)) {
-                $el_input->setAttribute("value", $el[5]);
-            } elseif (in_array("detail", $classes_array)) {
-                // $el_input->setAttribute("value", $el[6]);
-            } elseif (in_array("nd", $classes_array)) {
-                $option_ = $xpath->query(".//*[(@value='" . $el[6] . "')]", $el_input);
-                $option_[0]->setAttribute("selected", "true");
+                $el_input->setAttribute("value", $el["uid"]);
+            } elseif (in_array("totalTTC", $classes_array)) {
+                $el_input->setAttribute("value", $el["total_ttc_apres_remise"]);
+            } elseif (in_array("state", $classes_array)) {
+                $el_input->setAttribute("value", $el["state"]);
+            } elseif (in_array("client", $classes_array)) {
+
+                if (!trim($el['raison_sociale'])) {
+                    $el_input->setAttribute("value", $el['client_uid'] . " - " . $el['noms'] . " " . $el['prenoms']);
+                } else {
+                    $el_input->setAttribute("value", $el['client_uid'] . " - " . $el['raison_sociale'] . " / " . $el['nom_commercial']);
+                }
             }
         }
     }

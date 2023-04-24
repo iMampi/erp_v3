@@ -49,7 +49,7 @@ class DbHandler
             // print_r($result_->dataArray);
             return $result_->dataArray;
         } catch (\Exception $e) {
-            echo "<br>error2 <br>";
+            echo "<br>error20 <br>";
             echo $myquery;
             echo "<br>";
             \var_dump($e);
