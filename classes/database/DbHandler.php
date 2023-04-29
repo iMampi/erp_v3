@@ -100,7 +100,7 @@ class DbHandler
                 echo "<br>called 2<br>";
                 // TODO : pas top, à changer
 
-                return self::select_query($prepared_statement->query);
+                return self::select_query($prepared_statement->query, $fetch_mode);
             } else {
 
                 $stmt->bind_param(...$prepared_statement->binding);

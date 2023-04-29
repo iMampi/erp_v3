@@ -625,3 +625,7 @@ fixed grabCommandeDataForm(), not grabbing remise and totalapresremise;
 implemented generateRowTable();
 implemented _cleanNewForm();
 implemented chaining for assynchornous execution of "save commande for later";
+-------------------------
+092:
+working on all the process of restting modal-commande-new...
+commande-main.js : implemented the process of reseting the modal-commande-new form.it works;

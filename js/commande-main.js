@@ -1,10 +1,85 @@
-const DefaultValuesCommandeNewFormObj={};
+var currentUser;
+const TODAY=luxon.DateTime.now().toFormat('yyyy-MM-dd');
+//key magasin removed
+const DefaultValuesCommandeNewFormObj={
+    uid:"",
+    state:1,
+    commercial:currentUser,
+    client:"",
+    date:TODAY,
+    "totalHT-avant-remise":"",
+    "TVA-avant-remise":"",
+    "totalTTC-avant-remise":"",
+    "remise-taux":"",
+"remise-montant" :"",
+"totalHT-apres-remise":"",
+"TVA-apres-remise":"",
+"totalTTC-apres-remise":"",
+"note":""
+};
+
+const DefaultValuesCommandeRowItem={
+"item-uid":"",
+"item-name" :"",
+"num-serie" :"",
+"item-pu" :"",
+"item-quantity" :"",
+"item-prix-total" :""
+};
+
 var counterRowItem=1;
 var typingTimer;  
 
 var modificationWatcher = false;
 const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
+
+function removeItem(target,mode) {
+    console.log("remove me");
+    if (mode==="target"){
+        let rowId=target.parentNode.parentNode.remove();
+    }else if(mode==="node"){
+        target.remove();
+    }else{
+        throw new Error("mode is not valid");
+    }
+    
+}
+
+function removeOtherItemRow(nodeList){
+    nodeList.forEach((element,index) => {
+        if(index!=0){
+            removeItem(element,"node");
+        }
+    });
+}
+
+function cleanFormNew(modal){
+    console.log("cleaning");
+    const inputsForm =
+    modal.querySelectorAll(".input");
+        inputsForm.forEach((input) => {
+        // console.log(input);
+        let myValue=DefaultValuesCommandeNewFormObj[input.id];
+        if (myValue==undefined){
+            myValue=DefaultValuesCommandeRowItem[input.id];
+            if (myValue==undefined){
+                return;
+            }
+        }
+        input.value=myValue;
+    });
+}
+
+function DefaultModalNew(modal){
+    //remove other item rows
+    let itemRows = modal.querySelectorAll(".item-commande-row");
+    removeOtherItemRow(itemRows);
+    //clean an dput to deafult value
+    cleanFormNew(modal);
+
+
+}
 
 function generateRowTable(nodeModel, DataObj) {
     //MARQUE PAGE
@@ -15,6 +90,7 @@ function generateRowTable(nodeModel, DataObj) {
 	// TODO : use a dto or something
 	newNode.querySelector("input.date").value = DataObj["date"];
 	newNode.querySelector(".client.input").value=DataObj["client"];
+    //TODO : format the numbers
 	newNode.querySelector(".totalTTC.input").value=DataObj["totalTTC-apres-remise"];
 	newNode.querySelector(".uid.input").value=DataObj["uid"];
 	newNode.querySelector(".state.input").value=DataObj["state"];
@@ -59,7 +135,7 @@ async function saveCommande(inputObj) {
 	return [result[0] == "success", result[1]];
 }
 
-function generateRowAddItem(nodeModel, DataObj) {
+function generateRowItem(nodeModel, DataObj) {
 	// console.log(DataObj);
 	let newNode = nodeModel.cloneNode(true);
 	newNode.id = "row-"+zeroLeftPadding(counterRowItem, 3, false);
@@ -90,7 +166,7 @@ function grabCommandeDataForm(modal) {
     // console.log(tableBodyRows);
     tableBodyRows.forEach(row => {
         // console.log(row);
-        let itemID=row.querySelector("#item-id").value;
+        let itemID=row.querySelector("#item-uid").value;
         let quantity=row.querySelector("#item-quantity").value;
         let prixUnitaire=row.querySelector("#item-pu").value;
         let numSerie=row.querySelector("#num-serie").value;
@@ -168,6 +244,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     const clientDataList=document.getElementById("client-list");
 
 
+
     ////modal new
     const modalCommandeNew=document.getElementById("modal-commande-new");
     const bsModalCommandeNew = new bootstrap.Modal(modalCommandeNew, {
@@ -183,6 +260,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     const TVAApresRemiseInput=modalCommandeNew.querySelector("#TVA-apres-remise");
     const montantTTCAvantRemiseInput=modalCommandeNew.querySelector("#totalTTC-avant-remise");
     const montantTTCApresRemiseInput=modalCommandeNew.querySelector("#totalTTC-apres-remise");
+    currentUser=modalCommandeNew.querySelector("#commercial").value;
 
     //FUNCTION
     function _cleanNewForm() {
@@ -308,7 +386,7 @@ document.addEventListener("DOMContentLoaded",()=>{
             console.log(trModel);
     
             tableFacture.querySelector('tbody').append(
-                generateRowAddItem(trModel, ["","","","","",""])
+                generateRowItem(trModel, ["","","","","",""])
             );
             // bsModalNew.hide();
             // _cleanNewForm();
@@ -316,17 +394,12 @@ document.addEventListener("DOMContentLoaded",()=>{
             return true;
         });}
 
-    function removeItem(target) {
-        console.log("remove me");
-        let rowId=target.parentNode.parentNode.remove();
-        
-    }
 
     //EVENTHANDLER
 
     // today's date
     try {
-        modalCommandeNew.querySelector('#date').value=luxon.DateTime.now().toFormat('yyyy-MM-dd');
+        modalCommandeNew.querySelector('#date').value=TODAY;
 
     } catch (error) {
         console.log("dont know what happened");
@@ -344,13 +417,13 @@ document.addEventListener("DOMContentLoaded",()=>{
     try {
         modalCommandeNew.addEventListener('click',(event)=>{
             if(event.target.id=="btn-cancel-new"){
-
-                bsModalCommandeNew.hide();
+                DefaultModalNew(modalCommandeNew);
+                // bsModalCommandeNew.hide();
             }else if(event.target.id=="btn-add-item"){
                 counterRowItem++;
                 addItem();
             }else if(event.target.classList.contains("btn-del")){
-                removeItem(event.target);
+                removeItem(event.target,"target");
                 console.log("remove");
                 updateTotalPrice(montantHTAvantRemiseInput,modalCommandeNew.querySelectorAll("#item-prix-total"))
                 updateAllHeaderPrices(montantHTAvantRemiseInput,TVAAvantRemiseInput,montantTTCAvantRemiseInput,remiseTauxInput,remiseMontantInput,montantHTApresRemiseInput,TVAApresRemiseInput,montantTTCApresRemiseInput);
@@ -406,7 +479,7 @@ document.addEventListener("DOMContentLoaded",()=>{
         modalCommandeNew.addEventListener('keyup',(event)=>{
             console.log("event keyup");
             console.log(event);
-            if ((event.target.id=="item-id")&&(event.key)){
+            if ((event.target.id=="item-uid")&&(event.key)){
                 console.log("searching item");
                 itemDataList.innerHTML="";
                 clearTimeout(typingTimer);
@@ -426,7 +499,7 @@ document.addEventListener("DOMContentLoaded",()=>{
                         clientDataList.innerHTML="<option value='Searching for \""+event.target.value.trim()+"\"'></option>";
                         typingTimer = setTimeout(()=>{searchLive(term,clientDataList,"client")}, 1500);
                     }
-            }else if((event.target.id=="item-id")&&(!event.key)){
+            }else if((event.target.id=="item-uid")&&(!event.key)){
                 console.log("item selected");
                 let val=event.target.value;
                 console.log(getName(val));
@@ -455,9 +528,9 @@ document.addEventListener("DOMContentLoaded",()=>{
         modalCommandeNew.addEventListener('input',(event)=>{
             console.log("event input");
             console.log(event);
-            if ((event.target.id=="item-id")&&(event.key)){
+            if ((event.target.id=="item-uid")&&(event.key)){
 
-            }else if((event.target.id=="item-id")&&(!event.key)){
+            }else if((event.target.id=="item-uid")&&(!event.key)){
             }else if (event.target.id=="item-quantity"){
                 updateItemTotalPrice(event.target.parentNode.parentNode)
                 const itemTotalPriceInputs=modalCommandeNew.querySelectorAll("#item-prix-total");
