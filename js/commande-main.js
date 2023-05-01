@@ -54,7 +54,7 @@ function removeOtherItemRow(nodeList){
     });
 }
 
-function cleanFormNew(modal){
+function cleanNewForm(modal){
     console.log("cleaning");
     const inputsForm =
     modal.querySelectorAll(".input");
@@ -76,7 +76,7 @@ function DefaultModalNew(modal){
     let itemRows = modal.querySelectorAll(".item-commande-row");
     removeOtherItemRow(itemRows);
     //clean an dput to deafult value
-    cleanFormNew(modal);
+    cleanNewForm(modal);
 
 
 }
@@ -262,6 +262,93 @@ document.addEventListener("DOMContentLoaded",()=>{
     const montantTTCApresRemiseInput=modalCommandeNew.querySelector("#totalTTC-apres-remise");
     currentUser=modalCommandeNew.querySelector("#commercial").value;
 
+    ////modal confirmation
+    const modalConfirmation=document.getElementById("modal-confirmation");
+    const bsModalConfirmation = new bootstrap.Modal(modalConfirmation, {
+        backdrop: "static",
+        keyboard: false,
+        focus: true,
+    });
+    const btnConfirmationYes=modalConfirmation.querySelector(		"#btn-confirmation-yes"
+    );
+    const btnConfirmationNo=modalConfirmation.querySelector(		"#btn-confirmation-no"
+    );
+
+    //CONFIRMATION OBJ
+    const confirmationObj = {
+		modal: modalConfirmation,
+		bsModal: bsModalConfirmation,
+		btnYes: btnConfirmationYes,
+		btnNo: btnConfirmationNo,
+	};
+
+    const cancelCreationObj = {
+		message:
+			"Des champs ont été modifiés.<br>\
+		Vos modifications vont être perdus.<br>\
+		Êtes vous sûr de vouloir quitter ce formulaire?",
+		yes: () => {
+			bsModalCommandeNew.hide();
+            DefaultModalNew(modalCommandeNew);
+			bsModalConfirmation.hide();
+			modificationWatcher = false;
+		},
+		no: () => {
+			bsModalConfirmation.hide();
+		},
+	};
+
+    const saveCreationObj = {
+		message:
+			"Des champs ont été modifiés.<br>\
+				Vos modifications vont être enregistrées.<br>\
+				Êtes vous sûr de vouloir sauvegarder vos modifications?",
+		yes: () => {
+            
+            let dataModalCommandeNew=grabCommandeDataForm(modalCommandeNew);
+            console.log(dataModalCommandeNew);
+            saveCommande(dataModalCommandeNew).then((result)=>{
+                if (result[0]) {
+                    // insert uid of newly created client
+                    dataModalCommandeNew["header"]["uid"] = result[1];
+                    dataModalCommandeNew["header"]["state"] = 1;
+                    // console.log(dataObj);
+                    // TODO : cache html
+                    fetch(
+                        "/elements/commandes/liste_commandes_table_001_base.html"
+                    )
+                        .then((response) => {
+                            let tt = response.text();
+                            console.log("tt");
+                            console.log(tt);
+                            return tt;
+                        })
+                        .then((txt) => {
+                            // TODO : abstract this process
+                            let doc = new DOMParser().parseFromString(
+                                txt,
+                                "text/html"
+                            );
+                            let trModel = doc.querySelector("#row-001");
+
+                            tableBody.append(
+                                generateRowTable(trModel, dataModalCommandeNew["header"])
+                            );
+                            bsModalCommandeNew.hide();
+                            DefaultModalNew(modalCommandeNew);
+                            bsModalConfirmation.hide();
+                            console.log("yes saving called");
+                            return false;
+                        });
+                } else {
+                    //TODO : show error
+                    return true;
+                }
+            });
+            bsModalCommandeNew.hide();
+        }
+    }
+
     //FUNCTION
     function _cleanNewForm() {
 		console.log("cleaning");
@@ -417,8 +504,14 @@ document.addEventListener("DOMContentLoaded",()=>{
     try {
         modalCommandeNew.addEventListener('click',(event)=>{
             if(event.target.id=="btn-cancel-new"){
-                DefaultModalNew(modalCommandeNew);
-                // bsModalCommandeNew.hide();
+                if (modificationWatcher) {
+                    openModalConfirmation(
+                        confirmationObj,
+                        cancelCreationObj
+                    );
+                } else {
+                    bsModalCommandeNew.hide();
+                } 
             }else if(event.target.id=="btn-add-item"){
                 counterRowItem++;
                 addItem();
@@ -428,48 +521,15 @@ document.addEventListener("DOMContentLoaded",()=>{
                 updateTotalPrice(montantHTAvantRemiseInput,modalCommandeNew.querySelectorAll("#item-prix-total"))
                 updateAllHeaderPrices(montantHTAvantRemiseInput,TVAAvantRemiseInput,montantTTCAvantRemiseInput,remiseTauxInput,remiseMontantInput,montantHTApresRemiseInput,TVAApresRemiseInput,montantTTCApresRemiseInput);
             }else if(event.target.id=="btn-save-new"){
-                let dataModalCommandeNew=grabCommandeDataForm(modalCommandeNew);
-                console.log(dataModalCommandeNew);
-                saveCommande(dataModalCommandeNew).then((result)=>{
-                    if (result[0]) {
-                        // insert uid of newly created client
-                        dataModalCommandeNew["header"]["uid"] = result[1];
-                        dataModalCommandeNew["header"]["state"] = 1;
-                        // console.log(dataObj);
-                        // TODO : cache html
-                        fetch(
-                            "/elements/commandes/liste_commandes_table_001_base.html"
-                        )
-                            .then((response) => {
-                                let tt = response.text();
-                                console.log("tt");
-                                console.log(tt);
-                                return tt;
-                            })
-                            .then((txt) => {
-                                // TODO : abstract this process
-                                let doc = new DOMParser().parseFromString(
-                                    txt,
-                                    "text/html"
-                                );
-                                let trModel = doc.querySelector("#row-001");
-    
-                                tableBody.append(
-                                    generateRowTable(trModel, dataModalCommandeNew["header"])
-                                );
-                                bsModalNew.hide();
-                                _cleanNewForm();
-                                console.log("yes saving called");
-                                return false;
-                            });
-                    } else {
-                        //TODO : show error
-                        return true;
-                    }
-                });
-                bsModalCommandeNew.hide();
-            }
-        })
+                if (modificationWatcher) {
+                    openModalConfirmation(
+                        confirmationObj,
+                        saveCreationObj
+                    );
+                } else {
+                    bsModalConfirmation.hide();
+                } 
+        }})
     } catch (error) {
         
     }
@@ -528,6 +588,8 @@ document.addEventListener("DOMContentLoaded",()=>{
         modalCommandeNew.addEventListener('input',(event)=>{
             console.log("event input");
             console.log(event);
+            modificationWatcher=true;
+
             if ((event.target.id=="item-uid")&&(event.key)){
 
             }else if((event.target.id=="item-uid")&&(!event.key)){

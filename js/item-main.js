@@ -836,6 +836,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
     try {
         modalNew.addEventListener('input',(event)=>{
+			console.log("input done");
             modificationWatcher=true;
         })
     } catch (error) {
