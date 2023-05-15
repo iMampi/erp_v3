@@ -1,6 +1,26 @@
 var currentUser;
+
 const TODAY=luxon.DateTime.now().toFormat('yyyy-MM-dd');
 //key magasin removed
+const DTO_FILL_INPUT_HEADERS={
+uid:"uid",
+date:"date",
+note:"libelle",
+state:"state",
+magasin:"magasin_uid",
+"totalHT-avant-remise":"total_ht_avant_remise",
+"totalTTC-avant-remise":"total_ttc_avant_remise",
+"remise-taux":"remise_taux",
+"remise-montant":"remise_montant",
+"totalHT-apres-remise":"total_ht_apres_remise",
+"totalTTC-apres-remise":"total_ttc_apres_remise",
+"TVA-avant-remise":"TVA-avant-remise",
+"TVA-apres-remise":"TVA-apres-remise"
+
+}
+const DTO_FILL_INPUT_ITEMS_ROWS={
+
+}
 const DefaultValuesCommandeNewFormObj={
     uid:"",
     state:1,
@@ -33,6 +53,68 @@ var typingTimer;
 var modificationWatcher = false;
 const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
+
+function fillInputsDetailsHeaders(responseJSON,modalDetails) {
+	console.log("responseJSON : ");
+	console.log(responseJSON);
+    valueObj=responseJSON["header"];
+    valueObj["TVA-avant-remise"]=roundToTwo(valueObj["total_ht_avant_remise"]);
+    valueObj["TVA-apres-remise"]=roundToTwo(valueObj["total_ht_apres_remise"]);
+	// let inputsElements = md.querySelectorAll(".input");
+
+	let inputsElements =
+    modalDetails.querySelectorAll(".input");
+
+	// console.log("inputsElement :");
+	// console.log(inputsElements);
+	// let inputsElements = document.querySelectorAll(
+	// "#modal-clt-details .input"
+	// );
+	//TODO : use a DTO>> TO DUPLICATE EVERYWHERE ELSE
+	for (let index = 0; index < inputsElements.length; index++) {
+		let element = inputsElements[index];
+        if(element.id==="client"){
+            if(valueObj["raison_sociale"]){
+                element.value=valueObj["client_uid"]+" - "+valueObj["raison_sociale"]+" / "+valueObj["nom_commercial"];
+            }else{
+                element.value=valueObj["client_uid"]+" - "+valueObj["noms"]+" "+valueObj["prénoms"];
+            }
+        }
+        else if(element.id==="commercial"){
+            element.value=valueObj["user_uid"]+"//"+valueObj["user_name"];
+
+		}else{
+			element.value=valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
+		}
+
+		// console.log(element.id);
+		// console.log(DTO_FILL_INPUT[element.id]);
+		// console.log(valueObj[DTO_FILL_INPUT[element.id]]);
+		
+	}
+}
+
+async function responseHandlerSelectOneCommande(response) {
+	try {
+		console.log("response++");
+		console.log(response);
+		let myjson = JSON.parse(await response);
+		//NOTE : the correct way for save. not correct for select query
+		//NOTE : works for error also
+		// TODO : handle for when it is an error
+        // TODO : all seems to use the same logic. DRY in all others occurence
+		console.log("myjson select");
+		console.log(myjson);
+		if (myjson["header"][0] && myjson["items"][0]) {
+			return ["success", {"header":myjson["header"][1], "items":myjson["items"][1]}];
+		} else {
+			return ["failure", myjson];
+		}
+	} catch (e) {
+		// TODO : comment me
+		return "error js: " + e;
+	}
+}
 
 function removeItem(target,mode) {
     console.log("remove me");
@@ -244,7 +326,6 @@ document.addEventListener("DOMContentLoaded",()=>{
     const clientDataList=document.getElementById("client-list");
 
 
-
     ////modal new
     const modalCommandeNew=document.getElementById("modal-commande-new");
     const bsModalCommandeNew = new bootstrap.Modal(modalCommandeNew, {
@@ -273,6 +354,17 @@ document.addEventListener("DOMContentLoaded",()=>{
     );
     const btnConfirmationNo=modalConfirmation.querySelector(		"#btn-confirmation-no"
     );
+
+    ////modal item detail
+    const modalCommandeDetails=document.getElementById("modal-details");
+    const bsModalCommandeDetails = new bootstrap.Modal(modalCommandeDetails, {
+        backdrop: "static",
+        keyboard: false,
+        focus: true,
+    });
+    // const btnSaveCommandeDetails=modalCommandeDetails.querySelector("#btn-save");
+    // const btnCancelCommandeDetails=modalCommandeDetails.querySelector("#btn-cancel");
+    // const btnModifyCommandeDetails=modalCommandeDetails.querySelector("#btn-modify");
 
     //CONFIRMATION OBJ
     const confirmationObj = {
@@ -350,15 +442,41 @@ document.addEventListener("DOMContentLoaded",()=>{
     }
 
     //FUNCTION
-    function _cleanNewForm() {
-		console.log("cleaning");
-		const inputsForm =
-			modalCommandeNew.querySelectorAll(".input");
-            inputsForm.forEach((input) => {
-			// console.log(input);
-			input.value = DefaultValuesCommandeNewFormObj[input.id];
-		});
+
+    async function showDetails(event) {
+		// TODO : refactor
+		console.log("called here");
+		let parent = event.target.parentNode.parentNode.parentNode;
+		// console.log("parent");
+		// console.log(parent);
+		let myuid = parent.querySelector(".input.uid").value;
+		// console.log("myuid tr");
+		// console.log(myuid);
+		sendData("/database/select/one_commande_details.php", {
+			uid: myuid,
+		})
+			.then((resp) => {
+				console.log("shwodetail :");
+				console.log(resp);
+				return responseHandlerSelectOneCommande(resp);
+			})
+			.then((result) => {
+				// console.log("result : " + JSON.stringify(result[1]));
+				// TODO : implement this part in new-client into a function cleanClass(). and optimize : if same personnality called, no nedd to recall.
+                console.log("result+-+");
+                console.log(result);
+				if (result[0]==="success") {
+
+						console.log("result[1]");
+						console.log(result[1]);
+                        let inputsHeader = modalCommandeDetails.querySelector("#commande-header")
+						fillInputsDetailsHeaders(result[1],inputsHeader);
+				}else{
+                    throw new Error(result);
+                }
+			});
 	}
+
 
     async function searchClient(inputObj) {
         console.log("searching ITEM");
@@ -584,6 +702,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     } catch (error) {
         
     }
+
     try {
         modalCommandeNew.addEventListener('input',(event)=>{
             console.log("event input");
@@ -605,6 +724,15 @@ document.addEventListener("DOMContentLoaded",()=>{
     } catch (error) {
         
     }
+
+    try {
+		tableBody.addEventListener("click", (event) => {
+			if (event.target.classList.contains("btn-details")){
+				showDetails(event);
+				bsModalCommandeDetails.show();
+			}
+		})
+		} catch (error) {}
 
     try {
         modalCommandeNew.addEventListener('input',(event)=>{

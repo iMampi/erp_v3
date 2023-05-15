@@ -4,7 +4,8 @@ const sd = 1000 * 60 * 60 * 24;
 
 function roundToTwo(num) {
 	//pour arrondir correctement avec 2 chiffre apres la virgul4
-	return +Math.round(num + "e+2") + "e-2";
+	// orMath.round(num * 100) / 100
+	return +(Math.round(num + "e+2") + "e-2");
 }
 
 function myRounder(num) {

@@ -16,6 +16,7 @@ class Queries
     static public $filter_item = "select code,name,type_item,categorie, famille,prix_vente, prix_achat_mp,declarable from view_all_items";
     static public $selection_items = "select code,name,prix_vente from items";
     static public $selection_clients = "select uid,noms,prenoms,nom_commercial,raison_sociale from view_all_clients";
+    static public $selection_commande_items = "select * from commandes_details where commande_uid=?";
 
     static public $update_client = "
         select update_client(?,
@@ -152,6 +153,9 @@ class Queries
         ";
     static public $select_one_item = "
         select * from view_all_items where code=? 
+        ";
+    static public $select_one_commande = "
+        select * from view_all_commandes_headers where uid=? 
         ";
     static public $select_all_clients = "
         call all_clients 
@@ -417,6 +421,9 @@ class Queries
             case 'select_one_item':
                 $this->query = self::$select_one_item;
                 break;
+            case 'select_one_commande':
+                $this->query = self::$select_one_commande;
+                break;
             case 'select_one_employee':
                 $this->query = self::$select_one_employee;
                 break;
@@ -479,6 +486,9 @@ class Queries
                 break;
             case 'selection_clients':
                 $this->query = self::$selection_clients;
+                break;
+            case 'selection_commande_items':
+                $this->query = self::$selection_commande_items;
                 break;
 
             default:
