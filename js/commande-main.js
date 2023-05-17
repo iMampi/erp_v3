@@ -54,7 +54,7 @@ var modificationWatcher = false;
 const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
 
-function fillInputsDetailsHeaders(responseJSON,modalDetails) {
+function fillInputsDetailsHeaders(responseJSON,modalDetailsHeaders) {
 	console.log("responseJSON : ");
 	console.log(responseJSON);
     valueObj=responseJSON["header"];
@@ -63,7 +63,7 @@ function fillInputsDetailsHeaders(responseJSON,modalDetails) {
 	// let inputsElements = md.querySelectorAll(".input");
 
 	let inputsElements =
-    modalDetails.querySelectorAll(".input");
+    modalDetailsHeaders.querySelectorAll(".input");
 
 	// console.log("inputsElement :");
 	// console.log(inputsElements);
@@ -93,6 +93,10 @@ function fillInputsDetailsHeaders(responseJSON,modalDetails) {
 		
 	}
 }
+
+
+
+
 
 async function responseHandlerSelectOneCommande(response) {
 	try {
@@ -135,6 +139,33 @@ function removeOtherItemRow(nodeList){
         }
     });
 }
+
+function addItem(tableFactureBody){
+    console.log("addding item");
+    fetch("/elements/commandes/commande_table_details_base.html")
+    .then((response) => {
+        let tt = response.text();
+        return tt;
+    })
+    .then((txt) => {
+        // TODO : abstract this process
+        // TODO : add caching
+        let doc = new DOMParser().parseFromString(
+            txt,
+            "text/html"
+        );
+        let trModel = doc.querySelector("#row-001");
+        console.log("trModel");
+        console.log(trModel);
+
+        tableFactureBody.querySelector('tbody').append(
+            generateRowItem(trModel, ["","","","","",""])
+        );
+        // bsModalNew.hide();
+        // _cleanNewForm();
+        // console.log("yes saving called");
+        return true;
+    });}
 
 function cleanNewForm(modal){
     console.log("cleaning");
@@ -199,9 +230,28 @@ async function responseHandlerSaveCommandeNew(response) {
 	}
 }
 
+function formatFloatsForDatabase(inputObj){
+    const keysWithNumbers=["remise-montant","remise-taux","totalHT-apres-remise","totalHT-avant-remise","totalTTC-apres-remise","totalTTC-avant-remise"];
+    let headersKeys=Object.keys(inputObj["header"])
+    headersKeys.forEach(key => {
+        if (keysWithNumbers.includes(key)){
+            inputObj["header"][key]=formatedNumberToFloat(inputObj["header"][key]);
+        }
+    });
+    inputObj["items"].forEach(row_array => {
+        row_array[1]=formatedNumberToFloat(row_array[1]);
+        row_array[2]=formatedNumberToFloat(row_array[2]);
+    });
+    return inputObj
+}
+
 async function saveCommande(inputObj) {
     console.log("saving  comande");
+    formatFloatsForDatabase(inputObj);
+    // console.log("data");
+    // console.log(data);
     let url = "/database/save/new_commande.php";
+    
     let response = await sendData(url, inputObj);
 
     console.log("error?");
@@ -321,7 +371,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     //CACHING ELEMENTS
     const divBtns=document.getElementById("div-btns");
     const tableBody=document.getElementById("ze-tbody");
-    const tableFacture=document.getElementById("modal-commande-new").querySelector("#table-facture");
+    const tableItemsFactureNew=document.getElementById("modal-commande-new").querySelector("#table-facture");
     const itemDataList=document.getElementById("item-list");
     const clientDataList=document.getElementById("client-list");
 
@@ -398,6 +448,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 		yes: () => {
             
             let dataModalCommandeNew=grabCommandeDataForm(modalCommandeNew);
+            console.log("dataModalCommandeNew");
             console.log(dataModalCommandeNew);
             saveCommande(dataModalCommandeNew).then((result)=>{
                 if (result[0]) {
@@ -572,32 +623,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 	
 	}
 
-    function addItem(){
-        console.log("addding item");
-        fetch("/elements/commandes/commande_table_details_base.html")
-        .then((response) => {
-            let tt = response.text();
-            return tt;
-        })
-        .then((txt) => {
-            // TODO : abstract this process
-            // TODO : add caching
-            let doc = new DOMParser().parseFromString(
-                txt,
-                "text/html"
-            );
-            let trModel = doc.querySelector("#row-001");
-            console.log("trModel");
-            console.log(trModel);
-    
-            tableFacture.querySelector('tbody').append(
-                generateRowItem(trModel, ["","","","","",""])
-            );
-            // bsModalNew.hide();
-            // _cleanNewForm();
-            // console.log("yes saving called");
-            return true;
-        });}
+
 
 
     //EVENTHANDLER
@@ -632,7 +658,7 @@ document.addEventListener("DOMContentLoaded",()=>{
                 } 
             }else if(event.target.id=="btn-add-item"){
                 counterRowItem++;
-                addItem();
+                addItem(tableItemsFactureNew);
             }else if(event.target.classList.contains("btn-del")){
                 removeItem(event.target,"target");
                 console.log("remove");

@@ -20,6 +20,6 @@ class NewCommandeItem extends Converter
         $this->data_for_db["prix_unitaire"] = \floatval($input[2]);
         $this->data_for_db["num_serie"] = $input[3];
         $this->data_for_db["commande_uid"] = \intval($input[4]);
-        $this->data_for_db["prix_total"] = \number_format($this->data_for_db["quantity"] * $this->data_for_db["prix_unitaire"], 2);
+        $this->data_for_db["prix_total"] = \number_format($this->data_for_db["quantity"] * $this->data_for_db["prix_unitaire"], 2, ".", "");
     }
 }

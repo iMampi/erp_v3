@@ -58,8 +58,8 @@ function formatNumber(value) {
 }
 
 function formatedNumberToFloat(val) {
-	// NOTE : there is option to use replaceAll, but too recent
 	if ((val) && (typeof val =="string")) {
+		// NOTE : there is option to use replaceAll, but too recent
 		let x = val.split(" ").join("");
 		let y = x.replace(",", ".");
 		return parseFloat(y);

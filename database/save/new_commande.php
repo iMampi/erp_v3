@@ -40,7 +40,9 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("fournisseur"))) {
         try {
             foreach ($data["items"] as $array_values) {
                 $ItemRowObj = new NewCommandeItem([...$array_values, $new_commande_uid]);
+                // echo "xxxx";
                 // var_dump($ItemRowObj);
+                // echo "xxxx";
                 $Query2 = new Queries("save_new_commande_row");
                 $Binding = new Bindings($ItemRowObj);
                 $Statement = new StandardPreparedStatement($Query2, $Binding);

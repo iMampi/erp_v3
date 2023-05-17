@@ -639,3 +639,11 @@ queries select_one_commande all allc oponent for get headers infos.
 js part for filling the modal.
 modfiying db : created view for commande.
 dumped db.
+-------------------------
+095:
+starting to implement the items'row of one commande...
+
+for savingNewCommande : added formatting using formatedNumberToFloat with the function formatNumbersForDatabase();
+class NewCommandeItem fixed. number_format was not parametered correctly.
+
+query "select_all_commandes_header_limit" : limit as set to 50 for dev purpose. change it back to 20
