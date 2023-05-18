@@ -296,10 +296,11 @@ document.addEventListener("DOMContentLoaded", () => {
 		console.log(response);
 		// TODO : we dont use await response.json because it is already handled in senData () as respones.text(). so we have to call JSON method manually;
 		let myjson = await JSON.parse(response);
-		// console.log("myjson");
+		console.log("myjson");
+		console.log(myjson);
 		if (Array.isArray(myjson)) {
 			// note : structure particuliere retourné par la funciton sql
-			if (myjson[0] && myjson[1][0] >= 1) {
+			if (myjson[0] && myjson[1][0][0] >= 1) {
 				console.log("succc");
 				console.log(JSON.stringify(myjson));
 				ToastShowClosured("success", "Client mis à jour avec succès.");
@@ -309,6 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				updateClientRow(table001, inputsValuesObj);
 				btnSaveModalClientDetails.disabled = true;
 				btnModifyClientDetails.disabled = false;
+				modificationWatcher = false;
 				return false;
 			} else {
 				console.log("faileeddd");

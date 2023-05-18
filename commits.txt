@@ -655,7 +655,9 @@ implemented the use of custom class Result into DbHandler::execute_prepared_stat
 fixed client cycles :
 removed field "sexe" in html base human;
 updated dataObj["uid"] = result[1] into dataObj["uid"] = result[1][0] because of DbHandler::execute_prepared_statement() 's update for saving new;
-updated view one client details js as well;
+updated view one client details js as well because of DbHandler::execute_prepared_statement() 's update;
+updated save updated client details js as well because of DbHandler::execute_prepared_statement() 's update;
 added modificationWatcher=false when saved succesfully new client;
+added modificationWatcher=false when saved succesfully update client;
 
 
