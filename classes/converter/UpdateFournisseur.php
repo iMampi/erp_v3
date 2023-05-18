@@ -10,5 +10,9 @@ class UpdateFournisseur extends NewClient
     {
         parent::__construct($data);
         $this->converter_for_db();
+
+        // FIXME : very bad practice.
+        $input = $this->data_from_user;
+        $this->data_for_db["active_fournisseur"] = \array_key_exists("actif", $input) ? \intval($input["actif"]) != 0 ?  \intval($input["actif"]) : 0 : 0;
     }
 }

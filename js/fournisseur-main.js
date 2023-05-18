@@ -564,7 +564,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			saveFournisseurNew(dataObj).then((result) => {
 				if (result[0]) {
 					// insert uid of newly created client
-					dataObj["uid"] = result[1];
+					dataObj["uid"] = result[1][0];
 					// console.log(dataObj);
 					// TODO : cache html
 					// TODO : handle fails for confirmation
@@ -917,7 +917,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		console.log(myjson);
 		if (Array.isArray(myjson)) {
 			// note : structure particuliere retourné par la funciton sql
-			if (myjson[0] && myjson[1][0] >= 1) {
+			if (myjson[0] && myjson[1][0][0] >= 1) {
 				console.log("succc");
 				console.log(JSON.stringify(myjson));
 				ToastShowClosured("success", "Fournisseur mis à jour avec succès.");
@@ -972,7 +972,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				if (result[0]) {
 					try {
 						let antiKey_ = (
-							(parseInt(result[1]["type_personnality_uid"]) % 2) +
+							(parseInt(result[1][0]["type_personnality_uid"]) % 2) +
 							1
 						).toString();
 						let classKey = "." + personnalities[antiKey_];
@@ -983,14 +983,14 @@ document.addEventListener("DOMContentLoaded", () => {
 						fieldsPersonnality.forEach((div) => div.remove());
 					} finally {
 						console.log("result[1]");
-						console.log(result[1]);
+						console.log(result[1][0]);
 						fecthAndAppendHTMLFournisseurForm(
 							refRowFournisseurDetails,
-							personnalities[result[1]["type_personnality_uid"]],
+							personnalities[result[1][0]["type_personnality_uid"]],
 							true
 						).then((newDom) => {
 							setTimeout(() => {
-								fillInputsDetails(result[1]);
+								fillInputsDetails(result[1][0]);
 							}, 200);
 							// bsModalClientDetails.show();
 						});
@@ -1198,7 +1198,7 @@ document.addEventListener("DOMContentLoaded", () => {
 						// btnSaveFournisseurDetails.disabled = true;
 						// btnModifyFournisseurDetails.disabled = false;
 						// TODO : change modification watcher when succesful
-						// modificationWatcher=false;
+						modificationWatcher=false;
 
 					} else {
 						bsModalFournisseurDetails.hide();

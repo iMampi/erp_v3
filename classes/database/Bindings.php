@@ -53,7 +53,7 @@ class Bindings
             ];
         } else if ($this->converter::class == "Converter\NewFournisseur") {
             $this->binding = [
-                'issssssssissssssssssidiii',
+                'issssssssissssssssssdiii',
                 $this->converter->data_for_db["type_personnality_uid"],
                 $arr["adress"],
                 $arr["nif"],
@@ -74,7 +74,6 @@ class Bindings
                 $arr["cin_lieu"],
                 $arr["naissance_date"],
                 $arr["naissance_lieu"],
-                $arr["sexe"],
                 $arr["encours"],
                 $arr["nb_jour"],
                 $arr["evaluation"],
