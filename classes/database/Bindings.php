@@ -23,8 +23,8 @@ class Bindings
         // $this->converter->data_for_db;
         if ($this->converter::class == "Converter\NewClient") {
             $this->binding = [
-                'issssssssissssssssssiidiiii',
-                $this->converter->data_for_db["type_personnality_uid"],
+                'issssssssissssssssssidiiii',
+                $arr["type_personnality_uid"],
                 $arr["adress"],
                 $arr["nif"],
                 $arr["stat"],
@@ -44,7 +44,6 @@ class Bindings
                 $arr["cin_lieu"],
                 $arr["naissance_date"],
                 $arr["naissance_lieu"],
-                $arr["sexe"],
                 $arr["type_vente"],
                 $arr["encours"],
                 $arr["nb_jour"],

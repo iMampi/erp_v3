@@ -647,3 +647,15 @@ for savingNewCommande : added formatting using formatedNumberToFloat with the fu
 class NewCommandeItem fixed. number_format was not parametered correctly.
 
 query "select_all_commandes_header_limit" : limit as set to 50 for dev purpose. change it back to 20
+-------------------------
+096:
+created commande_formulaire_body_table_read_only.php;
+implemented the use of custom class Result into DbHandler::execute_prepared_statement(), So we can fetch multiple value from request into result. NOW YOU GOT TO CHANGE EVERY PLACE WHERE RESULT of DbHandler::execute_prepared_statement() is used...
+
+fixed client cycles :
+removed field "sexe" in html base human;
+updated dataObj["uid"] = result[1] into dataObj["uid"] = result[1][0] because of DbHandler::execute_prepared_statement() 's update for saving new;
+updated view one client details js as well;
+added modificationWatcher=false when saved succesfully new client;
+
+

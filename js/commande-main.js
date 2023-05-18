@@ -93,6 +93,21 @@ function fillInputsDetailsHeaders(responseJSON,modalDetailsHeaders) {
 		
 	}
 }
+function fillInputsDetailsItems(responseJSON,modalDetailsHeaders) {
+}
+function fillInputsDetailsItem(arrayData,rowNode) {
+    const idToKey={"item-uid":"item_uid",
+        "item-name":"item_name",
+    "num-serie":"description_item",
+"item-pu":"prix_unitaire",
+"item-prix-total":"prix_total",
+"item-quantity":"quantity"
+}
+    rowNode.forEach(input => {
+        input.value=arr
+    });
+}
+
 
 
 

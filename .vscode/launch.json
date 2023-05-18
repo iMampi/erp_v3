@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
     
     
         {
@@ -39,7 +40,7 @@
             ],
             "program": "",
             "cwd": "${workspaceRoot}",
-            "port": 9003,
+            "port": 9000,
             "serverReadyAction": {
                 "pattern": "Development Server \\(http://localhost:([0-9]+)\\) started",
                 "uriFormat": "http://localhost:%s",

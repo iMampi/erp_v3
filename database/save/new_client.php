@@ -6,7 +6,11 @@ use Database\DbHandler;
 use Database\Queries;
 use Database\StandardPreparedStatement;
 
+use function Session\can_create;
+
+
 require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
+session_start();
 
 new DbHandler();
 
@@ -22,7 +26,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("client"))) {
     $data = json_decode(file_get_contents('php://input'), true);
     // var_dump($data);
 
-    $NewObj = new NewEmployee($data);
+    $NewObj = new NewClient($data);
     // var_dump($NewClientObj);
     $Query = new Queries("save_new_client");
     $Binding = new Bindings($NewObj);

@@ -17,7 +17,7 @@ class NewClient extends Converter
         $input = $this->data_from_user;
         $this->data_for_db["uid"] = \array_key_exists("uid", $input) ? \intval($input["uid"]) != 0 ?  \intval($input["uid"]) : \null : \null;
 
-        $this->data_for_db["type_personnality_uid"] = \array_key_exists("type_personnality_uid", $input) ?
+        $this->data_for_db["type_personnality_uid"] = \array_key_exists("type-personnality", $input) ?
             $this->data_for_db["type_personnality_uid"] = \in_array(\intval($input["type-personnality"]), [1, 2], \true) ?
             \intval($input["type-personnality"])
             : \null : \null;
@@ -42,19 +42,19 @@ class NewClient extends Converter
 
         $this->data_for_db["note"] = \array_key_exists("note", $input) ? \trim($input["note"]) != "" ?  \trim($input["note"]) : \null : \null;
 
-        $this->data_for_db["type_vente"] = \array_key_exists("type-vente", $input) ? \intval($input["type-vente"]) != 0 ?  \intval($input["type-vente"]) : \null : \null;
+        $this->data_for_db["type_vente"] = \array_key_exists("type-vente", $input) ? \intval($input["type-vente"]) != 0 ?  \intval($input["type-vente"]) : 0 : 0;
 
-        $this->data_for_db["encours"] = \array_key_exists("encours", $input) ? \floatval($input["encours"]) != 0 ?  \floatval($input["encours"]) : \null : \null;
+        $this->data_for_db["encours"] = \array_key_exists("encours", $input) ? \floatval($input["encours"]) != 0 ?  \floatval($input["encours"]) : 0 : 0;
 
-        $this->data_for_db["nb_jour"] = \array_key_exists("echeance", $input) ? \intval($input["echeance"]) != 0 ?  \intval($input["echeance"]) : \null : \null;
+        $this->data_for_db["nb_jour"] = \array_key_exists("echeance", $input) ? \intval($input["echeance"]) != 0 ?  \intval($input["echeance"]) : 0 : 0;
 
-        $this->data_for_db["evaluation"] = \array_key_exists("evaluation", $input) ? \intval($input["evaluation"]) != 0 ?  \intval($input["evaluation"]) : \null : \null;
+        $this->data_for_db["evaluation"] = \array_key_exists("evaluation", $input) ? \intval($input["evaluation"]) != 0 ?  \intval($input["evaluation"]) : 0 : 0;
 
         $this->data_for_db["sexe"] = \array_key_exists("sexe", $input) ? \intval($input["sexe"]) != 0 ?  \intval($input["sexe"]) : \null : \null;
 
         $this->data_for_db["declarable"] =  \array_key_exists("declarable", $input) ? \intval($input["declarable"]) != 0 ?  \intval($input["declarable"]) : \null : \null;
 
-        $this->data_for_db["commissionable"] = \array_key_exists("commissionable", $input) ? \intval($input["commissionable"]) != 0 ?  \intval($input["commissionable"]) : \null : \null;
+        $this->data_for_db["commissionable"] = \array_key_exists("commissionable", $input) ? \intval($input["commissionable"]) != 0 ?  \intval($input["commissionable"]) : 0 : 0;
 
         if ($input["type-personnality"] == "1") {
             // for human   
@@ -99,7 +99,7 @@ class NewClient extends Converter
 
             $this->data_for_db["naissance_lieu"] = \null;
 
-            $this->data_for_db["sexe"] = 0
+            $this->data_for_db["sexe"] = 0;
         }
     }
 }

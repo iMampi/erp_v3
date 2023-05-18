@@ -338,3 +338,14 @@ input:invalid,
  {
   border: red solid 3px;
 }
+
+
+//////////////
+[XDebug]
+xdebug.mode=debug
+xdebug.start_with_request=yes
+xdebug.client_port=9003
+xdebug.client_host = localhost
+zend_extension=C:\xampp\php\ext\php_xdebug.dll
+edit laucnch.json file to change pot to 9003
+////////////////

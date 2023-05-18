@@ -375,7 +375,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				if (result[0]) {
 					try {
 						let antiKey_ = (
-							(parseInt(result[1]["type_personnality_uid"]) % 2) +
+							(parseInt(result[1][0]["type_personnality_uid"]) % 2) +
 							1
 						).toString();
 						let classKey = "." + personnalities[antiKey_];
@@ -387,11 +387,11 @@ document.addEventListener("DOMContentLoaded", () => {
 					} finally {
 						fecthAndAppendHTMLClientForm(
 							refRowClientDetails,
-							personnalities[result[1]["type_personnality_uid"]],
+							personnalities[result[1][0]["type_personnality_uid"]],
 							true
 						).then((newDom) => {
 							setTimeout(() => {
-								fillInputsDetails(result[1]);
+								fillInputsDetails(result[1][0]);
 							}, 200);
 							// bsModalClientDetails.show();
 						});

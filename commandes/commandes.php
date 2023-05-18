@@ -177,7 +177,7 @@ is_logged();
                             <?php
                             //TODO : make the header of factures in details readonly. 
                             //TODO : change to require once. 
-                            require __DIR__ . "/../elements/affaires/affaires_table_details_base.html";
+                            require __DIR__ . "/../modals_processors/commande_formulaire_body_table_read_only.php";
                             ?>
                             <!-- </div> -->
                         </div>

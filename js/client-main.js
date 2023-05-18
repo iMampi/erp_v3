@@ -134,6 +134,7 @@ async function saveNewclient(inputObj) {
 	console.log(response);
 	if (result[0] == "success") {
 		ToastShowClosured(result[0], "Nouveau client créé avec succès");
+		modificationWatcher=false;
 	} else if (result[0] == "failure") {
 		ToastShowClosured(result[0], "Echec de la création du client");
 	} else {
@@ -303,6 +304,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		focus: true,
 	});
 
+	// TODO : confirmation save and the others...
+	
 	//modal filter
 	const modalClientFilter = document.getElementById("modal-client-filter");
 
@@ -642,7 +645,9 @@ document.addEventListener("DOMContentLoaded", () => {
 			saveNewclient(dataObj).then((result) => {
 				if (result[0]) {
 					// insert uid of newly created client
-					dataObj["uid"] = result[1];
+					console.log("resulty");
+					console.log(result);
+					dataObj["uid"] = result[1][0];
 					console.log("dataObj");
 					console.log(dataObj);
 					//TODO : use to DOMPARSER
