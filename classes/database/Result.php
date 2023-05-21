@@ -7,15 +7,17 @@ class Result
     public $dataObj;
     public $dataArray;
 
-    function __construct($dataObj, $mode = MYSQLI_BOTH)
+    function __construct($dataObj, $nb_affected_row, $mode = MYSQLI_BOTH)
     {
         if ($dataObj != \null) {
 
             $this->dataObj = $dataObj;
             $this->dataArray = $this->result_to_array($dataObj, $mode);
+            $this->affected_rows = $nb_affected_row;
         } else {
             $this->dataObj = \null;
             $this->dataArray = \null;
+            $this->affected_rows = $nb_affected_row;
         }
     }
 

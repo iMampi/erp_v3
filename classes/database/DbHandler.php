@@ -117,8 +117,9 @@ class DbHandler
                         // $res = $stmt->get_result();
 
                         // $results = $res->fetch_array($fetch_mode);
-
-                        $res_ = new Result($stmt->get_result());
+                        $r = $stmt->get_result();
+                        $n = $stmt->affected_rows;
+                        $res_ = new Result($r, $n);
 
                         $results = $res_->dataArray;
                     } catch (\Throwable $th) {

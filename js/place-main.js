@@ -164,8 +164,10 @@ async function saveNew(inputObj) {
 	let result = await responseHandlerSavePlaceNew(response);
 	if (result[0] == "success") {
 		ToastShowClosured(result[0], "Nouveau magasin créé avec succès");
+		modificationWatcher=false;
 	} else if (result[0] == "failure") {
 		ToastShowClosured(result[0], "Echec de la création du magsin");
+		modificationWatcher=false;
 	} else {
 		throw new Error("wrong value returned");
 	}
@@ -273,7 +275,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 			saveNew(dataObj).then((result) => {
 				if (result[0]) {
 					// insert uid of newly created client
-					dataObj["uid"] = result[1];
+					dataObj["uid"] = result[1][0];
 					// console.log(dataObj);
 					// TODO : cache html
 					fetch(
@@ -479,13 +481,13 @@ document.addEventListener("DOMContentLoaded",()=>{
 			.then((result) => {
 				// console.log("result : " + JSON.stringify(result[1]));
 				// TODO : implement this part in new-client into a function cleanClass(). and optimize : if same personnality called, no nedd to recall.
-                console.log("result++");
+                console.log("result+++");
                 console.log(result);
 				if (result[0]) {
 
 						console.log("result[1]");
-						console.log(result[1]);
-						fillInputsDetails(result[1]);
+						console.log(result[1][0]);
+						fillInputsDetails(result[1][0]);
 				}
 			});
 	}
@@ -506,7 +508,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 		console.log(Array.isArray(myjson));
 		if (Array.isArray(myjson)) {
 			// note : structure particuliere retourné par la funciton sql
-			if (myjson[0] && myjson[1]["nb_affected_row"] == 1) {
+			if (myjson[0]) {
 				console.log("succc");
 				console.log(JSON.stringify(myjson));
 				ToastShowClosured("success", "Magasin mis à jour avec succès.");

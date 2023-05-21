@@ -684,3 +684,14 @@ updated dataObj["uid"] = result[1] into dataObj["uid"] = result[1][0] because of
 updated view one fournisseur details js as well because of DbHandler::execute_prepared_statement() 's update;
 updated save updated fournisseur details js as well because of DbHandler::execute_prepared_statement() 's update;
 fixed a bug where table 'row were not updated when savedupdatedcategory succesful;
+
+-------------------------
+099:
+because of DbHandler::execute_prepared_statement() 's update UPDATING FOR 
+CYCLE places:
+updated dataObj["uid"] = result[1] into dataObj["uid"] = result[1][0] because of DbHandler::execute_prepared_statement() 's update for saving new;
+updated view one fournisseur details js as well because of DbHandler::execute_prepared_statement() 's update;
+
+class Result and  DbHandler::execute_prepared_statement() modified. added a property "nb_affected_row" fetechbale in class Result
+-------------------------
+100:
