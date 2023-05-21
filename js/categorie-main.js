@@ -227,7 +227,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 			saveNew(dataObj).then((result) => {
 				if (result[0]) {
 					// insert uid of newly created client
-					dataObj["uid"] = result[1];
+					dataObj["uid"] = result[1][0];
 					// console.log(dataObj);
 					// TODO : cache html
 					fetch(
@@ -511,14 +511,14 @@ document.addEventListener("DOMContentLoaded",()=>{
 		console.log(Array.isArray(myjson));
 		if (Array.isArray(myjson)) {
 			// note : structure particuliere retourné par la funciton sql
-			if (myjson[0] && myjson[1][0] == true) {
+			if (myjson[0] ) {
 				console.log("succc");
 				console.log(JSON.stringify(myjson));
 				ToastShowClosured("success", "Categorie mis à jour avec succès.");
 				let inputsForEdition =
 					modalCategorieDetails.querySelectorAll(".input");
 				disableInputs(inputsForEdition);
-				updateCategorieRow(table001, inputsValuesObj);
+				updateCategorieRow(tableBodyCategorie, inputsValuesObj);
 				btnSaveCategorieDetails.disabled = true;
 				btnModifyCategorieDetails.disabled = false;
 				return false;
@@ -584,7 +584,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 						console.log("result[1]");
 						console.log(result[1]);
-						fillInputsDetails(result[1]);
+						fillInputsDetails(result[1][0]);
 				}
 			});
 	}

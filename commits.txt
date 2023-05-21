@@ -670,4 +670,17 @@ updated save updated fournisseur details js as well because of DbHandler::execut
 added modificationWatcher=false when saved succesfully new fournisseur;
 added modificationWatcher=false when saved succesfully update fournisseur;
 
+-------------------------
+098:
+because of DbHandler::execute_prepared_statement() 's update UPDATING FOR 
+CYCLE famille:
+updated dataObj["uid"] = result[1] into dataObj["uid"] = result[1][0] because of DbHandler::execute_prepared_statement() 's update for saving new;
+updated view one fournisseur details js as well because of DbHandler::execute_prepared_statement() 's update;
+updated save updated fournisseur details js as well because of DbHandler::execute_prepared_statement() 's update;
 
+because of DbHandler::execute_prepared_statement() 's update UPDATING FOR 
+CYCLE categories:
+updated dataObj["uid"] = result[1] into dataObj["uid"] = result[1][0] because of DbHandler::execute_prepared_statement() 's update for saving new;
+updated view one fournisseur details js as well because of DbHandler::execute_prepared_statement() 's update;
+updated save updated fournisseur details js as well because of DbHandler::execute_prepared_statement() 's update;
+fixed a bug where table 'row were not updated when savedupdatedcategory succesful;

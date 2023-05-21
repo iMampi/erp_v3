@@ -44,6 +44,7 @@ function makeCategorieDetailsInputsEditable(inputElements) {
 	// console.log(inputElements.values());
 	// console.log(inputElements.item());
 	let typeVenteFlag = false;
+
 	inputElements.forEach((input) => {
 		if (input.id!="uid") {
 
@@ -65,8 +66,11 @@ async function saveNew(inputObj) {
 	let result = await responseHandlerSaveFamilleNew(response);
 	if (result[0] == "success") {
 		ToastShowClosured(result[0], "Nouvelle catégorie créé avec succès");
+		modificationWatcher=false;
 	} else if (result[0] == "failure") {
 		ToastShowClosured(result[0], "Echec de la création de la catégorie");
+		modificationWatcher=true;
+
 	} else {
 		throw new Error("wrong value returned");
 	}
@@ -241,7 +245,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 			saveNew(dataObj).then((result) => {
 				if (result[0]) {
 					// insert uid of newly created client
-					dataObj["uid"] = result[1];
+					dataObj["uid"] = result[1][0];
 					// console.log(dataObj);
 					// TODO : cache html
 					fetch(
@@ -503,6 +507,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 		console.log(inputsValuesObj);
 		let myurl = "/database/save/update_famille.php";
 		let response = await sendData(myurl, inputsValuesObj);
+		console.log("response");
 		console.log(response);
 		// TODO : we dont use await response.json because it is already handled in senData () as respones.text(). so we have to call JSON method manually;
 		let myjson = await JSON.parse(response);
@@ -512,7 +517,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 		console.log(Array.isArray(myjson));
 		if (Array.isArray(myjson)) {
 			// note : structure particuliere retourné par la funciton sql
-			if (myjson[0] && myjson[1][0] == true) {
+			if (myjson[0]) {
 				console.log("succc");
 				console.log(JSON.stringify(myjson));
 				ToastShowClosured("success", "Categorie mis à jour avec succès.");
@@ -522,11 +527,14 @@ document.addEventListener("DOMContentLoaded",()=>{
 				updateFamilleRow(tableBody, inputsValuesObj);
 				btnSaveFamilleDetails.disabled = true;
 				btnModifyFamilleDetails.disabled = false;
+				modificationWatcher=false;
+
 				return false;
 			} else {
 				console.log("faileeddd");
 				console.log(JSON.stringify(myjson));
 				ToastShowClosured("failure", "Echec de la mise à jour.");
+				modificationWatcher=true;
 				return true;
 			}
 		} else {
@@ -586,7 +594,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 						console.log("result[1]");
 						console.log(result[1]);
-						fillInputsDetails(result[1]);
+						fillInputsDetails(result[1][0]);
 				}
 			});
 	}

@@ -118,9 +118,9 @@ class DbHandler
 
                         // $results = $res->fetch_array($fetch_mode);
 
-                        $res = new Result($stmt->get_result());
+                        $res_ = new Result($stmt->get_result());
 
-                        $results = $res->dataArray;
+                        $results = $res_->dataArray;
                     } catch (\Throwable $th) {
                         // on a utilisait ca avant. on laisse juste a cas où
                         ////$results = [$stmt_execution];
