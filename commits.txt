@@ -695,3 +695,13 @@ updated view one fournisseur details js as well because of DbHandler::execute_pr
 class Result and  DbHandler::execute_prepared_statement() modified. added a property "nb_affected_row" fetechbale in class Result
 -------------------------
 100:
+because of DbHandler::execute_prepared_statement() 's update UPDATING FOR 
+CYCLE items:
+fixzd implemetnation for save, for update, for view.
+-------------------------
+101:
+starting to work again on cycle commande:
+fixing view...
+fixed a fucking ton of shit!! yeah!!!
+refactored addItem() to return a promise (so it can be handle properly with forloop in addItemRowsLoop())
+all is handled in fillDetailsItems() working with fillInputsDetailsItem(), disableInputsAndButtons(), addItemRowsLoop();

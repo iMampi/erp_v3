@@ -327,7 +327,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 			saveNew(dataObj).then((result) => {
 				if (result[0]) {
 					// insert uid of newly created client
-					dataObj["uid"] = result[1];
+					dataObj["uid"] = result[1][0];
 					// console.log(dataObj);
 					// TODO : cache html
 					fetch(
@@ -395,8 +395,14 @@ document.addEventListener("DOMContentLoaded",()=>{
 			console.log("called yes");
 			bsModalConfirmation.hide();
 
-			let inputsValuesObj = getFormInputsValues(modalItemDetails);
-			saveUpdatedItem(inputsValuesObj);
+			let dataObj = getFormInputsValues(modalItemDetails);
+			dataObj["categorie-uid"]=dataObj["categorie"].split(' - ')[0];
+			dataObj["categorie"]=dataObj["categorie"].split(' - ')[1];
+			dataObj["famille-uid"]=dataObj["famille"].split(' - ')[0];
+			dataObj["famille"]=dataObj["famille"].split(' - ')[1];
+			dataObj["prix-vente"]=parseFloat(dataObj["prix-vente"]).toFixed(2);
+
+			saveUpdatedItem(dataObj);
 			return false;
 		},
 		no: () => {
@@ -664,7 +670,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 		console.log(Array.isArray(myjson));
 		if (Array.isArray(myjson)) {
 			// note : structure particuliere retourné par la funciton sql
-			if (myjson[0] && myjson[1]["nb_affected_row"] == "1") {
+			if (myjson[0]) {
 				console.log("succc");
 				console.log(JSON.stringify(myjson));
 				ToastShowClosured("success", "Article mis à jour avec succès.");
@@ -739,8 +745,8 @@ document.addEventListener("DOMContentLoaded",()=>{
 				if (result[0]) {
 
 						console.log("result[1]");
-						console.log(result[1]);
-						fillInputsDetails(result[1]);
+						console.log(result[1][0]);
+						fillInputsDetails(result[1][0]);
 				}
 			});
 	}

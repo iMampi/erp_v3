@@ -35,7 +35,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("fournisseur"))) {
         print("error01");
         print(json_encode($temp_array_result));
     } else {
-        $new_commande_uid = $temp_array_result[1][0];
+        $new_commande_uid = $temp_array_result[1][0][0];
 
         try {
             foreach ($data["items"] as $array_values) {

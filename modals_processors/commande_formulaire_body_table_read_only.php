@@ -10,11 +10,15 @@ $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
 $xpath = new DOMXPath($dom);
 
 
-// disable all input
-$inputs = $xpath->query(".//*[contains(@class,'input')]");
-foreach ($inputs as $input_) {
-    $input_->setAttribute("disabled", true);
-}
+// // disable all input
+// $inputs = $xpath->query(".//*[contains(@class,'input')]");
+// foreach ($inputs as $input_) {
+//     $input_->setAttribute("disabled", true);
+// }
+
+//remove item row
+$row_001 = $dom->getElementById("row-001");
+$row_001->parentNode->removeChild($row_001);
 
 // disable all btn
 $buttons = $xpath->query(".//button");
