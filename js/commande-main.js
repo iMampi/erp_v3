@@ -129,7 +129,7 @@ function fillInputsDetailsItem(arrayData, rowNode) {
     }
 }
 
-async function fillDetailsItems(itemsArray, modalDetailsItemsTable) {
+async function fillInputsDetailsItems(itemsArray, modalDetailsItemsTable) {
 
     let numberOfRows = itemsArray.length;
     await addItemRowsLoop(numberOfRows, modalDetailsItemsTable);
@@ -179,12 +179,14 @@ function removeItem(target, mode) {
 
 }
 
-function removeOtherItemRow(nodeList) {
+function removeItemRows(nodeList) {
+    if (nodeList.length === 0) {
+        return false;
+    }
     nodeList.forEach((element, index) => {
-        if (index != 0) {
-            removeItem(element, "node");
-        }
+        removeItem(element, "node");
     });
+    return true;
 }
 
 function addItem(tableFactureBody) {
@@ -313,13 +315,14 @@ function cleanNewForm(modal) {
     });
 }
 
-function DefaultModalNew(modal) {
+async function DefaultModalCommande(modal, min_row = 1) {
     //remove other item rows
     let itemRows = modal.querySelectorAll(".item-commande-row");
-    removeOtherItemRow(itemRows);
+    if ((!removeItemRows(itemRows)) && (min_row != 0)) {
+        await addItem(modal)
+    };
     //clean an dput to deafult value
     cleanNewForm(modal);
-
 
 }
 
@@ -560,7 +563,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		Êtes vous sûr de vouloir quitter ce formulaire?",
         yes: () => {
             bsModalCommandeNew.hide();
-            DefaultModalNew(modalCommandeNew);
+            DefaultModalCommande(modalCommandeNew);
             bsModalConfirmation.hide();
             modificationWatcher = false;
         },
@@ -607,7 +610,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 generateRowTable(trModel, dataModalCommandeNew["header"])
                             );
                             bsModalCommandeNew.hide();
-                            DefaultModalNew(modalCommandeNew);
+                            DefaultModalCommande(modalCommandeNew);
                             bsModalConfirmation.hide();
                             console.log("yes saving called");
                             return false;
@@ -620,6 +623,22 @@ document.addEventListener("DOMContentLoaded", () => {
             bsModalCommandeNew.hide();
         }
     }
+
+    const cancelCommandeDetailsObj = {
+        message:
+            "Des champs ont été modifiés.<br>\
+		Vos modifications vont être perdus.<br>\
+		Êtes vous sûr de vouloir quitter ce formulaire?",
+        yes: () => {
+            bsModalCommandeDetails.hide();
+            DefaultModalCommande(modalCommandeDetails, 0);
+            bsModalConfirmation.hide();
+            modificationWatcher = false;
+        },
+        no: () => {
+            bsModalConfirmation.hide();
+        },
+    };
 
     //FUNCTION
 
@@ -788,9 +807,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     bsModalCommandeNew.hide();
                 }
             } else if (event.target.id == "btn-add-item") {
-                addItem(tableItemsFactureNew);
+                addItem(tableItemsFactureNew).then(() => modificationWatcher = true);
             } else if (event.target.classList.contains("btn-del")) {
                 removeItem(event.target, "target");
+                modificationWatcher = true;
                 console.log("remove");
                 updateTotalPrice(montantHTAvantRemiseInput, modalCommandeNew.querySelectorAll("#item-prix-total"))
                 updateAllHeaderPrices(montantHTAvantRemiseInput, TVAAvantRemiseInput, montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, montantHTApresRemiseInput, TVAApresRemiseInput, montantTTCApresRemiseInput);
@@ -904,6 +924,43 @@ document.addEventListener("DOMContentLoaded", () => {
             TVAHandler(montantHTApresRemiseInput, TVAApresRemiseInput, montantTTCApresRemiseInput, 2);
         })
 
+    } catch (error) {
+
+    }
+
+    try {
+        modalCommandeDetails.addEventListener('click', (event) => {
+            if (event.target.id == "btn-cancel") {
+                if (modificationWatcher) {
+                    openModalConfirmation(
+                        confirmationObj,
+                        cancelCommandeDetailsObj
+                    );
+                } else {
+                    DefaultModalCommande(modalCommandeDetails, 0);
+                    bsModalCommandeDetails.hide();
+                }
+                // } else if (event.target.id == "btn-add-item") {
+                //     addItem(tableItemsFactureNew).then(() => modificationWatcher = true);
+                //     } else if (event.target.classList.contains("btn-del")) {
+                //         removeItem(event.target, "target");
+                //         modificationWatcher = true;
+                //         console.log("remove");
+                //         updateTotalPrice(montantHTAvantRemiseInput, modalCommandeNew.querySelectorAll("#item-prix-total"))
+                //         updateAllHeaderPrices(montantHTAvantRemiseInput, TVAAvantRemiseInput, montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, montantHTApresRemiseInput, TVAApresRemiseInput, montantTTCApresRemiseInput);
+                //     } else if (event.target.id == "btn-save-new") {
+                //         if (modificationWatcher) {
+                //             openModalConfirmation(
+                //                 confirmationObj,
+                //                 saveCreationObj
+                //             );
+                //         } else {
+                //             bsModalConfirmation.hide();
+                //         }
+                //     }
+                // })
+            }
+        })
     } catch (error) {
 
     }

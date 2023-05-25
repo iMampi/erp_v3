@@ -1,7 +1,7 @@
 <?php
 
 
-$base = __DIR__ . "/../elements/modals/buttons_modal_footer_new_commande.html";
+$base = __DIR__ . "/../elements/modals/btns_modal_footer_view_commande.html";
 $dom = new DOMDocument();
 
 //to be able to use new html5 tag with DOMDocument
@@ -13,10 +13,10 @@ $xpath = new DOMXPath($dom);
 // print_r($_SESSION["user"]->authorizations);
 $btns = $xpath->query(".//*[contains(@class,'btn')]");
 //it works
-//TODO : include algo for what btns appears or not according to roles.
+//TODO : include algo for what btns appears or not according to roles
 foreach ($btns as $btn) {
-    if ((in_array($btn->getAttribute("id"), ["btn-save-new", "btn-validate-new"])) && (!$_SESSION["user"]->authorizations->commande->create)) {
-        // if (true) {
+    if ((in_array($btn->getAttribute("id"), ["btn-modify", "btn-save", "btn-validate"])) && (!$_SESSION["user"]->authorizations->commande->update)) {
+        // if(true){
         $btn->parentNode->removeChild($btn);
     }
 }

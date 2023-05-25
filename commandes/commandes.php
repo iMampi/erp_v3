@@ -182,10 +182,9 @@ is_logged();
                             <!-- </div> -->
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger">supprimer</button>
-                            <button type="button" class="btn btn-info">statistique</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
-                            <button type="button" class="btn btn-primary">Save</button>
+                            <?php
+                            require __DIR__ . "/../modals_processors/buttons_footer_view_commande.php"
+                            ?>
                         </div>
                     </div>
                 </div>

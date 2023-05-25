@@ -705,3 +705,11 @@ fixing view...
 fixed a fucking ton of shit!! yeah!!!
 refactored addItem() to return a promise (so it can be handle properly with forloop in addItemRowsLoop())
 all is handled in fillDetailsItems() working with fillInputsDetailsItem(), disableInputsAndButtons(), addItemRowsLoop();
+-------------------------
+102:
+!!cycle command!!
+cancel new commande : works good.
+modified function old funcitons into DefaultModalCommande() & removeItemRows()
+cancel commande details: works good
+-------------------------
+103:
