@@ -27,14 +27,14 @@ if (\true) {
     $Query = new Queries("select_one_commande");
     $Binding = new Bindings($SelectOneObj);
     $Statement = new StandardPreparedStatement($Query, $Binding);
-    $commande_headers = DbHandler::execute_prepared_statement($Statement);
+    $commande_headers = DbHandler::execute_prepared_statement($Statement, \MYSQLI_ASSOC);
 
     $SelectionCommandeItems = new SelectionCommandeItems($data);
     $QueryDetails = new Queries("selection_commande_items");
     $BindingDetails = new Bindings($SelectionCommandeItems);
     $StatementDetails = new StandardPreparedStatement($QueryDetails, $BindingDetails);
 
-    $commande_items = DbHandler::execute_prepared_statement($StatementDetails);
+    $commande_items = DbHandler::execute_prepared_statement($StatementDetails, \MYSQLI_ASSOC);
 
     print(json_encode(["header" => $commande_headers, "items" => $commande_items]));
     // print(json_encode(DbHandler::execute_prepared_statement($Statement)));

@@ -55,6 +55,24 @@ const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
 var listDOM = {};
 
+function makeCommandeFormEditabble(modal) {
+    let notEditable = ["uid", "state", "commercial", "date", "totalHT-avant-remise", "TVA-avant-remise", "totalTTC-avant-remise", "totalHT-apres-remise", "TVA-apres-remise", "totalTTC-apres-remise", "item-name", "item-pu", "item-prix-total"];
+    let inputs = modal.querySelectorAll(".input");
+    inputs.forEach(input => {
+        if (!notEditable.includes(input.id)) {
+            input.disabled = false;
+        }
+    });
+    let btns = modal.querySelectorAll(".btn");
+    btns.forEach(btn => {
+        if (btn.id !== "btn-modify") {
+            btn.disabled = false;
+        } else {
+            btn.disabled = true;
+
+        }
+    });
+}
 
 function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
     console.log("responseJSON : ");
@@ -1007,7 +1025,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     DefaultModalCommande(modalCommandeDetails, 0);
                     bsModalCommandeDetails.hide();
                 }
-                // } else if (event.target.id == "btn-add-item") {
+            } else if (event.target.id == "btn-modify") {
+                makeCommandeFormEditabble(modalCommandeDetails);
                 //     addItem(tableItemsFactureNew).then(() => modificationWatcher = true);
                 //     } else if (event.target.classList.contains("btn-del")) {
                 //         removeItem(event.target, "target");
