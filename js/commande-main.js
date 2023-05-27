@@ -318,8 +318,9 @@ function cleanNewForm(modal) {
 async function DefaultModalCommande(modal, min_row = 1) {
     //remove other item rows
     let itemRows = modal.querySelectorAll(".item-commande-row");
-    if ((!removeItemRows(itemRows)) && (min_row != 0)) {
-        await addItem(modal)
+    removeItemRows(itemRows);
+    if (min_row != 0) {
+        await addItem(modal);
     };
     //clean an dput to deafult value
     cleanNewForm(modal);
@@ -377,6 +378,7 @@ function formatFloatsForDatabase(inputObj) {
     return inputObj
 }
 
+
 async function saveCommandeNew(inputObj) {
     console.log("saving  comande");
     formatFloatsForDatabase(inputObj);
@@ -392,12 +394,14 @@ async function saveCommandeNew(inputObj) {
     if (result[0] == "success") {
         ToastShowClosured(result[0], "Commandes sauvegardées avec succès");
     } else if (result[0] == "failure") {
-        ToastShowClosured(result[0], "Echec de la sauvegarde de commandes");
+        ToastShowClosured(result[0], "Echec de la sauvegarde de la commande");
     } else {
         throw new Error("wrong value returned");
     }
     return [result[0] == "success", result[1]];
 }
+
+
 
 function generateRowItem(nodeModel, DataObj) {
     // console.log(DataObj);
@@ -624,6 +628,60 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    const validateCreationObj = {
+        message:
+            "<h2>Votre Commande va être sauvegarder et transformer en facture.</h2><br>\
+				Vos modifications vont être enregistrées.<br>\
+				Êtes vous sûr de vouloir sauvegarder vos modifications?",
+        yes: () => {
+
+            let dataModalCommandeNew = grabCommandeDataForm(modalCommandeNew);
+            dataModalCommandeNew["header"]["state"] = 2;
+            console.log("dataModalCommandeNew");
+            console.log(dataModalCommandeNew);
+            saveCommandeNew(dataModalCommandeNew).then((result) => {
+                if (result[0]) {
+                    // insert uid of newly created client
+                    dataModalCommandeNew["header"]["uid"] = result[1][0];
+                    // dataModalCommandeNew["header"]["state"] = 1;
+                    // console.log(dataObj);
+                    // TODO : cache html
+
+                    fetch(
+                        "/elements/commandes/liste_commandes_table_001_base.html"
+                    )
+                        .then((response) => {
+                            let tt = response.text();
+                            console.log("tt");
+                            console.log(tt);
+                            return tt;
+                        })
+                        .then((txt) => {
+                            // TODO : abstract this process
+                            let doc = new DOMParser().parseFromString(
+                                txt,
+                                "text/html"
+                            );
+                            let trModel = doc.querySelector("#row-001");
+
+                            tableBody.append(
+                                generateRowTable(trModel, dataModalCommandeNew["header"])
+                            );
+                            bsModalCommandeNew.hide();
+                            DefaultModalCommande(modalCommandeNew, 1);
+                            bsModalConfirmation.hide();
+                            console.log("yes saving called");
+                            return false;
+                        });
+                } else {
+                    //TODO : show error
+                    return true;
+                }
+            });
+            bsModalCommandeNew.hide();
+        }
+    }
+
     const cancelCommandeDetailsObj = {
         message:
             "Des champs ont été modifiés.<br>\
@@ -822,6 +880,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     );
                 } else {
                     bsModalConfirmation.hide();
+                }
+            } else if (event.target.id == "btn-validate-new") {
+                if (modificationWatcher) {
+                    openModalConfirmation(
+                        confirmationObj,
+                        validateCreationObj
+                    );
+                } else {
+                    bsModalCommandeNew.hide();
                 }
             }
         })

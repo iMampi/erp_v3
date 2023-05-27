@@ -23,7 +23,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
 
     $NewObj = new NewCommandeHeader($data["header"]);
 
-    $Query1 = new Queries("save_new_commande");
+    $Query1 = new Queries("validate_new_commande");
     $Binding = new Bindings($NewObj);
     $Statement = new StandardPreparedStatement($Query1, $Binding);
     $temp_array_result = DbHandler::execute_prepared_statement($Statement, MYSQLI_NUM);

@@ -34,6 +34,7 @@ if (can_visit($cycle_commande)) {
 
 
         $nodes = $xpath->query(".//*[contains(@class,'input')]", $tr_);
+        // $options=$xpath->query(".//slect[contains(@class,'state')>option]", $tr_)
         foreach ($nodes as $el_input) {
             // TODO : refactor. since we use all inputs have id
             $classes = $el_input->getAttribute('class');
@@ -46,7 +47,9 @@ if (can_visit($cycle_commande)) {
             } elseif (in_array("totalTTC", $classes_array)) {
                 $el_input->setAttribute("value", $el["total_ttc_apres_remise"]);
             } elseif (in_array("state", $classes_array)) {
-                $el_input->setAttribute("value", $el["state"]);
+                // $el_input->setAttribute("value", $el["state"]);
+                $option = $xpath->query(".//option[@value='" . $el["state"] . "']", $el_input);
+                $option[0]->setAttribute("selected", true);
             } elseif (in_array("client", $classes_array)) {
 
                 if (!trim($el['raison_sociale'])) {

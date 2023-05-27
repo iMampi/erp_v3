@@ -713,3 +713,6 @@ modified function old funcitons into DefaultModalCommande() & removeItemRows()
 cancel commande details: works good
 -------------------------
 103:
+!!cycle command!!
+working on validate
+new commande>>validation work great. changed generate_table_001.php to hanlde the state field (beecause select>option);
