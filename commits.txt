@@ -719,3 +719,8 @@ new commande>>validation work great. changed generate_table_001.php to hanlde th
 -------------------------
 104:
 fixed DbHandler::execute_prepared_statement(): with new Result(), forgot 1 parameter;
+created defaultButtons().
+fixed cancel behavior with view commande and new commande.
+gave id to some button in client field.
+now, if the command is "validate" (state 2), btn-modify will be disabled.
+

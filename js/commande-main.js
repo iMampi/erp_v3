@@ -38,6 +38,25 @@ const DefaultValuesCommandeNewFormObj = {
     "note": ""
 };
 
+const DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_NEW = {
+    "btn-new-client": false,
+    "btn-see-client": false,
+    "btn-add-item": false,
+    "btn-new-item": false,
+    "btn-cancel-new": false,
+    "btn-save-new": false,
+    "btn-validate-new": false,
+}
+const DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_DETAILS = {
+    "btn-new-client": true,
+    "btn-see-client": false,
+    "btn-add-item": true,
+    "btn-new-item": true,
+    "btn-cancel": false,
+    "btn-save": true,
+    "btn-validate": true,
+}
+
 const DefaultValuesCommandeRowItem = {
     "item-uid": "",
     "item-name": "",
@@ -262,71 +281,31 @@ function addItem(tableFactureBody) {
         }
     })
 }
-// function addItem(tableFactureBody){
-//     console.log("addding item");
-//     counterRowItem++;
-// 	if (listDOM["itemRow"]) {
-//         console.log("from cahce");
-//         let doc = new DOMParser().parseFromString(
-// 			listDOM["itemRow"],
-// 			"text/html"
-// 		);
-//         let trModel = doc.querySelector("#row-001");
-//         console.log("trModel");
-//         console.log(trModel);
 
-//         tableFactureBody.querySelector('tbody').append(
-//             generateRowItem(trModel, ["","","","","",""])
-//         );
-//         // bsModalNew.hide();
-//         // _cleanNewForm();
-//         // console.log("yes saving called");
-//         return true;
+function defaultButtons(modal) {
+    const refObj = {
+        "modal-details": DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_DETAILS,
+        'modal-commande-new': DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_NEW
+    };
+    let btns = modal.querySelectorAll(".btn");
+    btns.forEach(myBtn => {
+        myBtn.disabled = refObj[modal.id][myBtn.id];
+    });
+}
 
-//     }else{
-
-//         fetch("/elements/commandes/commande_table_details_base.html")
-//     .then((response) => 
-//         response.text()
-//     )
-//     .then((txt) => {
-//         // TODO : abstract this process
-//         console.log("from fetch");
-
-//         let doc = new DOMParser().parseFromString(
-//             txt,
-//             "text/html"
-//         );
-
-//         // caching
-//         listDOM["itemRow"] = doc.body.innerHTML;
-
-//         let trModel = doc.querySelector("#row-001");
-//         console.log("trModel");
-//         console.log(trModel);
-
-//         tableFactureBody.querySelector('tbody').append(
-//             generateRowItem(trModel, ["","","","","",""])
-//         );
-//         // bsModalNew.hide();
-//         // _cleanNewForm();
-//         // console.log("yes saving called");
-//         return true;
-//     });
-//     }
-// }
-
-function cleanNewForm(modal) {
+function cleanNewForm(modal, disable = false) {
     console.log("cleaning");
     const inputsForm =
         modal.querySelectorAll(".input");
+
     inputsForm.forEach((input) => {
         // console.log(input);
+        input.disabled = disable;
         let myValue = DefaultValuesCommandeNewFormObj[input.id];
         if (myValue == undefined) {
             myValue = DefaultValuesCommandeRowItem[input.id];
             if (myValue == undefined) {
-                return;
+                return false;
             }
         }
         input.value = myValue;
@@ -340,8 +319,9 @@ async function DefaultModalCommande(modal, min_row = 1) {
     if (min_row != 0) {
         await addItem(modal);
     };
+    defaultButtons(modal);
     //clean an dput to deafult value
-    cleanNewForm(modal);
+    cleanNewForm(modal, modal.id === "modal-details");
 
 }
 
@@ -525,7 +505,6 @@ document.addEventListener("DOMContentLoaded", () => {
     //CACHING ELEMENTS
     const divBtns = document.getElementById("div-btns");
     const tableBody = document.getElementById("ze-tbody");
-    const tableItemsFactureNew = document.getElementById("modal-commande-new").querySelector("#table-facture");
     const itemDataList = document.getElementById("item-list");
     const clientDataList = document.getElementById("client-list");
 
@@ -537,14 +516,15 @@ document.addEventListener("DOMContentLoaded", () => {
         keyboard: false,
         focus: true,
     });
-    const remiseTauxInput = modalCommandeNew.querySelector("#remise-taux");
-    const remiseMontantInput = modalCommandeNew.querySelector("#remise-montant");
-    const montantHTAvantRemiseInput = modalCommandeNew.querySelector("#totalHT-avant-remise");
-    const montantHTApresRemiseInput = modalCommandeNew.querySelector("#totalHT-apres-remise");
-    const TVAAvantRemiseInput = modalCommandeNew.querySelector("#TVA-avant-remise");
-    const TVAApresRemiseInput = modalCommandeNew.querySelector("#TVA-apres-remise");
-    const montantTTCAvantRemiseInput = modalCommandeNew.querySelector("#totalTTC-avant-remise");
-    const montantTTCApresRemiseInput = modalCommandeNew.querySelector("#totalTTC-apres-remise");
+    const tableItemsFactureNew = modalCommandeNew.querySelector("#table-facture");
+    const remiseTauxInputNew = modalCommandeNew.querySelector("#remise-taux");
+    const remiseMontantInputNew = modalCommandeNew.querySelector("#remise-montant");
+    const montantHTAvantRemiseInputNew = modalCommandeNew.querySelector("#totalHT-avant-remise");
+    const montantHTApresRemiseInputNew = modalCommandeNew.querySelector("#totalHT-apres-remise");
+    const TVAAvantRemiseInputNew = modalCommandeNew.querySelector("#TVA-avant-remise");
+    const TVAApresRemiseInputNew = modalCommandeNew.querySelector("#TVA-apres-remise");
+    const montantTTCAvantRemiseInputNew = modalCommandeNew.querySelector("#totalTTC-avant-remise");
+    const montantTTCApresRemiseInputNew = modalCommandeNew.querySelector("#totalTTC-apres-remise");
     currentUser = modalCommandeNew.querySelector("#commercial").value;
 
     ////modal confirmation
@@ -566,9 +546,16 @@ document.addEventListener("DOMContentLoaded", () => {
         keyboard: false,
         focus: true,
     });
-    // const btnSaveCommandeDetails=modalCommandeDetails.querySelector("#btn-save");
-    // const btnCancelCommandeDetails=modalCommandeDetails.querySelector("#btn-cancel");
-    // const btnModifyCommandeDetails=modalCommandeDetails.querySelector("#btn-modify");
+    const tableItemsFactureDetails = modalCommandeDetails.querySelector("#table-facture");
+
+    const remiseTauxInputDetails = modalCommandeDetails.querySelector("#remise-taux");
+    const remiseMontantInputDetails = modalCommandeDetails.querySelector("#remise-montant");
+    const montantHTAvantRemiseInputDetails = modalCommandeDetails.querySelector("#totalHT-avant-remise");
+    const montantHTApresRemiseInputDetails = modalCommandeDetails.querySelector("#totalHT-apres-remise");
+    const TVAAvantRemiseInputDetails = modalCommandeDetails.querySelector("#TVA-avant-remise");
+    const TVAApresRemiseInputDetails = modalCommandeDetails.querySelector("#TVA-apres-remise");
+    const montantTTCAvantRemiseInputDetails = modalCommandeDetails.querySelector("#totalTTC-avant-remise");
+    const montantTTCApresRemiseInputDetails = modalCommandeDetails.querySelector("#totalTTC-apres-remise");
 
     //CONFIRMATION OBJ
     const confirmationObj = {
@@ -686,7 +673,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 generateRowTable(trModel, dataModalCommandeNew["header"])
                             );
                             bsModalCommandeNew.hide();
-                            DefaultModalCommande(modalCommandeNew, 1);
+                            DefaultModalCommande(modalCommandeNew);
                             bsModalConfirmation.hide();
                             console.log("yes saving called");
                             return false;
@@ -744,6 +731,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     console.log("result[1]");
                     console.log(result[1]);
+                    let btnModify = modalCommandeDetails.querySelector('#btn-modify');
+                    btnModify.disabled = false;
+                    if (result[1]['header']["state"] == "2") {
+                        btnModify.disabled = true;
+                    }
                     let inputsHeader = modalCommandeDetails.querySelector("#commande-header")
                     fillInputsDetailsHeaders(result[1], inputsHeader);
                     fillInputsDetailsItems(result[1]["items"], modalCommandeDetails.querySelector("#table-facture"));
@@ -881,6 +873,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     );
                 } else {
                     bsModalCommandeNew.hide();
+                    defaultButtons(modalCommandeNew)
                 }
             } else if (event.target.id == "btn-add-item") {
                 addItem(tableItemsFactureNew).then(() => modificationWatcher = true);
@@ -888,8 +881,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 removeItem(event.target, "target");
                 modificationWatcher = true;
                 console.log("remove");
-                updateTotalPrice(montantHTAvantRemiseInput, modalCommandeNew.querySelectorAll("#item-prix-total"))
-                updateAllHeaderPrices(montantHTAvantRemiseInput, TVAAvantRemiseInput, montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, montantHTApresRemiseInput, TVAApresRemiseInput, montantTTCApresRemiseInput);
+                updateTotalPrice(montantHTAvantRemiseInputNew, modalCommandeNew.querySelectorAll("#item-prix-total"))
+                updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
             } else if (event.target.id == "btn-save-new") {
                 if (modificationWatcher) {
                     openModalConfirmation(
@@ -947,15 +940,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 const itemTotalPriceInputs = modalCommandeNew.querySelectorAll(".item-prix-total");
                 console.log("itemTotalPriceInputs");
                 console.log(itemTotalPriceInputs);
-                updateTotalPrice(montantHTAvantRemiseInput, itemTotalPriceInputs);
-                updateAllHeaderPrices(montantHTAvantRemiseInput, TVAAvantRemiseInput, montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, montantHTApresRemiseInput, TVAApresRemiseInput, montantTTCApresRemiseInput);
+                updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
+                updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
             } else if ((event.target.id == "client") && (!event.key)) {
                 console.log("client selected");
             } else if (event.target.id == "item-quantity") {
                 updateItemTotalPrice(event.target.parentNode.parentNode)
                 const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
-                updateTotalPrice(montantHTAvantRemiseInput, itemTotalPriceInputs);
-                updateAllHeaderPrices(montantHTAvantRemiseInput, TVAAvantRemiseInput, montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, montantHTApresRemiseInput, TVAApresRemiseInput, montantTTCApresRemiseInput);
+                updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
+                updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
 
 
             }
@@ -977,14 +970,78 @@ document.addEventListener("DOMContentLoaded", () => {
             } else if (event.target.id == "item-quantity") {
                 updateItemTotalPrice(event.target.parentNode.parentNode)
                 const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
-                updateTotalPrice(montantHTAvantRemiseInput, itemTotalPriceInputs);
-                updateAllHeaderPrices(montantHTAvantRemiseInput, TVAAvantRemiseInput, montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, montantHTApresRemiseInput, TVAApresRemiseInput, montantTTCApresRemiseInput);
+                updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
+                updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+            }
+        });
+    } catch (error) {
+    }
 
+    ////modalCommandeNew event handler
+    try {
+        modalCommandeDetails.addEventListener('keyup', (event) => {
+            console.log("event keyup");
+            console.log(event);
+            if ((event.target.id == "item-uid") && (event.key)) {
+                console.log("searching item");
+                itemDataList.innerHTML = "";
+                clearTimeout(typingTimer);
+                let term = event.target.value.trim();
+                if (term) {
+                    // TODO : sanitize here
+                    itemDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
+                    typingTimer = setTimeout(() => { searchLive(term, itemDataList, "item") }, 1500);
+                }
+            } else if ((event.target.id == "client") && (event.key)) {
+                console.log("searching client");
+                clientDataList.innerHTML = "";
+                clearTimeout(typingTimer);
+                let term = event.target.value.trim();
+                if (term) {
+                    // TODO : sanitize here
+                    clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
+                    typingTimer = setTimeout(() => { searchLive(term, clientDataList, "client") }, 1500);
+                }
+            } else if ((event.target.id == "item-uid") && (!event.key)) {
+                console.log("item selected");
+                let val = event.target.value;
+                console.log(getName(val));
+                fillItemNameAndPrice(event.target);
+                const itemTotalPriceInputs = modalCommandeDetails.querySelectorAll(".item-prix-total");
+                console.log("itemTotalPriceInputs");
+                console.log(itemTotalPriceInputs);
+                updateTotalPrice(montantHTAvantRemiseInputDetails, itemTotalPriceInputs);
+                updateAllHeaderPrices(montantHTAvantRemiseInputDetails, TVAAvantRemiseInputDetails, montantTTCAvantRemiseInputDetails, remiseTauxInputDetails, remiseMontantInputDetails, montantHTApresRemiseInputDetails, TVAApresRemiseInputDetails, montantTTCApresRemiseInputDetails);
+            } else if ((event.target.id == "client") && (!event.key)) {
+                console.log("client selected");
+            } else if (event.target.id == "item-quantity") {
+                updateItemTotalPrice(event.target.parentNode.parentNode)
+                const itemTotalPriceInputs = modalCommandeDetails.querySelectorAll("#item-prix-total");
+                updateTotalPrice(montantHTAvantRemiseInputDetails, itemTotalPriceInputs);
+                updateAllHeaderPrices(montantHTAvantRemiseInputDetails, TVAAvantRemiseInputDetails, montantTTCAvantRemiseInputDetails, remiseTauxInputDetails, remiseMontantInputDetails, montantHTApresRemiseInputDetails, TVAApresRemiseInputDetails, montantTTCApresRemiseInputDetails);
             }
         })
-
     } catch (error) {
 
+    }
+
+    try {
+        modalCommandeDetails.addEventListener('input', (event) => {
+            console.log("event input");
+            console.log(event);
+            modificationWatcher = true;
+
+            if ((event.target.id == "item-uid") && (event.key)) {
+
+            } else if ((event.target.id == "item-uid") && (!event.key)) {
+            } else if (event.target.id == "item-quantity") {
+                updateItemTotalPrice(event.target.parentNode.parentNode)
+                const itemTotalPriceInputs = modalCommandeDetails.querySelectorAll("#item-prix-total");
+                updateTotalPrice(montantHTAvantRemiseInputDetails, itemTotalPriceInputs);
+                updateAllHeaderPrices(montantHTAvantRemiseInputDetails, TVAAvantRemiseInputDetails, montantTTCAvantRemiseInputDetails, remiseTauxInputDetails, remiseMontantInputDetails, montantHTApresRemiseInputDetails, TVAApresRemiseInputDetails, montantTTCApresRemiseInputDetails);
+            }
+        });
+    } catch (error) {
     }
 
     try {
@@ -1000,13 +1057,13 @@ document.addEventListener("DOMContentLoaded", () => {
         modalCommandeNew.addEventListener('input', (event) => {
             // TODO : restrict event
             if (event.target.id == 'remise-taux') {
-                tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, 1);
+                tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, 1);
             } else if (event.target.id == 'remise-montant') {
-                tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, 2);
+                tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, 2);
 
             }
-            totalTTCDiscountedHandler(montantTTCAvantRemiseInput, montantTTCApresRemiseInput, remiseMontantInput);
-            TVAHandler(montantHTApresRemiseInput, TVAApresRemiseInput, montantTTCApresRemiseInput, 2);
+            totalTTCDiscountedHandler(montantTTCAvantRemiseInputNew, montantTTCApresRemiseInputNew, remiseMontantInputNew);
+            TVAHandler(montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew, 2);
         })
 
     } catch (error) {
@@ -1023,17 +1080,21 @@ document.addEventListener("DOMContentLoaded", () => {
                     );
                 } else {
                     DefaultModalCommande(modalCommandeDetails, 0);
+                    defaultButtons(modalCommandeDetails);
                     bsModalCommandeDetails.hide();
                 }
             } else if (event.target.id == "btn-modify") {
-                makeCommandeFormEditabble(modalCommandeDetails);
-                //     addItem(tableItemsFactureNew).then(() => modificationWatcher = true);
+                if (modalCommandeDetails.querySelector('#state').value !== "2") {
+                    makeCommandeFormEditabble(modalCommandeDetails);
+                }
+            } else if (event.target.id == "btn-add-item") {
+                addItem(tableItemsFactureDetails).then(() => modificationWatcher = true);
                 //     } else if (event.target.classList.contains("btn-del")) {
                 //         removeItem(event.target, "target");
                 //         modificationWatcher = true;
                 //         console.log("remove");
-                //         updateTotalPrice(montantHTAvantRemiseInput, modalCommandeNew.querySelectorAll("#item-prix-total"))
-                //         updateAllHeaderPrices(montantHTAvantRemiseInput, TVAAvantRemiseInput, montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, montantHTApresRemiseInput, TVAApresRemiseInput, montantTTCApresRemiseInput);
+                //         updateTotalPrice(montantHTAvantRemiseInputNew, modalCommandeNew.querySelectorAll("#item-prix-total"))
+                //         updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
                 //     } else if (event.target.id == "btn-save-new") {
                 //         if (modificationWatcher) {
                 //             openModalConfirmation(
