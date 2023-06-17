@@ -723,4 +723,7 @@ created defaultButtons().
 fixed cancel behavior with view commande and new commande.
 gave id to some button in client field.
 now, if the command is "validate" (state 2), btn-modify will be disabled.
+-------------------------
+105:
+added field input:hidden in commande table's item. #row-uid. to be used in case of update of a commande 
 

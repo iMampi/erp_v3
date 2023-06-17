@@ -4,7 +4,7 @@
 
 namespace Converter;
 
-class NewCommandeItem extends Converter
+class UpdateCommandeItem extends Converter
 {
     function __construct(array $data)
     {

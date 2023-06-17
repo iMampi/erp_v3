@@ -152,6 +152,7 @@ function disableInputsAndButtons(tableNode) {
 
 function fillInputsDetailsItem(arrayData, rowNode) {
     const idToKey = {
+        "row-uid": "uid",
         "item-uid": "item_uid",
         "item-name": "item_name",
         "num-serie": "description_item",
@@ -399,6 +400,28 @@ async function saveCommandeNew(inputObj) {
     return [result[0] == "success", result[1]];
 }
 
+async function saveCommandeModified(inputObj) {
+    console.log("saving  comande");
+    formatFloatsForDatabase(inputObj);
+    // console.log("data");
+    // console.log(data);
+    let url = "/database/save/update_commande.php";
+
+    let response = await sendData(url, inputObj);
+
+    console.log("error?");
+    console.log(response);
+    let result = await responseHandlerSaveCommandeNew(response);
+    if (result[0] == "success") {
+        ToastShowClosured(result[0], "Commandes sauvegardées avec succès");
+    } else if (result[0] == "failure") {
+        ToastShowClosured(result[0], "Echec de la sauvegarde de la commande");
+    } else {
+        throw new Error("wrong value returned");
+    }
+    return [result[0] == "success", result[1]];
+}
+
 
 
 function generateRowItem(nodeModel, DataObj) {
@@ -432,11 +455,12 @@ function grabCommandeDataForm(modal) {
     // console.log(tableBodyRows);
     tableBodyRows.forEach(row => {
         // console.log(row);
+        let rowID = row.querySelector("#row-uid").value;
         let itemID = row.querySelector("#item-uid").value;
         let quantity = row.querySelector("#item-quantity").value;
         let prixUnitaire = row.querySelector("#item-pu").value;
         let numSerie = row.querySelector("#num-serie").value;
-        data["items"].push([itemID, quantity, prixUnitaire, numSerie]);
+        data["items"].push([rowID, itemID, quantity, prixUnitaire, numSerie]);
     });
     return data;
 }
@@ -636,7 +660,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const validateCreationObj = {
         message:
             "<h2>Votre Commande va être sauvegarder et transformer en facture.</h2><br>\
-				Vos modifications vont être enregistrées.<br>\
+				Aucune modification ne possible.<br>\
 				Êtes vous sûr de vouloir sauvegarder vos modifications?",
         yes: () => {
 
@@ -702,6 +726,60 @@ document.addEventListener("DOMContentLoaded", () => {
             bsModalConfirmation.hide();
         },
     };
+
+    const validateCommandeDetailsObj = {
+        message:
+            "<h2>Votre Commande va être sauvegarder et transformer en facture.</h2><br>\
+				Aucune modification ne sera possible.<br>\
+				Êtes vous sûr de vouloir sauvegarder vos modifications?",
+        yes: () => {
+
+            let dataModalCommandeDetails = grabCommandeDataForm(modalCommandeDetails);
+            dataModalCommandeDetails["header"]["state"] = 2;
+            console.log("dataModalCommandeDetails");
+            console.log(dataModalCommandeDetails);
+            saveCommandeModified(dataModalCommandeDetails).then((result) => {
+                if (result[0]) {
+                    // insert uid of newly created client
+                    dataModalCommandeDetails["header"]["uid"] = result[1][0];
+                    // dataModalCommandeNew["header"]["state"] = 1;
+                    // console.log(dataObj);
+                    // TODO : cache html
+
+                    fetch(
+                        "/elements/commandes/liste_commandes_table_001_base.html"
+                    )
+                        .then((response) => {
+                            let tt = response.text();
+                            console.log("tt");
+                            console.log(tt);
+                            return tt;
+                        })
+                        .then((txt) => {
+                            // TODO : abstract this process
+                            let doc = new DOMParser().parseFromString(
+                                txt,
+                                "text/html"
+                            );
+                            let trModel = doc.querySelector("#row-001");
+
+                            tableBody.append(
+                                generateRowTable(trModel, dataModalCommandeDetails["header"])
+                            );
+                            bsModalCommandeNew.hide();
+                            DefaultModalCommande(modalCommandeNew);
+                            bsModalConfirmation.hide();
+                            console.log("yes saving called");
+                            return false;
+                        });
+                } else {
+                    //TODO : show error
+                    return true;
+                }
+            });
+            bsModalCommandeNew.hide();
+        }
+    }
 
     //FUNCTION
 
@@ -1089,6 +1167,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             } else if (event.target.id == "btn-add-item") {
                 addItem(tableItemsFactureDetails).then(() => modificationWatcher = true);
+            } else if (event.target.id == "btn-validate") {
+                openModalConfirmation(
+                    confirmationObj,
+                    validateCommandeDetailsObj
+                );
                 //     } else if (event.target.classList.contains("btn-del")) {
                 //         removeItem(event.target, "target");
                 //         modificationWatcher = true;

@@ -1,19 +1,20 @@
 <?php
 
-use Converter\NewCommandeHeader;
-use Converter\NewCommandeItem;
+use Converter\UpdateCommandeHeader;
 use Database\Bindings;
 use Database\DbHandler;
 use Database\Queries;
 use Database\StandardPreparedStatement;
 
-use function Session\can_create;
+use function Session\can_update;
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
+
 session_start();
 
+new DbHandler();
 
-if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
+if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_update("commande"))) {
     $data = json_decode(file_get_contents('php://input'), true);
 
     
@@ -22,7 +23,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
     $conn = $step1::$connection;
     $conn->begin_transaction();
 
-    $NewObj = new NewCommandeHeader($data["header"]);
+    $NewObj = new UpdateCommandeHeader($data["header"]);
 
     $Query1 = new Queries("save_new_commande");
     $Binding = new Bindings($NewObj);
