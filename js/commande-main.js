@@ -371,8 +371,8 @@ function formatFloatsForDatabase(inputObj) {
         }
     });
     inputObj["items"].forEach(row_array => {
-        row_array[1] = formatedNumberToFloat(row_array[1]);
         row_array[2] = formatedNumberToFloat(row_array[2]);
+        row_array[3] = formatedNumberToFloat(row_array[3]);
     });
     return inputObj
 }
@@ -809,11 +809,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     console.log("result[1]");
                     console.log(result[1]);
-                    let btnModify = modalCommandeDetails.querySelector('#btn-modify');
-                    btnModify.disabled = false;
-                    if (result[1]['header']["state"] == "2") {
-                        btnModify.disabled = true;
+                    try {
+
+                        let btnModify = modalCommandeDetails.querySelector('#btn-modify');
+                        btnModify.disabled = false;
+                        if (result[1]['header']["state"] == "2") {
+                            btnModify.disabled = true;
+                        }
+                    } catch {
+
                     }
+
                     let inputsHeader = modalCommandeDetails.querySelector("#commande-header")
                     fillInputsDetailsHeaders(result[1], inputsHeader);
                     fillInputsDetailsItems(result[1]["items"], modalCommandeDetails.querySelector("#table-facture"));

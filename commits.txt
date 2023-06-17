@@ -726,4 +726,10 @@ now, if the command is "validate" (state 2), btn-modify will be disabled.
 -------------------------
 105:
 added field input:hidden in commande table's item. #row-uid. to be used in case of update of a commande 
+-------------------------
+106:
+bug from xampp. had to reinstall. add to re clone the repository
+since the add of #row-uid in commande items list, the array for item row has changed. SO , had to update the formatFloatsForDatabase() to format the correct data becasue of the new length of the array. For newcommande, saving and validating works great.
+working on validate with modified command...
+
 
