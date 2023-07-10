@@ -74,6 +74,27 @@ const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
 var listDOM = {};
 
+function disableInputs(inputElements) {
+    inputElements.forEach(element => {
+        element.disabled = true;
+    });
+}
+
+function updateTableRow(mytable, dataObj) {
+    let correspondances_ = { "uid": 'uid', "date": 'date', "client": 'client', "totalTTC": 'totalTTC-apres-remise', "state": 'state' }
+    let row = mytable.querySelector("#row-" + dataObj["uid"]);
+    console.log("dataObj table's row");
+    console.log(dataObj);
+    console.log(mytable);
+    let inputsRow = row.querySelectorAll(".input");
+    inputsRow.forEach((input) => {
+        input.value = dataObj[correspondances_[input.id]];
+        if (input.id === "totalTTC") {
+            input.value = parseFloat(input.value).toFixed(2);
+        }
+    });
+}
+
 function makeCommandeFormEditabble(modal) {
     let notEditable = ["uid", "state", "commercial", "date", "totalHT-avant-remise", "TVA-avant-remise", "totalTTC-avant-remise", "totalHT-apres-remise", "TVA-apres-remise", "totalTTC-apres-remise", "item-name", "item-pu", "item-prix-total"];
     let inputs = modal.querySelectorAll(".input");
@@ -313,7 +334,7 @@ function cleanNewForm(modal, disable = false) {
     });
 }
 
-async function DefaultModalCommande(modal, min_row = 1) {
+async function DefaultModalCommandeNew(modal, min_row = 1) {
     //remove other item rows
     let itemRows = modal.querySelectorAll(".item-commande-row");
     removeItemRows(itemRows);
@@ -325,6 +346,7 @@ async function DefaultModalCommande(modal, min_row = 1) {
     cleanNewForm(modal, modal.id === "modal-details");
 
 }
+
 
 function generateRowTable(nodeModel, DataObj) {
     //MARQUE PAGE
@@ -342,6 +364,26 @@ function generateRowTable(nodeModel, DataObj) {
     return newNode;
 }
 
+async function responseHandlerUpdateCommande(response) {
+    try {
+        let myjson = JSON.parse(await response);
+        //NOTE : the correct way for save. not correct for select query
+        //NOTE : works for error also
+        // TODO : handle for when it is an error
+        // TODO : all seems to use the same logic. DRY in all others occurence
+        console.log("myjson");
+        console.log(myjson);
+        if (myjson[0]) {
+            // TODO : inconsistency, should be uniformed. but works for now
+            return ["success", myjson[1]];
+        } else {
+            return ["failure", Object.values(myjson[1])[0]];
+        }
+    } catch (e) {
+        // TODO : comment me
+        return "error js: " + e;
+    }
+}
 async function responseHandlerSaveCommandeNew(response) {
     try {
         let myjson = JSON.parse(await response);
@@ -411,15 +453,15 @@ async function saveCommandeModified(inputObj) {
 
     console.log("error?");
     console.log(response);
-    let result = await responseHandlerSaveCommandeNew(response);
+    let result = await responseHandlerUpdateCommande(response);
     if (result[0] == "success") {
         ToastShowClosured(result[0], "Commandes sauvegardées avec succès");
-    } else if (result[0] == "failure") {
+    } else if (result[0] === "failure") {
         ToastShowClosured(result[0], "Echec de la sauvegarde de la commande");
     } else {
         throw new Error("wrong value returned");
     }
-    return [result[0] == "success", result[1]];
+    return [result[0] === "success", result[1]];
 }
 
 
@@ -436,9 +478,20 @@ function generateRowItem(nodeModel, DataObj) {
 //SAVING COMMANDE NEW
 function grabCommandeDataForm(modal) {
     let data = { header: {}, items: [] };
-    const headersName = ["commercial", "client", "date", "note", "remise-taux", "remise-montant", "magasin", "totalHT-avant-remise", "totalTTC-avant-remise", "remise-taux", "remise-montant", "totalHT-apres-remise", "totalTTC-apres-remise"];
+    const headersName = ["uid", "commercial", 'state', "client", "date", "note", "remise-taux", "remise-montant", "magasin", "totalHT-avant-remise", "totalTTC-avant-remise", "remise-taux", "remise-montant", "totalHT-apres-remise", "totalTTC-apres-remise"];
     //grab only essential headers data
-    let headerInputs = modal.querySelector("#new-modal-body-heads").querySelectorAll(".input");
+    //grab only essential item data
+    // TODO : refactor me
+    let headerInputs;
+    let tableBodyRows;
+    if (modal.id === "modal-details") {
+        headerInputs = modal.querySelector("#commande-header").querySelectorAll(".input");
+        tableBodyRows = modal.querySelector("#table-facture").querySelector('tbody').querySelectorAll("tr");
+    } else {
+        headerInputs = modal.querySelector("#new-modal-body-heads").querySelectorAll(".input");
+        tableBodyRows = modal.querySelector("#new-modal-body-table").querySelector('tbody').querySelectorAll("tr");
+    }
+
     headerInputs.forEach(input => {
         try {
             if (headersName.includes(input.id)) {
@@ -450,8 +503,7 @@ function grabCommandeDataForm(modal) {
     });
 
 
-    //grab only essential item data
-    let tableBodyRows = modal.querySelector("#new-modal-body-table").querySelector('tbody').querySelectorAll("tr");
+
     // console.log(tableBodyRows);
     tableBodyRows.forEach(row => {
         // console.log(row);
@@ -596,7 +648,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		Êtes vous sûr de vouloir quitter ce formulaire?",
         yes: () => {
             bsModalCommandeNew.hide();
-            DefaultModalCommande(modalCommandeNew);
+            DefaultModalCommandeNew(modalCommandeNew);
             bsModalConfirmation.hide();
             modificationWatcher = false;
         },
@@ -643,7 +695,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 generateRowTable(trModel, dataModalCommandeNew["header"])
                             );
                             bsModalCommandeNew.hide();
-                            DefaultModalCommande(modalCommandeNew);
+                            DefaultModalCommandeNew(modalCommandeNew);
                             bsModalConfirmation.hide();
                             console.log("yes saving called");
                             return false;
@@ -697,7 +749,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 generateRowTable(trModel, dataModalCommandeNew["header"])
                             );
                             bsModalCommandeNew.hide();
-                            DefaultModalCommande(modalCommandeNew);
+                            DefaultModalCommandeNew(modalCommandeNew);
                             bsModalConfirmation.hide();
                             console.log("yes saving called");
                             return false;
@@ -718,7 +770,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		Êtes vous sûr de vouloir quitter ce formulaire?",
         yes: () => {
             bsModalCommandeDetails.hide();
-            DefaultModalCommande(modalCommandeDetails, 0);
+            DefaultModalCommandeNew(modalCommandeDetails, 0);
             bsModalConfirmation.hide();
             modificationWatcher = false;
         },
@@ -740,38 +792,41 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(dataModalCommandeDetails);
             saveCommandeModified(dataModalCommandeDetails).then((result) => {
                 if (result[0]) {
-                    // insert uid of newly created client
-                    dataModalCommandeDetails["header"]["uid"] = result[1][0];
-                    // dataModalCommandeNew["header"]["state"] = 1;
-                    // console.log(dataObj);
-                    // TODO : cache html
+                    modalCommandeDetails.querySelector("#state").value = "2";
+                    disableInputs(modalCommandeDetails.querySelectorAll(".input"));
+                    defaultButtons(modalCommandeDetails);
+                    modalCommandeDetails.querySelector("#btn-modify").disabled = true;
+                    bsModalConfirmation.hide();
+                    updateTableRow(tableBody, dataModalCommandeDetails["header"]);
+                    console.log("yes saving called");
+                    return false;
+                } else {
+                    //TODO : show error
+                    return true;
+                }
+            });
+            bsModalCommandeNew.hide();
+        }
+    }
 
-                    fetch(
-                        "/elements/commandes/liste_commandes_table_001_base.html"
-                    )
-                        .then((response) => {
-                            let tt = response.text();
-                            console.log("tt");
-                            console.log(tt);
-                            return tt;
-                        })
-                        .then((txt) => {
-                            // TODO : abstract this process
-                            let doc = new DOMParser().parseFromString(
-                                txt,
-                                "text/html"
-                            );
-                            let trModel = doc.querySelector("#row-001");
+    const saveCommandeDetailsObj = {
+        message:
+            "<h2>Votre Commande va être sauvegarder.</h2><br>\
+				Aucune modification ne sera possible.<br>\
+            Êtes vous sûr de vouloir sauvegarder vos modifications?",
+        yes: () => {
 
-                            tableBody.append(
-                                generateRowTable(trModel, dataModalCommandeDetails["header"])
-                            );
-                            bsModalCommandeNew.hide();
-                            DefaultModalCommande(modalCommandeNew);
-                            bsModalConfirmation.hide();
-                            console.log("yes saving called");
-                            return false;
-                        });
+            let dataModalCommandeDetails = grabCommandeDataForm(modalCommandeDetails);
+            console.log("dataModalCommandeDetails");
+            console.log(dataModalCommandeDetails);
+            saveCommandeModified(dataModalCommandeDetails).then((result) => {
+                if (result[0]) {
+                    disableInputs(modalCommandeDetails.querySelectorAll(".input"));
+                    defaultButtons(modalCommandeDetails);
+                    bsModalConfirmation.hide();
+                    updateTableRow(tableBody, dataModalCommandeDetails["header"]);
+                    console.log("yes saving called");
+                    return false;
                 } else {
                     //TODO : show error
                     return true;
@@ -1163,7 +1218,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         cancelCommandeDetailsObj
                     );
                 } else {
-                    DefaultModalCommande(modalCommandeDetails, 0);
+                    DefaultModalCommandeNew(modalCommandeDetails, 0);
                     defaultButtons(modalCommandeDetails);
                     bsModalCommandeDetails.hide();
                 }
@@ -1173,7 +1228,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             } else if (event.target.id == "btn-add-item") {
                 addItem(tableItemsFactureDetails).then(() => modificationWatcher = true);
-            } else if (event.target.id == "btn-validate") {
+            } else if (event.target.id === "btn-save") {
+                openModalConfirmation(
+                    confirmationObj,
+                    saveCommandeDetailsObj
+                );
+            } else if (event.target.id === "btn-validate") {
                 openModalConfirmation(
                     confirmationObj,
                     validateCommandeDetailsObj

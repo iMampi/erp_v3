@@ -1,12 +1,15 @@
 <?php
 
-use Converter\UpdateCommandeHeader;
+use Database\Queries;
 use Database\Bindings;
 use Database\DbHandler;
-use Database\Queries;
-use Database\StandardPreparedStatement;
-
+use Converter\NewCommandeItem;
+use function Session\can_create;
 use function Session\can_update;
+
+use Converter\UpdateCommandeItem;
+use Converter\UpdateCommandeHeader;
+use Database\StandardPreparedStatement;
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 
@@ -14,10 +17,10 @@ session_start();
 
 new DbHandler();
 
-if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_update("commande"))) {
+if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_update("commande") && (can_create("commande")))) {
     $data = json_decode(file_get_contents('php://input'), true);
 
-    
+    // var_dump($data);
     // DbHandler::$connection->autocommit(\false);
     $step1 = new DbHandler();
     $conn = $step1::$connection;
@@ -25,7 +28,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_update("commande"))) {
 
     $NewObj = new UpdateCommandeHeader($data["header"]);
 
-    $Query1 = new Queries("save_new_commande");
+    $Query1 = new Queries("update_commande");
     $Binding = new Bindings($NewObj);
     $Statement = new StandardPreparedStatement($Query1, $Binding);
     $temp_array_result = DbHandler::execute_prepared_statement($Statement, MYSQLI_NUM);
@@ -36,29 +39,37 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_update("commande"))) {
         print("error01");
         print(json_encode($temp_array_result));
     } else {
-        $new_commande_uid = $temp_array_result[1][0][0];
+        // $new_commande_uid = $temp_array_result[1][0][0];
 
         try {
             foreach ($data["items"] as $array_values) {
-                $ItemRowObj = new NewCommandeItem([...$array_values, $new_commande_uid]);
-                // echo "xxxx";
-                // var_dump($ItemRowObj);
-                // echo "xxxx";
-                $Query2 = new Queries("save_new_commande_row");
-                $Binding = new Bindings($ItemRowObj);
-                $Statement = new StandardPreparedStatement($Query2, $Binding);
-                $temp_insert_result = DbHandler::execute_prepared_statement($Statement, MYSQLI_NUM);
-                if (!$temp_insert_result[0]) {
-                    print(json_encode($temp_insert_result));
-                    print("error02");
-
-                    $conn->rollback();
-                    break;
+                if (!$array_values[0]) {
+                    $ItemRowObj = new NewCommandeItem([...$array_values, $data["header"]["uid"]]);
+                    // echo "xxxx";
+                    // var_dump($ItemRowObj);
+                    // echo "xxxx";
+                    $Query2 = new Queries("save_new_commande_row");
+                    $Binding = new Bindings($ItemRowObj);
+                    $Statement = new StandardPreparedStatement($Query2, $Binding);
+                    $temp_insert_result = DbHandler::execute_prepared_statement($Statement, MYSQLI_NUM);
+                    if (!$temp_insert_result[0]) {
+                        print(json_encode($temp_insert_result));
+                        print("error02");
+                        $conn->rollback();
+                        break;
+                    }
+                } else {
+                    $ItemRowObj = new UpdateCommandeItem([...$array_values, $data["header"]["uid"]]);
+                    $Query3 = new Queries("update_commande_row");
+                    $Binding = new Bindings($ItemRowObj);
+                    $Statement = new StandardPreparedStatement($Query3, $Binding);
+                    $temp_insert_result = DbHandler::execute_prepared_statement($Statement, MYSQLI_NUM);
                 }
             }
         } catch (\Throwable $th) {
             $conn->rollback();
-            print("error03");
+            //error with commande item row
+            print("error03" . $th);
         }
 
         $conn->commit();

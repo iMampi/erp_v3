@@ -114,6 +114,32 @@ class Queries
         note=?
         where code=?
         ";
+    static public $update_commande =
+    "update commandes set
+        client_uid=?,
+        date=?,
+        magasin_uid=?,
+        libelle=?,
+        state=?,
+        user_uid=?,
+        total_ht_avant_remise=?,
+        total_ttc_avant_remise=?,
+        remise_taux=?,
+        remise_montant=?,
+        total_ht_apres_remise=?,
+        total_ttc_apres_remise=?
+        where uid=?
+        ";
+    static public $update_commande_row =
+        "update commandes_details set
+        commande_uid=?,
+        item_uid=?,
+        description_item=?,
+        quantity=?,
+        prix_unitaire=?,
+        prix_total=?
+        where uid=?
+        ";
 
     static public $delete_client = "
         update clients set active_client='0' where uid=? 
@@ -463,6 +489,15 @@ class Queries
                 break;
             case 'update_place':
                 $this->query = self::$update_place;
+                break;
+            case 'update_place':
+                $this->query = self::$update_place;
+                break;
+            case 'update_commande':
+                $this->query = self::$update_commande;
+                break;
+            case 'update_commande_row':
+                $this->query = self::$update_commande_row;
                 break;
             case 'filter_clients':
                 $this->query = self::$filter_client;

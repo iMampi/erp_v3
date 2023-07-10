@@ -731,5 +731,9 @@ added field input:hidden in commande table's item. #row-uid. to be used in case 
 bug from xampp. had to reinstall. add to re clone the repository
 since the add of #row-uid in commande items list, the array for item row has changed. SO , had to update the formatFloatsForDatabase() to format the correct data becasue of the new length of the array. For newcommande, saving and validating works great.
 working on validate with modified command...
+-------------------------
+107:
+validating and saving modified commands works great. confirmation is ok. defaulting and disabling buttons is ok. changing state when validating and specificaly disabling #btn-modify when validating a command is ok. formating correctly the decimal number when updating table.
+adding eventlistener for updating remises' values...
 
 

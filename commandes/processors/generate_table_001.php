@@ -29,7 +29,7 @@ if (can_visit($cycle_commande)) {
         // break;
         $tr_ = $tr_model->cloneNode(true);
 
-        $tr_->setAttribute("id", $el["uid"]);
+        $tr_->setAttribute("id", "row-" . $el["uid"]);
         $tbody_->appendChild($tr_);
 
 

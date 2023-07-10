@@ -288,6 +288,35 @@ class Bindings
                 $arr["note"],
                 $arr["code"]
             ];
+        } elseif ($this->converter::class == "Converter\UpdateCommandeHeader") {
+            $this->binding = [
+                'isisiiddddddi',
+                $arr["client_uid"],
+                $arr["date"],
+                $arr["magasin_uid"],
+                $arr["libelle"],
+                $arr["state"],
+                $arr["user_uid"],
+                $arr["total_ht_avant_remise"],
+                $arr["total_ttc_avant_remise"],
+                $arr["remise_taux"],
+                $arr["remise_montant"],
+                $arr["total_ht_apres_remise"],
+                $arr["total_ttc_apres_remise"],
+                $arr["uid"]
+            ];
+        } elseif ($this->converter::class == "Converter\SelectOneClient") {
+        } elseif ($this->converter::class == "Converter\UpdateCommandeItem") {
+            $this->binding = [
+                'issdddi',
+                $arr["commande_uid"],
+                $arr["item_uid"],
+                $arr["num_serie"],
+                $arr["quantity"],
+                $arr["prix_unitaire"],
+                $arr["prix_total"],
+                $arr["uid"]
+            ];
         } elseif ($this->converter::class == "Converter\SelectOneClient") {
             $this->binding = [
                 'i',
