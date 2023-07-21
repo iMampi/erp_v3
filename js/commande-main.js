@@ -137,7 +137,7 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
             if (valueObj["raison_sociale"]) {
                 element.value = valueObj["client_uid"] + " - " + valueObj["raison_sociale"] + " / " + valueObj["nom_commercial"];
             } else {
-                element.value = valueObj["client_uid"] + " - " + valueObj["noms"] + " " + valueObj["prénoms"];
+                element.value = valueObj["client_uid"] + " - " + valueObj["noms"] + " " + valueObj["prenoms"];
             }
         }
         else if (element.id === "commercial") {
@@ -478,7 +478,7 @@ function generateRowItem(nodeModel, DataObj) {
 //SAVING COMMANDE NEW
 function grabCommandeDataForm(modal) {
     let data = { header: {}, items: [] };
-    const headersName = ["uid", "commercial", 'state', "client", "date", "note", "remise-taux", "remise-montant", "magasin", "totalHT-avant-remise", "totalTTC-avant-remise", "remise-taux", "remise-montant", "totalHT-apres-remise", "totalTTC-apres-remise"];
+    const headersName = ["uid", "commercial", 'state', "client", "date", "note", "magasin", "totalHT-avant-remise", "totalTTC-avant-remise", "remise-taux", "remise-montant", "totalHT-apres-remise", "totalTTC-apres-remise"];
     //grab only essential headers data
     //grab only essential item data
     // TODO : refactor me
@@ -534,12 +534,11 @@ function updateItemTotalPrice(rowNode) {
 }
 
 function tauxAndMontantDiscountInputHandler(baseMontantInput, tauxInput, montantInput, mode) {
+    // mode: 1 = taux changed ; 2 = montant changed 
     let baseMontant = formatedNumberToFloat(baseMontantInput.value);
     if (mode == 1) {
         montantInput.value = (baseMontant * formatedNumberToFloat(tauxInput.value) / 100 || 0).toFixed(2);
     } else if (mode == 2) {
-
-
         tauxInput.value = (formatedNumberToFloat(montantInput.value) / formatedNumberToFloat(baseMontant) * 100 || 0).toFixed(2);
     }
 }
@@ -1203,6 +1202,22 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             totalTTCDiscountedHandler(montantTTCAvantRemiseInputNew, montantTTCApresRemiseInputNew, remiseMontantInputNew);
             TVAHandler(montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew, 2);
+        })
+
+    } catch (error) {
+
+    }
+
+    try {
+        modalCommandeDetails.addEventListener('input', (event) => {
+            // TODO : restrict event
+            if (event.target.id == 'remise-taux') {
+                tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInputDetails, remiseTauxInputDetails, remiseMontantInputDetails, 1);
+            } else if (event.target.id == 'remise-montant') {
+                tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInputDetails, remiseTauxInputDetails, remiseMontantInputDetails, 2);
+            }
+            totalTTCDiscountedHandler(montantTTCAvantRemiseInputDetails, montantTTCApresRemiseInputDetails, remiseMontantInputDetails);
+            TVAHandler(montantHTApresRemiseInputDetails, TVAApresRemiseInputDetails, montantTTCApresRemiseInputDetails, 2);
         })
 
     } catch (error) {

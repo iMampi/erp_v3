@@ -735,5 +735,8 @@ working on validate with modified command...
 107:
 validating and saving modified commands works great. confirmation is ok. defaulting and disabling buttons is ok. changing state when validating and specificaly disabling #btn-modify when validating a command is ok. formating correctly the decimal number when updating table.
 adding eventlistener for updating remises' values...
-
+-------------------------
+108:
+added for eventlistener for updating remises' values on commande details
+fixed fillInputsDetailsHeaders() prénoms au lieu de prenom
 
