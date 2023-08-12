@@ -747,6 +747,7 @@ validate didnt create entry in factures_client table. modified update_commande.p
 persistent connection : added p: to DbHandler to create a connection pool
 -------------------------
 110:
-when changing an item in a row, it reinitiate also the quantity. it should not
+when changing an item in a row, it reinitiate also the quantity. it should not. So we modified fillItemNameAndPrice() by adding a flag defaultQuantityMode. Now All ok.
+updated update_commande.php to verify if user has authorization to create facture_client.
 
 

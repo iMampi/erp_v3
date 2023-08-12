@@ -907,7 +907,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return document.querySelector("option[value='" + code + "']").getAttribute("label");
     }
 
-    function fillItemNameAndPrice(inputCodeNode) {
+    function fillItemNameAndPrice(inputCodeNode, defaultQuantityMode = 1) {
         const defaultQuantity = 1;
         const inputName = inputCodeNode.parentNode.parentNode.querySelector("#item-name");
         const inputPU = inputCodeNode.parentNode.parentNode.querySelector("#item-pu");
@@ -917,7 +917,9 @@ document.addEventListener("DOMContentLoaded", () => {
         inputName.value = getName(valName);
         let valPU = document.getElementById("item-list").querySelector("option[value='" + valName + "']").dataset.prix;
         inputPU.value = formatNumber(valPU);
-        inputQuantity.value = defaultQuantity;
+        if (defaultQuantityMode) {
+            inputQuantity.value = defaultQuantity;
+        }
         inputTotalPrice.value = formatNumber(valPU * defaultQuantity)
 
     }
@@ -1078,7 +1080,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("item selected");
                 let val = event.target.value;
                 console.log(getName(val));
-                fillItemNameAndPrice(event.target);
+
+
+                (event.target);
                 const itemTotalPriceInputs = modalCommandeNew.querySelectorAll(".item-prix-total");
                 console.log("itemTotalPriceInputs");
                 console.log(itemTotalPriceInputs);
@@ -1148,7 +1152,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("item selected");
                 let val = event.target.value;
                 console.log(getName(val));
-                fillItemNameAndPrice(event.target);
+                fillItemNameAndPrice(event.target, 0);
                 const itemTotalPriceInputs = modalCommandeDetails.querySelectorAll(".item-prix-total");
                 console.log("itemTotalPriceInputs");
                 console.log(itemTotalPriceInputs);

@@ -73,19 +73,24 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_update("commande") && (can_cr
             //error with commande item row
             print("error03" . $th);
         }
-        try {
-            if ($data["header"]["state"] === 2) {
+        if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_update("facture_client") && (can_create("facture_client")))) {
+            try {
+                if ($data["header"]["state"] === 2) {
 
-                $NewFactureClientObj = new NewFactureClient([$data["header"]["uid"], $data["header"]["commercial"]]);
-                $Query3 = new Queries("save_new_facture_client");
-                $Binding3 = new Bindings($NewFactureClientObj);
-                $Statement3 = new StandardPreparedStatement($Query3, $Binding3);
-                $temp_array_result = DbHandler::execute_prepared_statement($Statement3, MYSQLI_NUM);
+                    $NewFactureClientObj = new NewFactureClient([$data["header"]["uid"], $data["header"]["commercial"]]);
+                    $Query3 = new Queries("save_new_facture_client");
+                    $Binding3 = new Bindings($NewFactureClientObj);
+                    $Statement3 = new StandardPreparedStatement($Query3, $Binding3);
+                    $temp_array_result = DbHandler::execute_prepared_statement($Statement3, MYSQLI_NUM);
+                }
+            } catch (\Throwable $th) {
+                $conn->rollback();
+                //error with new facture client
+                print("error04" . $th);
             }
-        } catch (\Throwable $th) {
+        } else {
             $conn->rollback();
-            //error with new facture client
-            print("error04" . $th);
+            print("error05 : NOT AUTHORIZED TO CREATE FACTURE CLIENT");
         }
 
         $conn->commit();
