@@ -371,11 +371,15 @@ async function responseHandlerUpdateCommande(response) {
         //NOTE : works for error also
         // TODO : handle for when it is an error
         // TODO : all seems to use the same logic. DRY in all others occurence
-        console.log("myjson");
+        console.log("myjson26");
         console.log(myjson);
         if (myjson[0]) {
             // TODO : inconsistency, should be uniformed. but works for now
-            return ["success", myjson[1]];
+            try {
+                return ["success", myjson[1][0][0]];
+            } catch (error) {
+                return ["success", myjson[1]];
+            }
         } else {
             return ["failure", Object.values(myjson[1])[0]];
         }

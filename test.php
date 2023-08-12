@@ -1,8 +1,10 @@
 <?php
+// phpinfo();
 $test=666;
 echo "32";
 
 throw new Exception("this is x debg test", 1);;
+
 // // use Session\User;
 
 // use Conge\CongesMonthly;

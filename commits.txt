@@ -739,4 +739,14 @@ adding eventlistener for updating remises' values...
 108:
 added for eventlistener for updating remises' values on commande details
 fixed fillInputsDetailsHeaders() prénoms au lieu de prenom
+-------------------------
+109:
+starting to work on facts_clt.php to harmonize with commandes...
+creating queries and other object properties...
+validate didnt create entry in factures_client table. modified update_commande.php. now it does.
+persistent connection : added p: to DbHandler to create a connection pool
+-------------------------
+110:
+when changing an item in a row, it reinitiate also the quantity. it should not
+
 

@@ -1,11 +1,14 @@
 <?php
 //TODO :delete me
-require __DIR__ . "/dummy.php";
+// require __DIR__ . "/dummy.php";
+use function Session\can_visit;
+
+require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 
 
-
-$base = __DIR__ . "/../../elements/facts_clt/liste_facts_clt_table_001_base.html";
-
+$cycle_facture_client = "facture_client";
+// require __DIR__ . "/../../elements/affaires/liste_affaires_table_001_base.html";
+$base = __DIR__ . "/../../elements/commandes/liste_commandes_table_001_base.html";
 
 //create first DOM to handle base file
 $dom = new DOMDocument();
@@ -19,37 +22,64 @@ $xpath = new DOMXPath($dom);
 
 $row_counter = 1;
 
-foreach ($dummy as $el) {
-    $tr_ = $tr_model->cloneNode(true);
+if (can_visit($cycle_commande)) {
+    require_once __DIR__ . "/../../database/select/all_commandes_header_limit.php";
+    foreach ($all_commandes_header_limit as $el) {
+        // var_dump($el);
+        // break;
+        $tr_ = $tr_model->cloneNode(true);
 
-    $id_ = sprintf('%03d', $row_counter);
-    $tr_->setAttribute("id", $id_);
-    $tbody_->appendChild($tr_);
+        $tr_->setAttribute("id", "row-" . $el["uid"]);
+        $tbody_->appendChild($tr_);
 
 
-    $nodes = $xpath->query(".//*[contains(@class,'input')]", $tr_);
-    foreach ($nodes as $el_input) {
-        $classes = $el_input->getAttribute('class');
-        $classes_array = explode(" ", $classes);
+        $nodes = $xpath->query(".//*[contains(@class,'input')]", $tr_);
+        // $options=$xpath->query(".//slect[contains(@class,'state')>option]", $tr_)
+        foreach ($nodes as $el_input) {
+            // TODO : refactor. since we use all inputs have id
+            $classes = $el_input->getAttribute('class');
+            $classes_array = explode(" ", $classes);
 
-        if (in_array("date", $classes_array)) {
-            $el_input->setAttribute("value", $el[1]);
-        } elseif (in_array("uid", $classes_array)) {
-            $el_input->setAttribute("value", $el[0]);
-        } elseif (in_array("clt", $classes_array)) {
-            $el_input->setAttribute("value", $el[2]);
-        } elseif (in_array("num", $classes_array)) {
-            $el_input->setAttribute("value", $el[3]);
-        } elseif (in_array("affaire", $classes_array)) {
-            $el_input->setAttribute("value", $el[4]);
-        } elseif (in_array("total", $classes_array)) {
-            $el_input->setAttribute("value", $el[5]);
-        } elseif (in_array("detail", $classes_array)) {
-            // $el_input->setAttribute("value", $el[6]);
-        } elseif (in_array("state", $classes_array)) {
-            $option_ = $xpath->query(".//*[(@value='" . $el[6] . "')]", $el_input);
-            $option_[0]->setAttribute("selected", "true");
+            if (in_array("date", $classes_array)) {
+                $el_input->setAttribute("value", $el["date"]);
+            } elseif (in_array("uid", $classes_array)) {
+                $el_input->setAttribute("value", $el["uid"]);
+            } elseif (in_array("totalTTC", $classes_array)) {
+                $el_input->setAttribute("value", $el["total_ttc_apres_remise"]);
+            } elseif (in_array("state", $classes_array)) {
+                // $el_input->setAttribute("value", $el["state"]);
+                $option = $xpath->query(".//option[@value='" . $el["state"] . "']", $el_input);
+                $option[0]->setAttribute("selected", true);
+            } elseif (in_array("client", $classes_array)) {
+
+                if (!trim($el['raison_sociale'])) {
+                    $el_input->setAttribute("value", $el['client_uid'] . " - " . $el['noms'] . " " . $el['prenoms']);
+                } else {
+                    $el_input->setAttribute("value", $el['client_uid'] . " - " . $el['raison_sociale'] . " / " . $el['nom_commercial']);
+                }
+            }
         }
     }
+    // echo utf8_decode($dom->saveHTML($dom->documentElement));
+} else {
+    $tr_ = $tr_model->cloneNode();
+    $tr_2 = $tr_model->cloneNode();
+
+    $td_ = $dom->createElement("td");
+    $td_2 = $dom->createElement("td");
+    $txt_ = $dom->createTextNode("Nothing for you to see here.");
+    $txt_2 = $dom->createTextNode("Contact your administrator to change that.");
+    $td_->appendChild($txt_);
+    $td_2->appendChild($txt_2);
+    // TODO : set colspan's number dynamically;
+    $td_->setAttribute('colspan', "6");
+    // $td_->setAttribute('rowspan', "2");
+    $td_->setAttribute('class', "px-5 text-center");
+    $td_2->setAttribute('colspan', "6");
+    $td_2->setAttribute('class', "px-5 text-center");
+    $tr_->appendChild($td_);
+    $tr_2->appendChild($td_2);
+    $tbody_->appendChild($tr_);
+    $tbody_->appendChild($tr_2);
 }
-echo utf8_decode($dom->saveHTML($dom->documentElement));
+echo $dom->saveHTML($dom->documentElement);

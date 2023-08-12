@@ -9,7 +9,7 @@ class DbHandler
 {
     // TODO : make them private
     static $created = 0;
-    const HOST = "localhost:3306";
+    const HOST = "p:localhost:3306";
     const USER = "imampi";
     const PASSWORD = "2708";
     const DATABASE = "erpv2";
@@ -28,6 +28,7 @@ class DbHandler
 
     static function connect()
     {
+        // prefix HOST with "p:" for persistent connection (connection pool)
         self::$connection = new \mysqli(self::HOST, self::USER, self::PASSWORD, self::DATABASE);
         self::$connection->set_charset('utf8mb4');
         //add this so we can see why a query fails
@@ -125,6 +126,7 @@ class DbHandler
                     } catch (\Throwable $th) {
                         // on a utilisait ca avant. on laisse juste a cas où
                         ////$results = [$stmt_execution];
+                        $results = \null;
                         $nb_affected_row = $stmt->affected_rows;
                         if ($nb_affected_row > 0) {
                             $results = ["nb_affected_row" => $nb_affected_row];

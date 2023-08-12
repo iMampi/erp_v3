@@ -136,6 +136,12 @@ class Bindings
                 $arr["total_ht_apres_remise"],
                 $arr["total_ttc_apres_remise"]
             ];
+        } else if ($this->converter::class == "Converter\NewFactureClient") {
+            $this->binding = [
+                'ii',
+                $arr["commande_uid"],
+                $arr["user_uid"]
+            ];
         } else if ($this->converter::class == "Converter\NewCommandeItem") {
             $this->binding = [
                 'issddd',

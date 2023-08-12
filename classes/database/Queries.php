@@ -131,7 +131,7 @@ class Queries
         where uid=?
         ";
     static public $update_commande_row =
-        "update commandes_details set
+    "update commandes_details set
         commande_uid=?,
         item_uid=?,
         description_item=?,
@@ -318,6 +318,9 @@ class Queries
     static public $save_new_commande_row = "
         insert into commandes_details values (NULL,?,?,?,?,?,?)
         ";
+    static public $save_new_facture_client = "
+        select new_facture_client (?,?)
+        ";
     static public $save_new_employee = "
         select new_employee(
             ?,
@@ -390,6 +393,9 @@ class Queries
                 break;
             case 'save_new_commande_row':
                 $this->query = self::$save_new_commande_row;
+                break;
+            case 'save_new_facture_client':
+                $this->query = self::$save_new_facture_client;
                 break;
             case 'select_all_clients':
                 $this->query = self::$select_all_clients;
