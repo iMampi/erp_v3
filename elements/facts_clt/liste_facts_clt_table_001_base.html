@@ -1,25 +1,23 @@
 <table class="table table-hover" id="table-001">
 	<thead id="ze-thead" class="bg-dark sticky-top">
 		<tr>
-			<td class="ps-5 td-uid"><div class="ps-4">uid</div></td>
+			<td class="ps-5"><div class="ps-4">numéro facture</div></td>
 			<td>date</td>
 			<td>client</td>
-			<td>numéro facture</td>
-			<td>affaire</td>
-			<td>total</td>
-			<td>détails</td>
-			<td class="pe-5 td-uid text-end">état</td>
+			<td>total TTC</td>
+			<td>Etat</td>
+			<td class="pe-5 td-uid text-end">détails</td>
 			</td>
 		</tr>
 	</thead>
 	<tbody id="ze-tbody" class="bg-light position-relative">
 		<tr id="row-001">
-			<td class="td-uid ps-5">
-				<div class="uid ps-4">
+			<td class="ps-5">
+				<div class="ps-4">
 					<input
 						type="text"
 						disabled
-						class="uid input form-control form-control-sm"
+						class="num-fact input form-control form-control-sm"
 					/>
 				</div>
 			</td>
@@ -34,24 +32,10 @@
 				<input
 					type="text"
 					disabled
-					class="clt input form-control form-control-sm"
+					class="client input form-control form-control-sm"
 				/>
 			</td>
-			<td>
-				<input
-					type="text"
-					disabled
-					class="num input form-control form-control-sm"
-				/>
-			</td>
-			<td>
-				<input
-					type="text"
-					disabled
-					class="affaire input form-control form-control-sm"
-				/>
-			</td>
-			<td>
+			<td class="">
 				<input
 					type="text"
 					disabled
@@ -59,24 +43,24 @@
 				/>
 			</td>
 			<td>
-				<!-- Button trigger modal -->
-				<button
-					type="button"
-					class="btn btn-primary btn-sm btn-details"
-					data-bs-toggle="modal"
-					data-bs-target="#modal-detail-facture"
-				>
-					see
-				</button>
-			</td>
-			<td class="text-end pe-5">
-				<select
+				<input
+					type="text"
 					disabled
-					class="etat input form-control form-control-sm"
-				>
-					<option value="0">impayée</option>
-					<option value="1">payée</option>
-				</select>
+					class="payment input form-control form-control-sm"
+				/>
+			</td>
+
+			<td class="text-end pe-5">
+								<!-- Button trigger modal -->
+								<button
+								type="button"
+								class="btn btn-primary btn-sm btn-details"
+								data-bs-toggle="modal"
+								data-bs-target="#modal-detail-facture"
+							>
+								see
+							</button>
+			
 			</td>
 			<!-- <td class="text-end pe-5">
 				<div class="pe-4">

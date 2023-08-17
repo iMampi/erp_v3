@@ -42,7 +42,7 @@ is_logged();
         <div id="header-top" class=" bg-light-blue">
             <?php
             require_once $_SERVER["DOCUMENT_ROOT"] . '/utilities/login_utils.php';
-            $header = generate_logged_header($_SESSION['user']->name, "link-commandes");
+            $header = generate_logged_header($_SESSION['user']->name, "link-facts-clt");
             echo $header;
             ?>
             <div id="sub-header" class="container-fluid sticky-top py-2 bordered bg-light-blue
@@ -60,7 +60,6 @@ is_logged();
                         require_once $_SERVER["DOCUMENT_ROOT"] . '/elements/sub_header_div_btns.html';
                     }
                     ?>
-
                 </div>
             </div>
             <!-- </div> -->

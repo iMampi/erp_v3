@@ -5,10 +5,11 @@ use function Session\can_visit;
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 
+$state_of_payment=["impayé","partiel","payé"];
 
 $cycle_facture_client = "facture_client";
 // require __DIR__ . "/../../elements/affaires/liste_affaires_table_001_base.html";
-$base = __DIR__ . "/../../elements/commandes/liste_commandes_table_001_base.html";
+$base = __DIR__ . "/../../elements/facts_clt/liste_facts_clt_table_001_base.html";
 
 //create first DOM to handle base file
 $dom = new DOMDocument();
@@ -23,13 +24,13 @@ $xpath = new DOMXPath($dom);
 $row_counter = 1;
 
 if (can_visit($cycle_commande)) {
-    require_once __DIR__ . "/../../database/select/all_commandes_header_limit.php";
-    foreach ($all_commandes_header_limit as $el) {
+    require_once __DIR__ . "/../../database/select/all_factures_client_header_limit.php";
+    foreach ($all_factures_client_header_limit as $el) {
         // var_dump($el);
         // break;
         $tr_ = $tr_model->cloneNode(true);
 
-        $tr_->setAttribute("id", "row-" . $el["uid"]);
+        $tr_->setAttribute("id", "row-" . $el["num_facture"]);
         $tbody_->appendChild($tr_);
 
 
@@ -41,15 +42,13 @@ if (can_visit($cycle_commande)) {
             $classes_array = explode(" ", $classes);
 
             if (in_array("date", $classes_array)) {
-                $el_input->setAttribute("value", $el["date"]);
-            } elseif (in_array("uid", $classes_array)) {
-                $el_input->setAttribute("value", $el["uid"]);
-            } elseif (in_array("totalTTC", $classes_array)) {
+                $el_input->setAttribute("value", date_format(date_create($el["datetime"]), "Y-m-d"));
+            } elseif (in_array("num-fact", $classes_array)) {
+                $el_input->setAttribute("value", $el["num_facture"]);
+            } elseif (in_array("total", $classes_array)) {
                 $el_input->setAttribute("value", $el["total_ttc_apres_remise"]);
-            } elseif (in_array("state", $classes_array)) {
-                // $el_input->setAttribute("value", $el["state"]);
-                $option = $xpath->query(".//option[@value='" . $el["state"] . "']", $el_input);
-                $option[0]->setAttribute("selected", true);
+            } elseif (in_array("payment", $classes_array)) {
+                $el_input->setAttribute("value", $state_of_payment[$el["payment"]]);
             } elseif (in_array("client", $classes_array)) {
 
                 if (!trim($el['raison_sociale'])) {

@@ -198,6 +198,11 @@ class Queries
         view_all_clients on view_all_clients.uid=commandes.client_uid 
         order by uid,date desc limit 50 ;
         ";
+    static public $select_all_factures_client_header_limit = "
+        select num_facture, datetime, client_uid, noms, prenoms, nom_commercial, raison_sociale,total_ttc_apres_remise,payment
+        from view_all_factures_client_headers 
+        order by num_facture, datetime desc limit 20 ;
+        ";
     static public $select_all_employees_name = "
         call all_employees_active_only 
         ";
@@ -435,6 +440,9 @@ class Queries
                 break;
             case 'select_all_commandes_header_limit':
                 $this->query = self::$select_all_commandes_header_limit;
+                break;
+            case 'select_all_factures_client_header_limit':
+                $this->query = self::$select_all_factures_client_header_limit;
                 break;
             case 'select_one_client':
                 $this->query = self::$select_one_client;
