@@ -38,6 +38,19 @@ const DefaultValuesCommandeNewFormObj = {
     "note": ""
 };
 
+const InputsDisabledByDefaultCommandeNewFormArray = [
+    'uid',
+    "state",
+    "commercial",
+    "date",
+    "totalHT-avant-remise",
+    "TVA-avant-remise",
+    "totalTTC-avant-remise",
+    "totalHT-apres-remise",
+    "TVA-apres-remise",
+    "totalTTC-apres-remise"
+];
+
 const DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_NEW = {
     "btn-new-client": false,
     "btn-see-client": false,
@@ -65,6 +78,12 @@ const DefaultValuesCommandeRowItem = {
     "item-quantity": "",
     "item-prix-total": ""
 };
+
+const InputsDisabledByDefaultCommandeRowItemArray = [
+    "item-name",
+    "item-pu",
+    "item-prix-total"
+]
 
 var counterRowItem = 1;
 var typingTimer;
@@ -317,12 +336,17 @@ function defaultButtons(modal) {
 
 function cleanNewForm(modal, disable = false) {
     console.log("cleaning");
-    const inputsForm =
-        modal.querySelectorAll(".input");
+    let array1 = InputsDisabledByDefaultCommandeNewFormArray.concat(InputsDisabledByDefaultCommandeRowItemArray);
+
+    const inputsForm = modal.querySelectorAll(".input");
 
     inputsForm.forEach((input) => {
         // console.log(input);
-        input.disabled = disable;
+        if (array1.includes(input.id)) {
+            input.disabled = true;
+        } else {
+            input.disabled = disable;
+        }
         let myValue = DefaultValuesCommandeNewFormObj[input.id];
         if (myValue == undefined) {
             myValue = DefaultValuesCommandeRowItem[input.id];
@@ -1077,12 +1101,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     typingTimer = setTimeout(() => { searchLive(term, clientDataList, "client") }, 1500);
                 }
             } else if ((event.target.id == "item-uid") && (!event.key)) {
-                console.log("item selected");
+                console.log("item selected 26");
                 let val = event.target.value;
                 console.log(getName(val));
-
-
-                (event.target);
+                fillItemNameAndPrice(event.target, 1);
                 const itemTotalPriceInputs = modalCommandeNew.querySelectorAll(".item-prix-total");
                 console.log("itemTotalPriceInputs");
                 console.log(itemTotalPriceInputs);
@@ -1113,6 +1135,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if ((event.target.id == "item-uid") && (event.key)) {
 
             } else if ((event.target.id == "item-uid") && (!event.key)) {
+
             } else if (event.target.id == "item-quantity") {
                 updateItemTotalPrice(event.target.parentNode.parentNode)
                 const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
@@ -1149,7 +1172,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     typingTimer = setTimeout(() => { searchLive(term, clientDataList, "client") }, 1500);
                 }
             } else if ((event.target.id == "item-uid") && (!event.key)) {
-                console.log("item selected");
+                console.log("item selected 36");
                 let val = event.target.value;
                 console.log(getName(val));
                 fillItemNameAndPrice(event.target, 0);
@@ -1159,7 +1182,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 updateTotalPrice(montantHTAvantRemiseInputDetails, itemTotalPriceInputs);
                 updateAllHeaderPrices(montantHTAvantRemiseInputDetails, TVAAvantRemiseInputDetails, montantTTCAvantRemiseInputDetails, remiseTauxInputDetails, remiseMontantInputDetails, montantHTApresRemiseInputDetails, TVAApresRemiseInputDetails, montantTTCApresRemiseInputDetails);
             } else if ((event.target.id == "client") && (!event.key)) {
-                console.log("client selected");
+                console.log("client selected 46");
             } else if (event.target.id == "item-quantity") {
                 updateItemTotalPrice(event.target.parentNode.parentNode)
                 const itemTotalPriceInputs = modalCommandeDetails.querySelectorAll("#item-prix-total");

@@ -753,3 +753,5 @@ updated update_commande.php to verify if user has authorization to create factur
 111:
 facts_clt.php : generate_table_001 is ok. queries needed created. created a new view coz we added a new field payment in factures_client's table.
 
+commande-main.js : because there cleanNewForm() did not disabled the correct input field, we fixed it by creating array s InputsDisabledByDefaultCommandeNewFormArray and InputsDisabledByDefaultCommandeRowItemArray. And added a few step into cleanNewForm(). Also fixed a part of th code where all price zould not update correctly in newCommandeForm
+
