@@ -47,6 +47,8 @@ if (can_visit($cycle_commande)) {
                 $el_input->setAttribute("value", $el["num_facture"]);
             } elseif (in_array("total", $classes_array)) {
                 $el_input->setAttribute("value", $el["total_ttc_apres_remise"]);
+            } elseif (in_array("commande-uid", $classes_array)) {
+                $el_input->setAttribute("value", $el["commande_uid"]);
             } elseif (in_array("payment", $classes_array)) {
                 $el_input->setAttribute("value", $state_of_payment[$el["payment"]]);
             } elseif (in_array("client", $classes_array)) {

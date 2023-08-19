@@ -306,6 +306,7 @@ is_logged();
         <div class="toast-container position-fixed top-0 end-0 p-3" id="toast-container">
         </div>
         <!-- end TOAST  -->
+        <!-- confirmation  modal-->
         <div class="modal fade bg-confirmation" tabindex="-1" id="modal-confirmation">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm ">
                 <div class="modal-content">

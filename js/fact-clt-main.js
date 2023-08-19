@@ -1,5 +1,21 @@
 const TODAY = luxon.DateTime.now().toFormat('yyyy-MM-dd');
 
+
+const DTO_FILL_INPUT_HEADERS = {
+    uid: "uid",
+    date: "date",
+    note: "libelle",
+    state: "state",
+    magasin: "magasin_uid",
+    "totalHT-avant-remise": "total_ht_avant_remise",
+    "totalTTC-avant-remise": "total_ttc_avant_remise",
+    "remise-taux": "remise_taux",
+    "remise-montant": "remise_montant",
+    "totalHT-apres-remise": "total_ht_apres_remise",
+    "totalTTC-apres-remise": "total_ttc_apres_remise",
+    "TVA-avant-remise": "TVA-avant-remise",
+    "TVA-apres-remise": "TVA-apres-remise"
+}
 const DefaultValuesCommandeNewFormObj = {
     uid: "",
     state: 1,
@@ -74,11 +90,141 @@ const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
 var listDOM = {};
 
+
+
+
 function generateRowAddItem(nodeModel, DataObj) {
     // console.log(DataObj);
     let newNode = nodeModel.cloneNode(true);
     newNode.id = "row-" + zeroLeftPadding(counterRowItem, 3, false);
     return newNode;
+}
+
+function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
+    console.log("responseJSON : ");
+    console.log(responseJSON);
+    valueObj = responseJSON["header"];
+    valueObj["TVA-avant-remise"] = roundToTwo(valueObj["total_ht_avant_remise"]);
+    valueObj["TVA-apres-remise"] = roundToTwo(valueObj["total_ht_apres_remise"]);
+    // let inputsElements = md.querySelectorAll(".input");
+
+    let inputsElements =
+        modalDetailsHeaders.querySelectorAll(".input");
+
+    // console.log("inputsElement :");
+    // console.log(inputsElements);
+    // let inputsElements = document.querySelectorAll(
+    // "#modal-clt-details .input"
+    // );
+    //TODO : use a DTO>> TO DUPLICATE EVERYWHERE ELSE
+    for (let index = 0; index < inputsElements.length; index++) {
+        let element = inputsElements[index];
+        if (element.id === "client") {
+            if (valueObj["raison_sociale"]) {
+                element.value = valueObj["client_uid"] + " - " + valueObj["raison_sociale"] + " / " + valueObj["nom_commercial"];
+            } else {
+                element.value = valueObj["client_uid"] + " - " + valueObj["noms"] + " " + valueObj["prenoms"];
+            }
+        }
+        else if (element.id === "commercial") {
+            element.value = valueObj["user_uid"] + "//" + valueObj["user_name"];
+
+        } else {
+            element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
+        }
+
+        // console.log(element.id);
+        // console.log(DTO_FILL_INPUT[element.id]);
+        // console.log(valueObj[DTO_FILL_INPUT[element.id]]);
+
+    }
+}
+
+async function addItemRowsLoop(numberOfRows, modalDetailsItemsTable) {
+    for (let i = 0; i < numberOfRows; ++i) {
+        console.log("counterRowItem : " + counterRowItem);
+        await addItem(modalDetailsItemsTable);
+    }
+    return new Promise((resolve, reject) => resolve(true));
+}
+
+function disableInputsAndButtons(tableNode) {
+    console.log('disable this shit');
+    let nodesToDisable = tableNode.querySelectorAll(".input, .btn");
+
+    for (let index = 0; index < nodesToDisable.length; index++) {
+        nodesToDisable[index].disabled = true;
+    }
+}
+
+
+function fillInputsDetailsItem(arrayData, rowNode) {
+    const idToKey = {
+        "row-uid": "uid",
+        "item-uid": "item_uid",
+        "item-name": "item_name",
+        "num-serie": "description_item",
+        "item-pu": "prix_unitaire",
+        "item-prix-total": "prix_total",
+        "item-quantity": "quantity"
+    }
+    let inputs = rowNode.querySelectorAll(".input");
+    for (let k = 0; k < inputs.length; k++) {
+        let input = inputs[k];
+        input.value = arrayData[idToKey[input.id]];
+    }
+}
+
+async function fillInputsDetailsItems(itemsArray, modalDetailsItemsTable) {
+
+    let numberOfRows = itemsArray.length;
+    await addItemRowsLoop(numberOfRows, modalDetailsItemsTable);
+    disableInputsAndButtons(modalDetailsItemsTable);
+    let rowsToFill = modalDetailsItemsTable.querySelectorAll(".item-commande-row");
+
+    for (let j = 0; j < numberOfRows; j++) {
+        fillInputsDetailsItem(itemsArray[j], rowsToFill[j]);
+
+    }
+}
+
+function fillInputsDetailsItem(arrayData, rowNode) {
+    const idToKey = {
+        "row-uid": "uid",
+        "item-uid": "item_uid",
+        "item-name": "item_name",
+        "num-serie": "description_item",
+        "item-pu": "prix_unitaire",
+        "item-prix-total": "prix_total",
+        "item-quantity": "quantity"
+    }
+    let inputs = rowNode.querySelectorAll(".input");
+    for (let k = 0; k < inputs.length; k++) {
+        let input = inputs[k];
+        input.value = arrayData[idToKey[input.id]];
+    }
+}
+
+async function responseHandlerSelectOneCommande(response) {
+    try {
+        console.log("response++");
+        console.log(response);
+        let myjson = JSON.parse(await response);
+        //NOTE : the correct way for save. not correct for select query
+        //NOTE : works for error also
+        // TODO : handle for when it is an error
+        // TODO : all seems to use the same logic. DRY in all others occurence
+        console.log("myjson select");
+        console.log(myjson);
+        if (myjson["header"][0] && myjson["items"][0]) {
+            return ["success", { "header": myjson["header"][1][0], "items": myjson["items"][1] }];
+        } else {
+            return ["failure", myjson];
+        }
+    } catch (e) {
+        // TODO : comment me
+        return "error js: " + e;
+    }
 }
 
 function removeItem(target, mode) {
@@ -194,7 +340,7 @@ function cleanNewForm(modal, disable = false) {
     });
 }
 
-async function DefaultModalCommandeNew(modal, min_row = 1) {
+async function DefaultModalCommandInputs(modal, min_row = 1) {
     //remove other item rows
     let itemRows = modal.querySelectorAll(".item-commande-row");
     removeItemRows(itemRows);
@@ -281,6 +427,19 @@ document.addEventListener("DOMContentLoaded", () => {
     tableFacture
     const itemDataList = document.getElementById("item-list");
     const clientDataList = document.getElementById("client-list");
+
+    ////modal confirmation
+    const modalConfirmation = document.getElementById("modal-confirmation");
+    const bsModalConfirmation = new bootstrap.Modal(modalConfirmation, {
+        backdrop: "static",
+        keyboard: false,
+        focus: true,
+    });
+    const btnConfirmationYes = modalConfirmation.querySelector("#btn-confirmation-yes"
+    );
+    const btnConfirmationNo = modalConfirmation.querySelector("#btn-confirmation-no"
+    );
+
     ////modal new
     const modalCommandeNew = document.getElementById("modal-commande-new");
     const bsModalCommandeNew = new bootstrap.Modal(modalCommandeNew, {
@@ -302,18 +461,197 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnAddItem = modalCommandeNew.querySelector("#btn-add-item");
 
     ////modal facture details
-    // const modalFactureDetails = document.getElementById("modal-facture-details");
-    // const bsModalFactureDetails = new bootstrap.Modal(modalFactureDetails, {
-    //     backdrop: "static",
-    //     keyboard: false,
-    //     focus: true,
-    // });
-    // const btnSaveNew=modalCommandeNew.querySelector("#btn-save-new");
-    // const btnCancelNew=modalCommandeNew.querySelector("#btn-cancel-new");
-    // const btnAddItem=modalCommandeNew.querySelector("#btn-add-item");
+    const modalFactureDetails = document.getElementById("modal-details");
+    const bsModalFactureDetails = new bootstrap.Modal(modalFactureDetails, {
+        backdrop: "static",
+        keyboard: false,
+        focus: true,
+    });
+    //const btnSaveNew=modalCommandeNew.querySelector("#btn-save-new");
+    //const btnCancelNew=modalCommandeNew.querySelector("#btn-cancel-new");
+    //const btnAddItem=modalCommandeNew.querySelector("#btn-add-item");
+
+    //CONFIRMATION OBJ
+    const confirmationObj = {
+        modal: modalConfirmation,
+        bsModal: bsModalConfirmation,
+        btnYes: btnConfirmationYes,
+        btnNo: btnConfirmationNo,
+    };
+
+    const cancelCreationObj = {
+        message:
+            "Des champs ont été modifiés.<br>\
+		Vos modifications vont être perdus.<br>\
+		Êtes vous sûr de vouloir quitter ce formulaire?",
+        yes: () => {
+            bsModalCommandeNew.hide();
+            DefaultModalCommandInputs(modalCommandeNew);
+            bsModalConfirmation.hide();
+            modificationWatcher = false;
+        },
+        no: () => {
+            bsModalConfirmation.hide();
+        },
+    };
+
+    const saveCreationObj = {
+        message:
+            "Des champs ont été modifiés.<br>\
+				Vos modifications vont être enregistrées.<br>\
+				Êtes vous sûr de vouloir sauvegarder vos modifications?",
+        yes: () => {
+
+            let dataModalCommandeNew = grabCommandeDataForm(modalCommandeNew);
+            console.log("dataModalCommandeNew");
+            console.log(dataModalCommandeNew);
+            saveCommandeNew(dataModalCommandeNew).then((result) => {
+                if (result[0]) {
+                    // insert uid of newly created client
+                    dataModalCommandeNew["header"]["uid"] = result[1][0];
+                    dataModalCommandeNew["header"]["state"] = 1;
+                    // console.log(dataObj);
+                    // TODO : cache html
+                    fetch(
+                        "/elements/commandes/liste_commandes_table_001_base.html"
+                    )
+                        .then((response) => {
+                            let tt = response.text();
+                            console.log("tt");
+                            console.log(tt);
+                            return tt;
+                        })
+                        .then((txt) => {
+                            // TODO : abstract this process
+                            let doc = new DOMParser().parseFromString(
+                                txt,
+                                "text/html"
+                            );
+                            let trModel = doc.querySelector("#row-001");
+
+                            tableBody.append(
+                                generateRowTable(trModel, dataModalCommandeNew["header"])
+                            );
+                            bsModalCommandeNew.hide();
+                            DefaultModalCommandInputs(modalCommandeNew);
+                            bsModalConfirmation.hide();
+                            console.log("yes saving called");
+                            return false;
+                        });
+                } else {
+                    //TODO : show error
+                    return true;
+                }
+            });
+            bsModalCommandeNew.hide();
+        }
+    }
+
+    const validateCreationObj = {
+        message:
+            "<h2>Votre Commande va être sauvegarder et transformer en facture.</h2><br>\
+				Aucune modification ne possible.<br>\
+				Êtes vous sûr de vouloir sauvegarder vos modifications?",
+        yes: () => {
+
+            let dataModalCommandeNew = grabCommandeDataForm(modalCommandeNew);
+            dataModalCommandeNew["header"]["state"] = 2;
+            console.log("dataModalCommandeNew");
+            console.log(dataModalCommandeNew);
+            saveCommandeNew(dataModalCommandeNew).then((result) => {
+                if (result[0]) {
+                    // insert uid of newly created client
+                    dataModalCommandeNew["header"]["uid"] = result[1][0];
+                    // dataModalCommandeNew["header"]["state"] = 1;
+                    // console.log(dataObj);
+                    // TODO : cache html
+
+                    fetch(
+                        "/elements/commandes/liste_commandes_table_001_base.html"
+                    )
+                        .then((response) => {
+                            let tt = response.text();
+                            console.log("tt");
+                            console.log(tt);
+                            return tt;
+                        })
+                        .then((txt) => {
+                            // TODO : abstract this process
+                            let doc = new DOMParser().parseFromString(
+                                txt,
+                                "text/html"
+                            );
+                            let trModel = doc.querySelector("#row-001");
+
+                            tableBody.append(
+                                generateRowTable(trModel, dataModalCommandeNew["header"])
+                            );
+                            bsModalCommandeNew.hide();
+                            DefaultModalCommandInputs(modalCommandeNew);
+                            bsModalConfirmation.hide();
+                            console.log("yes saving called");
+                            return false;
+                        });
+                } else {
+                    //TODO : show error
+                    return true;
+                }
+            });
+            bsModalCommandeNew.hide();
+        }
+    }
+
+
+
+
 
     //FUNCTIONS
 
+    async function showCommandeDetails(event) {
+        // TODO : refactor
+        console.log("called here");
+        let parent = event.target.parentNode.parentNode;
+        console.log("parent");
+        console.log(parent);
+        let myuid = parent.querySelector(".input.commande-uid").value;
+        console.log("myuid tr");
+        console.log(myuid);
+        sendData("/database/select/one_commande_details.php", {
+            uid: myuid,
+        })
+            .then((resp) => {
+                console.log("shwodetail :");
+                console.log(resp);
+                return responseHandlerSelectOneCommande(resp);
+            })
+            .then((result) => {
+                // console.log("result : " + JSON.stringify(result[1]));
+                // TODO : implement this part in new-client into a function cleanClass(). and optimize : if same personnality called, no nedd to recall.
+                console.log("result+-+");
+                console.log(result);
+                if (result[0] === "success") {
+
+                    console.log("result[1]");
+                    console.log(result[1]);
+                    try {
+
+                        let btnModify = modalFactureDetails.querySelector('#btn-modify');
+                        btnModify.disabled = false;
+                        if (result[1]['header']["state"] == "2") {
+                            btnModify.disabled = true;
+                        }
+                    } catch {
+
+                    }
+
+                    let inputsHeader = modalFactureDetails.querySelector("#commande-header")
+                    fillInputsDetailsHeaders(result[1], inputsHeader);
+                    fillInputsDetailsItems(result[1]["items"], modalFactureDetails.querySelector("#table-facture"));
+                } else {
+                    throw new Error(result);
+                }
+            });
+    }
 
 
 
@@ -540,14 +878,10 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
         modalFactureDetails.addEventListener('click', (event) => {
             if (event.target.id == "btn-cancel") {
-                bsModalFactureDetails.hide();
+                bsModalFactureDetails.hide()
+                DefaultModalCommandInputs(modalFactureDetails, 0);
             }
-            if (event.target.id == "btn-modify") {
-                enableInputs();
-            }
-
         })
-
     } catch (error) {
 
     }
@@ -555,6 +889,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
         tableBody.addEventListener("click", (event) => {
             if (event.target.classList.contains('btn-details')) {
+                showCommandeDetails(event);
                 bsModalFactureDetails.show()
             }
         })

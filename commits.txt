@@ -760,3 +760,8 @@ fixed algo for eventhandler on modalCommandeNew.addEventListener('keyup'...if ((
 
 working on fact-clt.js :
 +prices updating correctly when item added,removed, modified.
++fixed data-bs on html for table_list
++commande-new : client selection works
++facture-detail : all works. seeing and quitting (cleaning). no modification possible
+
+

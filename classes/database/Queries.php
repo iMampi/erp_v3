@@ -199,7 +199,7 @@ class Queries
         order by uid,date desc limit 50 ;
         ";
     static public $select_all_factures_client_header_limit = "
-        select num_facture, datetime, client_uid, noms, prenoms, nom_commercial, raison_sociale,total_ttc_apres_remise,payment
+        select num_facture,commande_uid, datetime, client_uid, noms, prenoms, nom_commercial, raison_sociale,total_ttc_apres_remise,payment
         from view_all_factures_client_headers 
         order by num_facture, datetime desc limit 20 ;
         ";

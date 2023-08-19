@@ -80,7 +80,7 @@ is_logged();
             <!-- END TABLEAU -->
             <!-- modal commandes new -->
             <div class="modal fade" id="modal-commande-new" tabindex="-1">
-                <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Close">
                 </button>
                 <div class="modal-dialog modal-dialog-scrollable modal-xl">
 
@@ -113,47 +113,8 @@ is_logged();
                         </div>
                     </div>
                 </div>
-
-
             </div>
             <!-- end modal commandes new -->
-
-            <!-- modal filter -->
-            <div class="modal fade" id="modal-filter" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
-                </button>
-                <div class="modal-dialog modal-dialog-scrollable modal-lg">
-
-                    <div class="modal-content">
-
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Filtrer</h5>
-                        </div>
-                        <div class="modal-body">
-
-                            <div id="modal-body-heads">
-                                <?php
-                                //TODO : make the header of factures in details readonly
-                                //TODO : change to require once.
-                                require __DIR__ . "/../elements/treso_affectation_affaire_header_base.html";
-                                ?>
-                            </div>
-                            <!-- TODO : to elete. we gonna use only JS here -->
-                            <div id="modal-body-table">
-                                <?php
-                                //TODO : change to require once.
-                                require __DIR__ . "/../elements/treso_affectation_affaire_details_base.html";
-                                ?>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">annuler</button>
-                            <button type="button" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- end modal filter -->
             <!-- modal détails  -->
             <div class="modal fade" id="modal-details" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <!-- <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button> -->
@@ -190,122 +151,12 @@ is_logged();
                 </div>
             </div>
             <!-- end modal détails -->
-            <!-- modal see client's details -->
-            <div class="modal fade" id="modal-clt-details" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <!-- <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button> -->
-                <!-- <div class="modal-dialog modal-dialog-scrollable modal-xl"> -->
-                <div class="modal-dialog modal-dialog-scrollable modal-lg ">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">fiche client</h5>
-                        </div>
-                        <div class="modal-body">
-
-                            <!-- <div id="modal-body-heads"> -->
-                            <?php
-                            //TODO : make the header of factures in details readonly. 
-                            //TODO : change to require once. 
-                            require __DIR__ . "/../elements/tiers/clients/client_formulaire_base.html";
-                            ?>
-                            <!-- </div> -->
-                            <!-- TODO : to elete. we gonna use only JS here -->
-                            <!-- <div id="modal-body-table"> -->
-                            <?php
-                            //TODO : make the header of factures in details readonly. 
-                            //TODO : change to require once. 
-                            // require __DIR__ . "/../elements/affaires/affaires_table_details_base.html";
-                            ?>
-                            <!-- </div> -->
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger">supprimer</button>
-                            <button type="button" class="btn btn-info">statistique</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
-                            <button type="button" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- end modal see client's details -->
-            <!-- modal new client -->
-            <div class="modal fade" id="modal-clt-new" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <!-- <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button> -->
-                <!-- <div class="modal-dialog modal-dialog-scrollable modal-xl"> -->
-                <div class="modal-dialog modal-dialog-scrollable modal-lg ">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">création nouveau client</h5>
-                        </div>
-                        <div class="modal-body">
-
-                            <!-- <div id="modal-body-heads"> -->
-                            <?php
-                            //TODO : make the header of factures in details readonly. 
-                            //TODO : change to require once. 
-                            require __DIR__ . "/../elements/tiers/clients/client_formulaire_base.html";
-                            ?>
-                            <!-- </div> -->
-                            <!-- TODO : to elete. we gonna use only JS here -->
-                            <!-- <div id="modal-body-table"> -->
-                            <?php
-                            //TODO : make the header of factures in details readonly. 
-                            //TODO : change to require once. 
-                            // require __DIR__ . "/../elements/affaires/affaires_table_details_base.html";
-                            ?>
-                            <!-- </div> -->
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger">supprimer</button>
-                            <button type="button" class="btn btn-info">statistique</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
-                            <button type="button" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- end modal new client -->
-            <!-- modal new item -->
-            <div class="modal fade" id="modal-item-new" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <!-- <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button> -->
-                <!-- <div class="modal-dialog modal-dialog-scrollable modal-xl"> -->
-                <div class="modal-dialog modal-dialog-scrollable modal-lg ">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">création nouvel article</h5>
-                        </div>
-                        <div class="modal-body">
-
-                            <!-- <div id="modal-body-heads"> -->
-                            <?php
-                            //TODO : make the header of factures in details readonly. 
-                            //TODO : change to require once. 
-                            require __DIR__ . "/../elements/tiers/clients/client_formulaire_base.html";
-                            ?>
-                            <!-- </div> -->
-                            <!-- TODO : to elete. we gonna use only JS here -->
-                            <!-- <div id="modal-body-table"> -->
-                            <?php
-                            //TODO : make the header of factures in details readonly. 
-                            //TODO : change to require once. 
-                            // require __DIR__ . "/../elements/affaires/affaires_table_details_base.html";
-                            ?>
-                            <!-- </div> -->
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger">supprimer</button>
-                            <button type="button" class="btn btn-info">statistique</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
-                            <button type="button" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- end modal new item -->
         </div>
         <!-- TOAST  -->
         <div class="toast-container position-fixed top-0 end-0 p-3" id="toast-container">
         </div>
         <!-- end TOAST  -->
+        <!-- modal confirmation -->
         <div class="modal fade bg-confirmation" tabindex="-1" id="modal-confirmation">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm ">
                 <div class="modal-content">

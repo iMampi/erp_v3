@@ -16,11 +16,12 @@ const DTO_FILL_INPUT_HEADERS = {
     "totalTTC-apres-remise": "total_ttc_apres_remise",
     "TVA-avant-remise": "TVA-avant-remise",
     "TVA-apres-remise": "TVA-apres-remise"
-
 }
+
 const DTO_FILL_INPUT_ITEMS_ROWS = {
 
 }
+
 const DefaultValuesCommandeNewFormObj = {
     uid: "",
     state: 1,
@@ -358,7 +359,7 @@ function cleanNewForm(modal, disable = false) {
     });
 }
 
-async function DefaultModalCommandeNew(modal, min_row = 1) {
+async function DefaultModalCommandInputs(modal, min_row = 1) {
     //remove other item rows
     let itemRows = modal.querySelectorAll(".item-commande-row");
     removeItemRows(itemRows);
@@ -675,7 +676,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		Êtes vous sûr de vouloir quitter ce formulaire?",
         yes: () => {
             bsModalCommandeNew.hide();
-            DefaultModalCommandeNew(modalCommandeNew);
+            DefaultModalCommandInputs(modalCommandeNew);
             bsModalConfirmation.hide();
             modificationWatcher = false;
         },
@@ -722,7 +723,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 generateRowTable(trModel, dataModalCommandeNew["header"])
                             );
                             bsModalCommandeNew.hide();
-                            DefaultModalCommandeNew(modalCommandeNew);
+                            DefaultModalCommandInputs(modalCommandeNew);
                             bsModalConfirmation.hide();
                             console.log("yes saving called");
                             return false;
@@ -776,7 +777,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 generateRowTable(trModel, dataModalCommandeNew["header"])
                             );
                             bsModalCommandeNew.hide();
-                            DefaultModalCommandeNew(modalCommandeNew);
+                            DefaultModalCommandInputs(modalCommandeNew);
                             bsModalConfirmation.hide();
                             console.log("yes saving called");
                             return false;
@@ -797,7 +798,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		Êtes vous sûr de vouloir quitter ce formulaire?",
         yes: () => {
             bsModalCommandeDetails.hide();
-            DefaultModalCommandeNew(modalCommandeDetails, 0);
+            DefaultModalCommandInputs(modalCommandeDetails, 0);
             bsModalConfirmation.hide();
             modificationWatcher = false;
         },
@@ -1267,7 +1268,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         cancelCommandeDetailsObj
                     );
                 } else {
-                    DefaultModalCommandeNew(modalCommandeDetails, 0);
+                    DefaultModalCommandInputs(modalCommandeDetails, 0);
                     defaultButtons(modalCommandeDetails);
                     bsModalCommandeDetails.hide();
                 }
