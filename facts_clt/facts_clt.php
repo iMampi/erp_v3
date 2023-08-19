@@ -33,7 +33,7 @@ is_logged();
     <script src="/js/toast.js"></script>
     <script src="/js/fact-clt-main.js"></script>
     <link rel="stylesheet" href="/style/mampi.css">
-    <title>commandes</title>
+    <title>factures client</title>
 
 </head>
 

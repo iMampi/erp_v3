@@ -944,8 +944,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (defaultQuantityMode) {
             inputQuantity.value = defaultQuantity;
         }
-        inputTotalPrice.value = formatNumber(valPU * defaultQuantity)
-
+        inputTotalPrice.value = formatNumber(valPU * inputQuantity.value)
     }
 
     async function searchLive(term, datalistNode, mode) {
@@ -1104,7 +1103,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("item selected 26");
                 let val = event.target.value;
                 console.log(getName(val));
-                fillItemNameAndPrice(event.target, 1);
+                if (event.target.parentNode.parentNode.querySelector("#item-quantity").value > 0) {
+                    fillItemNameAndPrice(event.target, 0);
+                } else {
+                    fillItemNameAndPrice(event.target, 1);
+                }
                 const itemTotalPriceInputs = modalCommandeNew.querySelectorAll(".item-prix-total");
                 console.log("itemTotalPriceInputs");
                 console.log(itemTotalPriceInputs);

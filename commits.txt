@@ -754,4 +754,9 @@ updated update_commande.php to verify if user has authorization to create factur
 facts_clt.php : generate_table_001 is ok. queries needed created. created a new view coz we added a new field payment in factures_client's table.
 
 commande-main.js : because there cleanNewForm() did not disabled the correct input field, we fixed it by creating array s InputsDisabledByDefaultCommandeNewFormArray and InputsDisabledByDefaultCommandeRowItemArray. And added a few step into cleanNewForm(). Also fixed a part of th code where all price zould not update correctly in newCommandeForm
+-------------------------
+112:
+fixed algo for eventhandler on modalCommandeNew.addEventListener('keyup'...if ((event.target.id == "client") && (event.key))) and changed function for fillItemNameAndPrice() in fact-clt-main.js and  commande-main.js. My previous fix introduced new bug. NOW IT IS OK. when selecting an item to add to the order/facture, the quantity will be 1 by default if new row with no item yet. If quantity was already filled and you are just changing the item, it will not update the quantity but juste the item uid, price, item's name and total.
 
+working on fact-clt.js :
++prices updating correctly when item added,removed, modified.
