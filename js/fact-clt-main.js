@@ -2,10 +2,10 @@ const TODAY = luxon.DateTime.now().toFormat('yyyy-MM-dd');
 
 
 const DTO_FILL_INPUT_HEADERS = {
-    uid: "uid",
+    uid: "num_facture",
     date: "date",
     note: "libelle",
-    state: "state",
+    payment: "payment",
     magasin: "magasin_uid",
     "totalHT-avant-remise": "total_ht_avant_remise",
     "totalTTC-avant-remise": "total_ttc_avant_remise",
@@ -125,9 +125,12 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
             } else {
                 element.value = valueObj["client_uid"] + " - " + valueObj["noms"] + " " + valueObj["prenoms"];
             }
-        }
-        else if (element.id === "commercial") {
+        } else if (element.id === "commercial") {
             element.value = valueObj["user_uid"] + "//" + valueObj["user_name"];
+        } else if (element.id === "date") {
+            console.log("datetime");
+            console.log(valueObj["datetime"].slice(0, 11));
+            element.value = valueObj["datetime"].slice(0, 10);
 
         } else {
             element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
@@ -616,8 +619,11 @@ document.addEventListener("DOMContentLoaded", () => {
         let myuid = parent.querySelector(".input.commande-uid").value;
         console.log("myuid tr");
         console.log(myuid);
-        sendData("/database/select/one_commande_details.php", {
+        console.log("num-fact tr");
+        console.log(parent.querySelector(".input.num-fact").value);
+        sendData("/database/select/one_facture_client_details.php", {
             uid: myuid,
+            "num-facture": parent.querySelector(".input.num-fact").value,
         })
             .then((resp) => {
                 console.log("shwodetail :");

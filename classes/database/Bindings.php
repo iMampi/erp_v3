@@ -358,6 +358,11 @@ class Bindings
                 'i',
                 $this->converter->data_for_db["uid"]
             ];
+        } elseif ($this->converter::class == "Converter\SelectOneFactureClient") {
+            $this->binding = [
+                'i',
+                $this->converter->data_for_db["num_facture"]
+            ];
         } elseif ($this->converter::class == "Converter\SelectionCommandeItems") {
             $this->binding = [
                 'i',

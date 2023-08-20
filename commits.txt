@@ -763,5 +763,11 @@ working on fact-clt.js :
 +fixed data-bs on html for table_list
 +commande-new : client selection works
 +facture-detail : all works. seeing and quitting (cleaning). no modification possible
-
-
+-------------------------
+113:
+modals_processors\commande_formulaire_body_read_only.php : now btn-add-client is disabled;
+modals_processors/facture_client_formulaire_body_read_only.php : now btn-add-client is disabled;
+elements/facts_clt/facture_client_commande_header_base.htm: created;
+database\select\one_facture_client_details.php: created;
+class SelectOneFactureClient created with corresponding Queries and Binding;
+modified fillInputsDetailsHeaders() function, and DTO_FILL_INPUT_HEADERS in js file;

@@ -30,6 +30,15 @@ foreach ($all_places_name_nolimit as $values) {
     $magasin_select->appendChild($option_);
 }
 
+// disable  btns
+$buttons = $xpath->query(".//button");
+foreach ($buttons as $button_) {
+    if ($button_->getAttribute("id") !== "btn-see-client") {
+        $button_->setAttribute("disabled", true);
+    }
+}
+
+
 // $inputs = $xpath->query(".//*[contains(@class,'input')]");
 
 // foreach ($inputs as $input) {

@@ -1,0 +1,135 @@
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+<div id="commande-header">
+	<div class="row">
+		<span class="col-form-label col-2">numéro commande</span>
+		<div class="col-2 my-auto">
+			<input type="text" class="form-control form-control-sm input uid" disabled id="uid"/>
+		</div>
+		<span class="col-form-label col-2">état</span>
+		<div class="col-2 my-auto">
+			<select class="nd input form-control form-control-sm input payment" id="payment" disabled>
+				<option value="0">impayé</option>
+				<option value="1">partiel</option>
+				<option value="2">payé</option>
+			</select>
+		</div>
+		<!-- TODO:delete dummy options -->
+		<span class="col-form-label col-2">commercial</span>
+		<div class="col-2 my-auto">
+			<input type="text" class="form-control form-control-sm input commercial" disabled id="commercial"/>
+		</div>
+	</div>
+	<div id="clt-selection" class="row nowrap">
+		<span class="col-form-label col-2">client ID</span>
+		<div class="col my-auto btn-group">
+			<input
+				list="client-list"
+				type="text"
+				name="client"
+				id="client"
+				class="form-control form-control-sm input client"
+				placeholder="Choississez un client"
+			/>
+			<!-- </div> -->
+			<!-- <div class="col-1 my-auto pe-1"> -->
+			<button
+				class="mytbn btn btn-sm btn-success text-center"
+				id="btn-new-client"
+			>
+				+
+			</button>
+			<!-- </div> -->
+
+			<!-- <div class="col-1 my-auto ps-1"> -->
+			<button class="mytbn btn btn-sm btn-success text-center" id="btn-see-client">
+				see
+			</button>
+		</div>
+
+	</div>
+	<div class="row my-auto">
+		<span class="col-form-label col-2">date</span>
+		<div class="col-2 my-auto">
+			<input type="date" class="form-control form-control-sm input date" disabled id="date"/>
+		</div>
+		<span class="col-form-label col-2">magasin</span>
+		<div class="col-2 my-auto">
+			<select type="text" class="form-control form-control-sm input magasin" id="magasin">
+
+			</select>
+		</div>
+		<span class="col-form-label col-2">note</span>
+		<div class="col-2 my-auto">
+			<input type="text" class="form-control form-control-sm input note" id="note" />
+		</div>
+
+	</div>
+	<div class="row my-auto">
+		<span class="col-form-label col-2 ">total HT avant remise</span>
+		<div class="col-2 my-auto">
+			<input type="text" class="form-control form-control-sm input totalHT-avant-remise" disabled 
+			id="totalHT-avant-remise"
+			/>
+		</div>
+
+		<span class="col-form-label col-2">TVA avant remise</span>
+		<div class="col-2 my-auto">
+			<input type="text" class="form-control form-control-sm input TVA-avant-remise" disabled 
+			id="TVA-avant-remise"
+			/>
+		</div>
+		<span class="col-form-label col-2">total TTC avant remise</span>
+		<div class="col-2 my-auto">
+			<input
+				type="text"
+				class="form-control form-control-sm input totalTTC-avant-remise"
+				disabled
+				id="totalTTC-avant-remise"
+			/>
+		</div>
+	</div>
+	<div class="row my-auto">
+		<span class="col-form-label col-2">taux remise (%)</span>
+		<div class="col-2 my-auto">
+			<input
+				type="number"
+				class="form-control form-control-sm input remise-taux"
+				placeholder="%"
+				id="remise-taux"
+			/>
+		</div>
+		<span class="col-form-label col-2">montant remise</span>
+		<div class="col-2 my-auto">
+			<input
+				type="number"
+				class="form-control form-control-sm input remise-montant"
+				placeholder="Ar"
+				id="remise-montant"
+				
+			/>
+		</div>
+	</div>
+	<div class="row my-auto">
+		<span class="col-form-label col-2">total HT aprés remise</span>
+		<div class="col-2 my-auto">
+			<input type="text" class="form-control form-control-sm input totalHT-apres-remise" disabled 
+			id="totalHT-apres-remise"
+			/>
+		</div>
+
+		<span class="col-form-label col-2">TVA aprés remise</span>
+		<div class="col-2 my-auto">
+			<input type="text" class="form-control form-control-sm input TVA-apres-remise" disabled 
+			id="TVA-apres-remise"/>
+		</div>
+		<span class="col-form-label col-2 fw-bold">total TTC à payer</span>
+		<div class="col-2 my-auto">
+			<input
+				type="text"
+				class="form-control form-control-sm fw-bold input totalTTC-apres-remise"
+				disabled
+				id="totalTTC-apres-remise"
+			/>
+		</div>
+	</div>
+</div>
