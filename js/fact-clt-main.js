@@ -132,6 +132,24 @@ function grabCommandeDataForm(modal) {
     return data;
 }
 
+
+function generateRowTable(nodeModel, DataObj) {
+    //MARQUE PAGE
+    console.log(DataObj);
+    let newNode = nodeModel.cloneNode(true);
+    DataObj["uid"] = zeroLeftPadding(DataObj["uid"], 5)
+    newNode.id = "row-" + DataObj["uid"];
+    // newNode.querySelector("input.uid").value = DataObj["uid"];
+    // TODO : use a dto or something
+    newNode.querySelector("input.date").value = DataObj["date"];
+    newNode.querySelector(".client.input").value = DataObj["client"];
+    //TODO : format the numbers
+    newNode.querySelector(".totalTTC.input").value = DataObj["totalTTC-apres-remise"];
+    newNode.querySelector(".uid.input").value = DataObj["uid"];
+    newNode.querySelector(".state.input").value = DataObj["state"];
+    return newNode;
+}
+
 async function responseHandlerSaveCommandeNew(response) {
     try {
         let myjson = JSON.parse(await response);
@@ -628,7 +646,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const validateCreationObj = {
         message:
             "<h2>Votre Commande va être sauvegarder et transformer en facture.</h2><br>\
-				Aucune modification ne possible.<br>\
+				Aucune modification ne sera possible.<br>\
 				Êtes vous sûr de vouloir sauvegarder vos modifications?",
         yes: () => {
 

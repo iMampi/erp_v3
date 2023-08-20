@@ -377,15 +377,16 @@ function generateRowTable(nodeModel, DataObj) {
     //MARQUE PAGE
     console.log(DataObj);
     let newNode = nodeModel.cloneNode(true);
-    newNode.id = "row-" + DataObj["uid"];
+    newNode.id = "row-" + DataObj["num_facture"];
     // newNode.querySelector("input.uid").value = DataObj["uid"];
     // TODO : use a dto or something
     newNode.querySelector("input.date").value = DataObj["date"];
+    newNode.querySelector("num-fact.date").value = DataObj["num_facture"];
     newNode.querySelector(".client.input").value = DataObj["client"];
     //TODO : format the numbers
     newNode.querySelector(".totalTTC.input").value = DataObj["totalTTC-apres-remise"];
-    newNode.querySelector(".uid.input").value = DataObj["uid"];
-    newNode.querySelector(".state.input").value = DataObj["state"];
+    newNode.querySelector(".commande-uid.input").value = DataObj["uid"];
+    newNode.querySelector(".payment.input").value = DataObj["payment"];
     return newNode;
 }
 
@@ -741,7 +742,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const validateCreationObj = {
         message:
             "<h2>Votre Commande va être sauvegarder et transformer en facture.</h2><br>\
-				Aucune modification ne possible.<br>\
+				Aucune modification ne sera possible.<br>\
 				Êtes vous sûr de vouloir sauvegarder vos modifications?",
         yes: () => {
 
@@ -1006,7 +1007,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let myjson = JSON.parse(response);
 
         return myjson;
-    // return await fillMainTable(myjson, tableBodyCategorie);
+        // return await fillMainTable(myjson, tableBodyCategorie);
 
     }
 

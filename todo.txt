@@ -169,3 +169,6 @@ select `erpv2`.`commandes`.`uid` AS `uid`,`erpv2`.`commandes`.`client_uid` AS `c
 commande == btn-delete , all process to implement
 
 for commandes. ajouter un button "voir facture" pour les commande validé.
+
+
+for facture and commande: with remise (taux et montant), implement asecurity control so that remise cannot be 100% or equal or greater than totalttcbeforeremise

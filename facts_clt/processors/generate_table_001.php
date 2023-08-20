@@ -5,7 +5,7 @@ use function Session\can_visit;
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 
-$state_of_payment=["impayé","partiel","payé"];
+$state_of_payment = ["impayé", "partiel", "payé"];
 
 $cycle_facture_client = "facture_client";
 // require __DIR__ . "/../../elements/affaires/liste_affaires_table_001_base.html";
@@ -23,7 +23,7 @@ $xpath = new DOMXPath($dom);
 
 $row_counter = 1;
 
-if (can_visit($cycle_commande)) {
+if (can_visit($cycle_facture_client)) {
     require_once __DIR__ . "/../../database/select/all_factures_client_header_limit.php";
     foreach ($all_factures_client_header_limit as $el) {
         // var_dump($el);

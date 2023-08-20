@@ -774,3 +774,9 @@ modified fillInputsDetailsHeaders() function, and DTO_FILL_INPUT_HEADERS in js f
 -------------------------
 114:
 fact-clt-main.js : saving new commande works.
+-------------------------
+115:
+facts_clt\processors\generate_table_001.php : implemented can_visit() correctly with cycle_facture_client;
+database\save\new_commande.php : creation of facture in db was not implemented. now it is. it also return the needed new uid according to http_referer (commande or facture) for filling table
+js\fact-clt-main.js : implemented the whole process for directly creating new facture.
+

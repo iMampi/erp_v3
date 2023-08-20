@@ -1,13 +1,14 @@
 <?php
 
-use Converter\NewCommandeHeader;
-use Converter\NewCommandeItem;
+use Database\Queries;
 use Database\Bindings;
 use Database\DbHandler;
-use Database\Queries;
-use Database\StandardPreparedStatement;
+use Converter\NewCommandeItem;
+use Converter\NewFactureClient;
+use Converter\NewCommandeHeader;
 
 use function Session\can_create;
+use Database\StandardPreparedStatement;
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 session_start();
@@ -16,7 +17,7 @@ session_start();
 if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
     $data = json_decode(file_get_contents('php://input'), true);
 
-    
+
     // DbHandler::$connection->autocommit(\false);
     $step1 = new DbHandler();
     $conn = $step1::$connection;
@@ -28,6 +29,8 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
     $Binding = new Bindings($NewObj);
     $Statement = new StandardPreparedStatement($Query1, $Binding);
     $temp_array_result = DbHandler::execute_prepared_statement($Statement, MYSQLI_NUM);
+    $data["header"]["uid"] = $temp_array_result[1][0][0];
+
     // echo "<br>jk<br>";
     // var_dump($temp_array_result);
     if (!$temp_array_result) {
@@ -60,10 +63,34 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
             print("error03");
         }
 
-        $conn->commit();
+        if (($_SERVER["REQUEST_METHOD"] == "POST") &&  (can_create("facture_client"))) {
+            try {
+                if ($data["header"]["state"] === 2) {
+
+                    $NewFactureClientObj = new NewFactureClient([$data["header"]["uid"], $data["header"]["commercial"]]);
+                    $Query3 = new Queries("save_new_facture_client");
+                    $Binding3 = new Bindings($NewFactureClientObj);
+                    $Statement3 = new StandardPreparedStatement($Query3, $Binding3);
+                    $temp_array_result_fact = DbHandler::execute_prepared_statement($Statement3, MYSQLI_NUM);
+                }
+            } catch (\Throwable $th) {
+                $conn->rollback();
+                //error with new facture client
+                print("error04" . $th);
+            }
+        } else {
+            $conn->rollback();
+            print("error05 : NOT AUTHORIZED TO CREATE FACTURE CLIENT");
+        }
+    }
+    $conn->commit();
 
 
-        //just returning the command uid in the end
+    //just returning the command uid in the end
+    if (\str_contains($_SERVER["HTTP_REFERER"], "facts_clt.php")) {
+        print(json_encode($temp_array_result_fact));
+    } else if (\str_contains($_SERVER["HTTP_REFERER"], "commandes.php")) {
+
         print(json_encode($temp_array_result));
     }
 }
