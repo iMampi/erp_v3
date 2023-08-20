@@ -413,6 +413,7 @@ async function responseHandlerUpdateCommande(response) {
         return "error js: " + e;
     }
 }
+
 async function responseHandlerSaveCommandeNew(response) {
     try {
         let myjson = JSON.parse(await response);
@@ -1005,7 +1006,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let myjson = JSON.parse(response);
 
         return myjson;
-        // return await fillMainTable(myjson, tableBodyCategorie);
+    // return await fillMainTable(myjson, tableBodyCategorie);
 
     }
 

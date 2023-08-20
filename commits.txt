@@ -771,3 +771,6 @@ elements/facts_clt/facture_client_commande_header_base.htm: created;
 database\select\one_facture_client_details.php: created;
 class SelectOneFactureClient created with corresponding Queries and Binding;
 modified fillInputsDetailsHeaders() function, and DTO_FILL_INPUT_HEADERS in js file;
+-------------------------
+114:
+fact-clt-main.js : saving new commande works.
