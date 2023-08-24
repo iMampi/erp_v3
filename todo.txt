@@ -172,3 +172,6 @@ for commandes. ajouter un button "voir facture" pour les commande validé.
 
 
 for facture and commande: with remise (taux et montant), implement asecurity control so that remise cannot be 100% or equal or greater than totalttcbeforeremise
+
+
+sql : verifier le  constraint user_uid dans avoir_client. puis les autres table 

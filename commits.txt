@@ -779,4 +779,8 @@ fact-clt-main.js : saving new commande works.
 facts_clt\processors\generate_table_001.php : implemented can_visit() correctly with cycle_facture_client;
 database\save\new_commande.php : creation of facture in db was not implemented. now it is. it also return the needed new uid according to http_referer (commande or facture) for filling table
 js\fact-clt-main.js : implemented the whole process for directly creating new facture.
-
+-------------------------
+116:
+starting to work on avoir_client...
+created tables and views for avoir_client_headers.
+modified base  php and html for avoir_client.
