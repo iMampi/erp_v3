@@ -1,34 +1,36 @@
-<table class="table">
-	<thead>
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+<table class="table table-borderless" id="table-avoir">
+	<thead class="border-start-0 border-top-0 border-end-0 border-3">
 		<tr>
 			<td class="ps-0">ID article</td>
 			<td>désignation</td>
 			<td>numéro de série</td>
-			<td>prix unitaire</td>
+			<td>prix unitaire HT</td>
 			<td>quantité</td>
-			<td>total</td>
+			<td>total HT</td>
 			<td class="pe-0">
-				<button type="button" class="btn btn-sm btn-success w-100">
+				<button type="button" class="btn btn-sm btn-success w-100" id="btn-add-item">
 					+
 				</button>
 			</td>
 		</tr>
 	</thead>
 	<tbody>
-		<tr id="row-001">
+		<tr id="row-001" class="item-commande-row border-bottom">
+			<input type="hidden" id="row-uid" class='input row-uid'>
 			<td class="ps-0 my-auto btn-group">
 				<input
-					list="items-list"
+					list="item-list"
 					type="text"
-					name="item-choice"
-					class="form-control form-control-sm"
+					id="item-uid"
+					class="form-control form-control-sm input item-id"
+					autocomplete="off"
 					placeholder="Choississez un article"
 				/>
 				<button
 					type="button"
 					class="btn btn-sm btn-success"
-					data-bs-toggle="modal"
-					data-bs-target="#modal-creer-item"
+					id="btn-new-item"
 				>
 					+
 				</button>
@@ -37,44 +39,41 @@
 				<input
 					type="text"
 					disabled
-					class="designation form-control form-control-sm"
+					id="item-name"
+					class=" form-control form-control-sm input item-name"
 				/>
 			</td>
 			<td>
 				<input
 					type="text"
-					list="num-serie-list"
-					class="num-serie form-control form-control-sm"
+					class=" form-control form-control-sm num-serie input"
+					id="num-serie"
 				/>
-				<datalist id="num-serie-list">
-					<option value="001">001-biens</option>
-					<option value="002">002-services</option>
-				</datalist>
+
 			</td>
 			<td>
 				<input
-					type="number"
-					class="pu form-control form-control-sm"
+					type="text"
+					class="form-control form-control-sm item-pu input"
 					disabled
+					id="item-pu"
 				/>
 			</td>
-			<td>
-				<input type="number" class="qty form-control form-control-sm" />
+			<td class="input-group input-group-sm">
+					<input type="number" class=" form-control form-control-sm input item-quantity" id="item-quantity" /><span class="input-group-text" id="initial-quantity">0</span>
 			</td>
 			<td>
 				<input
 					type="text"
 					disabled
-					class="form-control form-control-sm"
+					class="form-control form-control-sm item-prix-total input"
+					id="item-prix-total"
 				/>
 			</td>
 			<td class="pe-0">
-				<button type="button" class="btn btn-sm btn-danger">del</button>
+				<button type="button" class="btn btn-sm btn-danger btn-del"
+				id="btn-del-item">del</button>
 			</td>
 		</tr>
 	</tbody>
-	<datalist id="items-list">
-		<option value="001">001-biens</option>
-		<option value="002">002-services</option>
-	</datalist>
 </table>

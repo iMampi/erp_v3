@@ -1,101 +1,100 @@
-<div>
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+<div id="commande-header">
 	<div class="row">
-		<span class="col-form-label col-2">numéro facture</span>
+		<span class="col-form-label col-2">numéro avoir</span>
 		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" />
+			<input type="text" class="form-control form-control-sm input num-avoir" disabled id="num-avoir"/>
 		</div>
-		<span class="col-form-label col-2">état</span>
+		<span class="col-form-label col-2 lh-1">facture d'origine</span>
 		<div class="col-2 my-auto">
-			<select disabled class="nd input form-control form-control-sm">
-				<option value="0">impayée</option>
-				<option value="1">payée</option>
-			</select>
+			<input type="text" class="form-control form-control-sm input fact-origin" id="fact-origin"/>
 		</div>
+		
 		<!-- TODO:delete dummy options -->
 		<span class="col-form-label col-2">commercial</span>
 		<div class="col-2 my-auto">
-			<select disabled class="nd input form-control form-control-sm">
-				<option value="0">mampi</option>
-				<option value="1">sophie</option>
-			</select>
+			<input type="text" class="form-control form-control-sm input commercial" disabled id="commercial"/>
 		</div>
 	</div>
 	<div id="clt-selection" class="row nowrap">
 		<span class="col-form-label col-2">client ID</span>
 		<div class="col my-auto btn-group">
 			<input
-				list="clt-list"
+				list="client-list"
 				type="text"
-				name="clt-choice"
-				class="form-control form-control-sm"
+				name="client"
+				id="client"
+				class="form-control form-control-sm input client"
 				placeholder="Choississez un client"
 			/>
 			<!-- </div> -->
 			<!-- <div class="col-1 my-auto pe-1"> -->
 			<button
 				class="mytbn btn btn-sm btn-success text-center"
-				data-bs-toggle="modal"
-				data-bs-target="#modal-creer-client"
+				id="btn-new-client"
 			>
 				+
 			</button>
 			<!-- </div> -->
 
 			<!-- <div class="col-1 my-auto ps-1"> -->
-			<button class="mytbn btn btn-sm btn-success text-center">
+			<button class="mytbn btn btn-sm btn-success text-center" id="btn-see-client">
 				see
 			</button>
 		</div>
-		<datalist id="clt-list">
-			<option value="001">001-biens</option>
-			<option value="002">002-services</option>
-		</datalist>
+
 	</div>
 	<div class="row my-auto">
 		<span class="col-form-label col-2">date</span>
 		<div class="col-2 my-auto">
-			<input type="date" class="form-control form-control-sm" />
+			<input type="date" class="form-control form-control-sm input date" disabled id="date"/>
 		</div>
-		<span class="col-form-label col-2">affaire</span>
+		<span class="col-form-label col-2">magasin</span>
 		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" />
+			<select type="text" class="form-control form-control-sm input magasin" id="magasin">
+
+			</select>
 		</div>
+		
+
+	</div>
+	<div class="row my-auto">
+		<span class="col-form-label col-2">type</span>
+		<div class="col-2 my-auto">
+
+			<select class="form-control form-control-sm input type" id="type" disabled>
+				<option value="1">encours</option>
+				<option value="0">annulé</option>
+				<option value="2">validé</option>
+			</select>
+		</div>
+		<span class="col-form-label col-2">note</span>
+		<div class="col-2 my-auto">
+			<input type="text" class="form-control form-control-sm input note" id="note" />
+		</div>
+
 	</div>
 
 	<div class="row my-auto">
-		<span class="col-form-label col-2">taux remise </span>
-		<div class="col-2 my-auto">
-			<input
-				type="numer"
-				class="form-control form-control-sm"
-				placeholder="%"
-			/>
-		</div>
-		<span class="col-form-label col-2">montant remise</span>
-		<div class="col-2 my-auto">
-			<input
-				type="number"
-				class="form-control form-control-sm"
-				placeholder="Ar"
-			/>
-		</div>
-	</div>
-	<div class="row my-auto">
 		<span class="col-form-label col-2">total HT</span>
 		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" disabled />
+			<input type="text" class="form-control form-control-sm input total-ht" disabled 
+			id="total-ht"
+			/>
 		</div>
 
 		<span class="col-form-label col-2">TVA</span>
 		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" disabled />
+			<input type="text" class="form-control form-control-sm input TVA-apres-remise" disabled 
+			id="TVA-apres-remise"/>
 		</div>
-		<span class="col-form-label col-2">total TTC</span>
+		<span class="col-form-label col-2 fw-bold">total TTC</span>
 		<div class="col-2 my-auto">
 			<input
-				type="number"
-				class="form-control form-control-sm"
+				type="text"
+				class="form-control form-control-sm fw-bold input totalTTC-apres-remise"
 				disabled
+				id="totalTTC-apres-remise"
 			/>
 		</div>
 	</div>

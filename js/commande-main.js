@@ -52,6 +52,11 @@ const InputsDisabledByDefaultCommandeNewFormArray = [
     "totalTTC-apres-remise"
 ];
 
+const InputsDisabledByDefaultCommandeRowItemArray = [
+    "item-name",
+    "item-pu",
+    "item-prix-total"
+];
 const DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_NEW = {
     "btn-new-client": false,
     "btn-see-client": false,
@@ -69,7 +74,7 @@ const DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_DETAILS = {
     "btn-cancel": false,
     "btn-save": true,
     "btn-validate": true,
-}
+};
 
 const DefaultValuesCommandeRowItem = {
     "item-uid": "",
@@ -80,11 +85,7 @@ const DefaultValuesCommandeRowItem = {
     "item-prix-total": ""
 };
 
-const InputsDisabledByDefaultCommandeRowItemArray = [
-    "item-name",
-    "item-pu",
-    "item-prix-total"
-]
+
 
 var counterRowItem = 1;
 var typingTimer;

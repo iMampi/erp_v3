@@ -21,43 +21,49 @@ $xpath = new DOMXPath($dom);
 
 $row_counter = 1;
 
+
+
 if (can_visit($cycle_facture_client)) {
-    require_once __DIR__ . "/../../database/select/all_factures_client_header_limit.php";
-    foreach ($all_factures_client_header_limit as $el) {
-        // var_dump($el);
-        // break;
-        $tr_ = $tr_model->cloneNode(true);
+    try {
+        require_once __DIR__ . "/../../database/select/all_avoirs_client_header_limit.php";
+        foreach ($all_avoirs_client_header_limit as $el) {
+            // var_dump($el);
+            // break;
+            $tr_ = $tr_model->cloneNode(true);
 
-        $tr_->setAttribute("id", "row-" . $el["num_facture"]);
-        $tbody_->appendChild($tr_);
+            $tr_->setAttribute("id", "row-" . $el["num_avoir"]);
+            $tbody_->appendChild($tr_);
 
 
-        $nodes = $xpath->query(".//*[contains(@class,'input')]", $tr_);
-        // $options=$xpath->query(".//slect[contains(@class,'state')>option]", $tr_)
-        foreach ($nodes as $el_input) {
-            // TODO : refactor. since we use all inputs have id
-            $classes = $el_input->getAttribute('class');
-            $classes_array = explode(" ", $classes);
+            $nodes = $xpath->query(".//*[contains(@class,'input')]", $tr_);
+            // $options=$xpath->query(".//slect[contains(@class,'state')>option]", $tr_)
+            foreach ($nodes as $el_input) {
+                // TODO : refactor. since we use all inputs have id
+                $classes = $el_input->getAttribute('class');
+                $classes_array = explode(" ", $classes);
 
-            if (in_array("date", $classes_array)) {
-                $el_input->setAttribute("value", date_format(date_create($el["datetime"]), "Y-m-d"));
-            } elseif (in_array("num-fact", $classes_array)) {
-                $el_input->setAttribute("value", $el["num_facture"]);
-            } elseif (in_array("total", $classes_array)) {
-                $el_input->setAttribute("value", $el["total_ttc_apres_remise"]);
-            } elseif (in_array("commande-uid", $classes_array)) {
-                $el_input->setAttribute("value", $el["commande_uid"]);
-            } elseif (in_array("payment", $classes_array)) {
-                $el_input->setAttribute("value", $state_of_payment[$el["payment"]]);
-            } elseif (in_array("client", $classes_array)) {
+                if (in_array("date", $classes_array)) {
+                    $el_input->setAttribute("value", date_format(date_create($el["datetime"]), "Y-m-d"));
+                } elseif (in_array("num-avoir", $classes_array)) {
+                    $el_input->setAttribute("value", $el["num_avoir"]);
+                } elseif (in_array("total", $classes_array)) {
+                    $el_input->setAttribute("value", $el["total_ttc"]);
+                } elseif (in_array("facture-client", $classes_array)) {
+                    $el_input->setAttribute("value", $el["facture_client_uid"]);
+                } elseif (in_array("type", $classes_array)) {
+                    $el_input->setAttribute("value", $state_of_payment[$el["type"]]);
+                } elseif (in_array("client", $classes_array)) {
 
-                if (!trim($el['raison_sociale'])) {
-                    $el_input->setAttribute("value", $el['client_uid'] . " - " . $el['noms'] . " " . $el['prenoms']);
-                } else {
-                    $el_input->setAttribute("value", $el['client_uid'] . " - " . $el['raison_sociale'] . " / " . $el['nom_commercial']);
+                    if (!trim($el['raison_sociale'])) {
+                        $el_input->setAttribute("value", $el['client_uid'] . " - " . $el['noms'] . " " . $el['prenoms']);
+                    } else {
+                        $el_input->setAttribute("value", $el['client_uid'] . " - " . $el['raison_sociale'] . " / " . $el['nom_commercial']);
+                    }
                 }
             }
         }
+    } catch (\Throwable $th) {
+        echo "";
     }
     // echo utf8_decode($dom->saveHTML($dom->documentElement));
 } else {

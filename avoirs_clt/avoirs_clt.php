@@ -79,30 +79,29 @@ is_logged();
             </div>
             <!-- END TABLEAU -->
             <!-- modal commandes new -->
-            <div class="modal fade" id="modal-commande-new" tabindex="-1">
+            <div class="modal fade" id="modal-avoir-new" tabindex="-1">
                 <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Close">
                 </button>
-                <div class="modal-dialog modal-dialog-scrollable modal-xl">
+                <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-xxl-down">
 
                     <div class="modal-content">
 
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Nouvelle commande</h5>
+                            <h5 class="modal-title" id="staticBackdropLabel">nouvel avoir</h5>
                         </div>
                         <div class="modal-body">
 
                             <div id="new-modal-body-heads">
                                 <?php
                                 //TODO : make the header of factures in details readonly
-                                require __DIR__ . "
-                                /../modals_processors/commande_formulaire_body_new.php"
+                                require __DIR__ . "/../modals_processors/avoir_formulaire_body_new.php";
                                 ?>
                             </div>
                             <!-- TODO : to delete. we gonna use only JS here -->
                             <div id="new-modal-body-table">
                                 <?php
                                 //TODO : change to require once.
-                                require __DIR__ . "/../elements/commandes/commande_table_details_base.html";
+                                require __DIR__ . "/../elements/avoirs_clt/avoir_clt_table_details_base.html";
                                 ?>
                             </div>
                         </div>
@@ -119,7 +118,7 @@ is_logged();
             <div class="modal fade" id="modal-details" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <!-- <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button> -->
                 <!-- <div class="modal-dialog modal-dialog-scrollable modal-xl"> -->
-                <div class="modal-dialog modal-dialog-scrollable modal-lg ">
+                <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-xxl-down">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel">détails affaire</h5>

@@ -784,3 +784,9 @@ js\fact-clt-main.js : implemented the whole process for directly creating new fa
 starting to work on avoir_client...
 created tables and views for avoir_client_headers.
 modified base  php and html for avoir_client.
+-------------------------
+117:
+i decided to add .modal-fullscreen-xxl-down to modal-dialog. it looks better for the text inside inputs that wraps-up. (gotta do that for all later).
+modified defqult border in table because of border bottom heigt inconsistance in modals. (gotta update every where else)
+working on avoir_client...
+avoir-client-main.js : cancel is ok. search client is ok. search item is ok.

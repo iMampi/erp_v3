@@ -1,9 +1,18 @@
 <?php
 // phpinfo();
-$test=666;
+$test = 666;
 echo "32";
-
-throw new Exception("this is x debg test", 1);;
+set_error_handler(function () { /* ignore errors */
+});
+dns_get_record();
+restore_error_handler();
+try {
+    //code...
+    echo $love;
+    throw new Exception("this is x debg test", 1);;
+} catch (\Exception $th) {
+    //throw $th;
+}
 
 // // use Session\User;
 
