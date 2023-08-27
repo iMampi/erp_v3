@@ -78,8 +78,39 @@ is_logged();
                 </div>
             </div>
             <!-- END TABLEAU -->
-            <!-- modal commandes new -->
-            <div class="modal fade" id="modal-avoir-new" tabindex="-1">
+            <!-- modal choose type new avoir-->
+            <div class="modal fade" id="modal-choose-new" tabindex="-1">
+
+                <div class="modal-dialog modal-dialog-scrollable modal-lg">
+
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">nouvel avoir</h5>
+                        </div>
+                        <div class="modal-body">
+
+                            <div id="new-modal-body-heads ">
+                                <div class="col-auto mb-3 d-flex  justify-content-center align-items-center gap-3">
+                                    <button type="button" id="btn-avoir-facture" class="btn btn-primary">à partir d'une facture</button>
+                                    <button type="button" id="btn-avoir-no-base" class="btn btn-primary">sans base</button>
+                                </div>
+
+                                <!-- TODO : to delete. we gonna use only JS here -->
+                                <div id="new-modal-body-table">
+
+                                </div>
+                            </div>
+                            <div class="modal-footer d-flex flex-row justify-content-start">
+                                <button type="button" id="btn-cancel" class="btn btn-secondary">X</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end modal choose type new avoir-->
+            <!-- modal avoir new -->
+            <div class="modal fade bg-confirmation" id="modal-avoir-new" tabindex="-1">
                 <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Close">
                 </button>
                 <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-xxl-down">
@@ -107,13 +138,13 @@ is_logged();
                         </div>
                         <div class="modal-footer">
                             <?php
-                            require_once __DIR__ . "/../modals_processors/buttons_footer_new_commande.php";
+                            require_once __DIR__ . "/../modals_processors/buttons_footer_new_avoir.php";
                             ?>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- end modal commandes new -->
+            <!-- end modal avoir new -->
             <!-- modal détails  -->
             <div class="modal fade" id="modal-details" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <!-- <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button> -->

@@ -97,6 +97,12 @@ var modal2 = new bootstrap.Modal(document.getElementById("modal-creer-tiers-affe
   keyboard: false
 })
 
+#for async
+    const promise1 = new Promise((resolve, reject) => {
+        bsModalChooseNew.hide();
+        resolve(true);
+    });
+
 #pour régler le probleme de double backdrop qui bloque tout
 mod.addEventListener('hidden.bs.modal', function (event) {
   let q=document.querySelectorAll('.modal-backdrop');

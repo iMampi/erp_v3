@@ -790,3 +790,9 @@ i decided to add .modal-fullscreen-xxl-down to modal-dialog. it looks better for
 modified defqult border in table because of border bottom heigt inconsistance in modals. (gotta update every where else)
 working on avoir_client...
 avoir-client-main.js : cancel is ok. search client is ok. search item is ok.
+-------------------------
+118:
+still working on avoir_client cycle. 
+ajout d'un nouveu modal pour choisir entre avoir facture based or avoir with no base.
+j'ai eu des soucis avec le multiple modal. il s'est avéré qu'il s'agissait juste d'un tag </div> qui manquait. on va créer un commit ici pour ne plus se faire chier avec cette erreur de merde.
+du coups, POUR LE PROCHAIN COMMIT, il va falloir revoir les behaviors déjà existant.

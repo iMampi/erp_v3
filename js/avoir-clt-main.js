@@ -1,6 +1,15 @@
 const TODAY = luxon.DateTime.now().toFormat('yyyy-MM-dd');
 var modificationWatcher = false;
 var typingTimer;
+var ModalFlag = false;
+const InputsDisabledByDefaultAvoirFactureBased = [
+    'num-avoir',
+    "commercial",
+    "date",
+    "total-ht",
+    "TVA",
+    "total-ttc"
+];
 
 const InputsDisabledByDefaultAvoirNewFormArray = [
     'num-avoir',
@@ -17,8 +26,10 @@ const InputsDisabledByDefaultCommandeRowItemArray = [
     "item-prix-total"
 ];
 
+
 function defaultButtons(modal) {
     const refObj = {
+
         "modal-details": DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_DETAILS,
         'modal-commande-new': DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_NEW
     };
@@ -80,11 +91,24 @@ document.addEventListener("DOMContentLoaded", () => {
         keyboard: false,
         focus: true,
     });
+    // const modalConfirmation2 = document.getElementById("modal-new");
+    // const bsModalConfirmation2 = new bootstrap.Modal(modalConfirmation2, {
+    //     backdrop: "static",
+    //     keyboard: false,
+    //     focus: true,
+    // });
     const btnConfirmationYes = modalConfirmation.querySelector("#btn-confirmation-yes"
     );
     const btnConfirmationNo = modalConfirmation.querySelector("#btn-confirmation-no"
     );
     ////modal new
+    const modalChooseNew = document.getElementById("modal-choose-new");
+    const bsModalChooseNew = new bootstrap.Modal(modalChooseNew, {
+        backdrop: "static",
+        keyboard: false,
+        focus: true,
+    });
+
     const modalAvoirNew = document.getElementById("modal-avoir-new");
     const bsModalAvoirNew = new bootstrap.Modal(modalAvoirNew, {
         backdrop: "static",
@@ -94,19 +118,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ////// today's date
     try {
-        modalCommandeNew.querySelector('#date').value = TODAY;
+        modalAvoirNew.querySelector('#date').value = TODAY;
 
     } catch (error) {
-        console.log("dont know what happened");
+        console.log("dont know what happened : " + error);
     }
-    try {
-        divBtns.addEventListener('click', (event) => {
-            if (event.target.id == "btn-main-new")
-                bsModalAvoirNew.show();
-        })
-    } catch (error) {
 
-    }
 
     //CONFIRMATION OBJ
     const confirmationObj = {
@@ -212,15 +229,83 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //EVENTHANDLER
 
+
+    try {
+        divBtns.addEventListener('click', (event) => {
+            if (event.target.id == "btn-main-new")
+                bsModalChooseNew.show();
+        })
+    } catch (error) {
+
+    }
+
+    // function closeModal() {
+    //     let q = document.querySelectorAll('.modal-backdrop');
+    //     for (let m of q) {
+    //         m.parentElement.removeChild(m);
+    //     }
+    //     console.log("closing");
+    // }
+
+
+    // modalChooseNew.addEventListener('hidden.bs.modal', function (event) {
+    //     console.log("evetlistn ");
+
+    //     // do something...
+    //     // bsModalAvoirNew.show()
+    //     // bsModalAvoirNew.show()
+    //     if (ModalFlag) {
+    //     }
+    // })
+
+    try {
+        modalChooseNew.addEventListener('click', (event) => {
+            if (event.target.id == "btn-cancel") {
+
+                bsModalChooseNew.hide();
+            } else if (event.target.id == "btn-avoir-facture") {
+                console.log(
+                    "step 1"
+                );
+                // bsModalChooseNew.hide();
+                // bsModalConfirmation2.show();
+                bsModalAvoirNew.show();
+                // closeModal();
+
+
+            } else if (event.target.id == "btn-avoir-no-base") {
+            }
+        })
+    } catch (error) {
+        console.log("errore " + error);
+    }
+
+    try {
+        modalChooseNew.addEventListener('click', (event) => {
+        })
+    } catch (error) {
+
+    }
+    try {
+        modalConfirmation.addEventListener('click', (event) => {
+            if (event.target.id === "btn-confirmation-no") {
+                bsModalConfirmation.hide();
+            }
+        })
+    } catch (error) {
+
+    }
+
     try {
         modalAvoirNew.addEventListener('click', (event) => {
-            if (event.target.id == "btn-cancel-new") {
+            if (event.target.id == "btn-cancel-avoir") {
                 if (modificationWatcher) {
                     openModalConfirmation(
                         confirmationObj,
                         cancelCreationObj
                     );
                 } else {
+                    console.log('here 365498');
                     bsModalAvoirNew.hide();
                     // defaultButtons(modalCommandeNew)
                 }
