@@ -204,45 +204,13 @@ is_logged();
         </div>
         <!-- endconfirmation  modal-->
         <datalist id="client-list">
-            <?php
-            // require_once __DIR__ . "/../database/select/all_clients_name_limit.php";
 
-            // $domclient = new DOMDocument();
-            // // //to be able to use new html5 tag with DOMDocument
-            // libxml_use_internal_errors(true);
-
-            // foreach ($all_active_clients_limit as $array) {
-            //     $client_name = $array["prenoms"] . " " . $array["noms"] . " " . $array["nom_commercial"] . " / " . $array["raison_sociale"];
-            //     $client_name = \trim($client_name);
-            //     $option_ = $domclient->createElement("option");
-            //     $option_->setAttribute("value", $client_name);
-            //     $option_->appendChild(
-            //         $domclient->createTextNode($array["uid"] . " - " . $client_name)
-            //     );
-            //     $domclient->appendChild($option_);
-            // }
-            // echo $domclient->saveHTML();
-            ?>
         </datalist>
         <datalist id="item-list">
-            <?php
-            // require_once __DIR__ . "/../database/select/all_items_name_limit.php";
 
-            // $domclient = new DOMDocument();
-            // // //to be able to use new html5 tag with DOMDocument
-            // libxml_use_internal_errors(true);
+        </datalist>
+        <datalist id="facture-list">
 
-            // foreach ($all_items_name_limit as $array) {
-
-            //     $option_ = $domclient->createElement("option");
-            //     $option_->setAttribute("value", $array["name"]);
-            //     $option_->appendChild(
-            //         $domclient->createTextNode($array["code"] . " - " . $array["name"])
-            //     );
-            //     $domclient->appendChild($option_);
-            // }
-            // echo $domclient->saveHTML();
-            ?>
         </datalist>
     </div>
 </body>

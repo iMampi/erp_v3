@@ -29,17 +29,24 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_visit("facture_client"))) {
     $Statement = new StandardPreparedStatement($Query, $Binding);
     $commande_headers = DbHandler::execute_prepared_statement($Statement, \MYSQLI_ASSOC);
 
-    $SelectionCommandeItems = new SelectionCommandeItems($data);
-    $QueryDetails = new Queries("selection_commande_items");
-    $BindingDetails = new Bindings($SelectionCommandeItems);
-    $StatementDetails = new StandardPreparedStatement($QueryDetails, $BindingDetails);
+    if (!$data["uid"]) {
+        if (empty($commande_headers[1][0])) {
+            print(json_encode([true, "no match"]));
+        } else {
+            $data["uid"] = $commande_headers[1][0]["commande_uid"];
+            $SelectionCommandeItems = new SelectionCommandeItems($data);
+            $QueryDetails = new Queries("selection_commande_items");
+            $BindingDetails = new Bindings($SelectionCommandeItems);
+            $StatementDetails = new StandardPreparedStatement($QueryDetails, $BindingDetails);
 
-    $commande_items = DbHandler::execute_prepared_statement($StatementDetails, \MYSQLI_ASSOC);
+            $commande_items = DbHandler::execute_prepared_statement($StatementDetails, \MYSQLI_ASSOC);
 
-    print(json_encode(["header" => $commande_headers, "items" => $commande_items]));
-    // print(json_encode(DbHandler::execute_prepared_statement($Statement)));
-    // foreach ($arr_banks as $value) {
-    //     $converter_bank[$value["bank_name"]] = $value["bank_table"];
+            print(json_encode(["header" => $commande_headers, "items" => $commande_items]));
+            // print(json_encode(DbHandler::execute_prepared_statement($Statement)));
+            // foreach ($arr_banks as $value) {
+            //     $converter_bank[$value["bank_name"]] = $value["bank_table"];
+        }
+    }
 } else {
     print(json_encode([\false, ['error' => "unauthorized"]]));
 }

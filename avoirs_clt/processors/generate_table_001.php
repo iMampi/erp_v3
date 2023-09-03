@@ -23,7 +23,8 @@ $row_counter = 1;
 
 
 
-if (can_visit($cycle_facture_client)) {
+// if (can_visit($cycle_facture_client)) {
+if (false) {
     try {
         require_once __DIR__ . "/../../database/select/all_avoirs_client_header_limit.php";
         foreach ($all_avoirs_client_header_limit as $el) {
