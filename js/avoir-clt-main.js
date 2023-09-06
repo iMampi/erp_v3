@@ -18,6 +18,16 @@ const InputsDisabledByDefaultCommandeRowItemArray = [
     "item-prix-total"
 ];
 
+function formatStringClientName(HeaderDataObject) {
+    let formatedResult;
+    if (HeaderDataObject["raison_sociale"]) {
+        formatedResult = HeaderDataObject["client_uid"] + " - " + HeaderDataObject["raison_sociale"] + " / " + HeaderDataObject["nom_commercial"];
+    } else {
+        formatedResult = HeaderDataObject["client_uid"] + " - " + HeaderDataObject["noms"] + " " + HeaderDataObject["prenoms"];
+    }
+    return formatedResult;
+}
+
 
 function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
     console.log("responseJSON : ");
@@ -347,8 +357,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 let option_ = document.createElement("option");
                 option_.value = headers_['num_facture'];
                 option_.label = headers_['num_facture'] + " - ";
-                option_.dataset.headers = headers_;
-                option_.dataset.items = arrayData[1]["items"][1];
+                option_.dataset.headers = JSON.stringify(headers_);
+                option_.dataset.items = JSON.stringify(arrayData[1]["items"][1]);
 
                 if (headers_.noms == "") {
                     console.log("client company");
@@ -393,6 +403,20 @@ document.addEventListener("DOMContentLoaded", () => {
             datalistNode.append(option_);
             return;
         }
+
+    }
+
+    function getDataFacture(code) {
+        return [JSON.parse(document.querySelector("option[value='" + code + "']").getAttribute("data-headers")),
+        JSON.parse(document.querySelector("option[value='" + code + "']").getAttribute("data-items"))];
+    }
+
+    function fillHeadersFactureOrigin(modalNode, headersData) {
+        modalNode.querySelector('#client').value = formatStringClientName(headersData);
+        return
+    }
+
+    function fillItemsFactureOrigin(modalNode, itemsData) {
 
     }
 
@@ -504,6 +528,21 @@ document.addEventListener("DOMContentLoaded", () => {
                     clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
                     typingTimer = setTimeout(() => { searchLive(term, factureDataList, "facture") }, 1500);
                 }
+            } else if ((event.target.id === "fact-origin") && (!event.key)) {
+                console.log("chossed fact");
+                console.log(getDataFacture(event.target.value));
+                let val = event.target.value;
+                fillHeadersFactureOrigin(modalAvoirNew, getDataFacture(event.target.value)[0]);
+                // if (event.target.parentNode.parentNode.querySelector("#item-quantity").value > 0) {
+                //     fillItemNameAndPrice(event.target, 0);
+                // } else {
+                //     fillItemNameAndPrice(event.target, 1);
+                // }
+                // const itemTotalPriceInputs = modalCommandeNew.querySelectorAll(".item-prix-total");
+                // console.log("itemTotalPriceInputs");
+                // console.log(itemTotalPriceInputs);
+                // updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
+                // updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
             } else if (event.target.id == "item-quantity") {
                 // updateItemTotalPrice(event.target.parentNode.parentNode)
                 // const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");

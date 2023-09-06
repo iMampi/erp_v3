@@ -802,3 +802,10 @@ still working on avoir_client cycle.
 working on searchFacture()...
 searchFacture() works. implemented into searchLive(). treatement of result is ok.
 il reste à faire le remplissage du formulaie...
+-------------------------
+120:
+avoir-main.js:
+getData() to grap data in datalist facture;
+fillHeadersFactureOrigin() - fill data needed for headers;
+formatStringClientName(headersData) implemented;
+fillItemsFactureOrigin() implementing...
