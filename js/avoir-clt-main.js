@@ -1,7 +1,17 @@
+var currentUser;
+
 const TODAY = luxon.DateTime.now().toFormat('yyyy-MM-dd');
 var modificationWatcher = false;
 var typingTimer;
 var ModalFlag = false;
+var listDOM = {};
+
+var counterRowItem = 1;
+
+const URL_TABLE_DETAILS_OBJ = {
+    view: "/elements/commandes/commande_table_details_base.html",
+    new: "/elements/avoirs_clt/avoir_clt_table_details_base.html"
+};
 
 const InputsDisabledByDefaultAvoirNewFormArray = [
     'num-avoir',
@@ -17,6 +27,121 @@ const InputsDisabledByDefaultCommandeRowItemArray = [
     "item-pu",
     "item-prix-total"
 ];
+
+// const inputAvoirToDbFieldObject = {
+//     "fact-origin": "num_facture",
+//     "row-uid": "commande_uid",
+//     : "client_uid",
+//     : "libelle",
+//     : "state",
+//     : "total_ht_apres_remise",
+//     : "total_ttc_apres_remise	",
+
+// }
+
+function generateRowItem(nodeModel, DataObj) {
+    // console.log(DataObj);
+    let newNode = nodeModel.cloneNode(true);
+    newNode.id = "row-" + zeroLeftPadding(counterRowItem, 3, false);
+
+    return newNode;
+}
+
+function fillHeadersFactureOrigin(modalNode, headersData) {
+    modalNode.querySelector('#client').value = formatStringClientName(headersData);
+    modalNode.querySelector('#total-ht').value = 0.0;
+    modalNode.querySelector('#total-ttc').value = 0.0;
+    modalNode.querySelector('#tva').value = 0.0;
+    return;
+}
+
+function addItem(tableFactureBody, mode) {
+    if (!["new", "view"].includes(mode)) {
+        throw new Error("mode must be 'new' or 'view'.");
+    }
+    return new Promise((resolve, reject) => {
+        console.log("addding item");
+        if (listDOM["item-row-" + mode]) {
+            console.log("from cahce");
+            counterRowItem++;
+            let doc = new DOMParser().parseFromString(
+                listDOM["item-row-" + mode],
+                "text/html"
+            );
+            let trModel = doc.querySelector("#row-001");
+            console.log("trModel");
+            console.log(trModel);
+
+            tableFactureBody.querySelector('tbody').append(
+                generateRowItem(trModel, ["", "", "", "", "", ""])
+            );
+            resolve(true);
+
+        } else {
+
+            fetch(URL_TABLE_DETAILS_OBJ[mode])
+                .then((response) =>
+                    response.text()
+                )
+                .then((txt) => {
+                    // TODO : abstract this process
+                    console.log("from fetch");
+                    counterRowItem++;
+
+                    let doc = new DOMParser().parseFromString(
+                        txt,
+                        "text/html"
+                    );
+
+                    // caching
+                    listDOM["item-row-" + mode] = doc.body.innerHTML;
+
+                    let trModel = doc.querySelector("#row-001");
+                    console.log("trModel");
+                    console.log(trModel);
+
+                    tableFactureBody.querySelector('tbody').append(
+                        generateRowItem(trModel, ["", "", "", "", "", ""])
+                    );
+                    // bsModalNew.hide();
+                    // _cleanNewForm();
+                    // console.log("yes saving called");
+                    resolve(true);
+
+
+                });
+        }
+    })
+}
+
+async function addItemRowsLoop(numberOfRows, modalDetailsItemsTable, mode) {
+    for (let i = 0; i < numberOfRows; ++i) {
+        console.log("counterRowItem : " + counterRowItem);
+        await addItem(modalDetailsItemsTable, mode);
+    }
+    return new Promise((resolve, reject) => resolve(true));
+}
+
+async function fillInputsDetailsItems(itemsArray, modalDetailsItemsTable, mode) {
+    if (!['new', 'view'].includes(mode)) {
+        throw new Error("Mode must be 'new' or 'view'.");
+    };
+    let numberOfRows = itemsArray.length;
+    await addItemRowsLoop(numberOfRows, modalDetailsItemsTable, mode);
+    // disableInputsAndButtons(modalDetailsItemsTable);
+    let rowsToFill = modalDetailsItemsTable.querySelectorAll(".item-commande-row");
+
+    for (let j = 0; j < numberOfRows; j++) {
+        fillInputsDetailsItem(itemsArray[j], rowsToFill[j], mode);
+
+    }
+}
+
+function fillItemsFactureOrigin(modalNode, itemsData, mode) {
+    itemsData.forEach(rowData => {
+
+    })
+}
 
 function formatStringClientName(HeaderDataObject) {
     let formatedResult;
@@ -71,21 +196,33 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
     }
 }
 
-function fillInputsDetailsItem(arrayData, rowNode) {
-    const idToKey = {
+function fillInputsDetailsItem(arrayData, rowNode, mode) {
+    if (!['new', 'view'].includes(mode)) {
+        throw new Error("Mode must be 'new' or 'view'.");
+    }
+    let idToKey = {
+        "initial-quantity": "quantity",
         "row-uid": "uid",
         "item-uid": "item_uid",
         "item-name": "item_name",
         "num-serie": "description_item",
         "item-pu": "prix_unitaire",
-        "item-prix-total": "prix_total",
-        "item-quantity": "quantity"
+    }
+    if (mode === "view") {
+        idToKey["item-quantity"] = "quantity";
+    } else {
+        rowNode.querySelector("#initial-quantity").textContent = arrayData["quantity"];
     }
     let inputs = rowNode.querySelectorAll(".input");
     for (let k = 0; k < inputs.length; k++) {
         let input = inputs[k];
-        input.value = arrayData[idToKey[input.id]];
+        if (["item-prix-total", "item-quantity"].includes(input.id)) {
+            input.value = 0;
+        } else {
+            input.value = arrayData[idToKey[input.id]];
+        }
     }
+
 }
 
 async function responseHandlerSelectOneCommande(response) {
@@ -351,14 +488,15 @@ document.addEventListener("DOMContentLoaded", () => {
         if ((Array.isArray(arrayData)) && (arrayData.length || arrayData[0] != undefined)) {
             console.log("array is ok");
             if (mode === "facture") {
-                console.log("facture");
+                console.log("facture xxx");
+                console.log(arrayData[1]["items"]);
                 let headers_ = arrayData[1]["header"];
 
                 let option_ = document.createElement("option");
                 option_.value = headers_['num_facture'];
                 option_.label = headers_['num_facture'] + " - ";
                 option_.dataset.headers = JSON.stringify(headers_);
-                option_.dataset.items = JSON.stringify(arrayData[1]["items"][1]);
+                option_.dataset.items = JSON.stringify(arrayData[1]["items"]);
 
                 if (headers_.noms == "") {
                     console.log("client company");
@@ -411,14 +549,9 @@ document.addEventListener("DOMContentLoaded", () => {
         JSON.parse(document.querySelector("option[value='" + code + "']").getAttribute("data-items"))];
     }
 
-    function fillHeadersFactureOrigin(modalNode, headersData) {
-        modalNode.querySelector('#client').value = formatStringClientName(headersData);
-        return
-    }
 
-    function fillItemsFactureOrigin(modalNode, itemsData) {
 
-    }
+
 
     //EVENTHANDLER
 
@@ -533,6 +666,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log(getDataFacture(event.target.value));
                 let val = event.target.value;
                 fillHeadersFactureOrigin(modalAvoirNew, getDataFacture(event.target.value)[0]);
+                fillInputsDetailsItems(getDataFacture(event.target.value)[1], modalAvoirNew.querySelector('#table-avoir'), 'new');
                 // if (event.target.parentNode.parentNode.querySelector("#item-quantity").value > 0) {
                 //     fillItemNameAndPrice(event.target, 0);
                 // } else {

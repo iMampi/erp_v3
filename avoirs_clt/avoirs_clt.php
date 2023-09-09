@@ -132,7 +132,7 @@ is_logged();
                             <div id="new-modal-body-table">
                                 <?php
                                 //TODO : change to require once.
-                                require __DIR__ . "/../elements/avoirs_clt/avoir_clt_table_details_base.html";
+                                require __DIR__ . "/../modals_processors/avoir_formulaire_body_table_read_only.php";
                                 ?>
                             </div>
                         </div>

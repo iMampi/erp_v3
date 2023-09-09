@@ -809,3 +809,9 @@ getData() to grap data in datalist facture;
 fillHeadersFactureOrigin() - fill data needed for headers;
 formatStringClientName(headersData) implemented;
 fillItemsFactureOrigin() implementing...
+-------------------------
+121:
+fixed algo error in one_facture_client_details.php.
+fillItemsFactureOrigin() done.
+fillInputsDetailsItems() implemented for 'new'. gotta see later for 'view'.
+changed avoir_formulaire_body_table_read_only.php to show no row by default;
