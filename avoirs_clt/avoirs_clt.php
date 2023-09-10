@@ -118,7 +118,7 @@ is_logged();
                     <div class="modal-content">
 
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">nouvel avoir</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel">nouvel avoir</h5>
                         </div>
                         <div class="modal-body">
 

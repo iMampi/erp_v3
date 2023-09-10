@@ -2,6 +2,33 @@ var currentUser;
 
 const TODAY = luxon.DateTime.now().toFormat('yyyy-MM-dd');
 //key magasin removed
+
+const NUMBER_INPUT_ITEM_ROW = [
+    "item-pu",
+    "item-prix-total",
+];
+
+const DTO_FILL_INPUT_ITEM_ROW = {
+    "row-uid": "uid",
+    "item-uid": "item_uid",
+    "item-name": "item_name",
+    "num-serie": "description_item",
+    "item-pu": "prix_unitaire",
+    "item-prix-total": "prix_total",
+    "item-quantity": "quantity"
+};
+
+const NUMBER_INPUT_HEADERS = [
+    "totalHT-avant-remise",
+    "totalTTC-avant-remise",
+    "remise-taux",
+    "remise-montant",
+    "totalHT-apres-remise",
+    "totalTTC-apres-remise",
+    "TVA-avant-remise",
+    "TVA-apres-remise"
+];
+
 const DTO_FILL_INPUT_HEADERS = {
     uid: "uid",
     date: "date",
@@ -139,8 +166,14 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
     console.log("responseJSON : ");
     console.log(responseJSON);
     valueObj = responseJSON["header"];
-    valueObj["TVA-avant-remise"] = roundToTwo(valueObj["total_ht_avant_remise"]);
-    valueObj["TVA-apres-remise"] = roundToTwo(valueObj["total_ht_apres_remise"]);
+    valueObj["TVA-avant-remise"] = valueObj["total_ht_avant_remise"].toLocaleString("fr-FR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
+    valueObj["TVA-apres-remise"] = valueObj["total_ht_apres_remise"].toLocaleString("fr-FR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
     // let inputsElements = md.querySelectorAll(".input");
 
     let inputsElements =
@@ -165,7 +198,14 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
             element.value = valueObj["user_uid"] + "//" + valueObj["user_name"];
 
         } else {
-            element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
+            if (NUMBER_INPUT_HEADERS.includes(element.id)) {
+                element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]].toLocaleString("fr-FR", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                });
+            } else {
+                element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
+            }
         }
 
         // console.log(element.id);
@@ -193,19 +233,20 @@ function disableInputsAndButtons(tableNode) {
 }
 
 function fillInputsDetailsItem(arrayData, rowNode) {
-    const idToKey = {
-        "row-uid": "uid",
-        "item-uid": "item_uid",
-        "item-name": "item_name",
-        "num-serie": "description_item",
-        "item-pu": "prix_unitaire",
-        "item-prix-total": "prix_total",
-        "item-quantity": "quantity"
-    }
+
     let inputs = rowNode.querySelectorAll(".input");
     for (let k = 0; k < inputs.length; k++) {
         let input = inputs[k];
-        input.value = arrayData[idToKey[input.id]];
+        if (NUMBER_INPUT_ITEM_ROW.includes(input.id)) {
+            input.value = arrayData[DTO_FILL_INPUT_ITEM_ROW[input.id]].toLocaleString("fr-FR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            });
+        } else {
+            input.value = arrayData[DTO_FILL_INPUT_ITEM_ROW[input.id]];
+
+        }
+
     }
 }
 

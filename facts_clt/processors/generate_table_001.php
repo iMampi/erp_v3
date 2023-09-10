@@ -46,7 +46,7 @@ if (can_visit($cycle_facture_client)) {
             } elseif (in_array("num-fact", $classes_array)) {
                 $el_input->setAttribute("value", $el["num_facture"]);
             } elseif (in_array("total", $classes_array)) {
-                $el_input->setAttribute("value", $el["total_ttc_apres_remise"]);
+                $el_input->setAttribute("value", number_format($el["total_ttc_apres_remise"], 2, ",", " "));
             } elseif (in_array("commande-uid", $classes_array)) {
                 $el_input->setAttribute("value", $el["commande_uid"]);
             } elseif (in_array("payment", $classes_array)) {

@@ -815,3 +815,13 @@ fixed algo error in one_facture_client_details.php.
 fillItemsFactureOrigin() done.
 fillInputsDetailsItems() implemented for 'new'. gotta see later for 'view'.
 changed avoir_formulaire_body_table_read_only.php to show no row by default;
+-------------------------
+122:
+implementing number_format() in php file...
+commande
+facture_client
+avoir
++++
+implementing .toLocaleString("fr-FR", {             minimumFractionDigits: 2,                maximumFractionDigits: 2,}) in js file. the idea is to replace my custom formatter...
+facture_client
++++
