@@ -39,6 +39,64 @@ const InputsDisabledByDefaultCommandeRowItemArray = [
 
 // }
 
+//PRICE MANIPULATION
+function updateTotalPrice(baseMontantInput, priceListNode) {
+    console.log("updateTotalPrice");
+    const pricesRaw = [];
+    priceListNode.forEach(element => {
+        pricesRaw.push(formatedNumberToFloat(element.value));
+    });
+    return baseMontantInput.value = formatNumber(pricesRaw.reduce((partialSum, a) => partialSum + formatedNumberToFloat(a), 0));
+}
+
+function updateItemTotalPrice(rowNode) {
+    const price = rowNode.querySelector("#item-pu").value;
+    const quantity = rowNode.querySelector("#item-quantity").value;
+    rowNode.querySelector("#item-prix-total").value = formatNumber(formatedNumberToFloat(price) * formatedNumberToFloat(quantity));
+}
+
+function tauxAndMontantDiscountInputHandler(baseMontantInput, tauxInput, montantInput, mode) {
+    // mode: 1 = taux changed ; 2 = montant changed 
+    let baseMontant = formatedNumberToFloat(baseMontantInput.value);
+    if (mode == 1) {
+        montantInput.value = (baseMontant * formatedNumberToFloat(tauxInput.value) / 100 || 0).toFixed(2);
+    } else if (mode == 2) {
+        tauxInput.value = (formatedNumberToFloat(montantInput.value) / formatedNumberToFloat(baseMontant) * 100 || 0).toFixed(2);
+    }
+}
+
+function updateAllHeaderPrices(montantHTAvantRemiseInput, TVAAvantRemiseInput, montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, montantHTApresRemiseInput, TVAApresRemiseInput, montantTTCApresRemiseInput) {
+
+    TVAHandler(montantHTAvantRemiseInput, TVAAvantRemiseInput, montantTTCAvantRemiseInput, 1);
+    tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, 1)
+    totalTTCDiscountedHandler(montantTTCAvantRemiseInput, montantTTCApresRemiseInput, remiseMontantInput);
+    TVAHandler(montantHTApresRemiseInput, TVAApresRemiseInput, montantTTCApresRemiseInput, 2);
+}
+
+function totalTTCDiscountedHandler(baseMontantInput, discountedMontantInput, montantDiscount) {
+    console.log("totalTTCDiscountedHandler");
+    discountedMontantInput.value = formatNumber(formatedNumberToFloat(baseMontantInput.value) - formatedNumberToFloat(montantDiscount.value))
+}
+
+function TVAHandler(discountedMontantInput, TVAInput, TotalTTCInput, mode) {
+    // Handles TVA and total update
+    // NOTE : mode = 1: ht to ttc;mode = 2: ttc to ht;
+    console.log("TVAHandler");
+    if (mode == 1) {
+
+        let TVA = formatedNumberToFloat(discountedMontantInput.value) * 0.20;
+        TVAInput.value = formatNumber(TVA || 0);
+        TotalTTCInput.value = formatNumber(formatedNumberToFloat(discountedMontantInput.value) + TVA);
+    } else if (mode == 2) {
+        let HT = formatedNumberToFloat(TotalTTCInput.value) / 1.2;
+        discountedMontantInput.value = formatNumber(HT);
+        TVAInput.value = formatNumber(formatedNumberToFloat(TotalTTCInput.value) - HT);
+
+    } else {
+
+    }
+}
+
 function generateRowItem(nodeModel, DataObj) {
     // console.log(DataObj);
     let newNode = nodeModel.cloneNode(true);
@@ -49,16 +107,22 @@ function generateRowItem(nodeModel, DataObj) {
 
 function fillHeadersFactureOrigin(modalNode, headersData) {
     modalNode.querySelector('#client').value = formatStringClientName(headersData);
-    modalNode.querySelector('#total-ht').value = 0.0;
-    modalNode.querySelector('#total-ttc').value = 0.0;
-    modalNode.querySelector('#tva').value = 0.0;
+    modalNode.querySelector('#totalHT-avant-remise').value = "0.00";
+    modalNode.querySelector('#TVA-avant-remise').value = "0.00";
+    modalNode.querySelector('#totalTTC-avant-remise').value = "0.00";
+    modalNode.querySelector('#totalHT-apres-remise').value = "0.00";
+    modalNode.querySelector('#TVA-apres-remise').value = "0.00";
+    modalNode.querySelector('#totalTTC-apres-remise').value = "0.00";
+    modalNode.querySelector('#remise-taux').value = headersData['remise_taux'];
+    modalNode.querySelector('#remise-montant').value = "0.00";
     return;
 }
 
 function addItem(tableFactureBody, mode) {
     if (!["new", "view"].includes(mode)) {
         throw new Error("mode must be 'new' or 'view'.");
-    }
+    };
+    let newInputDisabled = ["input-uid", "num-serie"];
     return new Promise((resolve, reject) => {
         console.log("addding item");
         if (listDOM["item-row-" + mode]) {
@@ -69,6 +133,10 @@ function addItem(tableFactureBody, mode) {
                 "text/html"
             );
             let trModel = doc.querySelector("#row-001");
+
+            trModel.querySelectorAll(".input").forEach(input_ => {
+                input_.disabled = input_.id != "item-quantity";
+            });
             console.log("trModel");
             console.log(trModel);
 
@@ -97,6 +165,11 @@ function addItem(tableFactureBody, mode) {
                     listDOM["item-row-" + mode] = doc.body.innerHTML;
 
                     let trModel = doc.querySelector("#row-001");
+
+                    trModel.querySelectorAll(".input").forEach(input_ => {
+                        input_.disabled = input_.id != "item-quantity";
+                    });
+
                     console.log("trModel");
                     console.log(trModel);
 
@@ -333,6 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     const btnConfirmationNo = modalConfirmation.querySelector("#btn-confirmation-no"
     );
+
     ////modal new
     const modalChooseNew = document.getElementById("modal-choose-new");
     const bsModalChooseNew = new bootstrap.Modal(modalChooseNew, {
@@ -347,6 +421,17 @@ document.addEventListener("DOMContentLoaded", () => {
         keyboard: false,
         focus: true,
     });
+
+    const montantHTAvantRemiseInputNew = modalAvoirNew.querySelector("#totalHT-avant-remise");
+    const TVAAvantRemiseInputNew = modalAvoirNew.querySelector("#TVA-avant-remise");
+    const montantTTCAvantRemiseInputNew = modalAvoirNew.querySelector("#totalTTC-avant-remise");
+    const remiseTauxInputNew = modalAvoirNew.querySelector("#remise-taux");
+    const remiseMontantInputNew = modalAvoirNew.querySelector("#remise-montant");
+    const montantHTApresRemiseInputNew = modalAvoirNew.querySelector("#totalHT-apres-remise");
+    const TVAApresRemiseInputNew = modalAvoirNew.querySelector("#TVA-apres-remise");
+    const montantTTCApresRemiseInputNew = modalAvoirNew.querySelector("#totalTTC-apres-remise");
+
+    montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew
 
     ////// today's date
     try {
@@ -678,10 +763,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 // updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
                 // updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
             } else if (event.target.id == "item-quantity") {
-                // updateItemTotalPrice(event.target.parentNode.parentNode)
-                // const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
-                // updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
-                // updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+                console.log("qtt called");
+                updateItemTotalPrice(event.target.parentNode.parentNode)
+                updateTotalPrice(montantHTAvantRemiseInputNew, modalAvoirNew.querySelectorAll("#item-prix-total"));
+                updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
             }
         });
     } catch (error) {

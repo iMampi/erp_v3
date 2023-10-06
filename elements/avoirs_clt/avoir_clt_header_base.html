@@ -77,25 +77,70 @@
 	</div>
 
 	<div class="row my-auto">
-		<span class="col-form-label col-2">total HT</span>
+		<span class="col-form-label col-2 ">total HT avant remise</span>
 		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm input total-ht" disabled 
-			id="total-ht"
+			<input type="text" class="form-control form-control-sm input totalHT-avant-remise" disabled 
+			id="totalHT-avant-remise"
 			/>
 		</div>
 
-		<span class="col-form-label col-2">TVA</span>
+		<span class="col-form-label col-2">TVA avant remise</span>
+		<div class="col-2 my-auto">
+			<input type="text" class="form-control form-control-sm input TVA-avant-remise" disabled 
+			id="TVA-avant-remise"
+			/>
+		</div>
+		<span class="col-form-label col-2">total TTC avant remise</span>
+		<div class="col-2 my-auto">
+			<input
+				type="text"
+				class="form-control form-control-sm input totalTTC-avant-remise"
+				disabled
+				id="totalTTC-avant-remise"
+			/>
+		</div>
+	</div>
+	<div class="row my-auto">
+		<span class="col-form-label col-2">taux remise (%)</span>
+		<div class="col-2 my-auto">
+			<input
+				type="number"
+				class="form-control form-control-sm input remise-taux"
+				placeholder="%"
+				id="remise-taux"
+			/>
+		</div>
+		<span class="col-form-label col-2">montant remise</span>
+		<div class="col-2 my-auto">
+			<input
+				type="number"
+				class="form-control form-control-sm input remise-montant"
+				placeholder="Ar"
+				id="remise-montant"
+				
+			/>
+		</div>
+	</div>
+	<div class="row my-auto">
+		<span class="col-form-label col-2">total HT aprés remise</span>
+		<div class="col-2 my-auto">
+			<input type="text" class="form-control form-control-sm input totalHT-apres-remise" disabled 
+			id="totalHT-apres-remise"
+			/>
+		</div>
+
+		<span class="col-form-label col-2">TVA aprés remise</span>
 		<div class="col-2 my-auto">
 			<input type="text" class="form-control form-control-sm input TVA-apres-remise" disabled 
-			id="tva"/>
+			id="TVA-apres-remise"/>
 		</div>
-		<span class="col-form-label col-2 fw-bold">total TTC</span>
+		<span class="col-form-label col-2 fw-bold">total TTC à payer</span>
 		<div class="col-2 my-auto">
 			<input
 				type="text"
 				class="form-control form-control-sm fw-bold input totalTTC-apres-remise"
 				disabled
-				id="total-ttc"
+				id="totalTTC-apres-remise"
 			/>
 		</div>
 	</div>

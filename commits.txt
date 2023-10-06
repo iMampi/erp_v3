@@ -825,3 +825,11 @@ avoir
 implementing .toLocaleString("fr-FR", {             minimumFractionDigits: 2,                maximumFractionDigits: 2,}) in js file. the idea is to replace my custom formatter...
 facture_client
 +++
+fixed action on selection of facture-origin : disable inputs except item-quantity
+
+changed avoir_client_headers.html base
+
+filling on cliking the facture.
+eventhandler on quantity changes works.
+
+implementing .toLocaleString("fr-FR", {             minimumFractionDigits: 2,                maximumFractionDigits: 2,}) in js file. the idea is to replace my custom formatter...

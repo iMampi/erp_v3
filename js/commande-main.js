@@ -416,7 +416,6 @@ async function DefaultModalCommandInputs(modal, min_row = 1) {
 
 
 function generateRowTable(nodeModel, DataObj) {
-    //MARQUE PAGE
     console.log(DataObj);
     let newNode = nodeModel.cloneNode(true);
     newNode.id = "row-" + DataObj["num_facture"];
