@@ -833,3 +833,10 @@ filling on cliking the facture.
 eventhandler on quantity changes works.
 
 implementing .toLocaleString("fr-FR", {             minimumFractionDigits: 2,                maximumFractionDigits: 2,}) in js file. the idea is to replace my custom formatter...
+-------------------------
+123:
+changed avoir_clt_table_details_base.html : added "min=0" attribut to #item-quantity input. Now cannot go below zero.
+fillInputsDetailsItem() : now it automaticallly set "max" attribut to #item-quantity so we cannot go above the initial quantity.
+#btn-create-avoir is disabled by default. now it is enabled when totalTTCapresremise >0.
+working on cleaning and putting back to default avoir Facture Based...
+base of cleaning done. cleaning works when cancel the creation of a new avoir.

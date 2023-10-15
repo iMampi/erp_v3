@@ -8,7 +8,7 @@ $dom = new DOMDocument();
 libxml_use_internal_errors(true);
 $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
 $xpath = new DOMXPath($dom);
- 
+
 $commercial_input = $xpath->query(".//input[@id='commercial']");
 $val = $_SESSION["user"]->name;
 $commercial_input[0]->setAttribute("value", $_SESSION["user"]->uid . "//" . $val);

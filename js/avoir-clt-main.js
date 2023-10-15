@@ -13,20 +13,64 @@ const URL_TABLE_DETAILS_OBJ = {
     new: "/elements/avoirs_clt/avoir_clt_table_details_base.html"
 };
 
+const DefaultValuesAvoirNewFormObj = {
+    "num-avoir": "",
+    "fact-origin": "",
+    "commercial": "",
+    "client": "",
+    "date": TODAY,
+    "note": "",
+    "totalHT-avant-remise": "0.00",
+    "TVA-avant-remise": "0.00",
+    "totalTTC-avant-remise": "0.00",
+    "remise-taux": "0.00",
+    "remise-montant": "0.00",
+    "totalHT-apres-remise": "0.00",
+    "TVA-apres-remise": "0.00",
+    "totalTTC-apres-remise": "0.00"
+};
+
 const InputsDisabledByDefaultAvoirNewFormArray = [
     'num-avoir',
     "commercial",
+    "client",
+    "magasin",
+    "type",
+    "note",
     "date",
-    "total-ht",
-    "TVA",
-    "total-ttc"
+    "totalHT-avant-remise",
+    "TVA-avant-remise",
+    "totalTTC-avant-remise",
+    "remise-taux",
+    "remise-montant",
+    "totalHT-apres-remise",
+    "TVA-apres-remise",
+    "totalTTC-apres-remise"
 ];
 
-const InputsDisabledByDefaultCommandeRowItemArray = [
+const InputsDisabledByDefaultAvoirRowItemArray = [
+    "item-uid",
     "item-name",
+    "num-serie",
     "item-pu",
     "item-prix-total"
 ];
+
+const DEFAULT_BUTTONS_DISABLED_STATE_AVOIR_DETAILS = {
+
+    "btn-new-client": true,
+    "btn-add-item": true,
+    "btn-del-item": true,
+    "btn-new-item": true
+}
+
+const DEFAULT_BUTTONS_DISABLED_STATE_AVOIR_NEW = {
+    "btn-new-client": true,
+    "btn-add-item": true,
+    "btn-del-item": true,
+    "btn-new-item": true,
+    "btn-create-avoir": true
+}
 
 // const inputAvoirToDbFieldObject = {
 //     "fact-origin": "num_facture",
@@ -119,6 +163,8 @@ function fillHeadersFactureOrigin(modalNode, headersData) {
 }
 
 function addItem(tableFactureBody, mode) {
+    console.log("table name");
+    console.log(tableFactureBody.parentNode.parentNode.parentNode.parentNode.parentNode.id);
     if (!["new", "view"].includes(mode)) {
         throw new Error("mode must be 'new' or 'view'.");
     };
@@ -137,6 +183,9 @@ function addItem(tableFactureBody, mode) {
             trModel.querySelectorAll(".input").forEach(input_ => {
                 input_.disabled = input_.id != "item-quantity";
             });
+            trModel.querySelector("#btn-new-item").disabled = true;
+            trModel.querySelector("#btn-del-item").disabled = tableFactureBody.parentNode.parentNode.parentNode.parentNode.parentNode.id == "modal-avoir-new";
+
             console.log("trModel");
             console.log(trModel);
 
@@ -169,6 +218,8 @@ function addItem(tableFactureBody, mode) {
                     trModel.querySelectorAll(".input").forEach(input_ => {
                         input_.disabled = input_.id != "item-quantity";
                     });
+                    trModel.querySelector("#btn-new-item").disabled = true;
+                    trModel.querySelector("#btn-del-item").disabled = tableFactureBody.parentNode.parentNode.parentNode.parentNode.parentNode.id == "modal-avoir-new";
 
                     console.log("trModel");
                     console.log(trModel);
@@ -284,6 +335,7 @@ function fillInputsDetailsItem(arrayData, rowNode, mode) {
     if (mode === "view") {
         idToKey["item-quantity"] = "quantity";
     } else {
+        rowNode.querySelector("#item-quantity").setAttribute("max", arrayData["quantity"]);
         rowNode.querySelector("#initial-quantity").textContent = arrayData["quantity"];
     }
     let inputs = rowNode.querySelectorAll(".input");
@@ -331,11 +383,34 @@ function openNewAvoirFactureBased(modal, bsModal) {
 
 }
 
+
+function removeItem(target, mode) {
+    console.log("remove me");
+    if (mode === "target") {
+        let rowId = target.parentNode.parentNode.remove();
+    } else if (mode === "node") {
+        target.remove();
+    } else {
+        throw new Error("mode is not valid");
+    }
+
+}
+
+function removeItemRows(nodeList) {
+    if (nodeList.length === 0) {
+        return false;
+    }
+    nodeList.forEach((element, index) => {
+        removeItem(element, "node");
+    });
+    return true;
+}
+
+
 function defaultButtons(modal) {
     const refObj = {
-
-        "modal-details": DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_DETAILS,
-        'modal-commande-new': DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_NEW
+        "modal-details": DEFAULT_BUTTONS_DISABLED_STATE_AVOIR_DETAILS,
+        'modal-avoir-new': DEFAULT_BUTTONS_DISABLED_STATE_AVOIR_NEW
     };
     let btns = modal.querySelectorAll(".btn");
     btns.forEach(myBtn => {
@@ -345,7 +420,7 @@ function defaultButtons(modal) {
 
 function cleanNewForm(modal, disable = false) {
     console.log("cleaning");
-    let array1 = InputsDisabledByDefaultAvoirNewFormArray.concat(InputsDisabledByDefaultCommandeRowItemArray);
+    let array1 = InputsDisabledByDefaultAvoirNewFormArray.concat(InputsDisabledByDefaultAvoirRowItemArray);
 
     const inputsForm = modal.querySelectorAll(".input");
 
@@ -356,9 +431,9 @@ function cleanNewForm(modal, disable = false) {
         } else {
             input.disabled = disable;
         }
-        let myValue = DefaultValuesCommandeNewFormObj[input.id];
+        let myValue = DefaultValuesAvoirNewFormObj[input.id];
         if (myValue == undefined) {
-            myValue = DefaultValuesCommandeRowItem[input.id];
+            myValue = DefaultValuesAvoirNewFormObj[input.id];
             if (myValue == undefined) {
                 return false;
             }
@@ -367,7 +442,7 @@ function cleanNewForm(modal, disable = false) {
     });
 }
 
-async function DefaultModalCommandInputs(modal, min_row = 1) {
+async function DefaultModalAvoirInputs(modal, min_row = 1) {
     //remove other item rows
     let itemRows = modal.querySelectorAll(".item-commande-row");
     removeItemRows(itemRows);
@@ -457,7 +532,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		Êtes vous sûr de vouloir quitter ce formulaire?",
         yes: () => {
             bsModalAvoirNew.hide();
-            DefaultModalCommandInputs(modalAvoirNew);
+            DefaultModalAvoirInputs(modalAvoirNew, 0);
             bsModalConfirmation.hide();
             modificationWatcher = false;
         },
@@ -635,9 +710,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-
-
-
     //EVENTHANDLER
 
     try {
@@ -676,6 +748,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     );
                 } else {
                     bsModalAvoirNew.hide();
+                    DefaultModalAvoirInputs(modalAvoirNew, 0);
                 }
             } else if (event.target.id == "btn-add-item") {
                 // addItem(tableItemsFactureNew).then(() => modificationWatcher = true);
@@ -767,6 +840,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 updateItemTotalPrice(event.target.parentNode.parentNode)
                 updateTotalPrice(montantHTAvantRemiseInputNew, modalAvoirNew.querySelectorAll("#item-prix-total"));
                 updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+                try {
+                    modalAvoirNew.querySelector("#btn-create-avoir").disabled = true;
+
+                    if (parseInt(montantTTCApresRemiseInputNew.value) > 0) {
+                        modalAvoirNew.querySelector("#btn-create-avoir").disabled = false;
+                    }
+                } catch (error) {
+                    console.log("error here cannot create not autho");
+                }
+
             }
         });
     } catch (error) {

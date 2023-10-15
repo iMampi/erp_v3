@@ -15,7 +15,7 @@ $btns = $xpath->query(".//*[contains(@class,'btn')]");
 //it works
 //TODO : include algo for what btns appears or not according to roles.
 foreach ($btns as $btn) {
-    if ((in_array($btn->getAttribute("id"), ["btn-save-new", "btn-validate-new"])) && (!$_SESSION["user"]->authorizations->commande->create)) {
+    if ((in_array($btn->getAttribute("id"), ["btn-save-new", "btn-create-avoir"])) && (!$_SESSION["user"]->authorizations->avoir_client->create)) {
         // if (true) {
         $btn->parentNode->removeChild($btn);
     }
