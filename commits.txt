@@ -840,3 +840,7 @@ fillInputsDetailsItem() : now it automaticallly set "max" attribut to #item-quan
 #btn-create-avoir is disabled by default. now it is enabled when totalTTCapresremise >0.
 working on cleaning and putting back to default avoir Facture Based...
 base of cleaning done. cleaning works when cancel the creation of a new avoir.
+-------------------------
+124:
+avoir-main.js:
+adding cleanNewForm() in algo when choosing a new fact.

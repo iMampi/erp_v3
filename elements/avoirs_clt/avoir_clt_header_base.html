@@ -9,9 +9,27 @@
 	</div>
 	<div class="row">
 		<span class="col-form-label col-2 lh-1">facture d'origine</span>
-		<div class="col-4 my-auto">
+		<div class="dropdown col-4 my-auto">
+            <button class="btn input fact-origin btn-secondary dropdown-toggle my-auto btn-sm w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false"  id="fact-origin">
+            choose ine</button>
+
+            <ul class="dropdown-menu" id="my-list">
+                <!-- <li id="search-container"><a class="dropdown-item" href="#"><input  type="text" placeholder="Search" id="search" autocomplete="off" class="form-control form-control-sm"></a>
+                </li> -->
+                <li id="search-container"><div class="mx-2">
+
+                <input  type="text" placeholder="Search" id="search" autocomplete="off" class="form-control form-control-sm">               
+              </div>
+              
+              </li>
+
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Action</a></li>
+            </ul>
+          </div>
+		<!-- <div class="col-4 my-auto">
 			<input type="text" class="form-control form-control-sm input fact-origin" id="fact-origin" placeholder="saisissez un numéro de facture" list="facture-list"/>
-		</div>
+		</div> -->
 		<span class="col-form-label col-2">commercial</span>
 		<div class="col-4 my-auto">
 			<input type="text" class="form-control form-control-sm input commercial" disabled id="commercial"/>

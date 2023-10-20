@@ -377,7 +377,8 @@ function openNewAvoirFactureBased(modal, bsModal) {
         element.disabled = element.id !== "fact-origin";
     });
     modal.querySelectorAll('.btn').forEach(element => {
-        element.disabled = element.id !== 'btn-cancel-avoir';
+        // element.disabled = element.id !== 'btn-cancel-avoir';
+        element.disabled = !['btn-cancel-avoir', 'fact-origin'].includes(element.id);
     });
     bsModal.show();
 
@@ -801,7 +802,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             } else if ((event.target.id === "client") && (event.inputType === "insertText")) {
                 console.log("searching client");
-                clientDataList.innerHTML = "";
+                // clientDataList.innerHTML = "";
                 clearTimeout(typingTimer);
                 let term = event.target.value.trim();
                 if (term) {
@@ -809,8 +810,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
                     typingTimer = setTimeout(() => { searchLive(term, clientDataList, "client") }, 1500);
                 }
-            } else if ((event.target.id === "fact-origin") && (event.inputType === "insertText")) {
+            } else if ((event.target.id === "fact-origin") && (["insertText"].includes(event.inputType))) {
                 console.log("searching fact");
+                console.log(event.inputType);
                 clientDataList.innerHTML = "";
                 clearTimeout(typingTimer);
                 let term = event.target.value.trim();
@@ -819,9 +821,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
                     typingTimer = setTimeout(() => { searchLive(term, factureDataList, "facture") }, 1500);
                 }
-            } else if ((event.target.id === "fact-origin") && (!event.key)) {
+            } else if ((event.target.id === "fact-origin") && (!event.key) && (!["deleteContentBackward", "deleteContentForward"].includes(event.inputType))) {
                 console.log("chossed fact");
+                console.log(event);
+
                 console.log(getDataFacture(event.target.value));
+                // DefaultModalAvoirInputs(modalAvoirNew, 0);
+                removeItemRows(modalAvoirNew.querySelectorAll(".item-commande-row"));
                 let val = event.target.value;
                 fillHeadersFactureOrigin(modalAvoirNew, getDataFacture(event.target.value)[0]);
                 fillInputsDetailsItems(getDataFacture(event.target.value)[1], modalAvoirNew.querySelector('#table-avoir'), 'new');
