@@ -844,3 +844,9 @@ base of cleaning done. cleaning works when cancel the creation of a new avoir.
 124:
 avoir-main.js:
 adding cleanNewForm() in algo when choosing a new fact.
+checkout branching for implementing me custom select-picker.
+-------------------------
+125_a:
+changed and fixed layout of select-picker;
+changed eventhandler and facture for livesearch of facture.
+still fixing some details...

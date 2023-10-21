@@ -98,3 +98,13 @@ td .name {
 	width:2.5rem;
 }
 
+
+.dropdown-toggle{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.dropdown-menu.show {
+    min-width: 100%;
+}

@@ -162,6 +162,8 @@ function fillHeadersFactureOrigin(modalNode, headersData) {
     return;
 }
 
+
+
 function addItem(tableFactureBody, mode) {
     console.log("table name");
     console.log(tableFactureBody.parentNode.parentNode.parentNode.parentNode.parentNode.id);
@@ -236,6 +238,22 @@ function addItem(tableFactureBody, mode) {
                 });
         }
     })
+}
+
+function addName(listNode, value, selectable, myJSON = {}) {
+    let newLi = document.createElement("li");
+    if (selectable) {
+        let newA = document.createElement("a");
+        newA.textContent = typeof value == "string" ? value : formatName(value);
+        newA.classList.add("dropdown-item", "fst-italic");
+        newA.setAttribute("href", "#");
+        newLi.appendChild(newA);
+    } else {
+        newLi.textContent = typeof value == "string" ? value : formatName(value);
+        newLi.classList.add("fst-italic", "px-2",);
+    }
+
+    listNode.appendChild(newLi);
 }
 
 async function addItemRowsLoop(numberOfRows, modalDetailsItemsTable, mode) {
@@ -463,7 +481,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const itemDataList = document.getElementById("item-list");
     const clientDataList = document.getElementById("client-list");
     const factureDataList = document.getElementById("facture-list");
-
+    const myList = document.getElementById("my-list");
 
     ////modal confirmation
     const modalConfirmation = document.getElementById("modal-confirmation");
@@ -645,6 +663,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     function addDatalistElement(datalistNode, arrayData, mode, term = "") {
+        //TODO : Refactor me
         datalistNode.innerHTML = "";
         if ((Array.isArray(arrayData)) && (arrayData.length || arrayData[0] != undefined)) {
             console.log("array is ok");
@@ -653,22 +672,38 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log(arrayData[1]["items"]);
                 let headers_ = arrayData[1]["header"];
 
-                let option_ = document.createElement("option");
-                option_.value = headers_['num_facture'];
-                option_.label = headers_['num_facture'] + " - ";
-                option_.dataset.headers = JSON.stringify(headers_);
-                option_.dataset.items = JSON.stringify(arrayData[1]["items"]);
+                let newLi = document.createElement("li");
+                let newA = document.createElement("a");
+                newA.classList.add("dropdown-item", "fst-italic");
+                newA.setAttribute("href", "#");
+                newA.textContent = headers_['num_facture'] + " - ";
+                newA.dataset.headers = JSON.stringify(headers_);
+                newA.dataset.items = JSON.stringify(arrayData[1]["items"]);
+
+                // let option_ = document.createElement("option");
+                // option_.value = headers_['num_facture'];
+                // option_.label = headers_['num_facture'] + " - ";
+                // option_.dataset.headers = JSON.stringify(headers_);
+                // option_.dataset.items = JSON.stringify(arrayData[1]["items"]);
 
                 if (headers_.noms == "") {
                     console.log("client company");
 
-                    option_.label += (headers_["raison_sociale"] || "") + " / " + (headers_["nom_commercial"] || "");
+                    newA.textContent += (headers_["raison_sociale"] || "") + " / " + (headers_["nom_commercial"] || "");
+                    // option_.label += (headers_["raison_sociale"] || "") + " / " + (headers_["nom_commercial"] || "");
                 } else if (headers_["raison_sociale"] == "") {
                     console.log("client humain");
-                    option_.label += headers_.noms + " " + headers_.prenoms;
+                    newA.textContent += headers_.noms + " " + headers_.prenoms;
+                    // option_.label += headers_.noms + " " + headers_.prenoms;
                 }
-                option_.label += " - " + formatNumber(headers_['total_ttc_apres_remise']);
-                datalistNode.append(option_);
+
+                console.log("xmar");
+                newA.textContent += " - " + formatNumber(headers_['total_ttc_apres_remise']);
+                newLi.appendChild(newA);
+                datalistNode.appendChild(newLi);
+
+                // option_.label += " - " + formatNumber(headers_['total_ttc_apres_remise']);
+                // datalistNode.append(option_);
                 return;
             }
 
@@ -704,6 +739,66 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
     }
+    // function addDatalistElement(datalistNode, arrayData, mode, term = "") {
+    //     datalistNode.innerHTML = "";
+    //     if ((Array.isArray(arrayData)) && (arrayData.length || arrayData[0] != undefined)) {
+    //         console.log("array is ok");
+    //         if (mode === "facture") {
+    //             console.log("facture xxx");
+    //             console.log(arrayData[1]["items"]);
+    //             let headers_ = arrayData[1]["header"];
+
+    //             let option_ = document.createElement("option");
+    //             option_.value = headers_['num_facture'];
+    //             option_.label = headers_['num_facture'] + " - ";
+    //             option_.dataset.headers = JSON.stringify(headers_);
+    //             option_.dataset.items = JSON.stringify(arrayData[1]["items"]);
+
+    //             if (headers_.noms == "") {
+    //                 console.log("client company");
+
+    //                 option_.label += (headers_["raison_sociale"] || "") + " / " + (headers_["nom_commercial"] || "");
+    //             } else if (headers_["raison_sociale"] == "") {
+    //                 console.log("client humain");
+    //                 option_.label += headers_.noms + " " + headers_.prenoms;
+    //             }
+    //             option_.label += " - " + formatNumber(headers_['total_ttc_apres_remise']);
+    //             datalistNode.append(option_);
+    //             return;
+    //         }
+
+    //         arrayData.forEach(element => {
+    //             let option_ = document.createElement("option");
+    //             if (mode == "item") {
+    //                 option_.value = element.code;
+    //                 option_.label = element.name;
+    //                 option_.dataset.prix = element.prix_vente;
+    //             } else if (mode == "client") {
+    //                 let val = element.uid + " - ";
+    //                 if (element.noms == "") {
+    //                     console.log("client company");
+
+    //                     val += (element["raison_sociale"] || "") + " / " + (element["nom_commercial"] || "");
+    //                 } else if (element["raison_sociale"] == "") {
+    //                     console.log("client humain");
+    //                     val += element.noms + " " + element.prenoms;
+    //                 }
+    //                 option_.value = val;
+    //                 option_.label = val;
+    //             }
+    //             datalistNode.append(option_);
+    //             return;
+    //         });
+    //     } else {
+    //         console.log("empty arrayy");
+    //         let option_ = document.createElement("option");
+    //         option_.value = "Néant";
+    //         option_.label = "aucun résultat pour \"" + term + "\"";
+    //         datalistNode.append(option_);
+    //         return;
+    //     }
+
+    // }
 
     function getDataFacture(code) {
         return [JSON.parse(document.querySelector("option[value='" + code + "']").getAttribute("data-headers")),
@@ -821,6 +916,56 @@ document.addEventListener("DOMContentLoaded", () => {
                     clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
                     typingTimer = setTimeout(() => { searchLive(term, factureDataList, "facture") }, 1500);
                 }
+            } else if (event.target.id === "search-facture") {
+                console.log("searching fact");
+                // console.log(event.inputType);
+                let hint = event.target.value.trim();
+                if (hint) {
+                    let selection;
+                    let LIs = myList.querySelectorAll("li");
+                    LIs.forEach(LI => {
+                        if (LI.id !== "search-container") {
+                            myList.removeChild(LI);
+                        }
+                    })
+                    //// START - grabing data
+                    clearTimeout(typingTimer)
+                    addName(myList, "Searching for \"" + event.target.value + "\"", false);
+                    typingTimer = setTimeout(() => { searchLive(hint, myList, "facture") }, 1500);
+                    //// END - grabing data
+                    console.log("markman");
+                    // if (selection == undefined) {
+                    //     selection = "no match for \"" + search.value + "\"";
+                    // };
+                    // console.log("typed : " + JSON.stringify(selection));
+                    // console.log(selection);
+                    // LIs = myList.querySelectorAll("li");
+                    // for (let index = 0; index < LIs.length; index++) {
+                    //     if (LIs[index].id !== "search-container") {
+                    //         myList.removeChild(LIs[index]);
+                    //     }
+                    // }
+
+                    // addName(myList, selection,true)
+
+
+                } else {
+                    let LIs = myList.querySelectorAll("li");
+                    for (let index = 0; index < LIs.length; index++) {
+                        let j = LIs[index].id;
+                        if (LIs[index].id !== "search-container") {
+                            myList.removeChild(LIs[index]);
+                        }
+                    }
+                }
+                // clientDataList.innerHTML = "";
+                // clearTimeout(typingTimer);
+                // let term = event.target.value.trim();
+                // if (term) {
+                //     // TODO : sanitize here
+                //     clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
+                //     typingTimer = setTimeout(() => { searchLive(term, factureDataList, "facture") }, 1500);
+                // }
             } else if ((event.target.id === "fact-origin") && (!event.key) && (!["deleteContentBackward", "deleteContentForward"].includes(event.inputType))) {
                 console.log("chossed fact");
                 console.log(event);
