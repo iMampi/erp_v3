@@ -150,6 +150,7 @@ function generateRowItem(nodeModel, DataObj) {
 }
 
 function fillHeadersFactureOrigin(modalNode, headersData) {
+    modalNode.querySelector('#fact-origin').textContent = headersData['num_facture'];
     modalNode.querySelector('#client').value = formatStringClientName(headersData);
     modalNode.querySelector('#totalHT-avant-remise').value = "0.00";
     modalNode.querySelector('#TVA-avant-remise').value = "0.00";
@@ -245,7 +246,7 @@ function addName(listNode, value, selectable, myJSON = {}) {
     if (selectable) {
         let newA = document.createElement("a");
         newA.textContent = typeof value == "string" ? value : formatName(value);
-        newA.classList.add("dropdown-item", "fst-italic");
+        newA.classList.add("dropdown-item", "fst-italic", "search-result");
         newA.setAttribute("href", "#");
         newLi.appendChild(newA);
     } else {
@@ -580,11 +581,14 @@ document.addEventListener("DOMContentLoaded", () => {
     async function searchFacture(inputObj) {
         console.log("searching Facture");
         let url = "/database/select/one_facture_client_details.php";
+        // let url = "/database/select/select_filtered_factures.php";
         let response = await sendData(url, inputObj);
 
         console.log("error?");
         console.log(response);
         let myjson = await responseHandlerSelectOneCommande(response);
+        // let myjson = JSON.parse(await response);
+
         console.log(myjson);
 
         return myjson;
@@ -664,52 +668,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function addDatalistElement(datalistNode, arrayData, mode, term = "") {
         //TODO : Refactor me
-        datalistNode.innerHTML = "";
+        let LIs = datalistNode.querySelectorAll("li");
+        LIs.forEach(LI => {
+            if (LI.id !== "search-container") {
+                datalistNode.removeChild(LI);
+            }
+        })
         if ((Array.isArray(arrayData)) && (arrayData.length || arrayData[0] != undefined)) {
             console.log("array is ok");
             if (mode === "facture") {
-                console.log("facture xxx");
-                console.log(arrayData[1]["items"]);
-                let headers_ = arrayData[1]["header"];
-
-                let newLi = document.createElement("li");
-                let newA = document.createElement("a");
-                newA.classList.add("dropdown-item", "fst-italic");
-                newA.setAttribute("href", "#");
-                newA.textContent = headers_['num_facture'] + " - ";
-                newA.dataset.headers = JSON.stringify(headers_);
-                newA.dataset.items = JSON.stringify(arrayData[1]["items"]);
-
-                // let option_ = document.createElement("option");
-                // option_.value = headers_['num_facture'];
-                // option_.label = headers_['num_facture'] + " - ";
-                // option_.dataset.headers = JSON.stringify(headers_);
-                // option_.dataset.items = JSON.stringify(arrayData[1]["items"]);
-
-                if (headers_.noms == "") {
-                    console.log("client company");
-
-                    newA.textContent += (headers_["raison_sociale"] || "") + " / " + (headers_["nom_commercial"] || "");
-                    // option_.label += (headers_["raison_sociale"] || "") + " / " + (headers_["nom_commercial"] || "");
-                } else if (headers_["raison_sociale"] == "") {
-                    console.log("client humain");
-                    newA.textContent += headers_.noms + " " + headers_.prenoms;
-                    // option_.label += headers_.noms + " " + headers_.prenoms;
-                }
-
-                console.log("xmar");
-                newA.textContent += " - " + formatNumber(headers_['total_ttc_apres_remise']);
-                newLi.appendChild(newA);
-                datalistNode.appendChild(newLi);
-
-                // option_.label += " - " + formatNumber(headers_['total_ttc_apres_remise']);
-                // datalistNode.append(option_);
-                return;
+                arrayData = [arrayData]
             }
 
             arrayData.forEach(element => {
                 let option_ = document.createElement("option");
-                if (mode == "item") {
+                if (mode === "facture") {
+                    console.log("facture xxx");
+                    console.log(element[1]["items"]);
+                    let headers_ = element[1]["header"];
+
+                    let newLi = document.createElement("li");
+                    let newA = document.createElement("a");
+                    newA.classList.add("dropdown-item", "fst-italic", "search-result");
+                    newA.setAttribute("href", "#");
+                    newA.textContent = headers_['num_facture'] + " - ";
+                    newA.dataset.headers = JSON.stringify(headers_);
+                    newA.dataset.items = JSON.stringify(element[1]["items"]);
+                    newA.dataset.value = headers_['num_facture'];
+
+
+                    if (headers_.noms == "") {
+                        console.log("client company");
+
+                        newA.textContent += (headers_["raison_sociale"] || "") + " / " + (headers_["nom_commercial"] || "");
+                        // option_.label += (headers_["raison_sociale"] || "") + " / " + (headers_["nom_commercial"] || "");
+                    } else if (headers_["raison_sociale"] == "") {
+                        console.log("client humain");
+                        newA.textContent += headers_.noms + " " + headers_.prenoms;
+                        // option_.label += headers_.noms + " " + headers_.prenoms;
+                    }
+
+                    console.log("xmar");
+                    newA.textContent += " - " + formatNumber(headers_['total_ttc_apres_remise']);
+                    newLi.appendChild(newA);
+                    datalistNode.appendChild(newLi);
+
+                    // option_.label += " - " + formatNumber(headers_['total_ttc_apres_remise']);
+                    // datalistNode.append(option_);
+                    return;
+                } else if (mode == "item") {
                     option_.value = element.code;
                     option_.label = element.name;
                     option_.dataset.prix = element.prix_vente;
@@ -726,7 +733,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     option_.value = val;
                     option_.label = val;
                 }
-                datalistNode.append(option_);
+                // datalistNode.append(option_);
                 return;
             });
         } else {
@@ -800,9 +807,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // }
 
-    function getDataFacture(code) {
-        return [JSON.parse(document.querySelector("option[value='" + code + "']").getAttribute("data-headers")),
-        JSON.parse(document.querySelector("option[value='" + code + "']").getAttribute("data-items"))];
+    function getDataFacture(target) {
+        // return [JSON.parse(document.querySelector("option[value='" + code + "']").getAttribute("data-headers")),
+        // JSON.parse(document.querySelector("option[value='" + code + "']").getAttribute("data-items"))];
+        return [JSON.parse(target.getAttribute("data-headers")),
+        JSON.parse(target.getAttribute("data-items"))];
     }
 
 
@@ -836,6 +845,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
         modalAvoirNew.addEventListener('click', (event) => {
+            console.log("testeur click");
+            console.log(event.target);
             if (event.target.id == "btn-cancel-avoir") {
                 if (modificationWatcher) {
                     openModalConfirmation(
@@ -863,6 +874,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
                     // bsModalConfirmation.hide();
                 }
+            } else if (event.target.classList.contains("search-result")) {
+                console.log("chossed fact");
+                console.log(event);
+
+                // console.log(getDataFacture(event.target));
+                // DefaultModalAvoirInputs(modalAvoirNew, 0);
+                removeItemRows(modalAvoirNew.querySelectorAll(".item-commande-row"));
+                let val = event.target.value;
+                fillHeadersFactureOrigin(modalAvoirNew, getDataFacture(event.target)[0]);
+                fillInputsDetailsItems(getDataFacture(event.target)[1], modalAvoirNew.querySelector('#table-avoir'), 'new');
+
             } else if (event.target.id == "btn-validate-new") {
                 if (modificationWatcher) {
                     //     openModalConfirmation(
@@ -920,6 +942,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("searching fact");
                 // console.log(event.inputType);
                 let hint = event.target.value.trim();
+                // TODO : sanitize hint
                 if (hint) {
                     let selection;
                     let LIs = myList.querySelectorAll("li");
@@ -958,15 +981,28 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     }
                 }
-                // clientDataList.innerHTML = "";
-                // clearTimeout(typingTimer);
-                // let term = event.target.value.trim();
-                // if (term) {
-                //     // TODO : sanitize here
-                //     clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
-                //     typingTimer = setTimeout(() => { searchLive(term, factureDataList, "facture") }, 1500);
-                // }
-            } else if ((event.target.id === "fact-origin") && (!event.key) && (!["deleteContentBackward", "deleteContentForward"].includes(event.inputType))) {
+
+                // } else if ((event.target.id === "fact-origin") && (!event.key) && (!["deleteContentBackward", "deleteContentForward"].includes(event.inputType))) {
+                //     console.log("chossed fact");
+                //     console.log(event);
+
+                //     console.log(getDataFacture(event.target.value));
+                //     // DefaultModalAvoirInputs(modalAvoirNew, 0);
+                //     removeItemRows(modalAvoirNew.querySelectorAll(".item-commande-row"));
+                //     let val = event.target.value;
+                //     fillHeadersFactureOrigin(modalAvoirNew, getDataFacture(event.target.value)[0]);
+                //     fillInputsDetailsItems(getDataFacture(event.target.value)[1], modalAvoirNew.querySelector('#table-avoir'), 'new');
+                //     // if (event.target.parentNode.parentNode.querySelector("#item-quantity").value > 0) {
+                //     //     fillItemNameAndPrice(event.target, 0);
+                //     // } else {
+                //     //     fillItemNameAndPrice(event.target, 1);
+                //     // }
+                //     // const itemTotalPriceInputs = modalCommandeNew.querySelectorAll(".item-prix-total");
+                //     // console.log("itemTotalPriceInputs");
+                //     // console.log(itemTotalPriceInputs);
+                //     // updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
+                //     // updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+            } else if (event.target.classList.contains("search-result")) {
                 console.log("chossed fact");
                 console.log(event);
 
@@ -976,16 +1012,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 let val = event.target.value;
                 fillHeadersFactureOrigin(modalAvoirNew, getDataFacture(event.target.value)[0]);
                 fillInputsDetailsItems(getDataFacture(event.target.value)[1], modalAvoirNew.querySelector('#table-avoir'), 'new');
-                // if (event.target.parentNode.parentNode.querySelector("#item-quantity").value > 0) {
-                //     fillItemNameAndPrice(event.target, 0);
-                // } else {
-                //     fillItemNameAndPrice(event.target, 1);
-                // }
-                // const itemTotalPriceInputs = modalCommandeNew.querySelectorAll(".item-prix-total");
-                // console.log("itemTotalPriceInputs");
-                // console.log(itemTotalPriceInputs);
-                // updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
-                // updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+
             } else if (event.target.id == "item-quantity") {
                 console.log("qtt called");
                 updateItemTotalPrice(event.target.parentNode.parentNode)

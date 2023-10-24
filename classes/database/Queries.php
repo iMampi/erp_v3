@@ -13,6 +13,7 @@ class Queries
     static public $filter_categorie = "select * from categories";
     static public $filter_famille = "select * from familles";
     static public $filter_place = "select * from magasins";
+    static public $filter_facture = "select * from factures_client";
     static public $filter_item = "select code,name,type_item,categorie, famille,prix_vente, prix_achat_mp,declarable from view_all_items";
     static public $selection_items = "select code,name,prix_vente from items";
     static public $selection_clients = "select uid,noms,prenoms,nom_commercial,raison_sociale from view_all_clients";
@@ -541,6 +542,9 @@ class Queries
                 break;
             case 'filter_items':
                 $this->query = self::$filter_item;
+                break;
+            case 'filter_factures':
+                $this->query = self::$filter_facture;
                 break;
             case 'selection_items':
                 $this->query = self::$selection_items;

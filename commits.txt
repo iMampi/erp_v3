@@ -849,4 +849,12 @@ checkout branching for implementing me custom select-picker.
 125_a:
 changed and fixed layout of select-picker;
 changed eventhandler and facture for livesearch of facture.
-still fixing some details...
+-------------------------
+126_a:
+still fixing some details...details fixed
+i found out that i started with "one_facture_client_details" for facture selection. this is wrong. i am changing it to "filtered_facture_client". So i am creating it from the ground up... SO I WAS WRONG AGAIN. because of the difficulties to make a filter for facturess's headers and with the factures'items list, i went back and just fixed addDatalistElement() by adding :
+if (mode === "facture") {
+    arrayData = [arrayData]
+}
+now the btn fills out with num-facture.
+selecting a diffrent num-fact clean the form and fill the form with the new data.
