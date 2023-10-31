@@ -1,4 +1,4 @@
-var currentUser;
+// var currentUser;
 
 const TODAY = luxon.DateTime.now().toFormat('yyyy-MM-dd');
 var modificationWatcher = false;
@@ -15,8 +15,8 @@ const URL_TABLE_DETAILS_OBJ = {
 
 const DefaultValuesAvoirNewFormObj = {
     "num-avoir": "",
-    "fact-origin": "",
-    "commercial": "",
+    "fact-origin": "Select Facture",
+    "commercial": currentUser,
     "client": "",
     "date": TODAY,
     "note": "",
@@ -340,11 +340,12 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
 }
 
 function fillInputsDetailsItem(arrayData, rowNode, mode) {
+    // TODO : to test when data mock available
     if (!['new', 'view'].includes(mode)) {
         throw new Error("Mode must be 'new' or 'view'.");
     }
     let idToKey = {
-        "initial-quantity": "quantity",
+        "initial-quantity": "remaining_quantity",
         "row-uid": "uid",
         "item-uid": "item_uid",
         "item-name": "item_name",
@@ -352,16 +353,18 @@ function fillInputsDetailsItem(arrayData, rowNode, mode) {
         "item-pu": "prix_unitaire",
     }
     if (mode === "view") {
-        idToKey["item-quantity"] = "quantity";
+        idToKey["item-quantity"] = "remaining_quantity";
     } else {
-        rowNode.querySelector("#item-quantity").setAttribute("max", arrayData["quantity"]);
-        rowNode.querySelector("#initial-quantity").textContent = arrayData["quantity"];
+        rowNode.querySelector("#item-quantity").setAttribute("max", arrayData["remaining_quantity"]);
+        rowNode.querySelector("#initial-quantity").textContent = arrayData["remaining_quantity"];
     }
     let inputs = rowNode.querySelectorAll(".input");
     for (let k = 0; k < inputs.length; k++) {
         let input = inputs[k];
         if (["item-prix-total", "item-quantity"].includes(input.id)) {
             input.value = 0;
+        } else if (input.id === "item-pu") {
+            input.value = formatNumber(arrayData[idToKey[input.id]]);
         } else {
             input.value = arrayData[idToKey[input.id]];
         }
@@ -446,19 +449,17 @@ function cleanNewForm(modal, disable = false) {
 
     inputsForm.forEach((input) => {
         // console.log(input);
-        if (array1.includes(input.id)) {
-            input.disabled = true;
-        } else {
-            input.disabled = disable;
-        }
+        input.disabled = array1.includes(input.id);
+
         let myValue = DefaultValuesAvoirNewFormObj[input.id];
         if (myValue == undefined) {
-            myValue = DefaultValuesAvoirNewFormObj[input.id];
-            if (myValue == undefined) {
-                return false;
-            }
+            return false;
         }
         input.value = myValue;
+        console.log(input.tagName);
+        if (input.tagName == "BUTTON") {
+            input.textContent = DefaultValuesAvoirNewFormObj[input.id];
+        }
     });
 }
 
@@ -580,7 +581,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function searchFacture(inputObj) {
         console.log("searching Facture");
-        let url = "/database/select/one_facture_client_details.php";
+        let url = "/database/select/one_facture_client_details_for_avoir.php";
         // let url = "/database/select/select_filtered_factures.php";
         let response = await sendData(url, inputObj);
 
@@ -738,10 +739,17 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         } else {
             console.log("empty arrayy");
-            let option_ = document.createElement("option");
-            option_.value = "Néant";
-            option_.label = "aucun résultat pour \"" + term + "\"";
-            datalistNode.append(option_);
+
+            let newLi = document.createElement("li");
+            newLi.classList.add("dropdown-item", "fst-italic", "search-result");
+            newLi.textContent = "aucun résultat pour \"" + term + "\"";
+            datalistNode.append(newLi);
+
+
+            // let option_ = document.createElement("option");
+            // option_.value = "Néant";
+            // option_.label = "aucun résultat pour \"" + term + "\"";
+            // datalistNode.append(option_);
             return;
         }
 
@@ -927,19 +935,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
                     typingTimer = setTimeout(() => { searchLive(term, clientDataList, "client") }, 1500);
                 }
-            } else if ((event.target.id === "fact-origin") && (["insertText"].includes(event.inputType))) {
-                console.log("searching fact");
-                console.log(event.inputType);
-                clientDataList.innerHTML = "";
-                clearTimeout(typingTimer);
-                let term = event.target.value.trim();
-                if (term) {
-                    // TODO : sanitize here
-                    clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
-                    typingTimer = setTimeout(() => { searchLive(term, factureDataList, "facture") }, 1500);
-                }
+                // } else if ((event.target.id === "fact-origin") && (["insertText"].includes(event.inputType))) {
+                //     console.log("searching fact1");
+                //     console.log(event.inputType);
+                //     clientDataList.innerHTML = "";
+                //     clearTimeout(typingTimer);
+                //     let term = event.target.value.trim();
+                //     if (term) {
+                //         // TODO : sanitize here
+                //         clientDataList.innerHTML = "<li  value='Searching for \"" + event.target.value.trim() + "\"'></li>";
+                //         typingTimer = setTimeout(() => { searchLive(term, factureDataList, "facture") }, 1500);
+                //     }
             } else if (event.target.id === "search-facture") {
-                console.log("searching fact");
+                console.log("searching fact2");
                 // console.log(event.inputType);
                 let hint = event.target.value.trim();
                 // TODO : sanitize hint

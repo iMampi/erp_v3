@@ -25,13 +25,15 @@ is_logged();
     <script src="/js/luxon.min.js"></script>
     <script src="/js/helpers.js"></script>
 
-    <script src="/js/fixed-header.js"></script>
+    <script src="/js/fixed-header.js" defer></script>
     <link rel="stylesheet" href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
     <script src="/js/server-communication.js"></script>
 
-    <script src="/js/confirmation.js"></script>
-    <script src="/js/toast.js"></script>
-    <script src="/js/avoir-clt-main.js"></script>
+    <script src="/js/confirmation.js" defer></script>
+    <script src="/js/toast.js" defer></script>
+    <script src="/js/avoir-clt-main.js" defer></script>
+    <?php
+    echo "<script> const currentUser =\"" . $_SESSION["user"]->uid . "//" . $_SESSION["user"]->name . "\";</script>;" ?>
     <link rel="stylesheet" href="/style/mampi.css">
     <title>avoir client</title>
 
@@ -118,7 +120,7 @@ is_logged();
                     <div class="modal-content">
 
                         <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">nouvel avoir</h5>
+                            <h5 class="modal-title" id="staticBackdropLabel">nouvel avoir</h5>
                         </div>
                         <div class="modal-body">
 

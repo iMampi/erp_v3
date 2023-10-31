@@ -858,3 +858,9 @@ if (mode === "facture") {
 }
 now the btn fills out with num-facture.
 selecting a diffrent num-fact clean the form and fill the form with the new data.
+-------------------------
+127_a:
+when cleaning form facture based, clean the btn...>> cleaning btn(select-picker) is ok.
+const currentUser is created via php directly.
+modified addDatalistElement() : the last part for no result was still using OPTION tag instead of LI tag. now fixed. gonna have to change all other field still stuck with datalist;
+fillInputsDetailsItem() : added formatNumber() into algo for item-pu;

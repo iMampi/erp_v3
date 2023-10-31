@@ -18,6 +18,7 @@ class Queries
     static public $selection_items = "select code,name,prix_vente from items";
     static public $selection_clients = "select uid,noms,prenoms,nom_commercial,raison_sociale from view_all_clients";
     static public $selection_commande_items = "select * from view_all_commandes_details where commande_uid=?";
+    static public $selection_commande_items_for_avoir = "select *, sum(quantity) as remaining_quantity from view_all_commandes_details where commande_uid=? group by item_uid";
 
     static public $update_client = "
         select update_client(?,
@@ -554,6 +555,9 @@ class Queries
                 break;
             case 'selection_commande_items':
                 $this->query = self::$selection_commande_items;
+                break;
+            case 'selection_commande_items_for_avoir':
+                $this->query = self::$selection_commande_items_for_avoir;
                 break;
 
             default:

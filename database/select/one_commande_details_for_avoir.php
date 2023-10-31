@@ -18,7 +18,7 @@ new DbHandler();
 
 
 if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_visit("commande"))) {
-// if (\true) {
+    // if (\true) {
     $data = json_decode(file_get_contents('php://input'), true);
     // var_dump($data);
 
