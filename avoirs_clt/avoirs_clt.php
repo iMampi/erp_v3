@@ -112,7 +112,7 @@ is_logged();
             </div>
             <!-- end modal choose type new avoir-->
             <!-- modal avoir new -->
-            <div class="modal fade bg-confirmation" id="modal-avoir-new" tabindex="-1">
+            <div class="modal fade bg-confirmation" id="modal-avoir-new-based" tabindex="-1">
                 <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Close">
                 </button>
                 <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-xxl-down">

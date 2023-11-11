@@ -47,6 +47,8 @@ class NewCommandeHeader extends Converter
 
         $this->data_for_db["state"] = \array_key_exists("state", $input) ? \intval($input["state"]) != "" ?  \intval($input["state"]) : 1 : 1;
 
+        $this->data_for_db["type"] = \array_key_exists("type", $input) ? \intval($input["type"]) != "" ?  \intval($input["type"]) : 1 : 1;
+
         $this->data_for_db["remise_taux"] = \array_key_exists("remise-taux", $input) ? \floatval($input["remise-taux"]) != "" ?  \floatval($input["remise-taux"]) : 0 : 0;
 
         $this->data_for_db["remise_montant"] = \array_key_exists("remise-montant", $input) ? \floatval($input["remise-montant"]) != "" ?  \floatval($input["remise-montant"]) : 0 : 0;

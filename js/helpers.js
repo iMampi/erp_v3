@@ -71,6 +71,8 @@ function formatedNumberToFloat(val) {
 	}
 }
 
+
+
 //add "0" to the left as padding according to the length defined
 function zeroLeftPadding(number, targetLength, forceSign) {
 	var absNumber = "" + Math.abs(number),

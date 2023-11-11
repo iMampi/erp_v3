@@ -22,5 +22,6 @@ class NewCommandeItem extends Converter
         $this->data_for_db["num_serie"] = $input[4];
         $this->data_for_db["commande_uid"] = \intval($input[5]);
         $this->data_for_db["prix_total"] = \number_format($this->data_for_db["quantity"] * $this->data_for_db["prix_unitaire"], 2, ".", "");
+        $this->data_for_db["commande_initial_uid"] = \count($input) == 7 ? \intval($input[6]) : \null;
     }
 }

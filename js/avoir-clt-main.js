@@ -83,6 +83,9 @@ const DEFAULT_BUTTONS_DISABLED_STATE_AVOIR_NEW = {
 
 // }
 
+const ToastShowClosured = showMe();
+
+
 //PRICE MANIPULATION
 function updateTotalPrice(baseMontantInput, priceListNode) {
     console.log("updateTotalPrice");
@@ -141,6 +144,102 @@ function TVAHandler(discountedMontantInput, TVAInput, TotalTTCInput, mode) {
     }
 }
 
+async function responseHandlerSaveAvoirNew(response) {
+    try {
+        let myjson = JSON.parse(await response);
+        //NOTE : the correct way for save. not correct for select query
+        //NOTE : works for error also
+        // TODO : handle for when it is an error
+        // TODO : all seems to use the same logic. DRY in all others occurence
+        console.log("myjson");
+        console.log(myjson);
+        if (myjson[0]) {
+            return ["success", Object.values(myjson[1])[0]];
+        } else {
+            return ["failure", Object.values(myjson[1])[0]];
+        }
+    } catch (e) {
+        // TODO : comment me
+        return "error js: " + e;
+    }
+}
+
+function grabAvoirDataForm(modal) {
+    let data = { header: {}, items: [] };
+    const headersName = ["num-avoir", "fact-origin", "commande-uid", "commercial", 'type', "state", "client", "date", "note", "magasin", "totalHT-avant-remise", "totalTTC-avant-remise", "remise-taux", "remise-montant", "totalHT-apres-remise", "totalTTC-apres-remise"];
+    //grab only essential headers data
+    //grab only essential item data
+    // TODO : refactor me
+    let headerInputs;
+    let tableBodyRows;
+    if (modal.id === "modal-details") {
+        headerInputs = modal.querySelector("#commande-header").querySelectorAll(".input");
+        tableBodyRows = modal.querySelector("#table-facture").querySelector('tbody').querySelectorAll("tr");
+    } else {
+        headerInputs = modal.querySelector("#new-modal-body-heads").querySelectorAll(".input");
+        tableBodyRows = modal.querySelector("#new-modal-body-table").querySelector('tbody').querySelectorAll("tr");
+    }
+
+    headerInputs.forEach(input => {
+        try {
+            if (headersName.includes(input.id)) {
+                data["header"][input.id] = getInputValue(input)
+            }
+        } catch (error) {
+            console.log("ehrror : " + error);
+        }
+    });
+
+    // console.log(tableBodyRows);
+    tableBodyRows.forEach(row => {
+        // console.log(row);
+        let rowID = row.querySelector("#row-uid").value;
+        let itemID = row.querySelector("#item-uid").value;
+        let quantity = row.querySelector("#item-quantity").value;
+        let prixUnitaire = row.querySelector("#item-pu").value;
+        let numSerie = row.querySelector("#num-serie").value;
+        data["items"].push([rowID, itemID, quantity, prixUnitaire, numSerie]);
+    });
+    return data;
+}
+
+async function saveAvoirNew(inputObj) {
+    console.log("saving avoir");
+    formatFloatsForDatabase(inputObj);
+    // console.log("data");
+    // console.log(data);
+    let url = "/database/save/new_avoir.php";
+    let response = await sendData(url, inputObj);
+
+    console.log("errore?");
+    console.log(response);
+    let result = await responseHandlerSaveAvoirNew(response);
+    if (result[0] == "success") {
+        ToastShowClosured(result[0], "Commandes sauvegardées avec succès");
+    } else if (result[0] == "failure") {
+        ToastShowClosured(result[0], "Echec de la sauvegarde de la commande");
+    } else {
+        throw new Error("wrong value returned");
+    }
+    return [result[0] == "success", result[1]];
+}
+
+function formatFloatsForDatabase(inputObj) {
+    //TODO : to put in helpers.js
+    const keysWithNumbers = ["remise-montant", "remise-taux", "totalHT-apres-remise", "totalHT-avant-remise", "totalTTC-apres-remise", "totalTTC-avant-remise"];
+    let headersKeys = Object.keys(inputObj["header"])
+    headersKeys.forEach(key => {
+        if (keysWithNumbers.includes(key)) {
+            inputObj["header"][key] = formatedNumberToFloat(inputObj["header"][key]);
+        }
+    });
+    inputObj["items"].forEach(row_array => {
+        row_array[2] = formatedNumberToFloat(row_array[2]);
+        row_array[3] = formatedNumberToFloat(row_array[3]);
+    });
+    return inputObj
+}
+
 function generateRowItem(nodeModel, DataObj) {
     // console.log(DataObj);
     let newNode = nodeModel.cloneNode(true);
@@ -151,6 +250,7 @@ function generateRowItem(nodeModel, DataObj) {
 
 function fillHeadersFactureOrigin(modalNode, headersData) {
     modalNode.querySelector('#fact-origin').textContent = headersData['num_facture'];
+    modalNode.querySelector('#commande-uid').value = headersData['commande_uid'];
     modalNode.querySelector('#client').value = formatStringClientName(headersData);
     modalNode.querySelector('#totalHT-avant-remise').value = "0.00";
     modalNode.querySelector('#TVA-avant-remise').value = "0.00";
@@ -187,7 +287,7 @@ function addItem(tableFactureBody, mode) {
                 input_.disabled = input_.id != "item-quantity";
             });
             trModel.querySelector("#btn-new-item").disabled = true;
-            trModel.querySelector("#btn-del-item").disabled = tableFactureBody.parentNode.parentNode.parentNode.parentNode.parentNode.id == "modal-avoir-new";
+            trModel.querySelector("#btn-del-item").disabled = tableFactureBody.parentNode.parentNode.parentNode.parentNode.parentNode.id == "modal-avoir-new-based";
 
             console.log("trModel");
             console.log(trModel);
@@ -222,7 +322,7 @@ function addItem(tableFactureBody, mode) {
                         input_.disabled = input_.id != "item-quantity";
                     });
                     trModel.querySelector("#btn-new-item").disabled = true;
-                    trModel.querySelector("#btn-del-item").disabled = tableFactureBody.parentNode.parentNode.parentNode.parentNode.parentNode.id == "modal-avoir-new";
+                    trModel.querySelector("#btn-del-item").disabled = tableFactureBody.parentNode.parentNode.parentNode.parentNode.parentNode.id == "modal-avoir-new-based";
 
                     console.log("trModel");
                     console.log(trModel);
@@ -406,6 +506,12 @@ function openNewAvoirFactureBased(modal, bsModal) {
 
 }
 
+function getInputValue(node) {
+    if (node.tagName == "BUTTON") {
+        return node.textContent;
+    }
+    return node.value;
+}
 
 function removeItem(target, mode) {
     console.log("remove me");
@@ -433,7 +539,7 @@ function removeItemRows(nodeList) {
 function defaultButtons(modal) {
     const refObj = {
         "modal-details": DEFAULT_BUTTONS_DISABLED_STATE_AVOIR_DETAILS,
-        'modal-avoir-new': DEFAULT_BUTTONS_DISABLED_STATE_AVOIR_NEW
+        'modal-avoir-new-based': DEFAULT_BUTTONS_DISABLED_STATE_AVOIR_NEW
     };
     let btns = modal.querySelectorAll(".btn");
     btns.forEach(myBtn => {
@@ -511,7 +617,7 @@ document.addEventListener("DOMContentLoaded", () => {
         focus: true,
     });
 
-    const modalAvoirNew = document.getElementById("modal-avoir-new");
+    const modalAvoirNew = document.getElementById("modal-avoir-new-based");
     const bsModalAvoirNew = new bootstrap.Modal(modalAvoirNew, {
         backdrop: "static",
         keyboard: false,
@@ -561,6 +667,39 @@ document.addEventListener("DOMContentLoaded", () => {
             bsModalConfirmation.hide();
         },
     };
+
+    const saveNewAvoirObj = {
+        message:
+            "Des champs ont été modifiés.<br>\
+				Vos modifications vont être enregistrées de facon définitive.<br>\
+				Êtes vous sûr de vouloir sauvegarder vos modifications?",
+        yes: () => {
+
+            let dataModalAvoirNew = grabAvoirDataForm(modalAvoirNew);
+            console.log("dataModalAvoirNew");
+            console.log(dataModalAvoirNew);
+            saveAvoirNew(dataModalAvoirNew).then((result) => {
+
+                console.log(result);
+                return;
+                if (result[0]) {
+                    // insert uid of newly created client
+
+                    bsModalCommandeNew.hide();
+                    DefaultModalCommandInputs(modalCommandeNew);
+                    bsModalConfirmation.hide();
+                    console.log("yes saving called");
+                    return false;
+
+                } else {
+                    //TODO : show error
+                    return true;
+                }
+
+                bsModalCommandeNew.hide();
+            })
+        }
+    }
 
     //FUNCTIONS
 
@@ -873,12 +1012,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 // console.log("remove");
                 // updateTotalPrice(montantHTAvantRemiseInputNew, modalCommandeNew.querySelectorAll("#item-prix-total"))
                 // updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
-            } else if (event.target.id == "btn-save-new") {
+            } else if (event.target.id == "btn-create-avoir") {
                 if (modificationWatcher) {
-                    //     openModalConfirmation(
-                    //         confirmationObj,
-                    //         saveCreationObj
-                    //     );
+                    openModalConfirmation(
+                        confirmationObj,
+                        saveNewAvoirObj
+                    );
                 } else {
                     // bsModalConfirmation.hide();
                 }

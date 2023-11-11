@@ -120,7 +120,7 @@ class Bindings
                 $arr["user_uid"],
 
             ];
-        } else if ($this->converter::class == "Converter\NewCommandeHeader") {
+        } else if ($this->converter::class == \in_array($this->converter::class, ["Converter\NewCommandeHeader", "Converter\NewCommandeAvoirHeader"])) {
             $this->binding = [
                 'isisiidddddd',
                 $arr["client_uid"],
@@ -142,15 +142,24 @@ class Bindings
                 $arr["commande_uid"],
                 $arr["user_uid"]
             ];
-        } else if ($this->converter::class == "Converter\NewCommandeItem") {
+        } else if ($this->converter::class == "Converter\NewAvoirClient") {
             $this->binding = [
-                'issddd',
+                'iiii',
+                $arr["commande_uid"],
+                $arr["facture_client_uid"],
+                $arr["type"],
+                $arr["user_uid"]
+            ];
+        } else if (\in_array($this->converter::class, ["Converter\NewCommandeItem", "Converter\NewCommandeAvoirItem"])) {
+            $this->binding = [
+                'issdddi',
                 $arr["commande_uid"],
                 $arr["item_uid"],
                 $arr["num_serie"],
                 $arr["quantity"],
                 $arr["prix_unitaire"],
-                $arr["prix_total"]
+                $arr["prix_total"],
+                $arr["commande_initial_uid"]
             ];
         } else if ($this->converter::class == "Converter\NewEmployee") {
             $this->binding = [

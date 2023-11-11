@@ -139,7 +139,8 @@ class Queries
         description_item=?,
         quantity=?,
         prix_unitaire=?,
-        prix_total=?
+        prix_total=?,
+        commande_initial_uid=?,
         where uid=?
         ";
 
@@ -331,10 +332,13 @@ class Queries
         select new_commande (?,?,?,?,?,?,?,?,?,?,?,?)
         ";
     static public $save_new_commande_row = "
-        insert into commandes_details values (NULL,?,?,?,?,?,?)
+        insert into commandes_details values (NULL,?,?,?,?,?,?,?)
         ";
     static public $save_new_facture_client = "
         select new_facture_client (?,?)
+        ";
+    static public $save_new_avoir_client = "
+        select new_avoir_client (?,?,?,?)
         ";
     static public $save_new_employee = "
         select new_employee(
@@ -411,6 +415,9 @@ class Queries
                 break;
             case 'save_new_facture_client':
                 $this->query = self::$save_new_facture_client;
+                break;
+            case 'save_new_avoir_client':
+                $this->query = self::$save_new_avoir_client;
                 break;
             case 'select_all_clients':
                 $this->query = self::$select_all_clients;

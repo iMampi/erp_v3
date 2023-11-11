@@ -864,3 +864,12 @@ when cleaning form facture based, clean the btn...>> cleaning btn(select-picker)
 const currentUser is created via php directly.
 modified addDatalistElement() : the last part for no result was still using OPTION tag instead of LI tag. now fixed. gonna have to change all other field still stuck with datalist;
 fillInputsDetailsItem() : added formatNumber() into algo for item-pu;
+-------------------------
+128_a:
+added #commande-uid input hidden.
+renamed modal-avoir-new into modal-avoir-new-based in html base.
+database modified. added field "commande_initial_uid" in "commande_details" table.
+working on saving avoir factre based...
+le cycle de sauvregarde pour un avoir fature based marche. le back end en tout cas.
+la base a été modifié 3 fois.
+il rest à arranger tout le process apres le toast et le grab returnable quantity when creating  avoir fature based...
