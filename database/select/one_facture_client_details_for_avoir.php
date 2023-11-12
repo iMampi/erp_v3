@@ -1,5 +1,6 @@
 <?php
 
+use Converter\SelectionCommandeAvoirItems;
 use Database\Queries;
 use Database\Bindings;
 use Database\DbHandler;
@@ -36,9 +37,9 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_visit("facture_client"))) {
             $data["uid"] = $commande_headers[1][0]["commande_uid"];
         }
     }
-    $SelectionCommandeItems = new SelectionCommandeItems($data);
+    $SelectionCommandeAvoirItems = new SelectionCommandeAvoirItems($data);
     $QueryDetails = new Queries("selection_commande_items_for_avoir");
-    $BindingDetails = new Bindings($SelectionCommandeItems);
+    $BindingDetails = new Bindings($SelectionCommandeAvoirItems);
     $StatementDetails = new StandardPreparedStatement($QueryDetails, $BindingDetails);
 
     $commande_items = DbHandler::execute_prepared_statement($StatementDetails, \MYSQLI_ASSOC);

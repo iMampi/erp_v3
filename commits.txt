@@ -873,3 +873,6 @@ working on saving avoir factre based...
 le cycle de sauvregarde pour un avoir fature based marche. le back end en tout cas.
 la base a été modifié 3 fois.
 il rest à arranger tout le process apres le toast et le grab returnable quantity when creating  avoir fature based...
+-------------------------
+129_a:
+i fixed the process where it calculate correctly the sum or "avoirable item." : new php file were created. new routes appeared. database was modified. now it works.

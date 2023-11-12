@@ -377,6 +377,12 @@ class Bindings
                 'i',
                 $this->converter->data_for_db["uid"]
             ];
+        } elseif ($this->converter::class == "Converter\SelectionCommandeAvoirItems") {
+            $this->binding = [
+                'ii',
+                $this->converter->data_for_db["uid"],
+                $this->converter->data_for_db["uid"]
+            ];
         } elseif ($this->converter::class == "Converter\SelectOneItem") {
             $this->binding = [
                 's',
