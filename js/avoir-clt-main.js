@@ -679,11 +679,11 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("dataModalAvoirNew");
             console.log(dataModalAvoirNew);
             saveAvoirNew(dataModalAvoirNew).then((result) => {
-
                 console.log(result);
-                return;
                 if (result[0]) {
                     // insert uid of newly created client
+                    dataModalAvoirNew["header"]["uid"] = result[1][0];
+                    return;
 
                     bsModalCommandeNew.hide();
                     DefaultModalCommandInputs(modalCommandeNew);

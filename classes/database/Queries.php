@@ -211,9 +211,9 @@ class Queries
         order by num_facture, datetime desc limit 20 ;
         ";
     static public $select_all_avoirs_client_header_limit = "
-        select num_avoir,client_uid, type, datetime, total_ttc
+        select num_avoir,commande_uid,client_uid,noms,prenoms,nom_commercial,raison_sociale, datetime, total_ttc_apres_remise
         from view_all_avoirs_client_headers 
-        order by num_facture, datetime desc limit 20 ;
+        order by num_avoir, datetime desc limit 20 ;
         ";
     static public $select_all_employees_name = "
         call all_employees_active_only 
@@ -461,6 +461,9 @@ class Queries
                 break;
             case 'select_all_factures_client_header_limit':
                 $this->query = self::$select_all_factures_client_header_limit;
+                break;
+            case 'select_all_avoirs_client_header_limit':
+                $this->query = self::$select_all_avoirs_client_header_limit;
                 break;
             case 'select_one_client':
                 $this->query = self::$select_one_client;

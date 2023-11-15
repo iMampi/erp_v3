@@ -30,7 +30,6 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("avoir_client"))) {
     $Statement = new StandardPreparedStatement($Query1, $Binding);
     $temp_array_result = DbHandler::execute_prepared_statement($Statement, MYSQLI_NUM);
     $data["header"]["uid"] = $temp_array_result[1][0][0];
-
     // echo "<br>jk<br>";
     // var_dump($temp_array_result);
     if (!$temp_array_result) {
@@ -69,11 +68,14 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("avoir_client"))) {
             try {
                 if ($data["header"]["state"] === "3") {
 
-                    $NewAvoirClientObj = new NewAvoirClient([$data["header"]["commande-uid"], $data["header"]["commercial"], $data["header"]["type"], $data["header"]["fact-origin"]]);
+                    $NewAvoirClientObj = new NewAvoirClient([$data["header"]["uid"], $data["header"]["commercial"], $data["header"]["type"], $data["header"]["fact-origin"]]);
                     $Query3 = new Queries("save_new_avoir_client");
                     $Binding3 = new Bindings($NewAvoirClientObj);
                     $Statement3 = new StandardPreparedStatement($Query3, $Binding3);
                     $temp_array_result_fact = DbHandler::execute_prepared_statement($Statement3, MYSQLI_NUM);
+                } else {
+                    $conn->rollback();
+                    print("error06 : not correct state");
                 }
             } catch (\Throwable $th) {
                 $conn->rollback();

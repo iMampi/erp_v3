@@ -24,7 +24,7 @@ $row_counter = 1;
 
 
 // if (can_visit($cycle_facture_client)) {
-if (false) {
+if (can_visit("avoir_client")) {
     try {
         require_once __DIR__ . "/../../database/select/all_avoirs_client_header_limit.php";
         foreach ($all_avoirs_client_header_limit as $el) {
@@ -47,12 +47,14 @@ if (false) {
                     $el_input->setAttribute("value", date_format(date_create($el["datetime"]), "Y-m-d"));
                 } elseif (in_array("num-avoir", $classes_array)) {
                     $el_input->setAttribute("value", $el["num_avoir"]);
+                } elseif (in_array("commande-uid", $classes_array)) {
+                    $el_input->setAttribute("value", $el["commande_uid"]);
                 } elseif (in_array("total", $classes_array)) {
-                    $el_input->setAttribute("value", $el["total_ttc"]);
+                    $el_input->setAttribute("value", $el["total_ttc_apres_remise"]);
                 } elseif (in_array("facture-client", $classes_array)) {
                     $el_input->setAttribute("value", $el["facture_client_uid"]);
-                } elseif (in_array("type", $classes_array)) {
-                    $el_input->setAttribute("value", $state_of_payment[$el["type"]]);
+                    // } elseif (in_array("type", $classes_array)) {
+                    //     $el_input->setAttribute("value", $state_of_payment[$el["type"]]);
                 } elseif (in_array("client", $classes_array)) {
 
                     if (!trim($el['raison_sociale'])) {

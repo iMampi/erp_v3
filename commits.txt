@@ -876,3 +876,12 @@ il rest à arranger tout le process apres le toast et le grab returnable quantit
 -------------------------
 129_a:
 i fixed the process where it calculate correctly the sum or "avoirable item." : new php file were created. new routes appeared. database was modified. now it works.
+-------------------------
+130_a:
+there were bugs in the previous commits :
+-wrong query while saving new avoir
+-wrong key in saving new avoir
+-created a view_all_avoirs_client_headers_limit
+-added hidden input for the table list of avoir html
+-modified the table list of avoir html
+-fixed the table list of avoir generation
