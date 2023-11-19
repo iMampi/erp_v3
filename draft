@@ -21,3 +21,12 @@ select `erpv2`.`avoirs_client`.`num_avoir` AS `num_avoir`,
 `view_all_commandes_headers`.`magasin_uid` AS `magasin_uid`,
 `view_all_commandes_headers`.`magasin_name` AS `magasin_name` 
 from ((`erpv2`.`avoirs_client` join `erpv2`.`view_all_commandes_headers` on(`erpv2`.`avoirs_client`.`commande_uid` = `view_all_commandes_headers`.`uid`)) join `erpv2`.`users` on(`erpv2`.`users`.`uid` = `erpv2`.`avoirs_client`.`user_uid`))
+
+
+INSERT INTO `commandes`(`uid`, `client_uid`, `date`, `magasin_uid`, `libelle`, `state`, `user_uid`, `datetime`, `total_ht_avant_remise`, `total_ttc_avant_remise`, `remise_taux`, `remise_montant`, `total_ht_apres_remise`, `total_ttc_apres_remise`) VALUES (NULL,'18','2023-11-16','1','manuel','3','1',NULL,'-198000.00','-198000.00','0','0','-198000.00','-198000.00')
+
+
+
+
+
+

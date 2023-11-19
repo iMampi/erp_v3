@@ -885,3 +885,14 @@ there were bugs in the previous commits :
 -added hidden input for the table list of avoir html
 -modified the table list of avoir html
 -fixed the table list of avoir generation
+-------------------------
+131_a:
+change the function new_commande in mysq. removed the parametter  unsigned""to save avoirdetails correctly;
+now working on  close confirmation, clean form, add nez line on table recap, js format value to support negative value...
+when saving :
+-clean form : ok
+-close modal confirmation : ok
+-close modal form : ok
+-toast is : ok 
+-add new line to table : ok
+

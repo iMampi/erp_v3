@@ -15,8 +15,8 @@ class NewCommandeAvoirHeader extends NewCommandeHeader
     public function negative_numbers()
     {
         $this->data_for_db["total_ht_avant_remise"] = $this->data_for_db["total_ht_avant_remise"] * -1;
-        $this->data_for_db["total_ttc_avant_remise"] = $this->data_for_db["total_ht_avant_remise"] * -1;
-        $this->data_for_db["total_ht_apres_remise"] =  $this->data_for_db["total_ht_avant_remise"] * -1;
-        $this->data_for_db["total_ttc_apres_remise"] = $this->data_for_db["total_ht_avant_remise"] * -1;
+        $this->data_for_db["total_ttc_avant_remise"] = $this->data_for_db["total_ttc_avant_remise"] * -1;
+        $this->data_for_db["total_ht_apres_remise"] =  $this->data_for_db["total_ht_apres_remise"] * -1;
+        $this->data_for_db["total_ttc_apres_remise"] = $this->data_for_db["total_ttc_apres_remise"] * -1;
     }
 }

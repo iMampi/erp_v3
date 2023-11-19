@@ -92,6 +92,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("avoir_client"))) {
 
     //just returning the command uid in the end
     if (\str_contains($_SERVER["HTTP_REFERER"], "avoirs_clt.php")) {
+        $temp_array_result_fact[1][0][] = $data["header"]["uid"];
         print(json_encode($temp_array_result_fact));
     } else if (\str_contains($_SERVER["HTTP_REFERER"], "commandes.php")) {
         print(json_encode($temp_array_result));

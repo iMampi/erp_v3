@@ -144,6 +144,79 @@ function TVAHandler(discountedMontantInput, TVAInput, TotalTTCInput, mode) {
     }
 }
 
+function addRowTable(tableBody, dataObj) {
+    return new Promise((resolve, reject) => {
+        console.log("addding new avoir");
+        if (listDOM["tableRow"]) {
+            console.log("from cahce");
+            counterRowItem++;
+            let doc = new DOMParser().parseFromString(
+                listDOM["tableRow"],
+                "text/html"
+            );
+            let trModel = doc.querySelector("#row-001");
+            console.log("trModel");
+            console.log(trModel);
+
+            tableBody.append(
+                generateRowTable(trModel, dataObj)
+            );
+            resolve(true);
+
+        } else {
+
+            fetch("/elements/avoirs_clt/liste_avoirs_clt_table_001_base.html")
+                .then((response) =>
+                    response.text()
+                )
+                .then((txt) => {
+                    // TODO : abstract this process
+                    console.log("from fetch");
+
+                    let doc = new DOMParser().parseFromString(
+                        txt,
+                        "text/html"
+                    );
+
+                    // caching
+                    listDOM["tableRow"] = doc.body.innerHTML;
+
+                    let trModel = doc.querySelector("#row-001");
+                    console.log("trModel");
+                    console.log(trModel);
+
+                    tableBody.append(
+                        generateRowTable(trModel, dataObj)
+                    );
+
+                    // bsModalNew.hide();
+                    // _cleanNewForm();
+                    // console.log("yes saving called");
+                    resolve(true);
+
+
+                });
+        }
+    })
+}
+
+function generateRowTable(nodeModel, DataObj) {
+    //MARQUE PAGE
+    console.log(DataObj);
+    let newNode = nodeModel.cloneNode(true);
+    DataObj["num-avoir"] = zeroLeftPadding(DataObj["num-avoir"], 4)
+    newNode.id = "row-" + DataObj["uid"];
+    // newNode.querySelector("input.uid").value = DataObj["uid"];
+    // TODO : use a dto or something
+    newNode.querySelector(".input.commande-uid").value = DataObj["new-commande-uid"];
+    newNode.querySelector(".input.date").value = DataObj["date"];
+    newNode.querySelector(".client.input").value = DataObj["client"];
+    //TODO : format the numbers
+    newNode.querySelector(".total.input").value = DataObj["totalTTC-apres-remise"]*-1;
+    newNode.querySelector(".num-avoir.input").value = DataObj["num-avoir"];
+    return newNode;
+}
+
 async function responseHandlerSaveAvoirNew(response) {
     try {
         let myjson = JSON.parse(await response);
@@ -214,10 +287,11 @@ async function saveAvoirNew(inputObj) {
     console.log("errore?");
     console.log(response);
     let result = await responseHandlerSaveAvoirNew(response);
+    // TODO ; to refactor
     if (result[0] == "success") {
-        ToastShowClosured(result[0], "Commandes sauvegardées avec succès");
+        ToastShowClosured(result[0], "Avoir sauvegardé avec succès");
     } else if (result[0] == "failure") {
-        ToastShowClosured(result[0], "Echec de la sauvegarde de la commande");
+        ToastShowClosured(result[0], "Echec de la sauvegarde de l'avoir");
     } else {
         throw new Error("wrong value returned");
     }
@@ -611,7 +685,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ////modal new
     const modalChooseNew = document.getElementById("modal-choose-new");
-    const bsModalChooseNew = new bootstrap.Modal(modalChooseNew, {
+    const bsModalChooseNewAvoir = new bootstrap.Modal(modalChooseNew, {
         backdrop: "static",
         keyboard: false,
         focus: true,
@@ -682,21 +756,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log(result);
                 if (result[0]) {
                     // insert uid of newly created client
-                    dataModalAvoirNew["header"]["uid"] = result[1][0];
-                    return;
+                    dataModalAvoirNew["header"]["num-avoir"] = result[1][0];
+                    dataModalAvoirNew["header"]["new-commande-uid"] = result[1][1];
 
-                    bsModalCommandeNew.hide();
-                    DefaultModalCommandInputs(modalCommandeNew);
-                    bsModalConfirmation.hide();
-                    console.log("yes saving called");
-                    return false;
+                    addRowTable(tableBody, dataModalAvoirNew["header"]).then(res => {
+                        //close and clean the rest
+                        bsModalAvoirNew.hide();
+                        bsModalChooseNewAvoir.hide();
+                        DefaultModalAvoirInputs(modalAvoirNew, 0);
+                        bsModalConfirmation.hide();
+                        console.log("yes saving avoir called");
+                        modificationWatcher = false;
+                        return false;
+                    })
+
+
 
                 } else {
                     //TODO : show error
                     return true;
                 }
 
-                bsModalCommandeNew.hide();
             })
         }
     }
@@ -967,7 +1047,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
         divBtns.addEventListener('click', (event) => {
             if (event.target.id == "btn-main-new")
-                bsModalChooseNew.show();
+                bsModalChooseNewAvoir.show();
         })
     } catch (error) {
 
@@ -976,7 +1056,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
         modalChooseNew.addEventListener('click', (event) => {
             if (event.target.id == "btn-cancel") {
-                bsModalChooseNew.hide();
+                bsModalChooseNewAvoir.hide();
             } else if (event.target.id == "btn-avoir-facture") {
                 console.log(
                     "step 1"
