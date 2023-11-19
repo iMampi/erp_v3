@@ -35,7 +35,6 @@ const InputsDisabledByDefaultAvoirNewFormArray = [
     "commercial",
     "client",
     "magasin",
-    "type",
     "note",
     "date",
     "totalHT-avant-remise",
@@ -99,7 +98,7 @@ function updateTotalPrice(baseMontantInput, priceListNode) {
 function updateItemTotalPrice(rowNode) {
     const price = rowNode.querySelector("#item-pu").value;
     const quantity = rowNode.querySelector("#item-quantity").value;
-    rowNode.querySelector("#item-prix-total").value = formatNumber(formatedNumberToFloat(price) * formatedNumberToFloat(quantity));
+    rowNode.querySelector("#item-prix-total").value = formatNumber(formatedNumberToFloat(price) * formatedNumberToFloat(quantity) * -1);
 }
 
 function tauxAndMontantDiscountInputHandler(baseMontantInput, tauxInput, montantInput, mode) {
@@ -212,7 +211,7 @@ function generateRowTable(nodeModel, DataObj) {
     newNode.querySelector(".input.date").value = DataObj["date"];
     newNode.querySelector(".client.input").value = DataObj["client"];
     //TODO : format the numbers
-    newNode.querySelector(".total.input").value = DataObj["totalTTC-apres-remise"]*-1;
+    newNode.querySelector(".total.input").value = formatNumber(DataObj["totalTTC-apres-remise"]);
     newNode.querySelector(".num-avoir.input").value = DataObj["num-avoir"];
     return newNode;
 }
@@ -570,7 +569,8 @@ async function responseHandlerSelectOneCommande(response) {
 
 function openNewAvoirFactureBased(modal, bsModal) {
     modal.querySelectorAll('.input').forEach(element => {
-        element.disabled = element.id !== "fact-origin";
+        // element.disabled = element.id !== "fact-origin";
+        element.disabled = InputsDisabledByDefaultAvoirNewFormArray.includes(element.id);
     });
     modal.querySelectorAll('.btn').forEach(element => {
         // element.disabled = element.id !== 'btn-cancel-avoir';
@@ -691,27 +691,27 @@ document.addEventListener("DOMContentLoaded", () => {
         focus: true,
     });
 
-    const modalAvoirNew = document.getElementById("modal-avoir-new-based");
-    const bsModalAvoirNew = new bootstrap.Modal(modalAvoirNew, {
+    const modalAvoirNewBased = document.getElementById("modal-avoir-new-based");
+    const bsModalAvoirNewBased = new bootstrap.Modal(modalAvoirNewBased, {
         backdrop: "static",
         keyboard: false,
         focus: true,
     });
 
-    const montantHTAvantRemiseInputNew = modalAvoirNew.querySelector("#totalHT-avant-remise");
-    const TVAAvantRemiseInputNew = modalAvoirNew.querySelector("#TVA-avant-remise");
-    const montantTTCAvantRemiseInputNew = modalAvoirNew.querySelector("#totalTTC-avant-remise");
-    const remiseTauxInputNew = modalAvoirNew.querySelector("#remise-taux");
-    const remiseMontantInputNew = modalAvoirNew.querySelector("#remise-montant");
-    const montantHTApresRemiseInputNew = modalAvoirNew.querySelector("#totalHT-apres-remise");
-    const TVAApresRemiseInputNew = modalAvoirNew.querySelector("#TVA-apres-remise");
-    const montantTTCApresRemiseInputNew = modalAvoirNew.querySelector("#totalTTC-apres-remise");
+    const montantHTAvantRemiseInputNew = modalAvoirNewBased.querySelector("#totalHT-avant-remise");
+    const TVAAvantRemiseInputNew = modalAvoirNewBased.querySelector("#TVA-avant-remise");
+    const montantTTCAvantRemiseInputNew = modalAvoirNewBased.querySelector("#totalTTC-avant-remise");
+    const remiseTauxInputNew = modalAvoirNewBased.querySelector("#remise-taux");
+    const remiseMontantInputNew = modalAvoirNewBased.querySelector("#remise-montant");
+    const montantHTApresRemiseInputNew = modalAvoirNewBased.querySelector("#totalHT-apres-remise");
+    const TVAApresRemiseInputNew = modalAvoirNewBased.querySelector("#TVA-apres-remise");
+    const montantTTCApresRemiseInputNew = modalAvoirNewBased.querySelector("#totalTTC-apres-remise");
 
     montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew
 
     ////// today's date
     try {
-        modalAvoirNew.querySelector('#date').value = TODAY;
+        modalAvoirNewBased.querySelector('#date').value = TODAY;
 
     } catch (error) {
         console.log("dont know what happened : " + error);
@@ -732,8 +732,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		Vos modifications vont être perdus.<br>\
 		Êtes vous sûr de vouloir quitter ce formulaire?",
         yes: () => {
-            bsModalAvoirNew.hide();
-            DefaultModalAvoirInputs(modalAvoirNew, 0);
+            bsModalAvoirNewBased.hide();
+            DefaultModalAvoirInputs(modalAvoirNewBased, 0);
             bsModalConfirmation.hide();
             modificationWatcher = false;
         },
@@ -749,7 +749,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				Êtes vous sûr de vouloir sauvegarder vos modifications?",
         yes: () => {
 
-            let dataModalAvoirNew = grabAvoirDataForm(modalAvoirNew);
+            let dataModalAvoirNew = grabAvoirDataForm(modalAvoirNewBased);
             console.log("dataModalAvoirNew");
             console.log(dataModalAvoirNew);
             saveAvoirNew(dataModalAvoirNew).then((result) => {
@@ -761,9 +761,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     addRowTable(tableBody, dataModalAvoirNew["header"]).then(res => {
                         //close and clean the rest
-                        bsModalAvoirNew.hide();
+                        bsModalAvoirNewBased.hide();
                         bsModalChooseNewAvoir.hide();
-                        DefaultModalAvoirInputs(modalAvoirNew, 0);
+                        DefaultModalAvoirInputs(modalAvoirNewBased, 0);
                         bsModalConfirmation.hide();
                         console.log("yes saving avoir called");
                         modificationWatcher = false;
@@ -876,7 +876,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.log("result[1]");
                     console.log(result[1]);
 
-                    let inputsHeader = modalAvoirNew.querySelector("#commande-header")
+                    let inputsHeader = modalAvoirNewBased.querySelector("#commande-header")
                     fillInputsDetailsHeaders(result[1], inputsHeader);
                     fillInputsDetailsItems(result[1]["items"], modalFactureDetails.querySelector("#table-facture"));
                 } else {
@@ -1061,7 +1061,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log(
                     "step 1"
                 );
-                openNewAvoirFactureBased(modalAvoirNew, bsModalAvoirNew);
+                openNewAvoirFactureBased(modalAvoirNewBased, bsModalAvoirNewBased);
             } else if (event.target.id == "btn-avoir-no-base") {
                 //TODO : place code here
             }
@@ -1071,7 +1071,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-        modalAvoirNew.addEventListener('click', (event) => {
+        modalAvoirNewBased.addEventListener('click', (event) => {
             console.log("testeur click");
             console.log(event.target);
             if (event.target.id == "btn-cancel-avoir") {
@@ -1081,8 +1081,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         cancelCreationObj
                     );
                 } else {
-                    bsModalAvoirNew.hide();
-                    DefaultModalAvoirInputs(modalAvoirNew, 0);
+                    bsModalAvoirNewBased.hide();
+                    DefaultModalAvoirInputs(modalAvoirNewBased, 0);
                 }
             } else if (event.target.id == "btn-add-item") {
                 // addItem(tableItemsFactureNew).then(() => modificationWatcher = true);
@@ -1106,11 +1106,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log(event);
 
                 // console.log(getDataFacture(event.target));
-                // DefaultModalAvoirInputs(modalAvoirNew, 0);
-                removeItemRows(modalAvoirNew.querySelectorAll(".item-commande-row"));
+                // DefaultModalAvoirInputs(modalAvoirNewBased, 0);
+                removeItemRows(modalAvoirNewBased.querySelectorAll(".item-commande-row"));
                 let val = event.target.value;
-                fillHeadersFactureOrigin(modalAvoirNew, getDataFacture(event.target)[0]);
-                fillInputsDetailsItems(getDataFacture(event.target)[1], modalAvoirNew.querySelector('#table-avoir'), 'new');
+                fillHeadersFactureOrigin(modalAvoirNewBased, getDataFacture(event.target)[0]);
+                fillInputsDetailsItems(getDataFacture(event.target)[1], modalAvoirNewBased.querySelector('#table-avoir'), 'new');
 
             } else if (event.target.id == "btn-validate-new") {
                 if (modificationWatcher) {
@@ -1127,7 +1127,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-        modalAvoirNew.addEventListener('input', (event) => {
+        modalAvoirNewBased.addEventListener('input', (event) => {
             console.log("event input");
             console.log(event);
             modificationWatcher = true;
@@ -1214,11 +1214,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 //     console.log(event);
 
                 //     console.log(getDataFacture(event.target.value));
-                //     // DefaultModalAvoirInputs(modalAvoirNew, 0);
-                //     removeItemRows(modalAvoirNew.querySelectorAll(".item-commande-row"));
+                //     // DefaultModalAvoirInputs(modalAvoirNewBased, 0);
+                //     removeItemRows(modalAvoirNewBased.querySelectorAll(".item-commande-row"));
                 //     let val = event.target.value;
-                //     fillHeadersFactureOrigin(modalAvoirNew, getDataFacture(event.target.value)[0]);
-                //     fillInputsDetailsItems(getDataFacture(event.target.value)[1], modalAvoirNew.querySelector('#table-avoir'), 'new');
+                //     fillHeadersFactureOrigin(modalAvoirNewBased, getDataFacture(event.target.value)[0]);
+                //     fillInputsDetailsItems(getDataFacture(event.target.value)[1], modalAvoirNewBased.querySelector('#table-avoir'), 'new');
                 //     // if (event.target.parentNode.parentNode.querySelector("#item-quantity").value > 0) {
                 //     //     fillItemNameAndPrice(event.target, 0);
                 //     // } else {
@@ -1234,22 +1234,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log(event);
 
                 console.log(getDataFacture(event.target.value));
-                // DefaultModalAvoirInputs(modalAvoirNew, 0);
-                removeItemRows(modalAvoirNew.querySelectorAll(".item-commande-row"));
+                // DefaultModalAvoirInputs(modalAvoirNewBased, 0);
+                removeItemRows(modalAvoirNewBased.querySelectorAll(".item-commande-row"));
                 let val = event.target.value;
-                fillHeadersFactureOrigin(modalAvoirNew, getDataFacture(event.target.value)[0]);
-                fillInputsDetailsItems(getDataFacture(event.target.value)[1], modalAvoirNew.querySelector('#table-avoir'), 'new');
+                fillHeadersFactureOrigin(modalAvoirNewBased, getDataFacture(event.target.value)[0]);
+                fillInputsDetailsItems(getDataFacture(event.target.value)[1], modalAvoirNewBased.querySelector('#table-avoir'), 'new');
 
             } else if (event.target.id == "item-quantity") {
                 console.log("qtt called");
                 updateItemTotalPrice(event.target.parentNode.parentNode)
-                updateTotalPrice(montantHTAvantRemiseInputNew, modalAvoirNew.querySelectorAll("#item-prix-total"));
+                updateTotalPrice(montantHTAvantRemiseInputNew, modalAvoirNewBased.querySelectorAll("#item-prix-total"));
                 updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
                 try {
-                    modalAvoirNew.querySelector("#btn-create-avoir").disabled = true;
+                    modalAvoirNewBased.querySelector("#btn-create-avoir").disabled = true;
 
-                    if (parseInt(montantTTCApresRemiseInputNew.value) > 0) {
-                        modalAvoirNew.querySelector("#btn-create-avoir").disabled = false;
+                    if (parseInt(montantTTCApresRemiseInputNew.value) < 0) {
+                        modalAvoirNewBased.querySelector("#btn-create-avoir").disabled = false;
                     }
                 } catch (error) {
                     console.log("error here cannot create not autho");

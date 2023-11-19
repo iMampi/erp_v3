@@ -9,7 +9,6 @@ class NewCommandeAvoirHeader extends NewCommandeHeader
     function __construct(array $data)
     {
         parent::__construct($data);
-        $this->negative_numbers();
     }
 
     public function negative_numbers()

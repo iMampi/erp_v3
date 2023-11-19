@@ -50,7 +50,7 @@ if (can_visit("avoir_client")) {
                 } elseif (in_array("commande-uid", $classes_array)) {
                     $el_input->setAttribute("value", $el["commande_uid"]);
                 } elseif (in_array("total", $classes_array)) {
-                    $el_input->setAttribute("value", $el["total_ttc_apres_remise"]);
+                    $el_input->setAttribute("value", number_format($el["total_ttc_apres_remise"], 2, ",", " "));
                 } elseif (in_array("facture-client", $classes_array)) {
                     $el_input->setAttribute("value", $el["facture_client_uid"]);
                     // } elseif (in_array("type", $classes_array)) {

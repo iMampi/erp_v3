@@ -895,4 +895,12 @@ when saving :
 -close modal form : ok
 -toast is : ok 
 -add new line to table : ok
+-------------------------
+132_a:
+there was a problem with commande table generate. it was because of selction option "3" avoir was missing.
+various fix : implemented format number here and there;
+changed #type's option to the correct one;
+modified js formatedNumber() : space was still considered as final result  ("- 180 000" instead of "-180 000". and same for positive value.);
+modified fs updateItemTotalPrice():the math changes the value tp negatived directly. and it cascades to all the others.
+modified classe NewCommandeAvoirHeader because now values are directly negative in client side. NO need for NewCommandeAvoirItem, all was ok there.
 

@@ -34,8 +34,13 @@ function equalArray(array1, array2) {
 }
 
 function formatNumber(value) {
-	if (value){
+	if (value) {
 		try {
+			let negative = "";
+			if (value < 0) {
+				negative = "-";
+				value = value * -1;
+			}
 			let sVal = parseFloat(value).toFixed(2);
 			let temp = sVal.split(".");
 			let len = temp[0].length;
@@ -47,23 +52,25 @@ function formatNumber(value) {
 			let temmp = [];
 			temmp.push(debut);
 			for (let i = 0; i < reste.length; i += 3) {
-				temmp.push(reste.substring(0 + i, 3 + i)||0);
+				temmp.push(reste.substring(0 + i, 3 + i) || 0);
 			}
 			// console.log(temmp);
-			return temmp.join(" ") + "," + temp[1];
+			let result = temmp.join(" ") + "," + temp[1];
+			return negative + result.trim();
+			// return result.trim();
 		} catch (err) {
 			console.log(err);
 		}
-}return "0,00"
+	} return "0,00"
 }
 
 function formatedNumberToFloat(val) {
-	if ((val) && (typeof val =="string")) {
+	if ((val) && (typeof val == "string")) {
 		// NOTE : there is option to use replaceAll, but too recent
 		let x = val.split(" ").join("");
 		let y = x.replace(",", ".");
 		return parseFloat(y);
-	} else if((val) && (typeof val =="number")){
+	} else if ((val) && (typeof val == "number")) {
 		return parseFloat(val);
 	} else {
 		// throw new Error("args is not a string");
@@ -339,8 +346,8 @@ function deleteArrayValue(arr, value) {
 
 function delay(fn, ms) {
 	let timer = 0
-	return function(...args) {
-	  clearTimeout(timer);
-	  timer = setTimeout(fn.bind(this, ...args), ms || 0)
+	return function (...args) {
+		clearTimeout(timer);
+		timer = setTimeout(fn.bind(this, ...args), ms || 0)
 	}
-  }
+}
