@@ -1,0 +1,11 @@
+magasins:
+1//siege 
+
+items:
+dvr_item_good - good - sur mesure s- prix variable
+dvr_item_service - service - sur mesure - prix variable
+
+categorie:
+1-sur mesure
+famille:
+1-sur mesure

@@ -179,3 +179,9 @@ sql : verifier le  constraint user_uid dans avoir_client. puis les autres table
 formatStringClientName(headersData) : to put ithe code in replcement to hard coded algo
 
 for some fild fill fetch and fill : add the behavior th if evnt key clean thoe autofilled inputs
+
+
+for row (in the main table)in items.*:
+prix can take "variable" as a value ( pour prix variable)
+
+code article input in modal new must cannot contain white space

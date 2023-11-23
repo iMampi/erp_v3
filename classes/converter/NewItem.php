@@ -37,10 +37,12 @@ class NewItem extends Converter
 
         $this->data_for_db["declarable"] = \array_key_exists("declarable", $input) ? \intval($input["declarable"]) != 0 ?  \intval($input["declarable"]) : 0 : 0;
 
-        $this->data_for_db["prix_vente"] = \array_key_exists("prix-vente", $input) ? \floatval($input["prix-vente"]) != 0 ?  \floatval($input["prix-vente"]) : \null : \null;
+        $this->data_for_db["prix_vente"] = \array_key_exists("prix-vente", $input) ? \floatval($input["prix-vente"]) != 0 ?  \floatval($input["prix-vente"]) : 0 : 0;
 
         $this->data_for_db["prix_achat_mp"] = \array_key_exists("pamp", $input) ? \floatval($input["pamp"]) != 0 ?  \floatval($input["pamp"]) : 0 : 0;
 
         $this->data_for_db["note"] = \array_key_exists("note", $input) ? \trim($input["note"]) != "" ?  \trim($input["note"]) : \null : \null;
+
+        $this->data_for_db["prix_variable"] = \array_key_exists("prix-variable", $input) ? \boolval($input["prix-variable"]) : 0;
     }
 }

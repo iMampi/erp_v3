@@ -903,4 +903,9 @@ changed #type's option to the correct one;
 modified js formatedNumber() : space was still considered as final result  ("- 180 000" instead of "-180 000". and same for positive value.);
 modified fs updateItemTotalPrice():the math changes the value tp negatived directly. and it cascades to all the others.
 modified classe NewCommandeAvoirHeader because now values are directly negative in client side. NO need for NewCommandeAvoirItem, all was ok there.
-
+-------------------------
+133_a:
+modified database > table : items > added field "prix_variable". uptade the function new_item();
+added prix_variable in base html for items;
+updated the item-main.js : added "prix-variable" everywhere it needed, with the right implementation.
+tested once. worked.

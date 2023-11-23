@@ -93,7 +93,7 @@ class Bindings
             ];
         } else if ($this->converter::class == "Converter\NewItem") {
             $this->binding = [
-                'issiiiiddiiiis',
+                'issiiiiddiiiisi',
                 $arr["uid"],
                 $arr["code"],
                 $arr["name"],
@@ -107,7 +107,8 @@ class Bindings
                 $arr["identifiable"],
                 $arr["unite_mesure_uid"],
                 $arr["active"],
-                $arr["note"]
+                $arr["note"],
+                $arr["prix_variable"]
             ];
         } else if ($this->converter::class == "Converter\NewPlace") {
             $this->binding = [
