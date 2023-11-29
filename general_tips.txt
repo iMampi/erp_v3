@@ -355,3 +355,37 @@ xdebug.client_host = localhost
 zend_extension=C:\xampp\php\ext\php_xdebug.dll
 edit laucnch.json file to change pot to 9003
 ////////////////
+
+
+bootstrap vertical alignement:
+use .col-form-label only with label tag (check documentaion) with my-auto on next div to align with label. only works for 1 field per row. not mutilple fields in one row. 
+but i prefer using .align-self-center when using any other tag. it solves it all
+
+
+css height of row (elements\avoirs_clt\avoir_clt_header_based_base.html):
+<div id="clt-selection" class="row  my-auto py-1">
+
+		<span class="align-self-center col-2 lh-1">client ID</span>
+		<div class="col-10 my-auto " >
+			<div class="dropdown btn-group d-flex" role="group">
+				<button class="btn btn-sm input client btn-secondary  dropdown-toggle right-corners w-100 text-start" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="fact-origin" >
+					Select Client
+				</button>
+
+				<ul class="dropdown-menu " id="client-list">
+					<li id="search-container">
+						<div class="px-2 pb-2">
+							<input  type="text" placeholder="Search" id="search-client" autocomplete="off" class="form-control form-control-sm">               
+						</div>
+					</li>
+				</ul>
+				<button class="mytbn btn btn-sm btn-success text-center left-corners form-control-sm"type="button" id="btn-see-client">
+					see</button>
+		
+        	</div>
+			<input type="hidden" class="input client-uid" disabled id="client-uid"/>
+
+        </div>
+	</div>
+
+i use .form-control-sm  in #btn-see-client just to uniform the height of each row.

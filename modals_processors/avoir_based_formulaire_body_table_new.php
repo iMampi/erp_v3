@@ -1,7 +1,7 @@
 <?php
 // TODO grab role of user
 // TODO : authorization
-$base = __DIR__ . "/../elements/avoirs_clt/avoir_clt_table_details_base.html";
+$base = __DIR__ . "/../elements/avoirs_clt/avoir_clt_based_table_details_base.html";
 
 $dom = new DOMDocument();
 //to be able to use new html5 tag with DOMDocument

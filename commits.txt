@@ -909,3 +909,12 @@ modified database > table : items > added field "prix_variable". uptade the func
 added prix_variable in base html for items;
 updated the item-main.js : added "prix-variable" everywhere it needed, with the right implementation.
 tested once. worked.
+-------------------------
+134_a:
+working back on create avoir (not based not facture)...
+fixed eavoir simple implementation.
+duplicated all avoirBased element for avoirSimple. gotta refactor this later. now opening those two works correctly.
+changed the position of remise-taux and remise-montant in all avoir.
+placed more appropriate placeholder value for all input montant related instead of hard value.
+changed DefaultValuesAvoirNewFormObj, modified cancelCreationObj.
+implementing eventlistener for modal-avoir-simple 

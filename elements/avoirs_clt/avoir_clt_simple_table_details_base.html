@@ -1,0 +1,79 @@
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+<table class="table table-borderless" id="table-avoir">
+	<thead class="border-start-0 border-top-0 border-end-0 border-3">
+		<tr>
+			<td class="ps-0">ID article</td>
+			<td>désignation</td>
+			<td>numéro de série</td>
+			<td>prix unitaire HT</td>
+			<td>quantité</td>
+			<td>total HT</td>
+			<td class="pe-0">
+				<button type="button" class="btn btn-sm btn-success w-100" id="btn-add-item">
+					+
+				</button>
+			</td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr id="row-001" class="item-commande-row border-bottom">
+			<input type="hidden" id="row-uid" class='input row-uid'>
+			<td class="ps-0 my-auto btn-group">
+				<input
+					list="item-list"
+					type="text"
+					id="item-uid"
+					class="form-control form-control-sm input item-id"
+					autocomplete="off"
+					placeholder="Choississez un article"
+				/>
+				<button
+					type="button"
+					class="btn btn-sm btn-success"
+					id="btn-new-item"
+				>
+					+
+				</button>
+			</td>
+			<td>
+				<input
+					type="text"
+					disabled
+					id="item-name"
+					class=" form-control form-control-sm input item-name"
+				/>
+			</td>
+			<td>
+				<input
+					type="text"
+					class=" form-control form-control-sm num-serie input"
+					id="num-serie"
+				/>
+
+			</td>
+			<td>
+				<input
+					type="text"
+					class="form-control form-control-sm item-pu input"
+					disabled
+					id="item-pu"
+				/>
+			</td>
+			<td>
+					<input type="number" min="0" class=" form-control form-control-sm input item-quantity" id="item-quantity" />
+			</td>
+			<td>
+				<input
+					type="text"
+					disabled
+					class="form-control form-control-sm item-prix-total input"
+					id="item-prix-total"
+				/>
+			</td>
+			<td class="pe-0">
+				<button type="button" class="btn btn-sm btn-danger btn-del"
+				id="btn-del-item">del</button>
+			</td>
+		</tr>
+	</tbody>
+</table>

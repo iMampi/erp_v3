@@ -1,29 +1,25 @@
 <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
 <div id="commande-header">
-	<div class="row">
-		<span class="col-form-label col-2">numéro avoir</span>
+	<div class="row my-auto py-1">
+		<span class="align-self-center col-2">numéro avoir</span>
 		<div class="col-2 my-auto">
 			<input type="text" class="form-control form-control-sm input num-avoir" disabled id="num-avoir"/>
 		</div>
 		
 	</div>
-	<div class="row ">
-		<span class="col-form-label col-2 lh-1">facture d'origine</span>
+	<div class="row my-auto py-1">
+		<span class="align-self-center col-2 lh-1">facture d'origine</span>
 		<div class="col-4 my-auto">
 		<div class="dropdown ">
             <button class="btn input fact-origin btn-secondary dropdown-toggle btn-sm w-100 text-start" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="fact-origin" >
-				Select Facture
+				Choississez une facture
 			</button>
             <ul class="dropdown-menu " id="my-list">
-                <!-- <li id="search-container"><a class="dropdown-item" href="#"><input  type="text" placeholder="Search" id="search" autocomplete="off" class="form-control form-control-sm"></a>
-                </li> -->
                 <li id="search-container">
 					<div class="px-2 pb-2">
                 		<input  type="text" placeholder="Search" id="search-facture" autocomplete="off" class="form-control form-control-sm">               
               		</div>
               	</li>
-              <!-- <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Action</a></li> -->
             </ul>
         </div>
 		<input type="hidden" class="input commande-uid" disabled id="commande-uid"/>
@@ -33,131 +29,139 @@
 		<!-- <div class="col-4 my-auto">
 			<input type="text" class="form-control form-control-sm input fact-origin" id="fact-origin" placeholder="saisissez un numéro de facture" list="facture-list"/>
 		</div> -->
-		<span class="col-form-label col-2">commercial</span>
+		<span class="align-self-center col-2">commercial</span>
 		<div class="col-4 my-auto">
 			<input type="text" class="form-control form-control-sm input commercial" disabled id="commercial"/>
 		</div>
 	</div>
-	<div id="clt-selection" class="row nowrap">
-		<span class="col-form-label col-2">client ID</span>
-		<div class="col my-auto btn-group">
-			<input
-				list="client-list"
-				type="text"
-				name="client"
-				id="client"
-				class="form-control form-control-sm input client"
-				placeholder="Choississez un client"
-			/>
-			<!-- </div> -->
-			<!-- <div class="col-1 my-auto pe-1"> -->
-			<button
-				class="mytbn btn btn-sm btn-success text-center"
-				id="btn-new-client"
-			>
-				+
-			</button>
-			<!-- </div> -->
 
-			<!-- <div class="col-1 my-auto ps-1"> -->
-			<button class="mytbn btn btn-sm btn-success text-center" id="btn-see-client">
-				see
-			</button>
-		</div>
+	
+	<div id="clt-selection" class="row  my-auto py-1">
 
+		<span class="align-self-center col-2 lh-1">client ID</span>
+		<div class="col-10 my-auto " >
+			<div class="dropdown btn-group d-flex" role="group">
+				<button class="btn btn-sm input client btn-secondary  dropdown-toggle right-corners w-100 text-start" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="client" >
+					Choississez un client
+				</button>
+
+				<ul class="dropdown-menu " id="client-list">
+					<li id="search-container">
+						<div class="px-2 pb-2">
+							<input  type="text" placeholder="Search" id="search-client" autocomplete="off" class="form-control form-control-sm">               
+						</div>
+					</li>
+				</ul>
+				<button class="mytbn btn btn-sm btn-success text-center left-corners form-control-sm"type="button" id="btn-see-client">
+					see</button>
+		
+        	</div>
+			<input type="hidden" class="input client-uid" disabled id="client-uid"/>
+
+        </div>
 	</div>
-	<div class="row my-auto">
-		<span class="col-form-label col-2">date</span>
+
+	<div class="row my-auto py-1">
+		<span class="align-self-center col-2">date</span>
 		<div class="col-2 my-auto">
 			<input type="date" class="form-control form-control-sm input date" disabled id="date"/>
 		</div>
-		<span class="col-form-label col-2">magasin</span>
+		<span class="align-self-center col-2">magasin</span>
 		<div class="col-2 my-auto">
 			<select type="text" class="form-control form-control-sm input magasin" id="magasin">
 
 			</select>
 		</div>
 	</div>
-	<div class="row my-auto">
-		<span class="col-form-label col-2">type</span>
+	<div class="row my-auto py-1">
+		<span class="align-self-center col-2">type</span>
 		<div class="col-2 my-auto">
 			<select class="form-control form-control-sm input type" id="type" disabled>
 				<option value="0">sans retour produit</option>
 				<option value="1">avec retour produit</option>
 			</select>
 		</div>
-		<span class="col-form-label col-2">note</span>
+		<span class="align-self-center col-2">note</span>
 		<div class="col-2 my-auto">
 			<input type="text" class="form-control form-control-sm input note" id="note" />
 		</div>
 
 	</div>
 
-	<div class="row my-auto">
-		<span class="col-form-label col-2 ">total HT avant remise</span>
+	<div class="row my-auto py-1">
+		<span class="align-self-center col-2 ">total HT avant remise</span>
 		<div class="col-2 my-auto">
 			<input type="text" class="form-control form-control-sm input totalHT-avant-remise" disabled 
 			id="totalHT-avant-remise"
+			placeholder="0,00"
 			/>
 		</div>
 
-		<span class="col-form-label col-2">TVA avant remise</span>
+		<span class="align-self-center col-2">TVA avant remise</span>
 		<div class="col-2 my-auto">
 			<input type="text" class="form-control form-control-sm input TVA-avant-remise" disabled 
 			id="TVA-avant-remise"
+			placeholder="0,00"
 			/>
 		</div>
-		<span class="col-form-label col-2">total TTC avant remise</span>
+		<span class="align-self-center col-2">total TTC avant remise</span>
 		<div class="col-2 my-auto">
 			<input
 				type="text"
 				class="form-control form-control-sm input totalTTC-avant-remise"
 				disabled
 				id="totalTTC-avant-remise"
+				placeholder="0,00"
 			/>
 		</div>
 	</div>
-	<div class="row my-auto">
-		<span class="col-form-label col-2">taux remise (%)</span>
+	<div class="row my-auto py-1">
+		<div class="col-4 my-auto">
+		</div>
+		<span class="align-self-center col-2">taux remise (%)</span>
 		<div class="col-2 my-auto">
 			<input
 				type="number"
 				class="form-control form-control-sm input remise-taux"
-				placeholder="%"
+				placeholder="0,00 %"
 				id="remise-taux"
 			/>
 		</div>
-		<span class="col-form-label col-2">montant remise</span>
+		<span class="align-self-center col-2">montant remise</span>
 		<div class="col-2 my-auto">
 			<input
 				type="number"
 				class="form-control form-control-sm input remise-montant"
-				placeholder="Ar"
+				placeholder="0,00"
 				id="remise-montant"
 				
 			/>
 		</div>
 	</div>
-	<div class="row my-auto">
-		<span class="col-form-label col-2">total HT aprés remise</span>
+	<div class="row my-auto py-1">
+		<span class="align-self-center col-2">total HT aprés remise</span>
 		<div class="col-2 my-auto">
 			<input type="text" class="form-control form-control-sm input totalHT-apres-remise" disabled 
 			id="totalHT-apres-remise"
+			placeholder="0,00"
 			/>
 		</div>
 
-		<span class="col-form-label col-2">TVA aprés remise</span>
+		<span class="align-self-center col-2">TVA aprés remise</span>
 		<div class="col-2 my-auto">
 			<input type="text" class="form-control form-control-sm input TVA-apres-remise" disabled 
-			id="TVA-apres-remise"/>
+			id="TVA-apres-remise"
+			placeholder="0,00"/>
 		</div>
-		<span class="col-form-label col-2 fw-bold">total TTC</span>
+		<!-- <span class="align-self-center col-2 fw-bold">total TTC</span> -->
+		<span class="align-self-center col-2 fw-bold">total TTC</span>
 		<div class="col-2 my-auto">
 			<input
 				type="text"
 				class="form-control form-control-sm fw-bold input totalTTC-apres-remise"
 				disabled
 				id="totalTTC-apres-remise"
+				placeholder="0,00"
 			/>
 		</div>
 	</div>

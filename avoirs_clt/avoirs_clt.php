@@ -95,7 +95,7 @@ is_logged();
                             <div id="new-modal-body-heads ">
                                 <div class="col-auto mb-3 d-flex  justify-content-center align-items-center gap-3">
                                     <button type="button" id="btn-avoir-facture" class="btn btn-primary">à partir d'une facture</button>
-                                    <button type="button" id="btn-avoir-no-base" class="btn btn-primary">sans base</button>
+                                    <button type="button" id="btn-avoir-simple" class="btn btn-primary">sans base</button>
                                 </div>
 
                                 <!-- TODO : to delete. we gonna use only JS here -->
@@ -111,7 +111,7 @@ is_logged();
                 </div>
             </div>
             <!-- end modal choose type new avoir-->
-            <!-- modal avoir new -->
+            <!-- modal avoir based new -->
             <div class="modal fade bg-confirmation" id="modal-avoir-new-based" tabindex="-1">
                 <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Close">
                 </button>
@@ -127,28 +127,64 @@ is_logged();
                             <div id="new-modal-body-heads">
                                 <?php
                                 //TODO : make the header of factures in details readonly
-                                require __DIR__ . "/../modals_processors/avoir_formulaire_body_new.php";
+                                require __DIR__ . "/../modals_processors/avoir_based_formulaire_body_new.php";
                                 ?>
                             </div>
                             <!-- TODO : to delete. we gonna use only JS here -->
                             <div id="new-modal-body-table">
                                 <?php
                                 //TODO : change to require once.
-                                require __DIR__ . "/../modals_processors/avoir_formulaire_body_table_read_only.php";
+                                require __DIR__ . "/../modals_processors/avoir_based_formulaire_body_table_new.php";
                                 ?>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <?php
-                            require_once __DIR__ . "/../modals_processors/buttons_footer_new_avoir.php";
+                            require __DIR__ . "/../modals_processors/buttons_footer_new_avoir.php";
                             ?>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- end modal avoir new -->
+            <!-- end modal avoir based new -->
+            <!-- modal avoir simple new -->
+            <div class="modal fade bg-confirmation" id="modal-avoir-new-simple" tabindex="-1">
+                <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Close">
+                </button>
+                <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-xxl-down">
+
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">nouvel avoir</h5>
+                        </div>
+                        <div class="modal-body">
+
+                            <div id="new-modal-body-heads">
+                                <?php
+                                //TODO : make the header of factures in details readonly
+                                require __DIR__ . "/../modals_processors/avoir_simple_formulaire_body_new.php";
+                                ?>
+                            </div>
+                            <!-- TODO : to delete. we gonna use only JS here -->
+                            <div id="new-modal-body-table">
+                                <?php
+                                //TODO : change to require once.
+                                require __DIR__ . "/../modals_processors/avoir_simple_formulaire_body_table_new.php";
+                                ?>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <?php
+                            require __DIR__ . "/../modals_processors/buttons_footer_new_avoir.php";
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end modal avoir simple new -->
             <!-- modal détails  -->
-            <div class="modal fade" id="modal-details" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="modal-details" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <!-- <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button> -->
                 <!-- <div class="modal-dialog modal-dialog-scrollable modal-xl"> -->
                 <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-xxl-down">
@@ -158,21 +194,21 @@ is_logged();
                         </div>
                         <div class="modal-body">
 
-                            <!-- <div id="modal-body-heads"> -->
-                            <?php
-                            //TODO : make the header of factures in details readonly. 
-                            //TODO : change to require once. 
-                            require __DIR__ . "/../modals_processors/facture_client_formulaire_body_read_only.php"
-                            ?>
-                            <!-- </div> -->
+                            <div id="modal-body-heads">
+                                <?php
+                                //TODO : make the header of factures in details readonly. 
+                                //TODO : change to require once. 
+                                require __DIR__ . "/../modals_processors/facture_client_formulaire_body_read_only.php"
+                                ?>
+                            </div>
                             <!-- TODO : to elete. we gonna use only JS here -->
-                            <!-- <div id="modal-body-table"> -->
-                            <?php
-                            //TODO : make the header of factures in details readonly. 
-                            //TODO : change to require once. 
-                            require __DIR__ . "/../modals_processors/commande_formulaire_body_table_read_only.php";
-                            ?>
-                            <!-- </div> -->
+                            <div id="modal-body-table">
+                                <?php
+                                //TODO : make the header of factures in details readonly. 
+                                //TODO : change to require once. 
+                                require __DIR__ . "/../modals_processors/commande_formulaire_body_table_read_only.php";
+                                ?>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <?php

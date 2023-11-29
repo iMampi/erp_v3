@@ -108,3 +108,12 @@ td .name {
 .dropdown-menu.show {
     min-width: 100%;
 }
+
+.right-corners{
+	border-top-right-radius: 0 !important;  
+	border-bottom-right-radius: 0 !important;
+}
+.left-corners{
+	border-top-left-radius: 0 !important;  
+	border-bottom-left-radius: 0 !important;
+}

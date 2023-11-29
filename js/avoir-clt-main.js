@@ -10,27 +10,28 @@ var counterRowItem = 1;
 
 const URL_TABLE_DETAILS_OBJ = {
     view: "/elements/commandes/commande_table_details_base.html",
-    new: "/elements/avoirs_clt/avoir_clt_table_details_base.html"
+    new: "/elements/avoirs_clt/avoir_clt_based_table_details_base.html"
 };
 
 const DefaultValuesAvoirNewFormObj = {
     "num-avoir": "",
-    "fact-origin": "Select Facture",
+    "fact-origin": "Choississez une facture",
     "commercial": currentUser,
-    "client": "",
+    "client": "Choississez un client",
     "date": TODAY,
     "note": "",
-    "totalHT-avant-remise": "0.00",
-    "TVA-avant-remise": "0.00",
-    "totalTTC-avant-remise": "0.00",
-    "remise-taux": "0.00",
-    "remise-montant": "0.00",
-    "totalHT-apres-remise": "0.00",
-    "TVA-apres-remise": "0.00",
-    "totalTTC-apres-remise": "0.00"
+    "type": "0",
+    "totalHT-avant-remise": "",
+    "TVA-avant-remise": "",
+    "totalTTC-avant-remise": "",
+    "remise-taux": "",
+    "remise-montant": "",
+    "totalHT-apres-remise": "",
+    "TVA-apres-remise": "",
+    "totalTTC-apres-remise": ""
 };
 
-const InputsDisabledByDefaultAvoirNewFormArray = [
+const InputsDisabledByDefaultAvoirBasedNewFormArray = [
     'num-avoir',
     "commercial",
     "client",
@@ -47,11 +48,35 @@ const InputsDisabledByDefaultAvoirNewFormArray = [
     "totalTTC-apres-remise"
 ];
 
-const InputsDisabledByDefaultAvoirRowItemArray = [
+const InputsDisabledByDefaultAvoirSimpleNewFormArray = [
+    'num-avoir',
+    "commercial",
+    "magasin",
+    "note",
+    "date",
+    "totalHT-avant-remise",
+    "TVA-avant-remise",
+    "totalTTC-avant-remise",
+    "remise-taux",
+    "remise-montant",
+    "totalHT-apres-remise",
+    "TVA-apres-remise",
+    "totalTTC-apres-remise"
+];
+
+const InputsDisabledByDefaultAvoirBasedRowItemArray = [
     "item-uid",
     "item-name",
     "num-serie",
     "item-pu",
+    "item-prix-total"
+];
+const InputsDisabledByDefaultAvoirSimpleRowItemArray = [
+    "item-uid",
+    "item-name",
+    "num-serie",
+    "item-pu",
+    "item-quantity",
     "item-prix-total"
 ];
 
@@ -324,7 +349,7 @@ function generateRowItem(nodeModel, DataObj) {
 function fillHeadersFactureOrigin(modalNode, headersData) {
     modalNode.querySelector('#fact-origin').textContent = headersData['num_facture'];
     modalNode.querySelector('#commande-uid').value = headersData['commande_uid'];
-    modalNode.querySelector('#client').value = formatStringClientName(headersData);
+    modalNode.querySelector('#client').textContent = formatStringClientName(headersData);
     modalNode.querySelector('#totalHT-avant-remise').value = "0.00";
     modalNode.querySelector('#TVA-avant-remise').value = "0.00";
     modalNode.querySelector('#totalTTC-avant-remise').value = "0.00";
@@ -570,7 +595,7 @@ async function responseHandlerSelectOneCommande(response) {
 function openNewAvoirFactureBased(modal, bsModal) {
     modal.querySelectorAll('.input').forEach(element => {
         // element.disabled = element.id !== "fact-origin";
-        element.disabled = InputsDisabledByDefaultAvoirNewFormArray.includes(element.id);
+        element.disabled = InputsDisabledByDefaultAvoirBasedNewFormArray.includes(element.id);
     });
     modal.querySelectorAll('.btn').forEach(element => {
         // element.disabled = element.id !== 'btn-cancel-avoir';
@@ -579,6 +604,24 @@ function openNewAvoirFactureBased(modal, bsModal) {
     bsModal.show();
 
 }
+
+function openNewAvoirFactureSimple(modal, bsModal) {
+    console.log("avoir simple");
+    bsModal.show();
+
+    modal.querySelectorAll('.input').forEach(element => {
+        // element.disabled = element.id !== "fact-origin";
+        element.disabled = InputsDisabledByDefaultAvoirSimpleNewFormArray.includes(element.id);
+
+    });
+
+    modal.querySelectorAll('.btn').forEach(element => {
+        // element.disabled = element.id !== 'btn-cancel-avoir';
+        element.disabled = !['btn-cancel-avoir', 'fact-origin', 'client'].includes(element.id);
+    });
+
+}
+
 
 function getInputValue(node) {
     if (node.tagName == "BUTTON") {
@@ -613,7 +656,8 @@ function removeItemRows(nodeList) {
 function defaultButtons(modal) {
     const refObj = {
         "modal-details": DEFAULT_BUTTONS_DISABLED_STATE_AVOIR_DETAILS,
-        'modal-avoir-new-based': DEFAULT_BUTTONS_DISABLED_STATE_AVOIR_NEW
+        'modal-avoir-new-based': DEFAULT_BUTTONS_DISABLED_STATE_AVOIR_NEW,
+        'modal-avoir-new-simple': DEFAULT_BUTTONS_DISABLED_STATE_AVOIR_NEW,
     };
     let btns = modal.querySelectorAll(".btn");
     btns.forEach(myBtn => {
@@ -623,7 +667,11 @@ function defaultButtons(modal) {
 
 function cleanNewForm(modal, disable = false) {
     console.log("cleaning");
-    let array1 = InputsDisabledByDefaultAvoirNewFormArray.concat(InputsDisabledByDefaultAvoirRowItemArray);
+    let dictSelectorObj = {
+        'modal-avoir-new-based': InputsDisabledByDefaultAvoirBasedNewFormArray,
+        'modal-avoir-new-simple': InputsDisabledByDefaultAvoirBasedNewFormArray
+    }
+    let array1 = dictSelectorObj[modal.id].concat(InputsDisabledByDefaultAvoirBasedRowItemArray);
 
     const inputsForm = modal.querySelectorAll(".input");
 
@@ -672,12 +720,7 @@ document.addEventListener("DOMContentLoaded", () => {
         keyboard: false,
         focus: true,
     });
-    // const modalConfirmation2 = document.getElementById("modal-new");
-    // const bsModalConfirmation2 = new bootstrap.Modal(modalConfirmation2, {
-    //     backdrop: "static",
-    //     keyboard: false,
-    //     focus: true,
-    // });
+
     const btnConfirmationYes = modalConfirmation.querySelector("#btn-confirmation-yes"
     );
     const btnConfirmationNo = modalConfirmation.querySelector("#btn-confirmation-no"
@@ -698,20 +741,37 @@ document.addEventListener("DOMContentLoaded", () => {
         focus: true,
     });
 
-    const montantHTAvantRemiseInputNew = modalAvoirNewBased.querySelector("#totalHT-avant-remise");
-    const TVAAvantRemiseInputNew = modalAvoirNewBased.querySelector("#TVA-avant-remise");
-    const montantTTCAvantRemiseInputNew = modalAvoirNewBased.querySelector("#totalTTC-avant-remise");
-    const remiseTauxInputNew = modalAvoirNewBased.querySelector("#remise-taux");
-    const remiseMontantInputNew = modalAvoirNewBased.querySelector("#remise-montant");
-    const montantHTApresRemiseInputNew = modalAvoirNewBased.querySelector("#totalHT-apres-remise");
-    const TVAApresRemiseInputNew = modalAvoirNewBased.querySelector("#TVA-apres-remise");
-    const montantTTCApresRemiseInputNew = modalAvoirNewBased.querySelector("#totalTTC-apres-remise");
+    const modalAvoirNewSimple = document.getElementById("modal-avoir-new-simple");
+    const bsModalAvoirNewSimple = new bootstrap.Modal(modalAvoirNewSimple, {
+        backdrop: "static",
+        keyboard: false,
+        focus: true,
+    });
 
-    montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew
+    const montantHTAvantRemiseInputNewBased = modalAvoirNewBased.querySelector("#totalHT-avant-remise");
+    const TVAAvantRemiseInputNewBased = modalAvoirNewBased.querySelector("#TVA-avant-remise");
+    const montantTTCAvantRemiseInputNewBased = modalAvoirNewBased.querySelector("#totalTTC-avant-remise");
+    const remiseTauxInputNewBased = modalAvoirNewBased.querySelector("#remise-taux");
+    const remiseMontantInputNewBased = modalAvoirNewBased.querySelector("#remise-montant");
+    const montantHTApresRemiseInputNewBased = modalAvoirNewBased.querySelector("#totalHT-apres-remise");
+    const TVAApresRemiseInputNewBased = modalAvoirNewBased.querySelector("#TVA-apres-remise");
+    const montantTTCApresRemiseInputNewBased = modalAvoirNewBased.querySelector("#totalTTC-apres-remise");
+
+    const montantHTAvantRemiseInputNewSimple = modalAvoirNewSimple.querySelector("#totalHT-avant-remise");
+    const TVAAvantRemiseInputNewSimple = modalAvoirNewSimple.querySelector("#TVA-avant-remise");
+    const montantTTCAvantRemiseInputNewSimple = modalAvoirNewSimple.querySelector("#totalTTC-avant-remise");
+    const remiseTauxInputNewSimple = modalAvoirNewSimple.querySelector("#remise-taux");
+    const remiseMontantInputNewSimple = modalAvoirNewSimple.querySelector("#remise-montant");
+    const montantHTApresRemiseInputNewSimple = modalAvoirNewSimple.querySelector("#totalHT-apres-remise");
+    const TVAApresRemiseInputNewSimple = modalAvoirNewSimple.querySelector("#TVA-apres-remise");
+    const montantTTCApresRemiseInputNewSimple = modalAvoirNewSimple.querySelector("#totalTTC-apres-remise");
+
+    // montantHTApresRemiseInputNewBased, TVAApresRemiseInputNewBased, montantTTCApresRemiseInputNewBased
 
     ////// today's date
     try {
         modalAvoirNewBased.querySelector('#date').value = TODAY;
+        modalAvoirNewSimple.querySelector('#date').value = TODAY;
 
     } catch (error) {
         console.log("dont know what happened : " + error);
@@ -726,6 +786,7 @@ document.addEventListener("DOMContentLoaded", () => {
         btnNo: btnConfirmationNo,
     };
 
+    // TODO : to refactor. not optimal
     const cancelCreationObj = {
         message:
             "Des champs ont été modifiés.<br>\
@@ -733,7 +794,9 @@ document.addEventListener("DOMContentLoaded", () => {
 		Êtes vous sûr de vouloir quitter ce formulaire?",
         yes: () => {
             bsModalAvoirNewBased.hide();
+            bsModalAvoirNewSimple.hide();
             DefaultModalAvoirInputs(modalAvoirNewBased, 0);
+            DefaultModalAvoirInputs(modalAvoirNewSimple, 0);
             bsModalConfirmation.hide();
             modificationWatcher = false;
         },
@@ -1062,8 +1125,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     "step 1"
                 );
                 openNewAvoirFactureBased(modalAvoirNewBased, bsModalAvoirNewBased);
-            } else if (event.target.id == "btn-avoir-no-base") {
+            } else if (event.target.id == "btn-avoir-simple") {
                 //TODO : place code here
+                openNewAvoirFactureSimple(modalAvoirNewSimple, bsModalAvoirNewSimple);
+
             }
         })
     } catch (error) {
@@ -1090,8 +1155,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 // removeItem(event.target, "target");
                 // modificationWatcher = true;
                 // console.log("remove");
-                // updateTotalPrice(montantHTAvantRemiseInputNew, modalCommandeNew.querySelectorAll("#item-prix-total"))
-                // updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+                // updateTotalPrice(montantHTAvantRemiseInputNewBased, modalCommandeNew.querySelectorAll("#item-prix-total"))
+                // updateAllHeaderPrices(montantHTAvantRemiseInputNewBased, TVAAvantRemiseInputNewBased, montantTTCAvantRemiseInputNewBased, remiseTauxInputNewBased, remiseMontantInputNewBased, montantHTApresRemiseInputNewBased, TVAApresRemiseInputNewBased, montantTTCApresRemiseInputNewBased);
             } else if (event.target.id == "btn-create-avoir") {
                 if (modificationWatcher) {
                     openModalConfirmation(
@@ -1227,8 +1292,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 //     // const itemTotalPriceInputs = modalCommandeNew.querySelectorAll(".item-prix-total");
                 //     // console.log("itemTotalPriceInputs");
                 //     // console.log(itemTotalPriceInputs);
-                //     // updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
-                //     // updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+                //     // updateTotalPrice(montantHTAvantRemiseInputNewBased, itemTotalPriceInputs);
+                //     // updateAllHeaderPrices(montantHTAvantRemiseInputNewBased, TVAAvantRemiseInputNewBased, montantTTCAvantRemiseInputNewBased, remiseTauxInputNewBased, remiseMontantInputNewBased, montantHTApresRemiseInputNewBased, TVAApresRemiseInputNewBased, montantTTCApresRemiseInputNewBased);
             } else if (event.target.classList.contains("search-result")) {
                 console.log("chossed fact");
                 console.log(event);
@@ -1243,12 +1308,204 @@ document.addEventListener("DOMContentLoaded", () => {
             } else if (event.target.id == "item-quantity") {
                 console.log("qtt called");
                 updateItemTotalPrice(event.target.parentNode.parentNode)
-                updateTotalPrice(montantHTAvantRemiseInputNew, modalAvoirNewBased.querySelectorAll("#item-prix-total"));
-                updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+                updateTotalPrice(montantHTAvantRemiseInputNewBased, modalAvoirNewBased.querySelectorAll("#item-prix-total"));
+                updateAllHeaderPrices(montantHTAvantRemiseInputNewBased, TVAAvantRemiseInputNewBased, montantTTCAvantRemiseInputNewBased, remiseTauxInputNewBased, remiseMontantInputNewBased, montantHTApresRemiseInputNewBased, TVAApresRemiseInputNewBased, montantTTCApresRemiseInputNewBased);
                 try {
                     modalAvoirNewBased.querySelector("#btn-create-avoir").disabled = true;
 
-                    if (parseInt(montantTTCApresRemiseInputNew.value) < 0) {
+                    if (parseInt(montantTTCApresRemiseInputNewBased.value) < 0) {
+                        modalAvoirNewBased.querySelector("#btn-create-avoir").disabled = false;
+                    }
+                } catch (error) {
+                    console.log("error here cannot create not autho");
+                }
+
+            }
+        });
+    } catch (error) {
+        console.log("error 356");
+    }
+
+
+    try {
+        modalAvoirNewSimple.addEventListener('click', (event) => {
+            console.log("testeur click");
+            console.log(event.target);
+            if (event.target.id == "btn-cancel-avoir") {
+                if (modificationWatcher) {
+                    openModalConfirmation(
+                        confirmationObj,
+                        cancelCreationObj
+                    );
+                } else {
+                    bsModalAvoirNewSimple.hide();
+                    DefaultModalAvoirInputs(modalAvoirNewSimple, 0);
+                }
+            } else if (event.target.id == "btn-add-item") {
+                // addItem(tableItemsFactureNew).then(() => modificationWatcher = true);
+            } else if (event.target.classList.contains("btn-del")) {
+                // removeItem(event.target, "target");
+                // modificationWatcher = true;
+                // console.log("remove");
+                // updateTotalPrice(montantHTAvantRemiseInputNewBased, modalCommandeNew.querySelectorAll("#item-prix-total"))
+                // updateAllHeaderPrices(montantHTAvantRemiseInputNewBased, TVAAvantRemiseInputNewBased, montantTTCAvantRemiseInputNewBased, remiseTauxInputNewBased, remiseMontantInputNewBased, montantHTApresRemiseInputNewBased, TVAApresRemiseInputNewBased, montantTTCApresRemiseInputNewBased);
+            } else if (event.target.id == "btn-create-avoir") {
+                if (modificationWatcher) {
+                    openModalConfirmation(
+                        confirmationObj,
+                        saveNewAvoirObj
+                    );
+                } else {
+                    // bsModalConfirmation.hide();
+                }
+            } else if (event.target.classList.contains("search-result")) {
+                console.log("chossed fact");
+                console.log(event);
+
+                // console.log(getDataFacture(event.target));
+                // DefaultModalAvoirInputs(modalAvoirNewBased, 0);
+                removeItemRows(modalAvoirNewBased.querySelectorAll(".item-commande-row"));
+                let val = event.target.value;
+                fillHeadersFactureOrigin(modalAvoirNewBased, getDataFacture(event.target)[0]);
+                fillInputsDetailsItems(getDataFacture(event.target)[1], modalAvoirNewBased.querySelector('#table-avoir'), 'new');
+
+            } else if (event.target.id == "btn-validate-new") {
+                if (modificationWatcher) {
+                    //     openModalConfirmation(
+                    //         confirmationObj,
+                    //         validateCreationObj
+                    //     );
+                } else {
+                    //     // bsModalCommandeNew.hide();
+                }
+            }
+        })
+    } catch (error) {
+    }
+
+    try {
+        modalAvoirNewSimple.addEventListener('input', (event) => {
+            console.log("event input");
+            console.log(event);
+            modificationWatcher = true;
+
+            if ((event.target.id == "item-uid") && (event.inputType === "insertText")) {
+                console.log("searching item");
+                itemDataList.innerHTML = "";
+                clearTimeout(typingTimer);
+                let term = event.target.value.trim();
+                if (term) {
+                    // TODO : sanitize here
+                    itemDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
+                    typingTimer = setTimeout(() => { searchLive(term, itemDataList, "item") }, 1500);
+                }
+            } else if ((event.target.id == "item-uid") && (!event.key)) {
+
+            } else if ((event.target.id === "client") && (event.inputType === "insertText")) {
+                console.log("searching client");
+                // clientDataList.innerHTML = "";
+                clearTimeout(typingTimer);
+                let term = event.target.value.trim();
+                if (term) {
+                    // TODO : sanitize here
+                    clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
+                    typingTimer = setTimeout(() => { searchLive(term, clientDataList, "client") }, 1500);
+                }
+                // } else if ((event.target.id === "fact-origin") && (["insertText"].includes(event.inputType))) {
+                //     console.log("searching fact1");
+                //     console.log(event.inputType);
+                //     clientDataList.innerHTML = "";
+                //     clearTimeout(typingTimer);
+                //     let term = event.target.value.trim();
+                //     if (term) {
+                //         // TODO : sanitize here
+                //         clientDataList.innerHTML = "<li  value='Searching for \"" + event.target.value.trim() + "\"'></li>";
+                //         typingTimer = setTimeout(() => { searchLive(term, factureDataList, "facture") }, 1500);
+                //     }
+            } else if (event.target.id === "search-facture") {
+                console.log("searching fact2");
+                // console.log(event.inputType);
+                let hint = event.target.value.trim();
+                // TODO : sanitize hint
+                if (hint) {
+                    let selection;
+                    let LIs = myList.querySelectorAll("li");
+                    LIs.forEach(LI => {
+                        if (LI.id !== "search-container") {
+                            myList.removeChild(LI);
+                        }
+                    })
+                    //// START - grabing data
+                    clearTimeout(typingTimer)
+                    addName(myList, "Searching for \"" + event.target.value + "\"", false);
+                    typingTimer = setTimeout(() => { searchLive(hint, myList, "facture") }, 1500);
+                    //// END - grabing data
+                    console.log("markman");
+                    // if (selection == undefined) {
+                    //     selection = "no match for \"" + search.value + "\"";
+                    // };
+                    // console.log("typed : " + JSON.stringify(selection));
+                    // console.log(selection);
+                    // LIs = myList.querySelectorAll("li");
+                    // for (let index = 0; index < LIs.length; index++) {
+                    //     if (LIs[index].id !== "search-container") {
+                    //         myList.removeChild(LIs[index]);
+                    //     }
+                    // }
+
+                    // addName(myList, selection,true)
+
+
+                } else {
+                    let LIs = myList.querySelectorAll("li");
+                    for (let index = 0; index < LIs.length; index++) {
+                        let j = LIs[index].id;
+                        if (LIs[index].id !== "search-container") {
+                            myList.removeChild(LIs[index]);
+                        }
+                    }
+                }
+
+                // } else if ((event.target.id === "fact-origin") && (!event.key) && (!["deleteContentBackward", "deleteContentForward"].includes(event.inputType))) {
+                //     console.log("chossed fact");
+                //     console.log(event);
+
+                //     console.log(getDataFacture(event.target.value));
+                //     // DefaultModalAvoirInputs(modalAvoirNewBased, 0);
+                //     removeItemRows(modalAvoirNewBased.querySelectorAll(".item-commande-row"));
+                //     let val = event.target.value;
+                //     fillHeadersFactureOrigin(modalAvoirNewBased, getDataFacture(event.target.value)[0]);
+                //     fillInputsDetailsItems(getDataFacture(event.target.value)[1], modalAvoirNewBased.querySelector('#table-avoir'), 'new');
+                //     // if (event.target.parentNode.parentNode.querySelector("#item-quantity").value > 0) {
+                //     //     fillItemNameAndPrice(event.target, 0);
+                //     // } else {
+                //     //     fillItemNameAndPrice(event.target, 1);
+                //     // }
+                //     // const itemTotalPriceInputs = modalCommandeNew.querySelectorAll(".item-prix-total");
+                //     // console.log("itemTotalPriceInputs");
+                //     // console.log(itemTotalPriceInputs);
+                //     // updateTotalPrice(montantHTAvantRemiseInputNewBased, itemTotalPriceInputs);
+                //     // updateAllHeaderPrices(montantHTAvantRemiseInputNewBased, TVAAvantRemiseInputNewBased, montantTTCAvantRemiseInputNewBased, remiseTauxInputNewBased, remiseMontantInputNewBased, montantHTApresRemiseInputNewBased, TVAApresRemiseInputNewBased, montantTTCApresRemiseInputNewBased);
+            } else if (event.target.classList.contains("search-result")) {
+                console.log("chossed fact");
+                console.log(event);
+
+                console.log(getDataFacture(event.target.value));
+                // DefaultModalAvoirInputs(modalAvoirNewBased, 0);
+                removeItemRows(modalAvoirNewBased.querySelectorAll(".item-commande-row"));
+                let val = event.target.value;
+                fillHeadersFactureOrigin(modalAvoirNewBased, getDataFacture(event.target.value)[0]);
+                fillInputsDetailsItems(getDataFacture(event.target.value)[1], modalAvoirNewBased.querySelector('#table-avoir'), 'new');
+
+            } else if (event.target.id == "item-quantity") {
+                console.log("qtt called");
+                updateItemTotalPrice(event.target.parentNode.parentNode)
+                updateTotalPrice(montantHTAvantRemiseInputNewBased, modalAvoirNewBased.querySelectorAll("#item-prix-total"));
+                updateAllHeaderPrices(montantHTAvantRemiseInputNewBased, TVAAvantRemiseInputNewBased, montantTTCAvantRemiseInputNewBased, remiseTauxInputNewBased, remiseMontantInputNewBased, montantHTApresRemiseInputNewBased, TVAApresRemiseInputNewBased, montantTTCApresRemiseInputNewBased);
+                try {
+                    modalAvoirNewBased.querySelector("#btn-create-avoir").disabled = true;
+
+                    if (parseInt(montantTTCApresRemiseInputNewBased.value) < 0) {
                         modalAvoirNewBased.querySelector("#btn-create-avoir").disabled = false;
                     }
                 } catch (error) {
