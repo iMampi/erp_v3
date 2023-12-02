@@ -4,14 +4,9 @@ use function Session\can_visit;
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 
-
 $cycle_item = "item";
 
-
 $base = __DIR__ . "/../../../elements/warehouses/items/liste_items_table_001_base.html";
-
-
-
 
 $TYPE_ITEM = ["0" => "service", "1" => 'bien'];
 //create first DOM to handle base file
@@ -87,9 +82,9 @@ if (can_visit($cycle_item)) {
                 } elseif (in_array("type", $classes_array)) {
                     $item_input->setAttribute("value", $TYPE_ITEM[$item["type_item"]]);
                 } elseif (in_array("category", $classes_array)) {
-                    $item_input->setAttribute("value", $all_categories_name[\intval($item["category_uid"]) - 1]["name"]);
+                    $item_input->setAttribute("value", $all_categories_name[\intval(array_search($item["category_uid"], array_column($all_categories_name, "uid")))]["name"]);
                 } elseif (in_array("famille", $classes_array)) {
-                    $item_input->setAttribute("value", $all_familles_name[\intval($item["family_uid"]) - 1]["name"]);
+                    $item_input->setAttribute("value", $all_familles_name[\intval(array_search($item["family_uid"], array_column($all_categories_name, "uid")))]["name"]);
                 } elseif (in_array("prix-vente", $classes_array)) {
                     $item_input->setAttribute("value", $item["prix_vente"]);
                 } elseif (in_array("pamp", $classes_array)) {

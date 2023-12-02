@@ -4,7 +4,7 @@ const TODAY = luxon.DateTime.now().toFormat('yyyy-MM-dd');
 var modificationWatcher = false;
 var typingTimer;
 var ModalFlag = false;
-var listDOM = {};
+var myCache = {};
 
 var counterRowItem = 1;
 
@@ -171,11 +171,11 @@ function TVAHandler(discountedMontantInput, TVAInput, TotalTTCInput, mode) {
 function addRowTable(tableBody, dataObj) {
     return new Promise((resolve, reject) => {
         console.log("addding new avoir");
-        if (listDOM["tableRow"]) {
+        if (myCache["tableRow"]) {
             console.log("from cahce");
             counterRowItem++;
             let doc = new DOMParser().parseFromString(
-                listDOM["tableRow"],
+                myCache["tableRow"],
                 "text/html"
             );
             let trModel = doc.querySelector("#row-001");
@@ -203,7 +203,7 @@ function addRowTable(tableBody, dataObj) {
                     );
 
                     // caching
-                    listDOM["tableRow"] = doc.body.innerHTML;
+                    myCache["tableRow"] = doc.body.innerHTML;
 
                     let trModel = doc.querySelector("#row-001");
                     console.log("trModel");
@@ -361,7 +361,154 @@ function fillHeadersFactureOrigin(modalNode, headersData) {
     return;
 }
 
+function addDatalistElement(datalistNode, arrayData, mode, term = "") {
+    //TODO : Refactor me
+    let LIs = datalistNode.querySelectorAll("li");
+    LIs.forEach(LI => {
+        if (LI.id !== "search-container") {
+            datalistNode.removeChild(LI);
+        }
+    })
+    if ((Array.isArray(arrayData)) && (arrayData.length || arrayData[0] != undefined)) {
+        console.log("array is ok");
+        if (mode === "facture") {
+            arrayData = [arrayData]
+        }
 
+        arrayData.forEach(element => {
+            let option_ = document.createElement("option");
+            if (mode === "facture") {
+                console.log("facture xxx");
+                console.log(element[1]["items"]);
+                let headers_ = element[1]["header"];
+
+                let newLi = document.createElement("li");
+                let newA = document.createElement("a");
+                newA.classList.add("dropdown-item", "fst-italic", "search-result");
+                newA.setAttribute("href", "#");
+                newA.textContent = headers_['num_facture'] + " - ";
+                newA.dataset.headers = JSON.stringify(headers_);
+                newA.dataset.items = JSON.stringify(element[1]["items"]);
+                newA.dataset.value = headers_['num_facture'];
+
+
+                if (headers_.noms == "") {
+                    console.log("client company");
+
+                    newA.textContent += (headers_["raison_sociale"] || "") + " / " + (headers_["nom_commercial"] || "");
+                    // option_.label += (headers_["raison_sociale"] || "") + " / " + (headers_["nom_commercial"] || "");
+                } else if (headers_["raison_sociale"] == "") {
+                    console.log("client humain");
+                    newA.textContent += headers_.noms + " " + headers_.prenoms;
+                    // option_.label += headers_.noms + " " + headers_.prenoms;
+                }
+
+                console.log("xmar");
+                newA.textContent += " - " + formatNumber(headers_['total_ttc_apres_remise']);
+                newLi.appendChild(newA);
+                datalistNode.appendChild(newLi);
+
+                // option_.label += " - " + formatNumber(headers_['total_ttc_apres_remise']);
+                // datalistNode.append(option_);
+                return;
+            } else if (mode == "item") {
+                option_.value = element.code;
+                option_.label = element.name;
+                option_.dataset.prix = element.prix_vente;
+            } else if (mode == "client") {
+                let val = element.uid + " - ";
+                if (element.noms == "") {
+                    console.log("client company");
+
+                    val += (element["raison_sociale"] || "") + " / " + (element["nom_commercial"] || "");
+                } else if (element["raison_sociale"] == "") {
+                    console.log("client humain");
+                    val += element.noms + " " + element.prenoms;
+                }
+                option_.value = val;
+                option_.label = val;
+            }
+            // datalistNode.append(option_);
+            return;
+        });
+    } else {
+        console.log("empty arrayy");
+
+        let newLi = document.createElement("li");
+        newLi.classList.add("dropdown-item", "fst-italic", "search-result");
+        newLi.textContent = "aucun résultat pour \"" + term + "\"";
+        datalistNode.append(newLi);
+
+
+        // let option_ = document.createElement("option");
+        // option_.value = "Néant";
+        // option_.label = "aucun résultat pour \"" + term + "\"";
+        // datalistNode.append(option_);
+        return;
+    }
+
+}
+
+async function searchClient(inputObj) {
+    console.log("searching ITEM");
+    let url = "/database/select/selection_clients.php";
+    let response = await sendData(url, inputObj);
+
+    console.log("error?");
+    console.log(response);
+    let myjson = JSON.parse(response);
+    console.log(myjson);
+
+    return myjson;
+    // return await fillMainTable(myjson, tableBodyCategorie);
+
+}
+
+async function searchFacture(inputObj) {
+    console.log("searching Facture");
+    let url = "/database/select/one_facture_client_details_for_avoir.php";
+    // let url = "/database/select/select_filtered_factures.php";
+    let response = await sendData(url, inputObj);
+
+    console.log("error?");
+    console.log(response);
+    let myjson = await responseHandlerSelectOneCommande(response);
+    // let myjson = JSON.parse(await response);
+
+    console.log(myjson);
+
+    return myjson;
+    // return await fillMainTable(myjson, tableBodyCategorie);
+
+}
+
+async function searchItem(inputObj) {
+    console.log("searching ITEM");
+    let url = "/database/select/selection_items.php";
+    let response = await sendData(url, inputObj);
+
+    console.log("error?");
+    console.log(response);
+    let myjson = JSON.parse(response);
+
+    return myjson;
+    // return await fillMainTable(myjson, tableBodyCategorie);
+
+}
+
+async function searchLive(term, datalistNode, mode) {
+    console.log("searching LIVE");
+    let search = { "client": searchClient, "item": searchItem, "facture": searchFacture }
+
+    let inputObj = {
+        "client": { uid: term, noms: term, prenoms: term, "nom-commercial": term, "raison-sociale": term },
+        "item": { code: term, name: term },
+        "facture": { uid: null, "num-facture": term }
+    };
+    let result = await search[mode](inputObj[mode]);
+    // let result = await searchItem(inputObj);
+    addDatalistElement(datalistNode, result, mode, term);
+}
 
 function addItem(tableFactureBody, mode) {
     console.log("table name");
@@ -372,11 +519,11 @@ function addItem(tableFactureBody, mode) {
     let newInputDisabled = ["input-uid", "num-serie"];
     return new Promise((resolve, reject) => {
         console.log("addding item");
-        if (listDOM["item-row-" + mode]) {
+        if (myCache["item-row-" + mode]) {
             console.log("from cahce");
             counterRowItem++;
             let doc = new DOMParser().parseFromString(
-                listDOM["item-row-" + mode],
+                myCache["item-row-" + mode],
                 "text/html"
             );
             let trModel = doc.querySelector("#row-001");
@@ -412,7 +559,7 @@ function addItem(tableFactureBody, mode) {
                     );
 
                     // caching
-                    listDOM["item-row-" + mode] = doc.body.innerHTML;
+                    myCache["item-row-" + mode] = doc.body.innerHTML;
 
                     let trModel = doc.querySelector("#row-001");
 
@@ -604,8 +751,17 @@ function openNewAvoirFactureBased(modal, bsModal) {
     bsModal.show();
 
 }
+// TODO :finish me
+async function getCachedData(key) {
+    if (!myCache["defautItemAvoirSimpleJSON"]) {
+        let resp = await searchItem({ code: "cstm_avr", name: "cstm_avr" });
+        myCache["defautItemAvoirSimpleJSON"] = resp[0];
 
-function openNewAvoirFactureSimple(modal, bsModal) {
+    }
+    return myCache["defautItemAvoirSimpleJSON"];
+}
+
+async function openNewAvoirFactureSimple(modal, bsModal) {
     console.log("avoir simple");
     bsModal.show();
 
@@ -615,10 +771,23 @@ function openNewAvoirFactureSimple(modal, bsModal) {
 
     });
 
+    await addItem(modal.querySelector("#table-avoir"), "new");
+
+    let defautItemAvoirSimpleJSON = await getCachedData("defautItemAvoirSimpleJSON");
+
+    modal.querySelector("#item-uid").value = defautItemAvoirSimpleJSON["code"];
+    modal.querySelector("#item-name").value = defautItemAvoirSimpleJSON["name"];
+    modal.querySelector("#item-quantity").value = "1";
+    modal.querySelector("#item-quantity").disabled = true;
+    modal.querySelector("#num-serie").disabled = false;
+    modal.querySelector("#item-pu").disabled = false;
+    modal.querySelector("#initial-quantity").textContent = "1";
+
     modal.querySelectorAll('.btn').forEach(element => {
         // element.disabled = element.id !== 'btn-cancel-avoir';
-        element.disabled = !['btn-cancel-avoir', 'fact-origin', 'client'].includes(element.id);
+        element.disabled = !['btn-cancel-avoir', 'fact-origin', 'client', "btn-del-item"].includes(element.id);
     });
+
 
 }
 
@@ -696,7 +865,7 @@ async function DefaultModalAvoirInputs(modal, min_row = 1) {
     let itemRows = modal.querySelectorAll(".item-commande-row");
     removeItemRows(itemRows);
     if (min_row != 0) {
-        await addItem(modal);
+        await addItem(modalm, "new");
     };
     defaultButtons(modal);
     //clean an dput to deafult value
@@ -846,66 +1015,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //FUNCTIONS
 
-    async function searchClient(inputObj) {
-        console.log("searching ITEM");
-        let url = "/database/select/selection_clients.php";
-        let response = await sendData(url, inputObj);
 
-        console.log("error?");
-        console.log(response);
-        let myjson = JSON.parse(response);
-        console.log(myjson);
-
-        return myjson;
-        // return await fillMainTable(myjson, tableBodyCategorie);
-
-    }
-
-    async function searchFacture(inputObj) {
-        console.log("searching Facture");
-        let url = "/database/select/one_facture_client_details_for_avoir.php";
-        // let url = "/database/select/select_filtered_factures.php";
-        let response = await sendData(url, inputObj);
-
-        console.log("error?");
-        console.log(response);
-        let myjson = await responseHandlerSelectOneCommande(response);
-        // let myjson = JSON.parse(await response);
-
-        console.log(myjson);
-
-        return myjson;
-        // return await fillMainTable(myjson, tableBodyCategorie);
-
-    }
-
-    async function searchItem(inputObj) {
-        console.log("searching ITEM");
-        let url = "/database/select/selection_items.php";
-        let response = await sendData(url, inputObj);
-
-        console.log("error?");
-        console.log(response);
-        let myjson = JSON.parse(response);
-
-        return myjson;
-        // return await fillMainTable(myjson, tableBodyCategorie);
-
-    }
-
-    async function searchLive(term, datalistNode, mode) {
-        console.log("searching LIVE");
-        let search = { "client": searchClient, "item": searchItem, "facture": searchFacture }
-
-        let inputObj = {
-            "client": { uid: term, noms: term, prenoms: term, "nom-commercial": term, "raison-sociale": term },
-            "item": { code: term, name: term },
-            "facture": { uid: null, "num-facture": term }
-        };
-        let result = await search[mode](inputObj[mode]);
-        // let result = await searchItem(inputObj);
-        addDatalistElement(datalistNode, result, mode, term);
-    }
 
 
 
@@ -947,155 +1057,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
     }
-
-
-    function addDatalistElement(datalistNode, arrayData, mode, term = "") {
-        //TODO : Refactor me
-        let LIs = datalistNode.querySelectorAll("li");
-        LIs.forEach(LI => {
-            if (LI.id !== "search-container") {
-                datalistNode.removeChild(LI);
-            }
-        })
-        if ((Array.isArray(arrayData)) && (arrayData.length || arrayData[0] != undefined)) {
-            console.log("array is ok");
-            if (mode === "facture") {
-                arrayData = [arrayData]
-            }
-
-            arrayData.forEach(element => {
-                let option_ = document.createElement("option");
-                if (mode === "facture") {
-                    console.log("facture xxx");
-                    console.log(element[1]["items"]);
-                    let headers_ = element[1]["header"];
-
-                    let newLi = document.createElement("li");
-                    let newA = document.createElement("a");
-                    newA.classList.add("dropdown-item", "fst-italic", "search-result");
-                    newA.setAttribute("href", "#");
-                    newA.textContent = headers_['num_facture'] + " - ";
-                    newA.dataset.headers = JSON.stringify(headers_);
-                    newA.dataset.items = JSON.stringify(element[1]["items"]);
-                    newA.dataset.value = headers_['num_facture'];
-
-
-                    if (headers_.noms == "") {
-                        console.log("client company");
-
-                        newA.textContent += (headers_["raison_sociale"] || "") + " / " + (headers_["nom_commercial"] || "");
-                        // option_.label += (headers_["raison_sociale"] || "") + " / " + (headers_["nom_commercial"] || "");
-                    } else if (headers_["raison_sociale"] == "") {
-                        console.log("client humain");
-                        newA.textContent += headers_.noms + " " + headers_.prenoms;
-                        // option_.label += headers_.noms + " " + headers_.prenoms;
-                    }
-
-                    console.log("xmar");
-                    newA.textContent += " - " + formatNumber(headers_['total_ttc_apres_remise']);
-                    newLi.appendChild(newA);
-                    datalistNode.appendChild(newLi);
-
-                    // option_.label += " - " + formatNumber(headers_['total_ttc_apres_remise']);
-                    // datalistNode.append(option_);
-                    return;
-                } else if (mode == "item") {
-                    option_.value = element.code;
-                    option_.label = element.name;
-                    option_.dataset.prix = element.prix_vente;
-                } else if (mode == "client") {
-                    let val = element.uid + " - ";
-                    if (element.noms == "") {
-                        console.log("client company");
-
-                        val += (element["raison_sociale"] || "") + " / " + (element["nom_commercial"] || "");
-                    } else if (element["raison_sociale"] == "") {
-                        console.log("client humain");
-                        val += element.noms + " " + element.prenoms;
-                    }
-                    option_.value = val;
-                    option_.label = val;
-                }
-                // datalistNode.append(option_);
-                return;
-            });
-        } else {
-            console.log("empty arrayy");
-
-            let newLi = document.createElement("li");
-            newLi.classList.add("dropdown-item", "fst-italic", "search-result");
-            newLi.textContent = "aucun résultat pour \"" + term + "\"";
-            datalistNode.append(newLi);
-
-
-            // let option_ = document.createElement("option");
-            // option_.value = "Néant";
-            // option_.label = "aucun résultat pour \"" + term + "\"";
-            // datalistNode.append(option_);
-            return;
-        }
-
-    }
-    // function addDatalistElement(datalistNode, arrayData, mode, term = "") {
-    //     datalistNode.innerHTML = "";
-    //     if ((Array.isArray(arrayData)) && (arrayData.length || arrayData[0] != undefined)) {
-    //         console.log("array is ok");
-    //         if (mode === "facture") {
-    //             console.log("facture xxx");
-    //             console.log(arrayData[1]["items"]);
-    //             let headers_ = arrayData[1]["header"];
-
-    //             let option_ = document.createElement("option");
-    //             option_.value = headers_['num_facture'];
-    //             option_.label = headers_['num_facture'] + " - ";
-    //             option_.dataset.headers = JSON.stringify(headers_);
-    //             option_.dataset.items = JSON.stringify(arrayData[1]["items"]);
-
-    //             if (headers_.noms == "") {
-    //                 console.log("client company");
-
-    //                 option_.label += (headers_["raison_sociale"] || "") + " / " + (headers_["nom_commercial"] || "");
-    //             } else if (headers_["raison_sociale"] == "") {
-    //                 console.log("client humain");
-    //                 option_.label += headers_.noms + " " + headers_.prenoms;
-    //             }
-    //             option_.label += " - " + formatNumber(headers_['total_ttc_apres_remise']);
-    //             datalistNode.append(option_);
-    //             return;
-    //         }
-
-    //         arrayData.forEach(element => {
-    //             let option_ = document.createElement("option");
-    //             if (mode == "item") {
-    //                 option_.value = element.code;
-    //                 option_.label = element.name;
-    //                 option_.dataset.prix = element.prix_vente;
-    //             } else if (mode == "client") {
-    //                 let val = element.uid + " - ";
-    //                 if (element.noms == "") {
-    //                     console.log("client company");
-
-    //                     val += (element["raison_sociale"] || "") + " / " + (element["nom_commercial"] || "");
-    //                 } else if (element["raison_sociale"] == "") {
-    //                     console.log("client humain");
-    //                     val += element.noms + " " + element.prenoms;
-    //                 }
-    //                 option_.value = val;
-    //                 option_.label = val;
-    //             }
-    //             datalistNode.append(option_);
-    //             return;
-    //         });
-    //     } else {
-    //         console.log("empty arrayy");
-    //         let option_ = document.createElement("option");
-    //         option_.value = "Néant";
-    //         option_.label = "aucun résultat pour \"" + term + "\"";
-    //         datalistNode.append(option_);
-    //         return;
-    //     }
-
-    // }
 
     function getDataFacture(target) {
         // return [JSON.parse(document.querySelector("option[value='" + code + "']").getAttribute("data-headers")),

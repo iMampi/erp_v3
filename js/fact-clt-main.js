@@ -88,7 +88,7 @@ var typingTimer;
 var modificationWatcher = false;
 const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
-var listDOM = {};
+var myCache = {};
 
 
 
@@ -369,11 +369,11 @@ function removeItemRows(nodeList) {
 function addItem(tableFactureBody) {
     return new Promise((resolve, reject) => {
         console.log("addding item");
-        if (listDOM["itemRow"]) {
+        if (myCache["itemRow"]) {
             console.log("from cahce");
             counterRowItem++;
             let doc = new DOMParser().parseFromString(
-                listDOM["itemRow"],
+                myCache["itemRow"],
                 "text/html"
             );
             let trModel = doc.querySelector("#row-001");
@@ -402,7 +402,7 @@ function addItem(tableFactureBody) {
                     );
 
                     // caching
-                    listDOM["itemRow"] = doc.body.innerHTML;
+                    myCache["itemRow"] = doc.body.innerHTML;
 
                     let trModel = doc.querySelector("#row-001");
                     console.log("trModel");

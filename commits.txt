@@ -918,3 +918,11 @@ changed the position of remise-taux and remise-montant in all avoir.
 placed more appropriate placeholder value for all input montant related instead of hard value.
 changed DefaultValuesAvoirNewFormObj, modified cancelCreationObj.
 implementing eventlistener for modal-avoir-simple 
+-------------------------
+135_a:
+working on js > openNewAvoirFactureSimple(). now row item created,
+now itemis filled by default.
+implementing getter for caching system with getCachedData(). a layer of abstration to ease the use of caching+fectching and the readability...
+items/generate_table_001.php : 
+modified to array_search($item["category_uid"], array_column($all_categories_name, "uid")); for finding key ofof a value in a multidimentional array;
+because if a ai-uid is missing (number jumped), it will fail with the old method. now it wont.

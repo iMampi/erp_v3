@@ -389,3 +389,14 @@ css height of row (elements\avoirs_clt\avoir_clt_header_based_base.html):
 	</div>
 
 i use .form-control-sm  in #btn-see-client just to uniform the height of each row.
+
+/////////////////////
+PHP has already greate array functions.
+like this one :
+array_search($item["category_uid"], array_column($all_categories_name, "uid"));
+
+array_search — Searches the array for a given value and returns the first corresponding key if successful
+
+array_column — Return the values from a single column in the input array
+
+by combining those 2, we can search for the key of value in a multidimensional array
