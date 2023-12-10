@@ -153,14 +153,15 @@ class Bindings
             ];
         } else if (\in_array($this->converter::class, ["Converter\NewCommandeItem", "Converter\NewCommandeAvoirItem"])) {
             $this->binding = [
-                'issdddi',
+                'issdddis',
                 $arr["commande_uid"],
                 $arr["item_uid"],
-                $arr["num_serie"],
+                $arr["description_item"],
                 $arr["quantity"],
                 $arr["prix_unitaire"],
                 $arr["prix_total"],
-                $arr["commande_initial_uid"]
+                $arr["commande_initial_uid"],
+                $arr["num_serie"]
             ];
         } else if ($this->converter::class == "Converter\NewEmployee") {
             $this->binding = [

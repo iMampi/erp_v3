@@ -926,3 +926,13 @@ implementing getter for caching system with getCachedData(). a layer of abstrati
 items/generate_table_001.php : 
 modified to array_search($item["category_uid"], array_column($all_categories_name, "uid")); for finding key ofof a value in a multidimentional array;
 because if a ai-uid is missing (number jumped), it will fail with the old method. now it wont.
+-------------------------
+136_a:
+libellé/numéro de série
+fixed selectionClient() uid is near
+textarea
+client fetch
+calcul update
+splited num-serie for num-serie et libelle. updated database. changes implemented for avoir client.
+added #state input hidden to html of avoir simple.
+saving simple avoir :... problem with database > constrain for foreign key commande-uid and facture uid (i think)>>FIXED. this was a problem  due to converter NewCommandeItem. wrong count of array key et wrong reatement of value for initail_commande_uid. returned 0 insted of NULL.

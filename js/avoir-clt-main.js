@@ -68,6 +68,7 @@ const InputsDisabledByDefaultAvoirBasedRowItemArray = [
     "item-uid",
     "item-name",
     "num-serie",
+    "num_serie",
     "item-pu",
     "item-prix-total"
 ];
@@ -295,7 +296,8 @@ function grabAvoirDataForm(modal) {
         let quantity = row.querySelector("#item-quantity").value;
         let prixUnitaire = row.querySelector("#item-pu").value;
         let numSerie = row.querySelector("#num-serie").value;
-        data["items"].push([rowID, itemID, quantity, prixUnitaire, numSerie]);
+        let libelle = row.querySelector("#libelle").value;
+        data["items"].push([rowID, itemID, quantity, prixUnitaire, numSerie, libelle]);
     });
     return data;
 }
@@ -416,19 +418,29 @@ function addDatalistElement(datalistNode, arrayData, mode, term = "") {
                 option_.label = element.name;
                 option_.dataset.prix = element.prix_vente;
             } else if (mode == "client") {
-                let val = element.uid + " - ";
+                console.log("client xxx");
+                console.log(element);
+                let newLi = document.createElement("li");
+                let newA = document.createElement("a");
+                newA.classList.add("dropdown-item", "fst-italic", "search-result");
+                newA.setAttribute("href", "#");
+                newA.textContent = element['uid'] + " - ";
+                newA.dataset.uid = element['uid'];
+                // newA.dataset.items = JSON.stringify(element[1]["items"]);
+                // newA.dataset.value = headers_['num_facture'];
                 if (element.noms == "") {
                     console.log("client company");
 
-                    val += (element["raison_sociale"] || "") + " / " + (element["nom_commercial"] || "");
+                    newA.textContent += (element["raison_sociale"] || "") + " / " + (element["nom_commercial"] || "");
                 } else if (element["raison_sociale"] == "") {
                     console.log("client humain");
-                    val += element.noms + " " + element.prenoms;
+                    newA.textContent += element.noms + " " + element.prenoms;
                 }
-                option_.value = val;
-                option_.label = val;
+                console.log("xmars");
+
+                newLi.appendChild(newA);
+                datalistNode.appendChild(newLi);
             }
-            // datalistNode.append(option_);
             return;
         });
     } else {
@@ -460,7 +472,6 @@ async function searchClient(inputObj) {
     console.log(myjson);
 
     return myjson;
-    // return await fillMainTable(myjson, tableBodyCategorie);
 
 }
 
@@ -492,7 +503,6 @@ async function searchItem(inputObj) {
     let myjson = JSON.parse(response);
 
     return myjson;
-    // return await fillMainTable(myjson, tableBodyCategorie);
 
 }
 
@@ -694,7 +704,8 @@ function fillInputsDetailsItem(arrayData, rowNode, mode) {
         "row-uid": "uid",
         "item-uid": "item_uid",
         "item-name": "item_name",
-        "num-serie": "description_item",
+        "libelle": "description_item",
+        "num-serie": "num_serie",
         "item-pu": "prix_unitaire",
     }
     if (mode === "view") {
@@ -751,6 +762,7 @@ function openNewAvoirFactureBased(modal, bsModal) {
     bsModal.show();
 
 }
+
 // TODO :finish me
 async function getCachedData(key) {
     if (!myCache["defautItemAvoirSimpleJSON"]) {
@@ -778,14 +790,15 @@ async function openNewAvoirFactureSimple(modal, bsModal) {
     modal.querySelector("#item-uid").value = defautItemAvoirSimpleJSON["code"];
     modal.querySelector("#item-name").value = defautItemAvoirSimpleJSON["name"];
     modal.querySelector("#item-quantity").value = "1";
-    modal.querySelector("#item-quantity").disabled = true;
-    modal.querySelector("#num-serie").disabled = false;
-    modal.querySelector("#item-pu").disabled = false;
     modal.querySelector("#initial-quantity").textContent = "1";
+    modal.querySelector("#item-quantity").disabled = true;
+    modal.querySelector("#libelle").disabled = false;
+    modal.querySelector("#item-pu").disabled = false;
+    modal.querySelector("#btn-del-item").disabled = true;
 
     modal.querySelectorAll('.btn').forEach(element => {
         // element.disabled = element.id !== 'btn-cancel-avoir';
-        element.disabled = !['btn-cancel-avoir', 'fact-origin', 'client', "btn-del-item"].includes(element.id);
+        element.disabled = !['btn-cancel-avoir', 'fact-origin', 'client',].includes(element.id);
     });
 
 
@@ -878,9 +891,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const divBtns = document.getElementById("div-btns");
     const tableBody = document.getElementById("ze-tbody");
     const itemDataList = document.getElementById("item-list");
-    const clientDataList = document.getElementById("client-list");
-    const factureDataList = document.getElementById("facture-list");
-    const myList = document.getElementById("my-list");
+    const factureDropdown = document.getElementById("facture-dropdown");
+    const clientDropdown = document.getElementById("client-dropdown");
 
     ////modal confirmation
     const modalConfirmation = document.getElementById("modal-confirmation");
@@ -974,7 +986,8 @@ document.addEventListener("DOMContentLoaded", () => {
         },
     };
 
-    const saveNewAvoirObj = {
+    // TODO : to refactor. doulon
+    const saveNewAvoirBasedObj = {
         message:
             "Des champs ont été modifiés.<br>\
 				Vos modifications vont être enregistrées de facon définitive.<br>\
@@ -996,6 +1009,47 @@ document.addEventListener("DOMContentLoaded", () => {
                         bsModalAvoirNewBased.hide();
                         bsModalChooseNewAvoir.hide();
                         DefaultModalAvoirInputs(modalAvoirNewBased, 0);
+                        bsModalConfirmation.hide();
+                        console.log("yes saving avoir called");
+                        modificationWatcher = false;
+                        return false;
+                    })
+
+
+
+                } else {
+                    //TODO : show error
+                    return true;
+                }
+
+            })
+        }
+    }
+
+    // TODO : to refactor. doulon
+    const saveNewAvoirSimpleObj = {
+        message:
+            "Des champs ont été modifiés.<br>\
+            Vos modifications vont être enregistrées de facon définitive.<br>\
+            Êtes vous sûr de vouloir sauvegarder vos modifications?",
+        yes: () => {
+
+            let dataModalAvoirNew = grabAvoirDataForm(modalAvoirNewSimple);
+            console.log("modalAvoirNewSimple");
+            console.log(dataModalAvoirNew);
+            saveAvoirNew(dataModalAvoirNew).then((result) => {
+                console.log("result123");
+                console.log(result);
+                if (result[0]) {
+                    // insert uid of newly created client
+                    dataModalAvoirNew["header"]["num-avoir"] = result[1][0];
+                    dataModalAvoirNew["header"]["new-commande-uid"] = result[1][1];
+
+                    addRowTable(tableBody, dataModalAvoirNew["header"]).then(res => {
+                        //close and clean the rest
+                        bsModalAvoirNewSimple.hide();
+                        bsModalChooseNewAvoir.hide();
+                        DefaultModalAvoirInputs(modalAvoirNewSimple, 0);
                         bsModalConfirmation.hide();
                         console.log("yes saving avoir called");
                         modificationWatcher = false;
@@ -1122,7 +1176,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (modificationWatcher) {
                     openModalConfirmation(
                         confirmationObj,
-                        saveNewAvoirObj
+                        saveNewAvoirBasedObj
                     );
                 } else {
                     // bsModalConfirmation.hide();
@@ -1137,16 +1191,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 let val = event.target.value;
                 fillHeadersFactureOrigin(modalAvoirNewBased, getDataFacture(event.target)[0]);
                 fillInputsDetailsItems(getDataFacture(event.target)[1], modalAvoirNewBased.querySelector('#table-avoir'), 'new');
-
-            } else if (event.target.id == "btn-validate-new") {
-                if (modificationWatcher) {
-                    //     openModalConfirmation(
-                    //         confirmationObj,
-                    //         validateCreationObj
-                    //     );
-                } else {
-                    //     // bsModalCommandeNew.hide();
-                }
             }
         })
     } catch (error) {
@@ -1198,16 +1242,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 // TODO : sanitize hint
                 if (hint) {
                     let selection;
-                    let LIs = myList.querySelectorAll("li");
+                    let LIs = factureDropdown.querySelectorAll("li");
                     LIs.forEach(LI => {
                         if (LI.id !== "search-container") {
-                            myList.removeChild(LI);
+                            factureDropdown.removeChild(LI);
                         }
                     })
                     //// START - grabing data
                     clearTimeout(typingTimer)
-                    addName(myList, "Searching for \"" + event.target.value + "\"", false);
-                    typingTimer = setTimeout(() => { searchLive(hint, myList, "facture") }, 1500);
+                    addName(factureDropdown, "Searching for \"" + event.target.value + "\"", false);
+                    typingTimer = setTimeout(() => { searchLive(hint, factureDropdown, "facture") }, 1500);
                     //// END - grabing data
                     console.log("markman");
                     // if (selection == undefined) {
@@ -1215,22 +1259,22 @@ document.addEventListener("DOMContentLoaded", () => {
                     // };
                     // console.log("typed : " + JSON.stringify(selection));
                     // console.log(selection);
-                    // LIs = myList.querySelectorAll("li");
+                    // LIs = factureDropdown.querySelectorAll("li");
                     // for (let index = 0; index < LIs.length; index++) {
                     //     if (LIs[index].id !== "search-container") {
-                    //         myList.removeChild(LIs[index]);
+                    //         factureDropdown.removeChild(LIs[index]);
                     //     }
                     // }
 
-                    // addName(myList, selection,true)
+                    // addName(factureDropdown, selection,true)
 
 
                 } else {
-                    let LIs = myList.querySelectorAll("li");
+                    let LIs = factureDropdown.querySelectorAll("li");
                     for (let index = 0; index < LIs.length; index++) {
                         let j = LIs[index].id;
                         if (LIs[index].id !== "search-container") {
-                            myList.removeChild(LIs[index]);
+                            factureDropdown.removeChild(LIs[index]);
                         }
                     }
                 }
@@ -1314,31 +1358,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (modificationWatcher) {
                     openModalConfirmation(
                         confirmationObj,
-                        saveNewAvoirObj
+                        saveNewAvoirSimpleObj
                     );
                 } else {
                     // bsModalConfirmation.hide();
                 }
+
             } else if (event.target.classList.contains("search-result")) {
                 console.log("chossed fact");
                 console.log(event);
 
-                // console.log(getDataFacture(event.target));
-                // DefaultModalAvoirInputs(modalAvoirNewBased, 0);
-                removeItemRows(modalAvoirNewBased.querySelectorAll(".item-commande-row"));
-                let val = event.target.value;
-                fillHeadersFactureOrigin(modalAvoirNewBased, getDataFacture(event.target)[0]);
-                fillInputsDetailsItems(getDataFacture(event.target)[1], modalAvoirNewBased.querySelector('#table-avoir'), 'new');
+                modalAvoirNewSimple.querySelector('#client').textContent = event.target.textContent
 
-            } else if (event.target.id == "btn-validate-new") {
-                if (modificationWatcher) {
-                    //     openModalConfirmation(
-                    //         confirmationObj,
-                    //         validateCreationObj
-                    //     );
-                } else {
-                    //     // bsModalCommandeNew.hide();
-                }
             }
         })
     } catch (error) {
@@ -1346,128 +1377,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
         modalAvoirNewSimple.addEventListener('input', (event) => {
-            console.log("event input");
-            console.log(event);
+            console.log("event input54");
+            console.log(event.target.id);
             modificationWatcher = true;
 
-            if ((event.target.id == "item-uid") && (event.inputType === "insertText")) {
-                console.log("searching item");
-                itemDataList.innerHTML = "";
-                clearTimeout(typingTimer);
-                let term = event.target.value.trim();
-                if (term) {
-                    // TODO : sanitize here
-                    itemDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
-                    typingTimer = setTimeout(() => { searchLive(term, itemDataList, "item") }, 1500);
-                }
-            } else if ((event.target.id == "item-uid") && (!event.key)) {
-
-            } else if ((event.target.id === "client") && (event.inputType === "insertText")) {
+            if ((event.target.id === "search-client")) {
                 console.log("searching client");
-                // clientDataList.innerHTML = "";
-                clearTimeout(typingTimer);
-                let term = event.target.value.trim();
-                if (term) {
-                    // TODO : sanitize here
-                    clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
-                    typingTimer = setTimeout(() => { searchLive(term, clientDataList, "client") }, 1500);
-                }
-                // } else if ((event.target.id === "fact-origin") && (["insertText"].includes(event.inputType))) {
-                //     console.log("searching fact1");
-                //     console.log(event.inputType);
-                //     clientDataList.innerHTML = "";
-                //     clearTimeout(typingTimer);
-                //     let term = event.target.value.trim();
-                //     if (term) {
-                //         // TODO : sanitize here
-                //         clientDataList.innerHTML = "<li  value='Searching for \"" + event.target.value.trim() + "\"'></li>";
-                //         typingTimer = setTimeout(() => { searchLive(term, factureDataList, "facture") }, 1500);
-                //     }
-            } else if (event.target.id === "search-facture") {
-                console.log("searching fact2");
-                // console.log(event.inputType);
                 let hint = event.target.value.trim();
                 // TODO : sanitize hint
                 if (hint) {
                     let selection;
-                    let LIs = myList.querySelectorAll("li");
+                    let LIs = clientDropdown.querySelectorAll("li");
                     LIs.forEach(LI => {
                         if (LI.id !== "search-container") {
-                            myList.removeChild(LI);
+                            clientDropdown.removeChild(LI);
                         }
                     })
-                    //// START - grabing data
                     clearTimeout(typingTimer)
-                    addName(myList, "Searching for \"" + event.target.value + "\"", false);
-                    typingTimer = setTimeout(() => { searchLive(hint, myList, "facture") }, 1500);
+                    addName(clientDropdown, "Searching for \"" + event.target.value + "\"", false);
+                    typingTimer = setTimeout(() => { searchLive(hint, clientDropdown, "client") }, 1500);
                     //// END - grabing data
-                    console.log("markman");
-                    // if (selection == undefined) {
-                    //     selection = "no match for \"" + search.value + "\"";
-                    // };
-                    // console.log("typed : " + JSON.stringify(selection));
-                    // console.log(selection);
-                    // LIs = myList.querySelectorAll("li");
-                    // for (let index = 0; index < LIs.length; index++) {
-                    //     if (LIs[index].id !== "search-container") {
-                    //         myList.removeChild(LIs[index]);
-                    //     }
-                    // }
-
-                    // addName(myList, selection,true)
-
-
-                } else {
-                    let LIs = myList.querySelectorAll("li");
-                    for (let index = 0; index < LIs.length; index++) {
-                        let j = LIs[index].id;
-                        if (LIs[index].id !== "search-container") {
-                            myList.removeChild(LIs[index]);
-                        }
-                    }
+                    console.log("markman2");
                 }
-
-                // } else if ((event.target.id === "fact-origin") && (!event.key) && (!["deleteContentBackward", "deleteContentForward"].includes(event.inputType))) {
-                //     console.log("chossed fact");
-                //     console.log(event);
-
-                //     console.log(getDataFacture(event.target.value));
-                //     // DefaultModalAvoirInputs(modalAvoirNewBased, 0);
-                //     removeItemRows(modalAvoirNewBased.querySelectorAll(".item-commande-row"));
-                //     let val = event.target.value;
-                //     fillHeadersFactureOrigin(modalAvoirNewBased, getDataFacture(event.target.value)[0]);
-                //     fillInputsDetailsItems(getDataFacture(event.target.value)[1], modalAvoirNewBased.querySelector('#table-avoir'), 'new');
-                //     // if (event.target.parentNode.parentNode.querySelector("#item-quantity").value > 0) {
-                //     //     fillItemNameAndPrice(event.target, 0);
-                //     // } else {
-                //     //     fillItemNameAndPrice(event.target, 1);
-                //     // }
-                //     // const itemTotalPriceInputs = modalCommandeNew.querySelectorAll(".item-prix-total");
-                //     // console.log("itemTotalPriceInputs");
-                //     // console.log(itemTotalPriceInputs);
-                //     // updateTotalPrice(montantHTAvantRemiseInputNewBased, itemTotalPriceInputs);
-                //     // updateAllHeaderPrices(montantHTAvantRemiseInputNewBased, TVAAvantRemiseInputNewBased, montantTTCAvantRemiseInputNewBased, remiseTauxInputNewBased, remiseMontantInputNewBased, montantHTApresRemiseInputNewBased, TVAApresRemiseInputNewBased, montantTTCApresRemiseInputNewBased);
-            } else if (event.target.classList.contains("search-result")) {
-                console.log("chossed fact");
-                console.log(event);
-
-                console.log(getDataFacture(event.target.value));
-                // DefaultModalAvoirInputs(modalAvoirNewBased, 0);
-                removeItemRows(modalAvoirNewBased.querySelectorAll(".item-commande-row"));
-                let val = event.target.value;
-                fillHeadersFactureOrigin(modalAvoirNewBased, getDataFacture(event.target.value)[0]);
-                fillInputsDetailsItems(getDataFacture(event.target.value)[1], modalAvoirNewBased.querySelector('#table-avoir'), 'new');
-
-            } else if (event.target.id == "item-quantity") {
-                console.log("qtt called");
+            } else if (event.target.id == "item-pu") {
+                console.log("pu called");
                 updateItemTotalPrice(event.target.parentNode.parentNode)
-                updateTotalPrice(montantHTAvantRemiseInputNewBased, modalAvoirNewBased.querySelectorAll("#item-prix-total"));
-                updateAllHeaderPrices(montantHTAvantRemiseInputNewBased, TVAAvantRemiseInputNewBased, montantTTCAvantRemiseInputNewBased, remiseTauxInputNewBased, remiseMontantInputNewBased, montantHTApresRemiseInputNewBased, TVAApresRemiseInputNewBased, montantTTCApresRemiseInputNewBased);
+                updateTotalPrice(montantHTAvantRemiseInputNewSimple, modalAvoirNewSimple.querySelectorAll("#item-prix-total"));
+                updateAllHeaderPrices(montantHTAvantRemiseInputNewSimple, TVAAvantRemiseInputNewSimple, montantTTCAvantRemiseInputNewSimple, remiseTauxInputNewSimple, remiseMontantInputNewSimple, montantHTApresRemiseInputNewSimple, TVAApresRemiseInputNewSimple, montantTTCApresRemiseInputNewSimple);
                 try {
-                    modalAvoirNewBased.querySelector("#btn-create-avoir").disabled = true;
+                    modalAvoirNewSimple.querySelector("#btn-create-avoir").disabled = true;
 
-                    if (parseInt(montantTTCApresRemiseInputNewBased.value) < 0) {
-                        modalAvoirNewBased.querySelector("#btn-create-avoir").disabled = false;
+                    if (parseInt(montantTTCApresRemiseInputNewSimple.value) < 0) {
+                        modalAvoirNewSimple.querySelector("#btn-create-avoir").disabled = false;
                     }
                 } catch (error) {
                     console.log("error here cannot create not autho");

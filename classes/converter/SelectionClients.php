@@ -69,7 +69,7 @@ class SelectionClients extends Converter
             foreach ($data as $key => $value) {
 
                 switch ($key) {
-                        // case 'uid':
+                    case 'uid':
                     case 'nom-commercial':
                     case 'raison-sociale':
                     case 'noms':

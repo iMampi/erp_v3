@@ -15,7 +15,12 @@ session_start();
 
 if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("avoir_client"))) {
     $data = json_decode(file_get_contents('php://input'), true);
-
+    if (!isset($data["header"]["commande-uid"])) {
+        $data["header"]["commande-uid"] = \null;
+    }
+    if (!isset($data["header"]["fact-origin"])) {
+        $data["header"]["fact-origin"] = \null;
+    }
 
     // DbHandler::$connection->autocommit(\false);
 
@@ -37,6 +42,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("avoir_client"))) {
         $conn->rollback();
         print("error01");
         print(json_encode($temp_array_result));
+        exit;
     } else {
         //succesful
         $new_commande_uid = $temp_array_result[1][0][0];
@@ -57,11 +63,13 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("avoir_client"))) {
 
                     $conn->rollback();
                     break;
+                    exit;
                 }
             }
         } catch (\Throwable $th) {
             $conn->rollback();
             print("error03");
+            exit;
         }
 
         if (($_SERVER["REQUEST_METHOD"] == "POST") &&  (can_create("avoir_client"))) {
@@ -81,10 +89,12 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("avoir_client"))) {
                 $conn->rollback();
                 //error with new facture client
                 print("error04" . $th);
+                exit;
             }
         } else {
             $conn->rollback();
             print("error05 : NOT AUTHORIZED TO CREATE AVOIR CLIENT");
+            exit;
         }
     }
     $conn->commit();

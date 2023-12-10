@@ -334,7 +334,7 @@ class Queries
         select new_commande (?,?,?,?,?,?,?,?,?,?,?,?)
         ";
     static public $save_new_commande_row = "
-        insert into commandes_details values (NULL,?,?,?,?,?,?,?)
+        insert into commandes_details values (NULL,?,?,?,?,?,?,?,?)
         ";
     static public $save_new_facture_client = "
         select new_facture_client (?,?)
