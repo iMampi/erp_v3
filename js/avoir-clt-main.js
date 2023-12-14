@@ -28,7 +28,10 @@ const DefaultValuesAvoirNewFormObj = {
     "remise-montant": "",
     "totalHT-apres-remise": "",
     "TVA-apres-remise": "",
-    "totalTTC-apres-remise": ""
+    "totalTTC-apres-remise": "",
+    "search-facture": "",
+    "search-client": "",
+
 };
 
 const InputsDisabledByDefaultAvoirBasedNewFormArray = [
@@ -847,7 +850,13 @@ function defaultButtons(modal) {
     });
 }
 
-function cleanNewForm(modal, disable = false) {
+function asyncLoopNodelist(element) {
+    return new Promise((resolve, reject) => {
+        resolve(element);
+    })
+}
+
+async function cleanNewForm(modal, disable = false) {
     console.log("cleaning");
     let dictSelectorObj = {
         'modal-avoir-new-based': InputsDisabledByDefaultAvoirBasedNewFormArray,
@@ -871,7 +880,18 @@ function cleanNewForm(modal, disable = false) {
             input.textContent = DefaultValuesAvoirNewFormObj[input.id];
         }
     });
+
+    const suggestionDropdown = modal.querySelectorAll('li');
+    console.log("suggestion : ");
+    for (var index = 0; index < suggestionDropdown.length; index++) {
+        let el = await asyncLoopNodelist(suggestionDropdown[index]);
+        if (el.id != "search-container") {
+            el.remove();
+        }
+    }
 }
+
+
 
 async function DefaultModalAvoirInputs(modal, min_row = 1) {
     //remove other item rows
@@ -882,7 +902,7 @@ async function DefaultModalAvoirInputs(modal, min_row = 1) {
     };
     defaultButtons(modal);
     //clean an dput to deafult value
-    cleanNewForm(modal, modal.id === "modal-details");
+    await cleanNewForm(modal, modal.id === "modal-details");
 
 }
 

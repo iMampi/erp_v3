@@ -26,6 +26,74 @@ from ((`erpv2`.`avoirs_client` join `erpv2`.`view_all_commandes_headers` on(`erp
 INSERT INTO `commandes`(`uid`, `client_uid`, `date`, `magasin_uid`, `libelle`, `state`, `user_uid`, `datetime`, `total_ht_avant_remise`, `total_ttc_avant_remise`, `remise_taux`, `remise_montant`, `total_ht_apres_remise`, `total_ttc_apres_remise`) VALUES (NULL,'18','2023-11-16','1','manuel','3','1',NULL,'-198000.00','-198000.00','0','0','-198000.00','-198000.00')
 
 
+return new Promise((resolve, reject) => {
+        console.log("addding item");
+        if (myCache["item-row-" + mode]) {
+            console.log("from cahce");
+            counterRowItem++;
+            let doc = new DOMParser().parseFromString(
+                myCache["item-row-" + mode],
+                "text/html"
+            );
+            let trModel = doc.querySelector("#row-001");
+
+            trModel.querySelectorAll(".input").forEach(input_ => {
+                input_.disabled = input_.id != "item-quantity";
+            });
+            trModel.querySelector("#btn-new-item").disabled = true;
+            trModel.querySelector("#btn-del-item").disabled = tableFactureBody.parentNode.parentNode.parentNode.parentNode.parentNode.id == "modal-avoir-new-based";
+
+            console.log("trModel");
+            console.log(trModel);
+
+            tableFactureBody.querySelector('tbody').append(
+                generateRowItem(trModel, ["", "", "", "", "", ""])
+            );
+            resolve(true);
+
+        } else {
+
+            fetch(URL_TABLE_DETAILS_OBJ[mode])
+                .then((response) =>
+                    response.text()
+                )
+                .then((txt) => {
+                    // TODO : abstract this process
+                    console.log("from fetch");
+                    counterRowItem++;
+
+                    let doc = new DOMParser().parseFromString(
+                        txt,
+                        "text/html"
+                    );
+
+                    // caching
+                    myCache["item-row-" + mode] = doc.body.innerHTML;
+
+                    let trModel = doc.querySelector("#row-001");
+
+                    trModel.querySelectorAll(".input").forEach(input_ => {
+                        input_.disabled = input_.id != "item-quantity";
+                    });
+                    trModel.querySelector("#btn-new-item").disabled = true;
+                    trModel.querySelector("#btn-del-item").disabled = tableFactureBody.parentNode.parentNode.parentNode.parentNode.parentNode.id == "modal-avoir-new-based";
+
+                    console.log("trModel");
+                    console.log(trModel);
+
+                    tableFactureBody.querySelector('tbody').append(
+                        generateRowItem(trModel, ["", "", "", "", "", ""])
+                    );
+                    // bsModalNew.hide();
+                    // _cleanNewForm();
+                    // console.log("yes saving called");
+                    resolve(true);
+
+
+                });
+        }
+    })
+
 
 
 

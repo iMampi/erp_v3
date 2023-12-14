@@ -936,3 +936,9 @@ calcul update
 splited num-serie for num-serie et libelle. updated database. changes implemented for avoir client.
 added #state input hidden to html of avoir simple.
 saving simple avoir :... problem with database > constrain for foreign key commande-uid and facture uid (i think)>>FIXED. this was a problem  due to converter NewCommandeItem. wrong count of array key et wrong reatement of value for initail_commande_uid. returned 0 insted of NULL.
+-------------------------
+137_a:
+working on cleaning the form > the li in dropdown (the suggestions). looks like it is a mtatter of promise qnd for loop... : FIXED;
+
+added #search-facture and #search-client to DefaultValuesAvoirNewFormObj;
+
