@@ -323,6 +323,10 @@ class Bindings
                 $arr["uid"]
             ];
         } elseif ($this->converter::class == "Converter\SelectOneClient") {
+            $this->binding = [
+                'i',
+                $arr["uid"]
+            ];
         } elseif ($this->converter::class == "Converter\UpdateCommandeItem") {
             $this->binding = [
                 'issdddi',

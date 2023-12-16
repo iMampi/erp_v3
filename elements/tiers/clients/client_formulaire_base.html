@@ -1,6 +1,6 @@
 <div class="container">
 	<div class="row">
-		<span class="col-form-label col-2">client id</span>
+		<span class="col-form-label col-2 text-capitalize">client id</span>
 
 		<div class="col-2 my-auto">
 			<input
@@ -10,7 +10,7 @@
 			/>
 		</div>
 		
-		<span class="col-form-label col-2">personnalité</span>
+		<span class="col-form-label col-2 text-capitalize">personnalité</span>
 		<div class="col-2 my-auto">
 			<select
 				class="type-personnality input form-control form-control-sm client-form"
@@ -21,7 +21,7 @@
 				<option value="2">morale</option>
 			</select>
 		</div>
-		<span class="col-form-label col-2">actif</span>
+		<span class="col-form-label col-2 text-capitalize">actif</span>
 
 		<div class="col-2 my-auto">
 			<select
@@ -38,7 +38,7 @@
 	<!-- <div class="row" id="div-modulable"></div> -->
 
 	<div class="row" id="ref-row">
-		<span class="col-form-label col-2">évaluation</span>
+		<span class="col-form-label col-2 text-capitalize">évaluation</span>
 
 		<div class="col-2 my-auto">
 			<select
@@ -51,7 +51,7 @@
 				<option value="1">bad</option>
 			</select>
 		</div>
-		<span class="col-form-label col-2">déclarable</span>
+		<span class="col-form-label col-2 text-capitalize">déclarable</span>
 
 		<div class="col-2 my-auto">
 			<select
@@ -63,12 +63,21 @@
 				<option value="0">non</option>
 			</select>
 		</div>
+		<span class="col-form-label col-2 text-capitalize">commissionable</span>
+		<div class="col-2 my-auto">
+			<select
+				class="nd input form-control form-control-sm client-form"
+				id="commissionable"
+			>
+				<option value="0">non</option>
+				<option value="1">oui</option>
+			</select>
 	</div>
 	<!-- <div class="row" id="ref-row"> -->
 	<!-- name according to personnaly type -->
 	<!-- </div> -->
-	<div class="row">
-		<span class="col-form-label col-2">adresse</span>
+	<!-- <div class="row"> -->
+		<span class="col-form-label col-2 text-capitalize">adresse</span>
 		<div class="col-10 my-auto">
 			<input
 				type="text"
@@ -76,9 +85,9 @@
 				id="adress"
 			/>
 		</div>
-	</div>
-	<div class="row">
-		<span class="col-form-label col-2">telephone 1</span>
+	<!-- </div> -->
+	<!-- <div class="row"> -->
+		<span class="col-form-label col-2 text-capitalize">téléphone 1</span>
 		<div class="col-4 my-auto">
 			<input
 				type="text"
@@ -86,7 +95,7 @@
 				id="phone1"
 			/>
 		</div>
-		<span class="col-form-label col-2">telephone 2</span>
+		<span class="col-form-label col-2 text-capitalize">téléphone 2</span>
 		<div class="col-4 my-auto">
 			<input
 				type="text"
@@ -94,9 +103,9 @@
 				id="phone2"
 			/>
 		</div>
-	</div>
-	<div class="row">
-		<span class="col-form-label col-2">email 1</span>
+	<!-- </div> -->
+	<!-- <div class="row"> -->
+		<span class="col-form-label col-2 text-capitalize">email 1</span>
 		<div class="col-4 my-auto">
 			<input
 				type="text"
@@ -104,7 +113,7 @@
 				id="mail1"
 			/>
 		</div>
-		<span class="col-form-label col-2">email 2</span>
+		<span class="col-form-label col-2 text-capitalize" >email 2</span>
 		<div class="col-4 my-auto">
 			<input
 				type="text"
@@ -112,9 +121,9 @@
 				id="mail2"
 			/>
 		</div>
-	</div>
-	<div class="row">
-		<span class="col-form-label col-2">type de vente</span>
+	<!-- </div> -->
+	<!-- <div class="row"> -->
+		<span class="col-form-label col-2 text-capitalize">type de vente</span>
 		<div class="col-2 my-auto">
 			<select
 				class="nd input form-control form-control-sm input client-form"
@@ -125,7 +134,7 @@
 			</select>
 		</div>
 
-		<span class="col-form-label col-2">encours</span>
+		<span class="col-form-label col-2 text-capitalize">encours</span>
 		<div class="col-2 my-auto">
 			<input
 				type="number"
@@ -135,7 +144,7 @@
 				disabled
 			/>
 		</div>
-		<span class="col-form-label col-2">échéance</span>
+		<span class="col-form-label col-2 text-capitalize">échéance</span>
 		<div class="col-2 my-auto">
 			<input
 				type="number"
@@ -145,60 +154,40 @@
 				disabled
 			/>
 		</div>
-	</div>
-	<div class="row my-auto">
-		<span class="col-form-label col-2">nif</span>
-		<div class="col-2 my-auto">
+	<!-- </div> -->
+	<!-- <div class="row my-auto"> -->
+		<span class="col-form-label col-2">NIF</span>
+		<div class="col-4 my-auto">
 			<input
 				type="text"
 				class="form-control form-control-sm input client-form"
 				id="nif"
 			/>
 		</div>
-		<span class="col-form-label col-2">stat</span>
-		<div class="col-2 my-auto">
+		<span class="col-form-label col-2">STAT</span>
+		<div class="col-4 my-auto">
 			<input
 				type="text"
 				class="form-control form-control-sm input client-form"
 				id="stat"
 			/>
 		</div>
-		<span class="col-form-label col-2">rcs</span>
-		<div class="col-2 my-auto">
+		<span class="col-form-label col-2">RCS</span>
+		<div class="col-4 my-auto">
 			<input
 				type="text"
 				class="form-control form-control-sm input client-form"
 				id="rcs"
 			/>
 		</div>
-	</div>
+	<!-- </div> -->
 	<div class="row my-auto">
-		<span class="col-form-label col-2">commissionable</span>
-		<div class="col-2 my-auto">
-			<select
-				class="nd input form-control form-control-sm client-form"
-				id="commissionable"
-			>
-				<option value="0">non</option>
-				<option value="1">oui</option>
-			</select>
+		
 		</div>
-		<!-- <div class="cpmamol">
-			<div class="form-check">
-				<input
-					class="form-check-input"
-					type="checkbox"
-					value="commission"
-					id="use-pourcentage"
-				/>
-				<label class="form-check-label" for="use-pourcentag">
-					commissionable
-				</label>
-			</div>
-		</div> -->
+
 	</div>
 	<div class="row">
-		<label for="note" class="form-label">note</label>
+		<label for="note" class="form-label text-capitalize">note</label>
 		<div class="col-12 my-auto">
 			<textarea
 				class="form-control input client-form"

@@ -383,6 +383,7 @@ function addDatalistElement(datalistNode, arrayData, mode, term = "") {
         arrayData.forEach(element => {
             let option_ = document.createElement("option");
             if (mode === "facture") {
+                // TODO : encapsulate in addName()
                 console.log("facture xxx");
                 console.log(element[1]["items"]);
                 let headers_ = element[1]["header"];
@@ -1261,7 +1262,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 let hint = event.target.value.trim();
                 // TODO : sanitize hint
                 if (hint) {
-                    let selection;
                     let LIs = factureDropdown.querySelectorAll("li");
                     LIs.forEach(LI => {
                         if (LI.id !== "search-container") {

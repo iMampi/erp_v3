@@ -129,7 +129,7 @@ is_logged();
                     <div class="modal-content">
 
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">créer nouveau client</h5>
+                            <h5 class="modal-title text-capitalize" id="staticBackdropLabel">créer un nouveau client</h5>
                         </div>
                         <div class="modal-body">
 

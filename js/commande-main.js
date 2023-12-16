@@ -1,6 +1,9 @@
 var currentUser;
 
 const TODAY = luxon.DateTime.now().toFormat('yyyy-MM-dd');
+
+var typingTimer;
+
 //key magasin removed
 
 const NUMBER_INPUT_ITEM_ROW = [
@@ -8,15 +11,26 @@ const NUMBER_INPUT_ITEM_ROW = [
     "item-prix-total",
 ];
 
-const DTO_FILL_INPUT_ITEM_ROW = {
-    "row-uid": "uid",
-    "item-uid": "item_uid",
-    "item-name": "item_name",
-    "num-serie": "description_item",
-    "item-pu": "prix_unitaire",
-    "item-prix-total": "prix_total",
-    "item-quantity": "quantity"
-};
+// const DTO_FILL_INPUT_ITEM_ROW = {
+//     "row-uid": "uid",
+//     "item-uid": "item_uid",
+//     "item-name": "item_name",
+//     "num-serie": "description_item",
+//     "item-pu": "prix_unitaire",
+//     "item-prix-total": "prix_total",
+//     "item-quantity": "quantity"
+// };
+
+const DTO_FILL_INPUT_ITEM_ROW = [
+    { inputId: "row-uid", objectKey: ["uid"] },
+    { inputId: "item-uid", objectKey: ["code", "item_uid"] },
+    { inputId: "item-name", objectKey: ["name", "item_name"] },
+    { inputId: "item-libelle", objectKey: ["libelle"] },
+    { inputId: "item-num-serie", objectKey: ["num_serie", "description_item"] },
+    { inputId: "item-pu", objectKey: ["prix_unitaire", "prix_vente"] },
+    { inputId: "item-prix-total", objectKey: ["prix_total"] },
+    { inputId: "item-quantity", objectKey: ["quantity"] }
+];
 
 const NUMBER_INPUT_HEADERS = [
     "totalHT-avant-remise",
@@ -122,6 +136,31 @@ const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
 var listDOM = {};
 
+function cleanDropdown(dropdownNode) {
+    // TODO : replace the hard coding with the funciton in the rest of the script replace 
+    let LIs = dropdownNode.querySelectorAll("li");
+    LIs.forEach(LI => {
+        console.log(LI.id);
+        if (LI.id !== "search-container") {
+            dropdownNode.removeChild(LI);
+        }
+    })
+}
+
+function getInputValue(node) {
+    if (node.tagName == "BUTTON") {
+        return node.textContent;
+    }
+    return node.value;
+}
+
+function setInputValue(node, value) {
+    if (node.tagName == "BUTTON") {
+        node.textContent = value;
+    }
+    return node.value = value;
+}
+
 function disableInputs(inputElements) {
     inputElements.forEach(element => {
         element.disabled = true;
@@ -160,6 +199,26 @@ function makeCommandeFormEditabble(modal) {
 
         }
     });
+}
+
+function addName(listNode, value, selectable, myJSON = {}) {
+    let newLi = document.createElement("li");
+    if (selectable) {
+        let newA = document.createElement("a");
+        newA.textContent = typeof value == "string" ? value : formatName(value);
+        newA.classList.add("dropdown-item", "fst-italic", "search-result");
+        newA.setAttribute("href", "#");
+        if (myJSON) {
+            newA.dataset.infos = JSON.stringify(myJSON);
+        }
+
+        newLi.appendChild(newA);
+    } else {
+        newLi.textContent = typeof value == "string" ? value : formatName(value);
+        newLi.classList.add("fst-italic", "px-2",);
+    }
+
+    listNode.appendChild(newLi);
 }
 
 function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
@@ -232,20 +291,56 @@ function disableInputsAndButtons(tableNode) {
     }
 }
 
+
 function fillInputsDetailsItem(arrayData, rowNode) {
 
+    console.log("arrayData");
+    console.log(arrayData);
     let inputs = rowNode.querySelectorAll(".input");
     for (let k = 0; k < inputs.length; k++) {
         let input = inputs[k];
-        if (NUMBER_INPUT_ITEM_ROW.includes(input.id)) {
-            input.value = arrayData[DTO_FILL_INPUT_ITEM_ROW[input.id]].toLocaleString("fr-FR", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
+        try {
+            let objectKeyArray = DTO_FILL_INPUT_ITEM_ROW.find((entrie) => entrie.inputId === input.id).objectKey;
+            objectKeyArray.some(function (value) {
+                let val = arrayData[value];
+                console.log(input.id + " - " + val);
+                if (val !== undefined) {
+                    if (NUMBER_INPUT_ITEM_ROW.includes(input.id)) {
+                        setInputValue(input, parseFloat(val).toLocaleString("fr-FR", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                        }));
+                    } else {
+                        setInputValue(input, val);
+                    }
+                    return true;
+                }
+                return false;
             });
-        } else {
-            input.value = arrayData[DTO_FILL_INPUT_ITEM_ROW[input.id]];
-
+        } catch (err) {
+            console.log("564");
+            continue;
         }
+
+        // objectKeyArray.forEach(value => {
+        //     let val = arrayData[value];
+        //     if (val !== undefined) {
+        //         input.value = val;
+        //         break;
+        //     }
+        // });
+
+        // input.value = arrayData[DTO_FILL_INPUT_ITEM_ROW.find((entrie) => entrie.objectKey.includes(input.id)).inputId];
+        // input.value = arrayData[DTO_FILL_INPUT_ITEM_ROW.find((entrie) => entrie.objectKey.includes(input.id)).inputId];
+        // if (NUMBER_INPUT_ITEM_ROW.includes(input.id)) {
+        //     input.value = arrayData[DTO_FILL_INPUT_ITEM_ROW[input.id]].toLocaleString("fr-FR", {
+        //         minimumFractionDigits: 2,
+        //         maximumFractionDigits: 2,
+        //     });
+        // } else {
+        //     input.value = arrayData[DTO_FILL_INPUT_ITEM_ROW.find((entrie)=>entrie.objectKey.includes("uid"));];
+
+        // }
 
     }
 }
@@ -601,6 +696,7 @@ function updateTotalPrice(baseMontantInput, priceListNode) {
 
 function updateItemTotalPrice(rowNode) {
     const price = rowNode.querySelector("#item-pu").value;
+    console.log(typeof price);
     const quantity = rowNode.querySelector("#item-quantity").value;
     rowNode.querySelector("#item-prix-total").value = formatNumber(formatedNumberToFloat(price) * formatedNumberToFloat(quantity));
 }
@@ -992,27 +1088,36 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function searchLive(term, datalistNode, mode) {
-        let search = { "client": searchClient, "item": searchItem }
+        console.log("term");
+        console.log(term);
+        term = term.trim();
+        if (term) {
+            let search = { "client": searchClient, "item": searchItem }
 
-        let inputObj = {
-            "client": { uid: term, noms: term, prenoms: term, "nom-commercial": term, "raison-sociale": term },
-            "item": { code: term, name: term }
-        };
-        let result = await search[mode](inputObj[mode]);
-        // let result = await searchItem(inputObj);
-        addDatalistElement(datalistNode, result, mode, term);
+            let inputObj = {
+                "client": { uid: term, noms: term, prenoms: term, "nom-commercial": term, "raison-sociale": term },
+                "item": { code: term, name: term }
+            };
+            let result = await search[mode](inputObj[mode]);
+            // let result = await searchItem(inputObj);
+            addDatalistElement(datalistNode, result, mode, term);
+        } else {
+            cleanDropdown(datalistNode);
+        }
+        return;
     }
 
     function addDatalistElement(datalistNode, arrayData, mode, term = "") {
-        datalistNode.innerHTML = "";
+        // datalistNode.innerHTML = "";
+        cleanDropdown(datalistNode);
         if ((Array.isArray(arrayData)) && (arrayData.length || arrayData[0] != undefined)) {
-            console.log("array is ok");
+            console.log("array is okadddata");
+            console.log(arrayData);
             arrayData.forEach(element => {
                 let option_ = document.createElement("option");
                 if (mode == "item") {
-                    option_.value = element.code;
-                    option_.label = element.name;
-                    option_.dataset.prix = element.prix_vente;
+                    addName(datalistNode, element.code + " - " + element.name, true, element);
+                    return;
                 } else if (mode == "client") {
                     let val = element.uid + " - ";
                     if (element.noms == "") {
@@ -1027,13 +1132,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     option_.label = val;
                 }
                 datalistNode.append(option_);
+
             });
         } else {
             console.log("empty arrayy");
-            let option_ = document.createElement("option");
-            option_.value = "Néant";
-            option_.label = "aucun résultat pour \"" + term + "\"";
-            datalistNode.append(option_);
+            addName(datalistNode, "aucun résultat pour \"" + term + "\"", false);
+            // let option_ = document.createElement("option");
+            // option_.value = "Néant";
+            // option_.label = "aucun résultat pour \"" + term + "\"";
+            // datalistNode.append(option_);
         }
 
     }
@@ -1112,6 +1219,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
                     bsModalCommandeNew.hide();
                 }
+            } else if (event.target.classList.contains("search-result")) {
+
+            }
+        })
+    } catch (error) {
+
+    }
+
+    try {
+        tableItemsFactureNew.addEventListener('click', (event) => {
+            if (event.target.classList.contains("search-result")) {
+                console.log("chossed item");
+                console.log(event);
+                fillInputsDetailsItem(JSON.parse(event.target.dataset.infos), event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode);
+            } else if (event.target.id === "item-uid") {
+                event.target.parentNode.querySelector("#search-item").focus();
             }
         })
     } catch (error) {
@@ -1123,18 +1246,8 @@ document.addEventListener("DOMContentLoaded", () => {
         modalCommandeNew.addEventListener('keyup', (event) => {
             console.log("event keyup");
             console.log(event);
-            if ((event.target.id == "item-uid") && (event.key)) {
-                console.log("searching item");
-                itemDataList.innerHTML = "";
-                clearTimeout(typingTimer);
-                let term = event.target.value.trim();
-                if (term) {
-                    // TODO : sanitize here
-                    itemDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
-                    typingTimer = setTimeout(() => { searchLive(term, itemDataList, "item") }, 1500);
-                }
-            } else if ((event.target.id == "client") && (event.key)) {
-                console.log("searching client");
+            if ((event.target.id == "client") && (event.key)) {
+                console.log("searching client 99");
                 clientDataList.innerHTML = "";
                 clearTimeout(typingTimer);
                 let term = event.target.value.trim();
@@ -1143,20 +1256,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
                     typingTimer = setTimeout(() => { searchLive(term, clientDataList, "client") }, 1500);
                 }
-            } else if ((event.target.id == "item-uid") && (!event.key)) {
-                console.log("item selected 26");
-                let val = event.target.value;
-                console.log(getName(val));
-                if (event.target.parentNode.parentNode.querySelector("#item-quantity").value > 0) {
-                    fillItemNameAndPrice(event.target, 0);
-                } else {
-                    fillItemNameAndPrice(event.target, 1);
-                }
-                const itemTotalPriceInputs = modalCommandeNew.querySelectorAll(".item-prix-total");
-                console.log("itemTotalPriceInputs");
-                console.log(itemTotalPriceInputs);
-                updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
-                updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+
             } else if ((event.target.id == "client") && (!event.key)) {
                 console.log("client selected");
             } else if (event.target.id == "item-quantity") {
@@ -1179,10 +1279,32 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(event);
             modificationWatcher = true;
 
-            if ((event.target.id == "item-uid") && (event.key)) {
-
-            } else if ((event.target.id == "item-uid") && (!event.key)) {
-
+            if (event.target.id == "search-item") {
+                // item searching with btn dropdown
+                console.log("searching item 23");
+                // let hint = event.target.value.trim();
+                let hint = event.target.value;
+                // TODO : sanitize hint
+                let itemDropdown = event.target.parentNode.parentNode.parentNode;
+                console.log("hint");
+                console.log(hint);
+                let LIs = itemDropdown.querySelectorAll("li");
+                LIs.forEach(LI => {
+                    console.log(LI.id);
+                    if (LI.id !== "search-container") {
+                        itemDropdown.removeChild(LI);
+                    }
+                });
+                //// START - grabing data
+                clearTimeout(typingTimer)
+                if (!hint.trim()) {
+                    cleanDropdown(itemDropdown);
+                    return
+                }
+                addName(itemDropdown, "Searching for \"" + event.target.value + "\"", false);
+                typingTimer = setTimeout(() => { searchLive(hint, itemDropdown, "item") }, 1500);
+                //// END - grabing data
+                console.log("markman");
             } else if (event.target.id == "item-quantity") {
                 updateItemTotalPrice(event.target.parentNode.parentNode)
                 const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
@@ -1193,23 +1315,13 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
     }
 
-    ////modalCommandeNew event handler
+    ////modalCommandeDetails event handler
     try {
         modalCommandeDetails.addEventListener('keyup', (event) => {
             console.log("event keyup");
             console.log(event);
-            if ((event.target.id == "item-uid") && (event.key)) {
-                console.log("searching item");
-                itemDataList.innerHTML = "";
-                clearTimeout(typingTimer);
-                let term = event.target.value.trim();
-                if (term) {
-                    // TODO : sanitize here
-                    itemDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
-                    typingTimer = setTimeout(() => { searchLive(term, itemDataList, "item") }, 1500);
-                }
-            } else if ((event.target.id == "client") && (event.key)) {
-                console.log("searching client");
+            if ((event.target.id == "client") && (event.key)) {
+                console.log("searching client 87");
                 clientDataList.innerHTML = "";
                 clearTimeout(typingTimer);
                 let term = event.target.value.trim();
@@ -1218,16 +1330,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
                     typingTimer = setTimeout(() => { searchLive(term, clientDataList, "client") }, 1500);
                 }
-            } else if ((event.target.id == "item-uid") && (!event.key)) {
-                console.log("item selected 36");
-                let val = event.target.value;
-                console.log(getName(val));
-                fillItemNameAndPrice(event.target, 0);
-                const itemTotalPriceInputs = modalCommandeDetails.querySelectorAll(".item-prix-total");
-                console.log("itemTotalPriceInputs");
-                console.log(itemTotalPriceInputs);
-                updateTotalPrice(montantHTAvantRemiseInputDetails, itemTotalPriceInputs);
-                updateAllHeaderPrices(montantHTAvantRemiseInputDetails, TVAAvantRemiseInputDetails, montantTTCAvantRemiseInputDetails, remiseTauxInputDetails, remiseMontantInputDetails, montantHTApresRemiseInputDetails, TVAApresRemiseInputDetails, montantTTCApresRemiseInputDetails);
+
             } else if ((event.target.id == "client") && (!event.key)) {
                 console.log("client selected 46");
             } else if (event.target.id == "item-quantity") {

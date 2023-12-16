@@ -942,3 +942,22 @@ working on cleaning the form > the li in dropdown (the suggestions). looks like 
 
 added #search-facture and #search-client to DefaultValuesAvoirNewFormObj;
 
+added .input to #search-facture and #search-client
+-------------------------
+138_a:
+.text-capitalized added for cycle CLIENT >forms.
+removed extra div in clientformulairebase.html causing non alignement non uniformity.
+fixed Bindings for Converter\SelectOneClient
+
+!!!!working on cycles Commandes!!!!
+implemented the btn dropdozn pour item-uid into #table-facture; the html, the js interaction;
+autofocus on #search-item when opening dropdown;
+fixed formatedNumberToFloat() not treating right &nbsp;
+implemented setInputValue() and grabInputValue() for a better handling of nodes with .input being a input tag or a button tag;
+
+
+woring on ...
+traitement pour indentifiable et stockable...
+....
+
+

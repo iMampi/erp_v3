@@ -4,6 +4,7 @@
 		<tr>
 			<td class="ps-0">ID article</td>
 			<td>désignation</td>
+			<td>libellé</td>
 			<td>numéro de série</td>
 			<td>prix unitaire HT</td>
 			<td>quantité</td>
@@ -18,7 +19,25 @@
 	<tbody>
 		<tr id="row-001" class="item-commande-row border-bottom">
 			<input type="hidden" id="row-uid" class='input row-uid'>
-			<td class="ps-0 my-auto btn-group">
+			<td>
+			<div class=" my-auto " >
+				<div class="dropdown btn-group d-flex" role="group">
+					<button class="btn btn-sm input item-uid btn-secondary  dropdown-toggle right-corners w-100 text-start input" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="item-uid" >
+						Choississez un article
+					</button>
+	
+					<ul class="dropdown-menu " id="item-dropdown">
+						<li id="search-container">
+							<div class="px-2 pb-2">
+								<input  type="text" placeholder="Search" id="search-item" autocomplete="off" class="form-control form-control-sm input">               
+							</div>
+						</li>
+					</ul>
+					<button class="mytbn btn btn-sm btn-success text-center left-corners form-control-sm"type="button" id="btn-see-client">
+						see</button>
+			
+				</div>
+			<!-- <td class="ps-0 my-auto btn-group">
 				<input
 					list="item-list"
 					type="text"
@@ -33,7 +52,7 @@
 					id="btn-new-item"
 				>
 					+
-				</button>
+				</button> </td>-->
 			</td>
 			<td>
 				<input
@@ -44,10 +63,14 @@
 				/>
 			</td>
 			<td>
+				<textarea class="form-control form-control-sm libelle input" id="item-libelle" rows="1"></textarea>
+			</td>
+
+			<td>
 				<input
 					type="text"
 					class=" form-control form-control-sm num-serie input"
-					id="num-serie"
+					id="item-num-serie"
 				/>
 
 			</td>
@@ -56,11 +79,11 @@
 					type="text"
 					class="form-control form-control-sm item-pu input"
 					disabled
-					id="item-pu"
+					id="item-pu" placeholder="0,00"
 				/>
 			</td>
 			<td>
-				<input type="number" class=" form-control form-control-sm input item-quantity" id="item-quantity" />
+				<input type="number" class=" form-control form-control-sm input item-quantity" id="item-quantity" placeholder="0,00" />
 			</td>
 			<td>
 				<input
@@ -68,6 +91,7 @@
 					disabled
 					class="form-control form-control-sm item-prix-total input"
 					id="item-prix-total"
+					placeholder="0,00"
 				/>
 			</td>
 			<td class="pe-0">

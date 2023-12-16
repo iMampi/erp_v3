@@ -68,6 +68,10 @@ function formatedNumberToFloat(val) {
 	if ((val) && (typeof val == "string")) {
 		// NOTE : there is option to use replaceAll, but too recent
 		let x = val.split(" ").join("");
+		x = x.split(String.fromCharCode(160)).join("");
+		x = x.split(String.fromCharCode(8199)).join("");
+		x = x.split(String.fromCharCode(8239)).join("");
+		x = x.split(String.fromCharCode(8288)).join("");
 		let y = x.replace(",", ".");
 		return parseFloat(y);
 	} else if ((val) && (typeof val == "number")) {

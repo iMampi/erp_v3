@@ -367,8 +367,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			uid: myuid,
 		})
 			.then((resp) => {
-				// console.log("shwodetail :");
-				// console.log(resp);
+				console.log("shwodetail :");
+				console.log(resp);
 				return responseHandlerSelectOneClient(resp);
 			})
 			.then((result) => {
@@ -411,7 +411,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				deteleClientObj
 			);
 		});
-	} catch (e) {}
+	} catch (e) { }
 
 	try {
 		table001.addEventListener("click", (e) => {
@@ -421,7 +421,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				bsModalClientDetails.show();
 			}
 		});
-	} catch (e) {}
+	} catch (e) { }
 
 	try {
 		btnModifyClientDetails.addEventListener("click", (e) => {
@@ -429,7 +429,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				modalClientDetails.querySelectorAll(".input");
 			makeClientDetailsInputsEditable(inputsForEdition);
 		});
-	} catch (e) {}
+	} catch (e) { }
 
 	try {
 		btnSaveModalClientDetails.addEventListener("click", (e) => {
@@ -448,7 +448,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				disableInputs(inputsForEdition);
 			}
 		});
-	} catch (e) {}
+	} catch (e) { }
 
 	modalClientDetails.addEventListener("input", () => {
 		modificationWatcher = true;
@@ -471,17 +471,17 @@ document.addEventListener("DOMContentLoaded", () => {
 				btnSaveModalClientDetails.disabled = true;
 			}
 		});
-	} catch (error) {}
+	} catch (error) { }
 
 	try {
 		btnModifyClientDetails.addEventListener("click", () => {
 			btnSaveModalClientDetails.disabled = false;
 			btnModifyClientDetails.disabled = true;
 		});
-	} catch (e) {}
+	} catch (e) { }
 	try {
 		inputTypeVenteClientDetails.addEventListener("click", () => {
 			typeVenteInputBehavior(modalClientDetails);
 		});
-	} catch (e) {}
+	} catch (e) { }
 });
