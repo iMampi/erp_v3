@@ -82,15 +82,12 @@ is_logged();
             <div class="modal fade" id="modal-commande-new" tabindex="-1">
                 <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
                 </button>
-                <div class="modal-dialog modal-dialog-scrollable modal-xl">
-
+                <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-xl-down">
                     <div class="modal-content">
-
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel">Nouvelle commande</h5>
                         </div>
                         <div class="modal-body">
-
                             <div id="new-modal-body-heads">
                                 <?php
                                 //TODO : make the header of factures in details readonly
@@ -158,7 +155,7 @@ is_logged();
             <div class="modal fade" id="modal-details" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <!-- <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button> -->
                 <!-- <div class="modal-dialog modal-dialog-scrollable modal-xl"> -->
-                <div class="modal-dialog modal-dialog-scrollable modal-lg ">
+                <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-xl-down">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel">détails affaire</h5>

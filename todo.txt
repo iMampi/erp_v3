@@ -185,3 +185,5 @@ for row (in the main table)in items.*:
 prix can take "variable" as a value ( pour prix variable)
 
 code article input in modal new must cannot contain white space
+
+refactor button with dropdown using js OOP(kind web component)

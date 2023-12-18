@@ -115,7 +115,7 @@ is_logged();
             <div class="modal fade bg-confirmation" id="modal-avoir-new-based" tabindex="-1">
                 <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Close">
                 </button>
-                <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-xxl-down">
+                <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-xl-down">
 
                     <div class="modal-content">
 
@@ -151,7 +151,7 @@ is_logged();
             <div class="modal fade bg-confirmation" id="modal-avoir-new-simple" tabindex="-1">
                 <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Close">
                 </button>
-                <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-xxl-down">
+                <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-xl-down">
 
                     <div class="modal-content">
 
@@ -187,7 +187,7 @@ is_logged();
             <div class="modal fade" id="modal-details" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <!-- <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button> -->
                 <!-- <div class="modal-dialog modal-dialog-scrollable modal-xl"> -->
-                <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-xxl-down">
+                <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-xl-down">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel">détails affaire</h5>

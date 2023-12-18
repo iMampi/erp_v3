@@ -29,6 +29,8 @@ const DTO_FILL_INPUT_ITEM_ROW = [
     { inputId: "item-num-serie", objectKey: ["num_serie", "description_item"] },
     { inputId: "item-pu", objectKey: ["prix_unitaire", "prix_vente"] },
     { inputId: "item-prix-total", objectKey: ["prix_total"] },
+    { inputId: "stockable", objectKey: ["stockable"] },
+    { inputId: "identifiable", objectKey: ["identifiable"] },
     { inputId: "item-quantity", objectKey: ["quantity"] }
 ];
 
@@ -291,12 +293,31 @@ function disableInputsAndButtons(tableNode) {
     }
 }
 
+function formatCLientName(objectData) {
+    let val = objectData.uid + " - ";
+    if (objectData.noms == "") {
+        // console.log("client company");
 
-function fillInputsDetailsItem(arrayData, rowNode) {
+        val += (objectData["raison_sociale"] || "") + " / " + (objectData["nom_commercial"] || "");
+    } else if (objectData["raison_sociale"] == "") {
+        // console.log("client humain");
+        val += objectData.noms + " " + objectData.prenoms;
+    };
+    return val;
+}
+
+function fillClientButton(objectData, rowNode) {
+    let client = formatCLientName(objectData);
+    setInputValue(rowNode, client);
+}
+
+function fillInputsDetailsItemRow(arrayData, rowNode) {
 
     console.log("arrayData");
     console.log(arrayData);
     let inputs = rowNode.querySelectorAll(".input");
+    rowNode.querySelector(".input#item-num-serie").disabled = Boolean(parseInt(arrayData["identifiable"]));
+    let stockableFlag = arrayData["stockable"];
     for (let k = 0; k < inputs.length; k++) {
         let input = inputs[k];
         try {
@@ -322,26 +343,6 @@ function fillInputsDetailsItem(arrayData, rowNode) {
             continue;
         }
 
-        // objectKeyArray.forEach(value => {
-        //     let val = arrayData[value];
-        //     if (val !== undefined) {
-        //         input.value = val;
-        //         break;
-        //     }
-        // });
-
-        // input.value = arrayData[DTO_FILL_INPUT_ITEM_ROW.find((entrie) => entrie.objectKey.includes(input.id)).inputId];
-        // input.value = arrayData[DTO_FILL_INPUT_ITEM_ROW.find((entrie) => entrie.objectKey.includes(input.id)).inputId];
-        // if (NUMBER_INPUT_ITEM_ROW.includes(input.id)) {
-        //     input.value = arrayData[DTO_FILL_INPUT_ITEM_ROW[input.id]].toLocaleString("fr-FR", {
-        //         minimumFractionDigits: 2,
-        //         maximumFractionDigits: 2,
-        //     });
-        // } else {
-        //     input.value = arrayData[DTO_FILL_INPUT_ITEM_ROW.find((entrie)=>entrie.objectKey.includes("uid"));];
-
-        // }
-
     }
 }
 
@@ -353,7 +354,7 @@ async function fillInputsDetailsItems(itemsArray, modalDetailsItemsTable) {
     let rowsToFill = modalDetailsItemsTable.querySelectorAll(".item-commande-row");
 
     for (let j = 0; j < numberOfRows; j++) {
-        fillInputsDetailsItem(itemsArray[j], rowsToFill[j]);
+        fillInputsDetailsItemRow(itemsArray[j], rowsToFill[j]);
 
     }
 }
@@ -678,8 +679,9 @@ function grabCommandeDataForm(modal) {
         let itemID = row.querySelector("#item-uid").value;
         let quantity = row.querySelector("#item-quantity").value;
         let prixUnitaire = row.querySelector("#item-pu").value;
-        let numSerie = row.querySelector("#num-serie").value;
-        data["items"].push([rowID, itemID, quantity, prixUnitaire, numSerie]);
+        let libelle = row.querySelector("#item-libelle").value;
+        let numSerie = row.querySelector("#item-num-serie").value;
+        data["items"].push([rowID, itemID, quantity, prixUnitaire, numSerie, libelle]);
     });
     return data;
 }
@@ -1119,20 +1121,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     addName(datalistNode, element.code + " - " + element.name, true, element);
                     return;
                 } else if (mode == "client") {
-                    let val = element.uid + " - ";
-                    if (element.noms == "") {
-                        console.log("client company");
-
-                        val += (element["raison_sociale"] || "") + " / " + (element["nom_commercial"] || "");
-                    } else if (element["raison_sociale"] == "") {
-                        console.log("client humain");
-                        val += element.noms + " " + element.prenoms;
-                    }
-                    option_.value = val;
-                    option_.label = val;
+                    let val = formatCLientName(element);
+                    addName(datalistNode, val, true, element);
+                    return;
                 }
-                datalistNode.append(option_);
-
             });
         } else {
             console.log("empty arrayy");
@@ -1220,9 +1212,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     bsModalCommandeNew.hide();
                 }
             } else if (event.target.classList.contains("search-result")) {
+                console.log("chossed client");
+                console.log(event);
+                fillClientButton(JSON.parse(event.target.dataset.infos), event.target.parentNode.parentNode.parentNode.querySelector("#client"));
 
+            } else if (event.target.id === "client") {
+                event.target.parentNode.querySelector("#search-client").focus();
             }
-        })
+        }, true)
     } catch (error) {
 
     }
@@ -1232,11 +1229,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if (event.target.classList.contains("search-result")) {
                 console.log("chossed item");
                 console.log(event);
-                fillInputsDetailsItem(JSON.parse(event.target.dataset.infos), event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode);
+                fillInputsDetailsItemRow(JSON.parse(event.target.dataset.infos), event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode);
             } else if (event.target.id === "item-uid") {
                 event.target.parentNode.querySelector("#search-item").focus();
             }
-        })
+        }, true)
     } catch (error) {
 
     }
@@ -1247,15 +1244,6 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("event keyup");
             console.log(event);
             if ((event.target.id == "client") && (event.key)) {
-                console.log("searching client 99");
-                clientDataList.innerHTML = "";
-                clearTimeout(typingTimer);
-                let term = event.target.value.trim();
-                if (term) {
-                    // TODO : sanitize here
-                    clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
-                    typingTimer = setTimeout(() => { searchLive(term, clientDataList, "client") }, 1500);
-                }
 
             } else if ((event.target.id == "client") && (!event.key)) {
                 console.log("client selected");
@@ -1288,23 +1276,44 @@ document.addEventListener("DOMContentLoaded", () => {
                 let itemDropdown = event.target.parentNode.parentNode.parentNode;
                 console.log("hint");
                 console.log(hint);
-                let LIs = itemDropdown.querySelectorAll("li");
-                LIs.forEach(LI => {
-                    console.log(LI.id);
-                    if (LI.id !== "search-container") {
-                        itemDropdown.removeChild(LI);
-                    }
-                });
+                cleanDropdown(itemDropdown);
                 //// START - grabing data
-                clearTimeout(typingTimer)
+                clearTimeout(typingTimer);
                 if (!hint.trim()) {
                     cleanDropdown(itemDropdown);
-                    return
+                    return;
                 }
                 addName(itemDropdown, "Searching for \"" + event.target.value + "\"", false);
                 typingTimer = setTimeout(() => { searchLive(hint, itemDropdown, "item") }, 1500);
                 //// END - grabing data
                 console.log("markman");
+
+
+
+            } else if (event.target.id == "search-client") {
+                console.log("searching client 78");
+                // clientDataList.innerHTML = "";
+                // clearTimeout(typingTimer);
+                // let term = event.target.value.trim();
+                // if (term) {
+                //     // TODO : sanitize here
+                //     clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
+                //     typingTimer = setTimeout(() => { searchLive(term, clientDataList, "client") }, 1500);
+                // }
+                let hint = event.target.value;
+                // TODO : sanitize hint
+                let clientDropdown = event.target.parentNode.parentNode.parentNode;
+                cleanDropdown(clientDropdown);
+                //// START - grabing data
+                clearTimeout(typingTimer);
+                if (!hint.trim()) {
+                    cleanDropdown(clientDropdown);
+                    return;
+                }
+                addName(clientDropdown, "Searching for \"" + event.target.value + "\"", false);
+                typingTimer = setTimeout(() => { searchLive(hint, clientDropdown, "client") }, 1500);
+                //// END - grabing data
+
             } else if (event.target.id == "item-quantity") {
                 updateItemTotalPrice(event.target.parentNode.parentNode)
                 const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");

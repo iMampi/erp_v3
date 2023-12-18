@@ -959,5 +959,10 @@ implemented setInputValue() and grabInputValue() for a better handling of nodes 
 woring on ...
 traitement pour indentifiable et stockable...
 ....
-
-
+-------------------------
+139_a:
+!!!!working on cycles Commandes!!!!
+implemented the btn dropdown pour #client into #modal-commande-new; the html, the js interaction;
+autofocus on #search-item when opening dropdown for button@client;
+put eventlistener in capture mode : modalCommandeNew on click, tableFactureBody on click. because there was an bug calling tableFactureBody on click when a .search-result was selected from dropdown-client;
+correct behavior is correct for CommandeItemRow when object is identifiable or not.
