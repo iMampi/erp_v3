@@ -187,3 +187,5 @@ prix can take "variable" as a value ( pour prix variable)
 code article input in modal new must cannot contain white space
 
 refactor button with dropdown using js OOP(kind web component)
+
+avoir_simple. c'est problematique d'utiliser un produit custom_avoir uniquement pour avoir. il apparaitra aussi dans la liste des items disponible pour des factures. il vaut mieux utiliser par defaut un item custom_item

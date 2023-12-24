@@ -24,6 +24,7 @@ $row_counter = 1;
 
 if (can_visit($cycle_commande)) {
     require_once __DIR__ . "/../../database/select/all_commandes_header_limit.php";
+
     foreach ($all_commandes_header_limit as $el) {
         // var_dump($el);
         // break;
@@ -45,7 +46,7 @@ if (can_visit($cycle_commande)) {
             } elseif (in_array("uid", $classes_array)) {
                 $el_input->setAttribute("value", $el["uid"]);
             } elseif (in_array("totalTTC", $classes_array)) {
-                $el_input->setAttribute("value", number_format($el["total_ttc_apres_remise"],2,","," "));
+                $el_input->setAttribute("value", number_format($el["total_ttc_apres_remise"], 2, ",", " "));
             } elseif (in_array("state", $classes_array)) {
                 // $el_input->setAttribute("value", $el["state"]);
                 $option = $xpath->query(".//option[@value='" . $el["state"] . "']", $el_input);

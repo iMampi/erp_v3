@@ -2,17 +2,28 @@
 // phpinfo();
 $test = 666;
 echo "32";
+?>
+<select class="nd input form-control form-control-sm input state" id="state" disabled>
+    <option value="1" >encours</option>
+    <option value="0">annulé</option>
+    <option value="2">validé</option>
+</select>
+<?php
 set_error_handler(function () { /* ignore errors */
 });
 dns_get_record();
 restore_error_handler();
 try {
-    //code...
-    echo $love;
-    throw new Exception("this is x debg test", 1);;
+//code...
+echo $love;
+throw new Exception("this is x debg test", 1);;
 } catch (\Exception $th) {
-    //throw $th;
+//throw $th;
 }
+
+
+
+
 
 // // use Session\User;
 
@@ -29,23 +40,23 @@ try {
 
 
 // $avantages_data = [
-//     "maison" => ["logement", 1500000], //500k
-//     "telephone1" => ["telephone", 200000], //30k
-//     "telephone2" => ["telephone", 15000], //2.25k
-//     "assurance maladie" => ["autre", 2000000] //2000k
+// "maison" => ["logement", 1500000], //500k
+// "telephone1" => ["telephone", 200000], //30k
+// "telephone2" => ["telephone", 15000], //2.25k
+// "assurance maladie" => ["autre", 2000000] //2000k
 // ];
 // $rakoto = new EmployeeBase(
-//     "026",
-//     "RAKOTO",
-//     "Jean",
-//     "2022-01-01",
-//     "4A",
-//     $my_sal_base,
-//     "",
-//     "OSTIE",
-//     "3",
-//     "1",
-//     $avantages_data
+// "026",
+// "RAKOTO",
+// "Jean",
+// "2022-01-01",
+// "4A",
+// $my_sal_base,
+// "",
+// "OSTIE",
+// "3",
+// "1",
+// $avantages_data
 // );
 // $conges_data=new CongesMonthly(2022,3,$my_sal_base,2);
 
@@ -53,7 +64,7 @@ try {
 
 // $fdp= new CalculateSalary Month(2022,3,$rakoto,30,0,0,$conges_data,$SMIE_data,$CNAPS_data);
 // // foreach ($CNAPS_data as $key => $value) {
-// //     echo "$key - $value";
+// // echo "$key - $value";
 // // }
 
 

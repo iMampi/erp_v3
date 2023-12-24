@@ -30,7 +30,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_visit("commande"))) {
     $commande_headers = DbHandler::execute_prepared_statement($Statement, \MYSQLI_ASSOC);
 
     $SelectionCommandeItems = new SelectionCommandeItems($data);
-    $QueryDetails = new Queries("selection_commande_items_for_avoir");
+    $QueryDetails = new Queries("selection_commande_items");
     $BindingDetails = new Bindings($SelectionCommandeItems);
     $StatementDetails = new StandardPreparedStatement($QueryDetails, $BindingDetails);
 

@@ -424,6 +424,11 @@ class Bindings
                 's',
                 $this->converter->data_for_db["code"]
             ];
+        } elseif ($this->converter::class == "Converter\ItemStockChecker") {
+            $this->binding = [
+                's',
+                $this->converter->data_for_db["code"]
+            ];
         } else {
             echo "NOT VALID";
         }

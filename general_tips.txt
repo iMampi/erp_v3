@@ -400,3 +400,8 @@ array_search — Searches the array for a given value and returns the first corr
 array_column — Return the values from a single column in the input array
 
 by combining those 2, we can search for the key of value in a multidimensional array
+
+//////////////////
+XPATH for queryselector
+select tag button with textContent "XPath tester":
+//button[contains(.,"XPath tester")]

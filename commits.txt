@@ -966,3 +966,21 @@ implemented the btn dropdown pour #client into #modal-commande-new; the html, th
 autofocus on #search-item when opening dropdown for button@client;
 put eventlistener in capture mode : modalCommandeNew on click, tableFactureBody on click. because there was an bug calling tableFactureBody on click when a .search-result was selected from dropdown-client;
 correct behavior is correct for CommandeItemRow when object is identifiable or not.
+-------------------------
+140_a:
+fixed behavior not working properly for CommandeItemRow when object is identifiable or not.
+fixed NewCommandeItem. after the introduction of commande_initial_uid, the array key was not enough.
+fixed generateRowTable(). it was the one for facture that was written there.
+correct behavior is correct for CommandeItemRow when object has prix_variable or not.
+DefaultValuesCommandeNewFormObj : added identifiable, stockable,prix-variable
+fixed prblem where all new commande created were in state =0. it was because there was a second input #state with no value. I deleted it. now it works.
+
+implementing stock verification upon validation of command...
+new_commande.php vrify stock for tsockable items. no treatement for identifiable yet.
+check_stock.php created as file for utlities functions. check_available_stock() is inside.
+in command-main.js, identifyInvalidType() and outOfStock() were created to handle out of stock case. gotta expand to all error/invalid case...
+
+
+updated all when price update
+default pour client
+client when viewing

@@ -4,15 +4,15 @@
 
 namespace Converter;
 
-class NewCommandeItem extends Converter
+class NewCommandeItemDisponibililty extends Converter
 {
-    function __construct(array $data)
+    public function __construct(array $data)
     {
         parent::__construct($data);
         $this->converter_for_db();
     }
 
-    public function converter_for_db()
+    private function converter_for_db()
     {
         $input = $this->data_from_user;
         $this->data_for_db["uid"] = $input[0];
@@ -29,5 +29,6 @@ class NewCommandeItem extends Converter
             $this->data_for_db["commande_initial_uid"] =
                 \intval($input[7]) == 0 ? \null : \intval($input[7]);
         }
+
     }
 }

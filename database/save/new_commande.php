@@ -13,6 +13,7 @@ use Database\StandardPreparedStatement;
 require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 session_start();
 
+require_once $_SERVER["DOCUMENT_ROOT"] . "/utilities/check_stocks.php";
 
 if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
     $data = json_decode(file_get_contents('php://input'), true);
@@ -22,6 +23,48 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
     $step1 = new DbHandler();
     $conn = $step1::$connection;
     $conn->begin_transaction();
+
+
+    //check the inventory item disponibilities 
+    $disponibilities = [];
+    try {
+        // TODO : dont forget to put me back to normal
+        // if ($data["header"]["state"] === 2) {
+        if (true) {
+            foreach ($data["items"] as $array_values) {
+                // stockable?
+                // foreach ($variable as $key => $value) {
+                # code...
+                if ($array_values[7]) {
+                    if (!array_key_exists($array_values[0], $disponibilities)) {
+                        $disponibilities[$array_values[1]] = 0;
+                    }
+                    $disponibilities[$array_values[1]] += $array_values[2];
+                    // identifiable? 
+                    if ($array_values[6]) {
+                        // check if in stock identifiable
+                    }
+                    // }
+                }
+            }
+        }
+        // check stocks
+        foreach ($disponibilities as $code => $quantity) {
+            // TODO : insert directlu $teste in the if condition
+            $teste = check_available_stock($code, $quantity);
+            if ($teste[0]) {
+                if ($teste[1][0][1] < $quantity) {
+                    print(json_encode([false, [["not enough stock//".$code]]]));
+                    return;
+                }
+            } else {
+                throw new Exception("Error Processing Request teh query");
+            }
+        }
+    } catch (\Throwable $th) {
+        $conn->rollback();
+        print("error000");
+    }
 
     $NewObj = new NewCommandeHeader($data["header"]);
 

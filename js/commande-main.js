@@ -25,13 +25,14 @@ const DTO_FILL_INPUT_ITEM_ROW = [
     { inputId: "row-uid", objectKey: ["uid"] },
     { inputId: "item-uid", objectKey: ["code", "item_uid"] },
     { inputId: "item-name", objectKey: ["name", "item_name"] },
-    { inputId: "item-libelle", objectKey: ["libelle"] },
-    { inputId: "item-num-serie", objectKey: ["num_serie", "description_item"] },
+    { inputId: "item-libelle", objectKey: ["description_item", "libelle"] },
+    { inputId: "item-num-serie", objectKey: ["num_serie"] },
     { inputId: "item-pu", objectKey: ["prix_unitaire", "prix_vente"] },
     { inputId: "item-prix-total", objectKey: ["prix_total"] },
     { inputId: "stockable", objectKey: ["stockable"] },
     { inputId: "identifiable", objectKey: ["identifiable"] },
-    { inputId: "item-quantity", objectKey: ["quantity"] }
+    { inputId: "item-quantity", objectKey: ["quantity"] },
+    { inputId: "prix-variable", objectKey: ["prix-variable"] }
 ];
 
 const NUMBER_INPUT_HEADERS = [
@@ -79,7 +80,10 @@ const DefaultValuesCommandeNewFormObj = {
     "totalHT-apres-remise": "",
     "TVA-apres-remise": "",
     "totalTTC-apres-remise": "",
-    "note": ""
+    "note": "",
+    "identifiable": "",
+    "stockable": "",
+    "prix-variable": "",
 };
 
 const InputsDisabledByDefaultCommandeNewFormArray = [
@@ -137,6 +141,22 @@ var modificationWatcher = false;
 const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
 var listDOM = {};
+
+// start FAILURE/invalid Handler
+function identifyInvalidType(array_message, modal) {
+    if (array_message[0].includes("not enough stock")) {
+        outOfStock(array_message[0].split("//")[1], modal);
+    }
+}
+function outOfStock(item_code, modal) {
+    let tbody = modal.querySelector("#table-facture > tbody");
+    // let btnTarget = tbody.querySelector("button[contains(.,\"" + item_code + "\")]");
+    let btnTarget = tbody.querySelector("button[value=\"" + item_code + "\"]");
+    let inputFail = btnTarget.parentNode.parentNode.parentNode.parentNode.querySelector("#item-quantity");
+    inputFail.classList.add("is-invalid");
+    return;
+}
+// end FAILURE/invalid Handler
 
 function cleanDropdown(dropdownNode) {
     // TODO : replace the hard coding with the funciton in the rest of the script replace 
@@ -316,7 +336,8 @@ function fillInputsDetailsItemRow(arrayData, rowNode) {
     console.log("arrayData");
     console.log(arrayData);
     let inputs = rowNode.querySelectorAll(".input");
-    rowNode.querySelector(".input#item-num-serie").disabled = Boolean(parseInt(arrayData["identifiable"]));
+    rowNode.querySelector(".input#item-num-serie").disabled = !Boolean(parseInt(arrayData["identifiable"]));
+    rowNode.querySelector(".input#item-pu").disabled = !Boolean(parseInt(arrayData["prix_variable"]));
     let stockableFlag = arrayData["stockable"];
     for (let k = 0; k < inputs.length; k++) {
         let input = inputs[k];
@@ -518,12 +539,15 @@ function generateRowTable(nodeModel, DataObj) {
     // newNode.querySelector("input.uid").value = DataObj["uid"];
     // TODO : use a dto or something
     newNode.querySelector("input.date").value = DataObj["date"];
-    newNode.querySelector("num-fact.date").value = DataObj["num_facture"];
+
     newNode.querySelector(".client.input").value = DataObj["client"];
     //TODO : format the numbers
-    newNode.querySelector(".totalTTC.input").value = DataObj["totalTTC-apres-remise"];
-    newNode.querySelector(".commande-uid.input").value = DataObj["uid"];
-    newNode.querySelector(".payment.input").value = DataObj["payment"];
+    newNode.querySelector(".totalTTC.input").value = DataObj["totalTTC-apres-remise"].toLocaleString("fr-FR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
+    newNode.querySelector(".uid.input").value = DataObj["uid"];
+    newNode.querySelector(".state.input").value = DataObj["state"];
     return newNode;
 }
 
@@ -588,7 +612,7 @@ function formatFloatsForDatabase(inputObj) {
 }
 
 
-async function saveCommandeNew(inputObj) {
+async function saveCommandeNew(inputObj, modal = null) {
     console.log("saving  comande");
     formatFloatsForDatabase(inputObj);
     // console.log("data");
@@ -681,8 +705,13 @@ function grabCommandeDataForm(modal) {
         let prixUnitaire = row.querySelector("#item-pu").value;
         let libelle = row.querySelector("#item-libelle").value;
         let numSerie = row.querySelector("#item-num-serie").value;
-        data["items"].push([rowID, itemID, quantity, prixUnitaire, numSerie, libelle]);
+        let identifiable = row.querySelector("#identifiable").value;
+        let stockable = row.querySelector("#stockable").value;
+        data["items"].push([rowID, itemID, quantity, prixUnitaire, numSerie, libelle, identifiable, stockable]);
     });
+
+    console.log("data");
+    console.log(data);
     return data;
 }
 
@@ -836,6 +865,7 @@ document.addEventListener("DOMContentLoaded", () => {
             let dataModalCommandeNew = grabCommandeDataForm(modalCommandeNew);
             console.log("dataModalCommandeNew");
             console.log(dataModalCommandeNew);
+
             saveCommandeNew(dataModalCommandeNew).then((result) => {
                 if (result[0]) {
                     // insert uid of newly created client
@@ -869,12 +899,17 @@ document.addEventListener("DOMContentLoaded", () => {
                             console.log("yes saving called");
                             return false;
                         });
+                    bsModalCommandeNew.hide();
+
                 } else {
                     //TODO : show error
+
+                    // TODO : dont forget to put me in the correct place. here is just for test
+                    identifyInvalidType(result[1], modalCommandeNew);
                     return true;
                 }
             });
-            bsModalCommandeNew.hide();
+            bsModalConfirmation.hide();
         }
     }
 
@@ -1179,7 +1214,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (modificationWatcher) {
                     openModalConfirmation(
                         confirmationObj,
-                        cancelCreationObj
+                        cancelCreationObj, event.currentTarget
                     );
                 } else {
                     bsModalCommandeNew.hide();
