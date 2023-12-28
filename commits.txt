@@ -981,6 +981,18 @@ check_stock.php created as file for utlities functions. check_available_stock() 
 in command-main.js, identifyInvalidType() and outOfStock() were created to handle out of stock case. gotta expand to all error/invalid case...
 
 
-updated all when price update
+updated all when price update+
 default pour client
 client when viewing
+
+-------------------------
+141_a:
+separated eventlistener on modalCommandeNew per part of the modal. to avoid conflict with .search-result;
+update all when price unitaire changes;
+set default value pour btn client;
+corrected tipo "choississez" into "choisissez";
+now client is filled correctly when viewing an order;
+
+input and data validation (number first,)...
+numserie algo...
+

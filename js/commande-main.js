@@ -70,7 +70,7 @@ const DefaultValuesCommandeNewFormObj = {
     uid: "",
     state: 1,
     commercial: currentUser,
-    client: "",
+    client: "Choisissez un client",
     date: TODAY,
     "totalHT-avant-remise": "",
     "TVA-avant-remise": "",
@@ -269,11 +269,7 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
     for (let index = 0; index < inputsElements.length; index++) {
         let element = inputsElements[index];
         if (element.id === "client") {
-            if (valueObj["raison_sociale"]) {
-                element.value = valueObj["client_uid"] + " - " + valueObj["raison_sociale"] + " / " + valueObj["nom_commercial"];
-            } else {
-                element.value = valueObj["client_uid"] + " - " + valueObj["noms"] + " " + valueObj["prenoms"];
-            }
+            fillClientButton(valueObj, element);
         }
         else if (element.id === "commercial") {
             element.value = valueObj["user_uid"] + "//" + valueObj["user_name"];
@@ -326,9 +322,10 @@ function formatCLientName(objectData) {
     return val;
 }
 
-function fillClientButton(objectData, rowNode) {
+function fillClientButton(objectData, BtnNode) {
+    // TODO: too much responsability here.
     let client = formatCLientName(objectData);
-    setInputValue(rowNode, client);
+    setInputValue(BtnNode, client);
 }
 
 function fillInputsDetailsItemRow(arrayData, rowNode) {
@@ -514,7 +511,7 @@ function cleanNewForm(modal, disable = false) {
                 return false;
             }
         }
-        input.value = myValue;
+        setInputValue(input, myValue);
     });
 }
 
@@ -1208,8 +1205,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
+    ////modalCommandeNew event handler
+
     try {
-        modalCommandeNew.addEventListener('click', (event) => {
+        modalCommandeNew.querySelector("#new-modal-body-heads").addEventListener('click', (event) => {
+            if (event.target.classList.contains("search-result")) {
+                console.log("chossed client");
+                console.log(event);
+                fillClientButton(JSON.parse(event.target.dataset.infos), event.target.parentNode.parentNode.parentNode.querySelector(".dropdown-toggle"));
+
+            } else if (event.target.id === "client") {
+                event.target.parentNode.querySelector("#search-client").focus();
+            }
+        }, true)
+    } catch (error) {
+
+    }
+
+    try {
+        tableItemsFactureNew.addEventListener('click', (event) => {
+            if (event.target.classList.contains("search-result")) {
+                console.log("chossed item");
+                console.log(event);
+                fillInputsDetailsItemRow(JSON.parse(event.target.dataset.infos), event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode);
+            } else if (event.target.id === "item-uid") {
+                event.target.parentNode.querySelector("#search-item").focus();
+            } else if (event.target.id == "btn-add-item") {
+                addItem(tableItemsFactureNew).then(() => modificationWatcher = true);
+            } else if (event.target.classList.contains("btn-del")) {
+                removeItem(event.target, "target");
+                modificationWatcher = true;
+                console.log("remove");
+                updateTotalPrice(montantHTAvantRemiseInputNew, modalCommandeNew.querySelectorAll("#item-prix-total"))
+                updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+            }
+        }, true)
+    } catch (error) {
+
+    }
+
+    try {
+        modalCommandeNew.querySelector(".modal-footer").addEventListener('click', (event) => {
             if (event.target.id == "btn-cancel-new") {
                 if (modificationWatcher) {
                     openModalConfirmation(
@@ -1220,14 +1256,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     bsModalCommandeNew.hide();
                     defaultButtons(modalCommandeNew)
                 }
-            } else if (event.target.id == "btn-add-item") {
-                addItem(tableItemsFactureNew).then(() => modificationWatcher = true);
-            } else if (event.target.classList.contains("btn-del")) {
-                removeItem(event.target, "target");
-                modificationWatcher = true;
-                console.log("remove");
-                updateTotalPrice(montantHTAvantRemiseInputNew, modalCommandeNew.querySelectorAll("#item-prix-total"))
-                updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
             } else if (event.target.id == "btn-save-new") {
                 if (modificationWatcher) {
                     openModalConfirmation(
@@ -1246,52 +1274,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
                     bsModalCommandeNew.hide();
                 }
-            } else if (event.target.classList.contains("search-result")) {
-                console.log("chossed client");
-                console.log(event);
-                fillClientButton(JSON.parse(event.target.dataset.infos), event.target.parentNode.parentNode.parentNode.querySelector("#client"));
-
-            } else if (event.target.id === "client") {
-                event.target.parentNode.querySelector("#search-client").focus();
             }
         }, true)
-    } catch (error) {
-
-    }
-
-    try {
-        tableItemsFactureNew.addEventListener('click', (event) => {
-            if (event.target.classList.contains("search-result")) {
-                console.log("chossed item");
-                console.log(event);
-                fillInputsDetailsItemRow(JSON.parse(event.target.dataset.infos), event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode);
-            } else if (event.target.id === "item-uid") {
-                event.target.parentNode.querySelector("#search-item").focus();
-            }
-        }, true)
-    } catch (error) {
-
-    }
-
-    ////modalCommandeNew event handler
-    try {
-        modalCommandeNew.addEventListener('keyup', (event) => {
-            console.log("event keyup");
-            console.log(event);
-            if ((event.target.id == "client") && (event.key)) {
-
-            } else if ((event.target.id == "client") && (!event.key)) {
-                console.log("client selected");
-            } else if (event.target.id == "item-quantity") {
-                updateItemTotalPrice(event.target.parentNode.parentNode)
-                const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
-                updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
-                updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
-
-
-            }
-        })
-
     } catch (error) {
 
     }
@@ -1323,18 +1307,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 //// END - grabing data
                 console.log("markman");
 
-
-
             } else if (event.target.id == "search-client") {
                 console.log("searching client 78");
-                // clientDataList.innerHTML = "";
-                // clearTimeout(typingTimer);
-                // let term = event.target.value.trim();
-                // if (term) {
-                //     // TODO : sanitize here
-                //     clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
-                //     typingTimer = setTimeout(() => { searchLive(term, clientDataList, "client") }, 1500);
-                // }
+
                 let hint = event.target.value;
                 // TODO : sanitize hint
                 let clientDropdown = event.target.parentNode.parentNode.parentNode;
@@ -1349,15 +1324,48 @@ document.addEventListener("DOMContentLoaded", () => {
                 typingTimer = setTimeout(() => { searchLive(hint, clientDropdown, "client") }, 1500);
                 //// END - grabing data
 
-            } else if (event.target.id == "item-quantity") {
+            } else if (["item-quantity", "item-pu"].includes(event.target.id)) {
+                console.log("update qty or pu");
                 updateItemTotalPrice(event.target.parentNode.parentNode)
                 const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
                 updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
                 updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+            } else if (event.target.id == 'remise-taux') {
+                tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, 1);
+            } else if (event.target.id == 'remise-montant') {
+                tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, 2);
+
             }
+            totalTTCDiscountedHandler(montantTTCAvantRemiseInputNew, montantTTCApresRemiseInputNew, remiseMontantInputNew);
+            TVAHandler(montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew, 2);
+
         });
     } catch (error) {
     }
+
+    // try {
+    //     modalCommandeNew.addEventListener('keyup', (event) => {
+    //         console.log("event keyup");
+    //         console.log(event);
+    //         if ((event.target.id == "client") && (event.key)) {
+
+    //         } else if ((event.target.id == "client") && (!event.key)) {
+    //             console.log("client selected");
+    //         } else if (event.target.id == "item-quantity") {
+    //             updateItemTotalPrice(event.target.parentNode.parentNode)
+    //             const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
+    //             updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
+    //             updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+
+
+    //         }
+    //     })
+
+    // } catch (error) {
+
+    // }
+
+
 
     ////modalCommandeDetails event handler
     try {
@@ -1377,7 +1385,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             } else if ((event.target.id == "client") && (!event.key)) {
                 console.log("client selected 46");
-            } else if (event.target.id == "item-quantity") {
+            } else if (["item-quantity", "item-pu"].includes(event.target.id)) {
                 updateItemTotalPrice(event.target.parentNode.parentNode)
                 const itemTotalPriceInputs = modalCommandeDetails.querySelectorAll("#item-prix-total");
                 updateTotalPrice(montantHTAvantRemiseInputDetails, itemTotalPriceInputs);
@@ -1394,10 +1402,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(event);
             modificationWatcher = true;
 
-            if ((event.target.id == "item-uid") && (event.key)) {
-
-            } else if ((event.target.id == "item-uid") && (!event.key)) {
-            } else if (event.target.id == "item-quantity") {
+            if (["item-quantity", "item-pu"].includes(event.target.id)) {
                 updateItemTotalPrice(event.target.parentNode.parentNode)
                 const itemTotalPriceInputs = modalCommandeDetails.querySelectorAll("#item-prix-total");
                 updateTotalPrice(montantHTAvantRemiseInputDetails, itemTotalPriceInputs);
@@ -1415,23 +1420,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         })
     } catch (error) { }
-
-    try {
-        modalCommandeNew.addEventListener('input', (event) => {
-            // TODO : restrict event
-            if (event.target.id == 'remise-taux') {
-                tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, 1);
-            } else if (event.target.id == 'remise-montant') {
-                tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, 2);
-
-            }
-            totalTTCDiscountedHandler(montantTTCAvantRemiseInputNew, montantTTCApresRemiseInputNew, remiseMontantInputNew);
-            TVAHandler(montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew, 2);
-        })
-
-    } catch (error) {
-
-    }
 
     try {
         modalCommandeDetails.addEventListener('input', (event) => {
