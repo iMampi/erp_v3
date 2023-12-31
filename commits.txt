@@ -1002,3 +1002,9 @@ changed html of commande table details.
 implemented backend for num-serie in php and js. the selection process.
 
 limit qty to 1 when identifiable...
+-------------------------
+143_a:
+implemented algo : 
+-when identifiable, quantity is locked to 1.
+-when num serie selected, all montant are updated.
+-when changing item, item-num-serie is cleaned, and all montant updated.

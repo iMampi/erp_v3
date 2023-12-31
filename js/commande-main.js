@@ -352,7 +352,14 @@ function fillInputsDetailsItemRow(arrayData, rowNode) {
     let inputs = rowNode.querySelectorAll(".input");
     rowNode.querySelector(".input#item-num-serie").disabled = !Boolean(parseInt(arrayData["identifiable"]));
     rowNode.querySelector(".input#item-pu").disabled = !Boolean(parseInt(arrayData["prix_variable"]));
-    let stockableFlag = arrayData["stockable"];
+
+    rowNode.querySelector(".input#item-quantity").value = "";
+    rowNode.querySelector(".input#item-quantity").disabled = false;
+
+    if (parseInt(arrayData["identifiable"])) {
+        rowNode.querySelector(".input#item-quantity").value = 1;
+        rowNode.querySelector(".input#item-quantity").disabled = true;
+    }
     for (let k = 0; k < inputs.length; k++) {
         let input = inputs[k];
         try {
@@ -1269,8 +1276,27 @@ document.addEventListener("DOMContentLoaded", () => {
             if (event.target.classList.contains("search-result")) {
                 console.log("chossed item");
                 console.log(event);
-                fillInputsDetailsItemRow(JSON.parse(event.target.dataset.infos), event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode);
-                searchLive([JSON.parse(event.target.dataset.infos)["code"], ''], event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('#num-serie-dropdown'), "num-serie");
+                let trNOde = event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+                let dropdownNode = event.target.parentNode.parentNode;
+                if (dropdownNode.id == "item-dropdown") {
+                    fillInputsDetailsItemRow(JSON.parse(event.target.dataset.infos), trNOde);
+                    searchLive([JSON.parse(event.target.dataset.infos)["code"], ''], event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('#num-serie-dropdown'), "num-serie");
+
+                    trNOde.querySelector("#item-num-serie").textContent = "...";
+
+                    updateItemTotalPrice(trNOde);
+                    const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
+                    updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
+                    updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+                } else if (dropdownNode.id == "num-serie-dropdown") {
+                    setInputValue(trNOde.querySelector("#item-num-serie"), event.target.textContent);
+
+                    updateItemTotalPrice(trNOde);
+                    const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
+                    updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
+                    updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+                }
+
 
             } else if (event.target.id === "item-uid") {
                 event.target.parentNode.querySelector("#search-item").focus();
