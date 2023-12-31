@@ -17,6 +17,7 @@ class Queries
     static public $filter_facture = "select * from factures_client";
     static public $filter_item = "select code,name,type_item,categorie, famille,prix_vente, prix_achat_mp,declarable from view_all_items";
     static public $selection_items = "select code,name,prix_vente,stockable,identifiable,prix_variable from items";
+    static public $selection_num_serie = "select * from identifiables";
     static public $selection_clients = "select uid,noms,prenoms,nom_commercial,raison_sociale from view_all_clients";
     static public $selection_commande_items = "select * from view_all_commandes_details where commande_uid=?";
     static public $selection_commande_items_for_avoir = "select *, sum(quantity) as remaining_quantity from view_all_commandes_details where commande_uid=? or commande_initial_uid=? group by item_uid";
@@ -565,6 +566,9 @@ class Queries
                 break;
             case 'selection_items':
                 $this->query = self::$selection_items;
+                break;
+            case 'selection_num_serie':
+                $this->query = self::$selection_num_serie;
                 break;
             case 'selection_clients':
                 $this->query = self::$selection_clients;

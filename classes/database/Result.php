@@ -5,10 +5,13 @@ namespace Database;
 class Result
 {
     public $dataObj;
+    public $mode;
     public $dataArray;
 
     function __construct($dataObj, $nb_affected_row, $mode = MYSQLI_BOTH)
     {
+        $this->mode = $mode;
+
         if ($dataObj != \null) {
 
             $this->dataObj = $dataObj;

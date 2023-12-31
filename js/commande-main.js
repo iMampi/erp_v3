@@ -148,6 +148,7 @@ function identifyInvalidType(array_message, modal) {
         outOfStock(array_message[0].split("//")[1], modal);
     }
 }
+
 function outOfStock(item_code, modal) {
     let tbody = modal.querySelector("#table-facture > tbody");
     // let btnTarget = tbody.querySelector("button[contains(.,\"" + item_code + "\")]");
@@ -157,6 +158,20 @@ function outOfStock(item_code, modal) {
     return;
 }
 // end FAILURE/invalid Handler
+
+
+function filterNumSerie(nodeListLI, term) {
+    term = term.trim();
+    if (term) {
+        nodeListLI.forEach(LI => {
+            LI.classList.remove("visually-hidden");
+            if (!LI.querySelector("a").textContent.includes(term)) {
+                LI.classList.add("visually-hidden");
+            }
+        });
+    }
+
+}
 
 function cleanDropdown(dropdownNode) {
     // TODO : replace the hard coding with the funciton in the rest of the script replace 
@@ -224,7 +239,9 @@ function makeCommandeFormEditabble(modal) {
 }
 
 function addName(listNode, value, selectable, myJSON = {}) {
+    console.log("addname");
     let newLi = document.createElement("li");
+    newLi.classList.add("result");
     if (selectable) {
         let newA = document.createElement("a");
         newA.textContent = typeof value == "string" ? value : formatName(value);
@@ -1122,15 +1139,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function searchLive(term, datalistNode, mode) {
+        // term: string if client or item or nom-commercial
+        // term: array if num-serie
         console.log("term");
         console.log(term);
-        term = term.trim();
+        try {
+            term = term.trim();
+        } catch (error) {
+
+        }
         if (term) {
-            let search = { "client": searchClient, "item": searchItem }
+            let search = { "client": searchClient, "item": searchItem, "num-serie": searchNumSerie }
 
             let inputObj = {
                 "client": { uid: term, noms: term, prenoms: term, "nom-commercial": term, "raison-sociale": term },
-                "item": { code: term, name: term }
+                "item": { code: term, name: term },
+                "num-serie": { code: term[0], "num-serie": term[1] },
             };
             let result = await search[mode](inputObj[mode]);
             // let result = await searchItem(inputObj);
@@ -1149,12 +1173,16 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(arrayData);
             arrayData.forEach(element => {
                 let option_ = document.createElement("option");
+                // use keys from database
                 if (mode == "item") {
                     addName(datalistNode, element.code + " - " + element.name, true, element);
                     return;
                 } else if (mode == "client") {
                     let val = formatCLientName(element);
                     addName(datalistNode, val, true, element);
+                    return;
+                } else if (mode == "num-serie") {
+                    addName(datalistNode, element.num_serie, true);
                     return;
                 }
             });
@@ -1172,6 +1200,20 @@ document.addEventListener("DOMContentLoaded", () => {
     async function searchItem(inputObj) {
         console.log("searching ITEM");
         let url = "/database/select/selection_items.php";
+        let response = await sendData(url, inputObj);
+
+        console.log("error?");
+        console.log(response);
+        let myjson = JSON.parse(response);
+
+        return myjson;
+        // return await fillMainTable(myjson, tableBodyCategorie);
+
+    }
+
+    async function searchNumSerie(inputObj) {
+        console.log("searching num-serie");
+        let url = "/database/select/selection_num_serie.php";
         let response = await sendData(url, inputObj);
 
         console.log("error?");
@@ -1228,6 +1270,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("chossed item");
                 console.log(event);
                 fillInputsDetailsItemRow(JSON.parse(event.target.dataset.infos), event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode);
+                searchLive([JSON.parse(event.target.dataset.infos)["code"], ''], event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('#num-serie-dropdown'), "num-serie");
+
             } else if (event.target.id === "item-uid") {
                 event.target.parentNode.querySelector("#search-item").focus();
             } else if (event.target.id == "btn-add-item") {
@@ -1289,7 +1333,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (event.target.id == "search-item") {
                 // item searching with btn dropdown
                 console.log("searching item 23");
-                // let hint = event.target.value.trim();
                 let hint = event.target.value;
                 // TODO : sanitize hint
                 let itemDropdown = event.target.parentNode.parentNode.parentNode;
@@ -1306,6 +1349,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 typingTimer = setTimeout(() => { searchLive(hint, itemDropdown, "item") }, 1500);
                 //// END - grabing data
                 console.log("markman");
+
+            } else if (event.target.id == "search-num-serie") {
+                console.log("searching num-serie 23");
+                let numSerieDropdown = event.target.parentNode.parentNode.parentNode;
+                filterNumSerie(numSerieDropdown.querySelectorAll("li.result"), event.target.value);
 
             } else if (event.target.id == "search-client") {
                 console.log("searching client 78");

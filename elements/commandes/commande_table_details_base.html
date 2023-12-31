@@ -23,24 +23,25 @@
 			<input type="hidden" id="identifiable" class='input identifiable'>
 			<input type="hidden" id="prix-variable" class='input prix-variable'>
 			<td>
-			<div class=" my-auto " >
-				<div class="dropdown btn-group d-flex" role="group">
-					<button class="btn btn-sm input item-uid btn-secondary  dropdown-toggle right-corners w-100 text-start input" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="item-uid" >
-						Choississez un article
-					</button>
-	
-					<ul class="dropdown-menu " id="item-dropdown">
-						<li id="search-container">
-							<div class="px-2 pb-2">
-								<input  type="text" placeholder="Search" id="search-item" autocomplete="off" class="form-control form-control-sm input">               
-							</div>
-						</li>
-					</ul>
-					<button class="mytbn btn btn-sm btn-success text-center left-corners form-control-sm"type="button" id="btn-see-client">
-						see</button>
-			
+				<div class=" my-auto " >
+					<div class="dropdown btn-group d-flex" role="group">
+						<button class="btn btn-sm input item-uid btn-secondary  dropdown-toggle right-corners w-100 text-start input" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="item-uid" >
+							Choississez un article
+						</button>
+		
+						<ul class="dropdown-menu " id="item-dropdown">
+							<li id="search-container">
+								<div class="px-2 pb-2">
+									<input  type="text" placeholder="Search" id="search-item" autocomplete="off" class="form-control form-control-sm input">               
+								</div>
+							</li>
+						</ul>
+						<button class="mytbn btn btn-sm btn-success text-center left-corners form-control-sm"type="button" id="btn-see-client">
+							see</button>
+				
+					</div>
 				</div>
-  </td>
+	        </td>
 			<td>
 				<input
 					type="text"
@@ -53,14 +54,30 @@
 				<textarea class="form-control form-control-sm libelle input" id="item-libelle" rows="1"></textarea>
 			</td>
 
-			<td>
+			<!-- <td>
 				<input
 					type="text"
 					class=" form-control form-control-sm num-serie input"
 					id="item-num-serie"
 				/>
 
-			</td>
+			</td> -->
+			<td>
+				<div class=" my-auto " >
+					<div class="dropdown btn-group d-flex" role="group">
+						<button class="btn btn-sm input num-serie btn-secondary dropdown-toggle w-100 text-start input" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="item-num-serie" >
+							...
+						</button>
+						<ul class="dropdown-menu " id="num-serie-dropdown">
+							<li id="search-container">
+								<div class="px-2 pb-2">
+									<input  type="text" placeholder="Search" id="search-num-serie" autocomplete="off" class="form-control form-control-sm input">               
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+	        </td>
 			<td>
 				<input
 					type="text"

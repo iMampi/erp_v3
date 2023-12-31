@@ -995,4 +995,10 @@ now client is filled correctly when viewing an order;
 
 input and data validation (number first,)...
 numserie algo...
+-------------------------
+142_a:
+database changed ot table "identifiable";
+changed html of commande table details.
+implemented backend for num-serie in php and js. the selection process.
 
+limit qty to 1 when identifiable...

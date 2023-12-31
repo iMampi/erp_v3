@@ -46,7 +46,7 @@ class DbHandler
             $result = self::$connection->query($myquery);
             if (!$result) die("Problem with your query");
             // echo "<br>called 1<br>";
-            $result_ = new Result($result, $mode);
+            $result_ = new Result($result,\null, $mode);
             // print_r($result_->dataArray);
             return $result_->dataArray;
         } catch (\Exception $e) {
