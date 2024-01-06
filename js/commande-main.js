@@ -11,6 +11,8 @@ const NUMBER_INPUT_ITEM_ROW = [
     "item-prix-total",
 ];
 
+const validNonCharInput = ["Backspace", "Enter", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Delete", ","];
+
 // const DTO_FILL_INPUT_ITEM_ROW = {
 //     "row-uid": "uid",
 //     "item-uid": "item_uid",
@@ -159,6 +161,149 @@ function outOfStock(item_code, modal) {
 }
 // end FAILURE/invalid Handler
 
+// validations and format
+function validateNumberOnlyTextInput(event) {
+    if (event.target.classList.contains("min-max-text")) {
+        validateNumberMinMaxTextInput(event);
+        return;
+    }
+    validateNumberTextInput(event);
+}
+
+function validateNumberTextInput(event) {
+    // caching
+
+    if (validNonCharInput.includes(event.data)) {
+        return true;
+    }
+    let position = event.target.selectionStart;
+    let intialValue = event.target.value.slice();
+    // insert input where it should
+    let test = intialValue.slice(0, position) + event.data + intialValue.slice(position);
+    test = test.trim();
+    // get rid of thousands separators
+    test = test.replace(/\s/g, '');
+    // Validate the input
+    let regex = /^(?:\-|\-{0,1}\d+|\-{0,1}\d*,\d{0,2})$/;
+    let notValid = !regex.test(test);
+    if (notValid) {
+        event.preventDefault();
+        // event.target.value=intialValue;
+        return false;
+    }
+    // event.target.value=test;
+    return true;
+}
+
+function validateNumberMinMaxTextInput(event) {
+    if (validNonCharInput.includes(event.data)) {
+        return true;
+    }
+    // caching
+    let position = event.target.selectionStart;
+    let intialValue = event.target.value.slice();
+    // insert input where it should
+    let test = intialValue.slice(0, position) + event.data + intialValue.slice(position);
+    test = test.trim();
+    // get rid of thousands separators
+    test = test.replace(/\s/g, '');
+
+    // test min
+    let flagLTMin = false;
+    try {
+        if (event.target.dataset.min) {
+            flagLTMin = !((formatedNumberToFloat(test) || 0) >= event.target.dataset.min);
+        }
+    } catch (error) {
+        console.log("er45");
+    }
+    // test max
+    let flagGTMax = false;
+    try {
+        if (event.target.dataset.max) {
+            flagGTMax = !((formatedNumberToFloat(test) || 0) <= event.target.dataset.max);
+        }
+    } catch (error) {
+        console.log("er55");
+    }
+    // Validate the input
+    let regex = /^(?:\-|\-{0,1}\d+|\-{0,1}\d*,\d{0,2})$/;
+    let notValid = !regex.test(test);
+    if (notValid || flagGTMax || flagLTMin) {
+        event.preventDefault();
+        return false;
+    }
+    return true;
+}
+
+function formatNumberForTextInput(event) {
+    console.log("formattting");
+    let text = event.target.value.replace(/\s/g, '');
+    let parts = text.split(',');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    event.target.value = parts.join(',');
+}
+
+// function validateAndFormatNumberTextInput(input) {
+//     input.preventDefault();
+//     // caching
+//     let position = input.target.selectionStart;
+//     var intialValue = input.target.value.slice();
+//     // insert input where it should
+//     let test = intialValue.slice(0, position) + input.data + intialValue.slice(position);
+//     test = test.trim();
+//     // get rid of thousands separators
+//     test = test.replace(/\s/g, '');
+
+//     // Validate the input
+//     var regex = /^(?:\d+|\d*,\d{0,2})$/;
+//     if (!regex.test(test)) {
+//         input.target.value = intialValue;
+//         return false;
+//     }
+//     // Format the input with thousand separators
+//     var parts = test.split(',');
+//     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+//     input.target.value = parts.join(',');
+//     return true;
+// }
+
+// function validateAndFormatNumberWithMinMaxTextInput(input, min = 0, max) {
+//     input.preventDefault();
+//     // caching
+//     let position = input.target.selectionStart;
+//     // deep copy current input value
+//     var intialValue = input.target.value.slice();
+//     console.log("init : " + intialValue);
+//     // insert input where it should
+//     let test = intialValue.slice(0, position) + input.data + intialValue.slice(position);
+//     test = test.trim();
+//     // get rid of thousands separators
+//     test = test.replace(/\s/g, '');
+
+//     // test max
+//     let flagGTMax = false;
+//     if (max) {
+//         flagGTMax = !(formatedNumberToFloat(test) <= max);
+//     }
+
+//     // Validate the input
+//     var regex = /^(?:\d+|\d*,\d{0,2})$/;
+
+//     if (!regex.test(test) || !(formatedNumberToFloat(test) >= min) || flagGTMax) {
+//         input.preventDefault();
+//         input.target.value = intialValue;
+//         return;
+//     }
+//     // Format the input with thousand separators
+//     var parts = test.split(',');
+//     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+//     input.target.value = parts.join(',');
+// }
+
+
+
+//end of validations and format
 
 function filterNumSerie(nodeListLI, term) {
     term = term.trim();
@@ -224,9 +369,16 @@ function makeCommandeFormEditabble(modal) {
     let inputs = modal.querySelectorAll(".input");
     inputs.forEach(input => {
         if (!notEditable.includes(input.id)) {
+
             input.disabled = false;
         }
     });
+
+    let identifiablesInputs = modal.querySelectorAll("#identifiable");
+    identifiablesInputs.forEach(input => {
+
+    });
+
     let btns = modal.querySelectorAll(".btn");
     btns.forEach(btn => {
         if (btn.id !== "btn-modify") {
@@ -451,7 +603,9 @@ function removeItemRows(nodeList) {
 function addItem(tableFactureBody) {
     return new Promise((resolve, reject) => {
         console.log("addding item");
+        // is it already cached
         if (listDOM["itemRow"]) {
+            // take it from cache
             console.log("from cahce");
             counterRowItem++;
             let doc = new DOMParser().parseFromString(
@@ -468,7 +622,7 @@ function addItem(tableFactureBody) {
             resolve(true);
 
         } else {
-
+            // fectch html
             fetch("/elements/commandes/commande_table_details_base.html")
                 .then((response) =>
                     response.text()
@@ -757,9 +911,15 @@ function tauxAndMontantDiscountInputHandler(baseMontantInput, tauxInput, montant
     // mode: 1 = taux changed ; 2 = montant changed 
     let baseMontant = formatedNumberToFloat(baseMontantInput.value);
     if (mode == 1) {
-        montantInput.value = (baseMontant * formatedNumberToFloat(tauxInput.value) / 100 || 0).toFixed(2);
+        montantInput.value = (baseMontant * formatedNumberToFloat(tauxInput.value) / 100 || 0).toLocaleString("fr-FR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        });
     } else if (mode == 2) {
-        tauxInput.value = (formatedNumberToFloat(montantInput.value) / formatedNumberToFloat(baseMontant) * 100 || 0).toFixed(2);
+        tauxInput.value = (formatedNumberToFloat(montantInput.value) / formatedNumberToFloat(baseMontant) * 100 || 0).toLocaleString("fr-FR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        });
     }
 }
 
@@ -1257,6 +1417,18 @@ document.addEventListener("DOMContentLoaded", () => {
     ////modalCommandeNew event handler
 
     try {
+        modalCommandeNew.addEventListener('beforeinput', (event) => {
+            console.log("validation");
+            if (event.inputType === "insertText" && event.target.classList.contains("number-text")) {
+
+                validateNumberOnlyTextInput(event);
+            }
+        })
+    } catch (error) {
+
+    }
+
+    try {
         modalCommandeNew.querySelector("#new-modal-body-heads").addEventListener('click', (event) => {
             if (event.target.classList.contains("search-result")) {
                 console.log("chossed client");
@@ -1353,9 +1525,14 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
         modalCommandeNew.addEventListener('input', (event) => {
             console.log("event input");
-            console.log(event);
             modificationWatcher = true;
+            // validation and formatting input
+            if (event.target.classList.contains("number-text")) {
+                console.log("number-text");
+                formatNumberForTextInput(event);
+            }
 
+            // business logic start
             if (event.target.id == "search-item") {
                 // item searching with btn dropdown
                 console.log("searching item 23");
@@ -1407,6 +1584,8 @@ document.addEventListener("DOMContentLoaded", () => {
             } else if (event.target.id == 'remise-taux') {
                 tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, 1);
             } else if (event.target.id == 'remise-montant') {
+
+                console.log("remise montant!");
                 tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, 2);
 
             }

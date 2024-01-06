@@ -338,6 +338,40 @@ document.getElementById("input2").addEventListener("keydown",(event)=>{
 console.log(event);
 isNumberKey(event)})
 
+I USE THIS NOW
+<script>
+function validateAndFormatNumberTextInput(input) {
+    // caching
+    let position = event.target.selectionStart;
+    var intialValue = input.target.value.slice();
+    // insert input where it should
+    let test=intialValue.slice(0,position)+input.data+intialValue.slice(position);
+    test=test.trim();
+    // get rid of thousands separators
+    test = test.replace(/\s/g, '');
+
+    // Validate the input
+    var regex = /^(?:\d+|\d*,\d{0,2})$/;
+    if (!regex.test(test)) {
+        return;
+    }
+    // Format the input with thousand separators
+    var parts = test.split(',');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    input.target.value = parts.join(',');
+}
+
+
+document.getElementById("test").addEventListener("beforeinput",(event)=>{
+console.log(event);
+if(event.inputType==="insertText"){
+    event.preventDefault();
+    validateAndFormatInput(event);
+}
+})
+</script>
+
+
 //////////////
 when input is invalid when u use pattern, the css selector is 
 input:invalid,
