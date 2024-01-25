@@ -29,11 +29,10 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
     $disponibilities = [];
     try {
         // TODO : dont forget to put me back to normal
-        // if ($data["header"]["state"] === 2) {
-        if (true) {
+        if ($data["header"]["state"] === 2) {
+        // if (true) {
             foreach ($data["items"] as $array_values) {
                 // stockable?
-                // foreach ($variable as $key => $value) {
                 # code...
                 if ($array_values[7]) {
                     if (!array_key_exists($array_values[0], $disponibilities)) {

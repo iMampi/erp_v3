@@ -1,4 +1,10 @@
 var currentUser;
+var defaultAutoNumericOptions =
+{
+    decimalCharacter: ",",
+    digitGroupSeparator: " ",
+    watchExternalChanges: true
+}
 
 const TODAY = luxon.DateTime.now().toFormat('yyyy-MM-dd');
 
@@ -13,15 +19,26 @@ const NUMBER_INPUT_ITEM_ROW = [
 
 const validNonCharInput = ["Backspace", "Enter", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Delete", ","];
 
-// const DTO_FILL_INPUT_ITEM_ROW = {
-//     "row-uid": "uid",
-//     "item-uid": "item_uid",
-//     "item-name": "item_name",
-//     "num-serie": "description_item",
-//     "item-pu": "prix_unitaire",
-//     "item-prix-total": "prix_total",
-//     "item-quantity": "quantity"
-// };
+const REQUIRED_INPUT_HEADERS = [
+    "state",
+    "commercial",
+    "client",
+    "date",
+    "magasin",
+    "totalHT-avant-remise",
+    "TVA-avant-remise",
+    "totalTTC-avant-remise",
+    "totalHT-apres-remise",
+    "TVA-apres-remise",
+    "totalTTC-apres-remise"
+]
+const REQUIRED_STANDARD_INPUT_ITEM_ROW = [
+    "item-uid",
+    "item-pu",
+    "item-quantity"
+]
+
+
 
 const DTO_FILL_INPUT_ITEM_ROW = [
     { inputId: "row-uid", objectKey: ["uid"] },
@@ -145,9 +162,77 @@ var defaultFilterFlag = true;
 var listDOM = {};
 
 // start FAILURE/invalid Handler
+// TODO : to refactor. to combine with grab. now, looping 2 times. make it 1.
+function checkRequiredInputs(modalNode) {
+    let result = [true];
+
+    let checkingHeaders = checkRequiredInputHeaders(modalNode.querySelector("#commande-header"));
+    if (!checkingHeaders[0]) {
+        return checkingHeaders;
+    };
+
+    let itemRows = modalNode.querySelectorAll(".item-commande-row");
+    for (let index = 0; index < itemRows.length; index++) {
+
+        let checkingRow = checkRequiredInputItemRow(itemRows[index]);
+        if (!checkingRow[0]) {
+            result = checkingRow;
+        }
+    };
+
+    return result;
+}
+
+function checkRequiredInputHeaders(headerContainer) {
+    let result = [true];
+    for (let index = 0; index < REQUIRED_INPUT_HEADERS.length; index++) {
+        let myInput = headerContainer.querySelector("#" + REQUIRED_INPUT_HEADERS[index]);
+        let value = getInputValue(myInput).trim();
+        let test = [value.startsWith('Chois'), value == "", value == null, value == "..."];
+        if (test.some((val) => val)) {
+            result = [false, myInput];
+            break;
+
+        }
+    }
+
+    return result;
+}
+
+function checkRequiredInputItemRow(itemRow) {
+    let result = [true];
+
+    let requiredSet = JSON.parse(JSON.stringify(REQUIRED_STANDARD_INPUT_ITEM_ROW));
+    let identifiable = itemRow.querySelector(".input.identifiable").value;
+    let prixVariable = itemRow.querySelector(".input.prix-variable").value;
+
+    if (identifiable == 1) {
+        requiredSet.push("identifiable")
+    }
+    if (prixVariable == 1) {
+        requiredSet.push("prix-variable")
+    }
+    for (let index = 0; index < REQUIRED_STANDARD_INPUT_ITEM_ROW.length; index++) {
+        let myInput = itemRow.querySelector("#" + REQUIRED_STANDARD_INPUT_ITEM_ROW[index]);
+        let value = getInputValue(myInput).trim();
+        let test = [value.startsWith('Chois'), value == "", value == null, value == "...", parseInt(value) == 0];
+        if (test.some((val) => val)) {
+            result = [false, myInput];
+            break;
+        }
+    };
+    return result;
+
+}
+
 function identifyInvalidType(array_message, modal) {
+    // for required
+    if (!array_message[0]) {
+        return inputRequired(array_message[1]);
+    }
+    // for stock verification
     if (array_message[0].includes("not enough stock")) {
-        outOfStock(array_message[0].split("//")[1], modal);
+        return outOfStock(array_message[0].split("//")[1], modal);
     }
 }
 
@@ -159,151 +244,15 @@ function outOfStock(item_code, modal) {
     inputFail.classList.add("is-invalid");
     return;
 }
+
+function inputRequired(inputNode) {
+    inputNode.classList.add("is-invalid");
+
+    return;
+}
 // end FAILURE/invalid Handler
 
-// validations and format
-function validateNumberOnlyTextInput(event) {
-    if (event.target.classList.contains("min-max-text")) {
-        validateNumberMinMaxTextInput(event);
-        return;
-    }
-    validateNumberTextInput(event);
-}
 
-function validateNumberTextInput(event) {
-    // caching
-
-    if (validNonCharInput.includes(event.data)) {
-        return true;
-    }
-    let position = event.target.selectionStart;
-    let intialValue = event.target.value.slice();
-    // insert input where it should
-    let test = intialValue.slice(0, position) + event.data + intialValue.slice(position);
-    test = test.trim();
-    // get rid of thousands separators
-    test = test.replace(/\s/g, '');
-    // Validate the input
-    let regex = /^(?:\-|\-{0,1}\d+|\-{0,1}\d*,\d{0,2})$/;
-    let notValid = !regex.test(test);
-    if (notValid) {
-        event.preventDefault();
-        // event.target.value=intialValue;
-        return false;
-    }
-    // event.target.value=test;
-    return true;
-}
-
-function validateNumberMinMaxTextInput(event) {
-    if (validNonCharInput.includes(event.data)) {
-        return true;
-    }
-    // caching
-    let position = event.target.selectionStart;
-    let intialValue = event.target.value.slice();
-    // insert input where it should
-    let test = intialValue.slice(0, position) + event.data + intialValue.slice(position);
-    test = test.trim();
-    // get rid of thousands separators
-    test = test.replace(/\s/g, '');
-
-    // test min
-    let flagLTMin = false;
-    try {
-        if (event.target.dataset.min) {
-            flagLTMin = !((formatedNumberToFloat(test) || 0) >= event.target.dataset.min);
-        }
-    } catch (error) {
-        console.log("er45");
-    }
-    // test max
-    let flagGTMax = false;
-    try {
-        if (event.target.dataset.max) {
-            flagGTMax = !((formatedNumberToFloat(test) || 0) <= event.target.dataset.max);
-        }
-    } catch (error) {
-        console.log("er55");
-    }
-    // Validate the input
-    let regex = /^(?:\-|\-{0,1}\d+|\-{0,1}\d*,\d{0,2})$/;
-    let notValid = !regex.test(test);
-    if (notValid || flagGTMax || flagLTMin) {
-        event.preventDefault();
-        return false;
-    }
-    return true;
-}
-
-function formatNumberForTextInput(event) {
-    console.log("formattting");
-    let text = event.target.value.replace(/\s/g, '');
-    let parts = text.split(',');
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    event.target.value = parts.join(',');
-}
-
-// function validateAndFormatNumberTextInput(input) {
-//     input.preventDefault();
-//     // caching
-//     let position = input.target.selectionStart;
-//     var intialValue = input.target.value.slice();
-//     // insert input where it should
-//     let test = intialValue.slice(0, position) + input.data + intialValue.slice(position);
-//     test = test.trim();
-//     // get rid of thousands separators
-//     test = test.replace(/\s/g, '');
-
-//     // Validate the input
-//     var regex = /^(?:\d+|\d*,\d{0,2})$/;
-//     if (!regex.test(test)) {
-//         input.target.value = intialValue;
-//         return false;
-//     }
-//     // Format the input with thousand separators
-//     var parts = test.split(',');
-//     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-//     input.target.value = parts.join(',');
-//     return true;
-// }
-
-// function validateAndFormatNumberWithMinMaxTextInput(input, min = 0, max) {
-//     input.preventDefault();
-//     // caching
-//     let position = input.target.selectionStart;
-//     // deep copy current input value
-//     var intialValue = input.target.value.slice();
-//     console.log("init : " + intialValue);
-//     // insert input where it should
-//     let test = intialValue.slice(0, position) + input.data + intialValue.slice(position);
-//     test = test.trim();
-//     // get rid of thousands separators
-//     test = test.replace(/\s/g, '');
-
-//     // test max
-//     let flagGTMax = false;
-//     if (max) {
-//         flagGTMax = !(formatedNumberToFloat(test) <= max);
-//     }
-
-//     // Validate the input
-//     var regex = /^(?:\d+|\d*,\d{0,2})$/;
-
-//     if (!regex.test(test) || !(formatedNumberToFloat(test) >= min) || flagGTMax) {
-//         input.preventDefault();
-//         input.target.value = intialValue;
-//         return;
-//     }
-//     // Format the input with thousand separators
-//     var parts = test.split(',');
-//     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-//     input.target.value = parts.join(',');
-// }
-
-
-
-//end of validations and format
 
 function filterNumSerie(nodeListLI, term) {
     term = term.trim();
@@ -416,14 +365,8 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
     console.log("responseJSON : ");
     console.log(responseJSON);
     valueObj = responseJSON["header"];
-    valueObj["TVA-avant-remise"] = valueObj["total_ht_avant_remise"].toLocaleString("fr-FR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    });
-    valueObj["TVA-apres-remise"] = valueObj["total_ht_apres_remise"].toLocaleString("fr-FR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    });
+    valueObj["TVA-avant-remise"] = valueObj["total_ht_avant_remise"];
+    valueObj["TVA-apres-remise"] = valueObj["total_ht_apres_remise"];
     // let inputsElements = md.querySelectorAll(".input");
 
     let inputsElements =
@@ -445,10 +388,7 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
 
         } else {
             if (NUMBER_INPUT_HEADERS.includes(element.id)) {
-                element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]].toLocaleString("fr-FR", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                });
+                element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
             } else {
                 element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
             }
@@ -497,8 +437,10 @@ function fillClientButton(objectData, BtnNode) {
     setInputValue(BtnNode, client);
 }
 
-function fillInputsDetailsItemRow(arrayData, rowNode) {
-
+function fillInputsDetailsItemRow(arrayData, rowNode, mode = "read") {
+    if (!["read", "new"].includes(mode)) {
+        throw new Error("mode must be read or new.");
+    }
     console.log("arrayData");
     console.log(arrayData);
     let inputs = rowNode.querySelectorAll(".input");
@@ -512,6 +454,12 @@ function fillInputsDetailsItemRow(arrayData, rowNode) {
         rowNode.querySelector(".input#item-quantity").value = 1;
         rowNode.querySelector(".input#item-quantity").disabled = true;
     }
+
+    if (mode === "new") {
+        AutoNumeric.getAutoNumericElement(rowNode.querySelector(".input#item-quantity")).update({ maximumValue: arrayData["stock"] });
+    }
+
+
     for (let k = 0; k < inputs.length; k++) {
         let input = inputs[k];
         try {
@@ -521,10 +469,7 @@ function fillInputsDetailsItemRow(arrayData, rowNode) {
                 console.log(input.id + " - " + val);
                 if (val !== undefined) {
                     if (NUMBER_INPUT_ITEM_ROW.includes(input.id)) {
-                        setInputValue(input, parseFloat(val).toLocaleString("fr-FR", {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                        }));
+                        setInputValue(input, parseFloat(val));
                     } else {
                         setInputValue(input, val);
                     }
@@ -598,6 +543,12 @@ function removeItemRows(nodeList) {
         removeItem(element, "node");
     });
     return true;
+}
+
+function autonumericItemRow(tableFactureBody) {
+    let currentRow = tableFactureBody.querySelector("#row-" + zeroLeftPadding(counterRowItem, 3, false));
+    new AutoNumeric(currentRow.querySelector("#item-pu"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
+    new AutoNumeric(currentRow.querySelector("#item-quantity"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
 }
 
 function addItem(tableFactureBody) {
@@ -717,10 +668,7 @@ function generateRowTable(nodeModel, DataObj) {
 
     newNode.querySelector(".client.input").value = DataObj["client"];
     //TODO : format the numbers
-    newNode.querySelector(".totalTTC.input").value = DataObj["totalTTC-apres-remise"].toLocaleString("fr-FR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    });
+    newNode.querySelector(".totalTTC.input").value = DataObj["totalTTC-apres-remise"];
     newNode.querySelector(".uid.input").value = DataObj["uid"];
     newNode.querySelector(".state.input").value = DataObj["state"];
     return newNode;
@@ -892,12 +840,16 @@ function grabCommandeDataForm(modal) {
 
 //PRICE MANIPULATION
 function updateTotalPrice(baseMontantInput, priceListNode) {
+    // Prices before discount
     console.log("updateTotalPrice");
     const pricesRaw = [];
     priceListNode.forEach(element => {
         pricesRaw.push(formatedNumberToFloat(element.value));
     });
-    return baseMontantInput.value = formatNumber(pricesRaw.reduce((partialSum, a) => partialSum + formatedNumberToFloat(a), 0));
+    let rawNumber = pricesRaw.reduce((partialSum, a) => partialSum + formatedNumberToFloat(a), 0);
+    baseMontantInput.value = formatNumber(rawNumber);
+
+    return;
 }
 
 function updateItemTotalPrice(rowNode) {
@@ -911,32 +863,37 @@ function tauxAndMontantDiscountInputHandler(baseMontantInput, tauxInput, montant
     // mode: 1 = taux changed ; 2 = montant changed 
     let baseMontant = formatedNumberToFloat(baseMontantInput.value);
     if (mode == 1) {
-        montantInput.value = (baseMontant * formatedNumberToFloat(tauxInput.value) / 100 || 0).toLocaleString("fr-FR", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        });
+        montantInput.value = (baseMontant * formatedNumberToFloat(tauxInput.value) / 100 || 0);
     } else if (mode == 2) {
-        tauxInput.value = (formatedNumberToFloat(montantInput.value) / formatedNumberToFloat(baseMontant) * 100 || 0).toLocaleString("fr-FR", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        });
+        tauxInput.value = (formatedNumberToFloat(montantInput.value) / formatedNumberToFloat(baseMontant) * 100 || 0)
     }
 }
 
 function totalTTCDiscountedHandler(baseMontantInput, discountedMontantInput, montantDiscount) {
     console.log("totalTTCDiscountedHandler");
-    discountedMontantInput.value = formatNumber(formatedNumberToFloat(baseMontantInput.value) - formatedNumberToFloat(montantDiscount.value))
+    try {
+        discountedMontantInput.value = AutoNumeric.format(parseFloat(AutoNumeric.unformat(baseMontantInput.value, defaultAutoNumericOptions)) - parseFloat(AutoNumeric.unformat(montantDiscount.value, defaultAutoNumericOptions)), defaultAutoNumericOptions);
+    } catch (error) {
+        console.log("HERE ERROR");
+        discountedMontantInput.value = AutoNumeric.format(0, defaultAutoNumericOptions)
+    }
+
+    // discountedMontantInput.value = formatNumber(formatedNumberToFloat(baseMontantInput.value) - formatedNumberToFloat(montantDiscount.value));
 }
 
-function TVAHandler(discountedMontantInput, TVAInput, TotalTTCInput, mode) {
+function TVAHandler(discountedMontantInput, TVAInput, TotalTTCInput, mode, remiseMontantInput = null) {
     // Handles TVA and total update
     // NOTE : mode = 1: ht to ttc;mode = 2: ttc to ht;
     console.log("TVAHandler");
     if (mode == 1) {
-
+        if (!remiseMontantInput) {
+            throw new Error('remiseMontantInput must be a valid DomElement');
+        }
         let TVA = formatedNumberToFloat(discountedMontantInput.value) * 0.20;
         TVAInput.value = formatNumber(TVA || 0);
-        TotalTTCInput.value = formatNumber(formatedNumberToFloat(discountedMontantInput.value) + TVA);
+        let rawNumber = formatedNumberToFloat(discountedMontantInput.value) + TVA
+        TotalTTCInput.value = formatNumber(rawNumber);
+        AutoNumeric.getAutoNumericElement(remiseMontantInput).update({ maximumValue: rawNumber });
     } else if (mode == 2) {
         let HT = formatedNumberToFloat(TotalTTCInput.value) / 1.2;
         discountedMontantInput.value = formatNumber(HT);
@@ -949,7 +906,7 @@ function TVAHandler(discountedMontantInput, TVAInput, TotalTTCInput, mode) {
 
 function updateAllHeaderPrices(montantHTAvantRemiseInput, TVAAvantRemiseInput, montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, montantHTApresRemiseInput, TVAApresRemiseInput, montantTTCApresRemiseInput) {
 
-    TVAHandler(montantHTAvantRemiseInput, TVAAvantRemiseInput, montantTTCAvantRemiseInput, 1);
+    TVAHandler(montantHTAvantRemiseInput, TVAAvantRemiseInput, montantTTCAvantRemiseInput, 1, remiseMontantInput);
     tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, 1)
     totalTTCDiscountedHandler(montantTTCAvantRemiseInput, montantTTCApresRemiseInput, remiseMontantInput);
     TVAHandler(montantHTApresRemiseInput, TVAApresRemiseInput, montantTTCApresRemiseInput, 2);
@@ -1043,6 +1000,14 @@ document.addEventListener("DOMContentLoaded", () => {
 				Êtes vous sûr de vouloir sauvegarder vos modifications?",
         yes: () => {
 
+            let checkingRequired = checkRequiredInputs(modalCommandeNew);
+            if (!checkingRequired[0]) {
+                console.log("required not fulfill1");
+                identifyInvalidType(checkingRequired, modalCommandeNew);
+                bsModalConfirmation.hide();
+                ToastShowClosured("failure", "Veuillez remplir correctement le champ en rouge")
+                return;
+            }
             let dataModalCommandeNew = grabCommandeDataForm(modalCommandeNew);
             console.log("dataModalCommandeNew");
             console.log(dataModalCommandeNew);
@@ -1100,7 +1065,15 @@ document.addEventListener("DOMContentLoaded", () => {
 				Aucune modification ne sera possible.<br>\
 				Êtes vous sûr de vouloir sauvegarder vos modifications?",
         yes: () => {
-
+            // TODO : to abstract reauiredchecking
+            let checkingRequired = checkRequiredInputs(modalCommandeNew);
+            if (!checkingRequired[0]) {
+                console.log("required not fulfill1");
+                identifyInvalidType(checkingRequired, modalCommandeNew);
+                bsModalConfirmation.hide();
+                ToastShowClosured("failure", "Veuillez remplir correctement le champ en rouge")
+                return;
+            }
             let dataModalCommandeNew = grabCommandeDataForm(modalCommandeNew);
             dataModalCommandeNew["header"]["state"] = 2;
             console.log("dataModalCommandeNew");
@@ -1170,7 +1143,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				Aucune modification ne sera possible.<br>\
 				Êtes vous sûr de vouloir sauvegarder vos modifications?",
         yes: () => {
-
+            // TODO : to abstract reauiredchecking
             let dataModalCommandeDetails = grabCommandeDataForm(modalCommandeDetails);
             dataModalCommandeDetails["header"]["state"] = 2;
             console.log("dataModalCommandeDetails");
@@ -1324,7 +1297,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 "num-serie": { code: term[0], "num-serie": term[1] },
             };
             let result = await search[mode](inputObj[mode]);
-            // let result = await searchItem(inputObj);
             addDatalistElement(datalistNode, result, mode, term);
         } else {
             cleanDropdown(datalistNode);
@@ -1356,10 +1328,6 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             console.log("empty arrayy");
             addName(datalistNode, "aucun résultat pour \"" + term + "\"", false);
-            // let option_ = document.createElement("option");
-            // option_.value = "Néant";
-            // option_.label = "aucun résultat pour \"" + term + "\"";
-            // datalistNode.append(option_);
         }
 
     }
@@ -1416,20 +1384,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ////modalCommandeNew event handler
 
-    try {
-        modalCommandeNew.addEventListener('beforeinput', (event) => {
-            console.log("validation");
-            if (event.inputType === "insertText" && event.target.classList.contains("number-text")) {
 
-                validateNumberOnlyTextInput(event);
-            }
-        })
-    } catch (error) {
-
-    }
 
     try {
         modalCommandeNew.querySelector("#new-modal-body-heads").addEventListener('click', (event) => {
+            if (event.target.classList.contains("dropdown-toggle")) {
+                if (event.target.classList.contains("is-invalid")) {
+                    event.target.classList.remove("is-invalid");
+                }
+            }
+
             if (event.target.classList.contains("search-result")) {
                 console.log("chossed client");
                 console.log(event);
@@ -1445,13 +1409,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
         tableItemsFactureNew.addEventListener('click', (event) => {
+            if (event.target.classList.contains("dropdown-toggle")) {
+                if (event.target.classList.contains("is-invalid")) {
+                    event.target.classList.remove("is-invalid");
+                }
+            }
+
             if (event.target.classList.contains("search-result")) {
                 console.log("chossed item");
                 console.log(event);
                 let trNOde = event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
                 let dropdownNode = event.target.parentNode.parentNode;
                 if (dropdownNode.id == "item-dropdown") {
-                    fillInputsDetailsItemRow(JSON.parse(event.target.dataset.infos), trNOde);
+                    fillInputsDetailsItemRow(JSON.parse(event.target.dataset.infos), trNOde, "new");
                     searchLive([JSON.parse(event.target.dataset.infos)["code"], ''], event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('#num-serie-dropdown'), "num-serie");
 
                     trNOde.querySelector("#item-num-serie").textContent = "...";
@@ -1459,6 +1429,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     updateItemTotalPrice(trNOde);
                     const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
                     updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
+
                     updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
                 } else if (dropdownNode.id == "num-serie-dropdown") {
                     setInputValue(trNOde.querySelector("#item-num-serie"), event.target.textContent);
@@ -1473,7 +1444,9 @@ document.addEventListener("DOMContentLoaded", () => {
             } else if (event.target.id === "item-uid") {
                 event.target.parentNode.querySelector("#search-item").focus();
             } else if (event.target.id == "btn-add-item") {
-                addItem(tableItemsFactureNew).then(() => modificationWatcher = true);
+                addItem(tableItemsFactureNew).
+                    then(() => autonumericItemRow(tableItemsFactureNew)).
+                    then(() => modificationWatcher = true);
             } else if (event.target.classList.contains("btn-del")) {
                 removeItem(event.target, "target");
                 modificationWatcher = true;
@@ -1522,15 +1495,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
+
     try {
         modalCommandeNew.addEventListener('input', (event) => {
             console.log("event input");
             modificationWatcher = true;
-            // validation and formatting input
-            if (event.target.classList.contains("number-text")) {
-                console.log("number-text");
-                formatNumberForTextInput(event);
+            if (event.target.classList.contains("is-invalid")) {
+                event.target.classList.remove("is-invalid");
             }
+
 
             // business logic start
             if (event.target.id == "search-item") {
@@ -1741,6 +1714,12 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
 
     }
+
+    // autonumeric Listener
+    new AutoNumeric.multiple(".remise-taux", [defaultAutoNumericOptions, { minimumValue: 0, maximumValue: 100 }]);
+    new AutoNumeric.multiple(".remise-montant", [defaultAutoNumericOptions, { minimumValue: 0 }]);
+    new AutoNumeric.multiple(".item-pu", [defaultAutoNumericOptions, { minimumValue: 0 }]);
+    new AutoNumeric.multiple(".item-quantity", [defaultAutoNumericOptions, { minimumValue: 0 }]);
 
 
 })

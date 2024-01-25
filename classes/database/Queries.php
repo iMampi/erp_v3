@@ -16,7 +16,7 @@ class Queries
     static public $filter_place = "select * from magasins";
     static public $filter_facture = "select * from factures_client";
     static public $filter_item = "select code,name,type_item,categorie, famille,prix_vente, prix_achat_mp,declarable from view_all_items";
-    static public $selection_items = "select code,name,prix_vente,stockable,identifiable,prix_variable from items";
+    static public $selection_items = "select code,name,prix_vente,stockable,identifiable,prix_variable,stock from items";
     static public $selection_num_serie = "select * from identifiables";
     static public $selection_clients = "select uid,noms,prenoms,nom_commercial,raison_sociale from view_all_clients";
     static public $selection_commande_items = "select * from view_all_commandes_details where commande_uid=?";

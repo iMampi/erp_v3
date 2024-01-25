@@ -1,8 +1,10 @@
 // const toastLiveExample = document.getElementById('liveToast')
 // const toastLiveExample = document.getElementById('liveToast')
 function showMe() {
+	// closure used because of use of counter
 	let toastCounter = 1;
 	const myFunction = function (mode, mytext) {
+		// mode : failure or success
 		console.log("toaster called");
 		// TODO : put const as a param. useless call
 		const toastContainer = document.getElementById("toast-container");
