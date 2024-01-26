@@ -19,6 +19,12 @@ const NUMBER_INPUT_ITEM_ROW = [
 
 const validNonCharInput = ["Backspace", "Enter", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Delete", ","];
 
+const ERROR_FLAG_MESSAGE_OBJ = {
+    "out-of-stock": "",
+    "required": "Veuillez remplir correctement le champ en rouge",
+
+}
+
 const REQUIRED_INPUT_HEADERS = [
     "state",
     "commercial",
@@ -121,6 +127,7 @@ const InputsDisabledByDefaultCommandeNewFormArray = [
 const InputsDisabledByDefaultCommandeRowItemArray = [
     "item-name",
     "item-pu",
+    "item-num-serie",
     "item-prix-total"
 ];
 const DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_NEW = {
@@ -128,6 +135,7 @@ const DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_NEW = {
     "btn-see-client": false,
     "btn-add-item": false,
     "btn-new-item": false,
+    "item-num-serie": true,
     "btn-cancel-new": false,
     "btn-save-new": false,
     "btn-validate-new": false,
@@ -242,13 +250,12 @@ function outOfStock(item_code, modal) {
     let btnTarget = tbody.querySelector("button[value=\"" + item_code + "\"]");
     let inputFail = btnTarget.parentNode.parentNode.parentNode.parentNode.querySelector("#item-quantity");
     inputFail.classList.add("is-invalid");
-    return;
+    return "out-of-stock";
 }
 
 function inputRequired(inputNode) {
     inputNode.classList.add("is-invalid");
-
-    return;
+    return "required";
 }
 // end FAILURE/invalid Handler
 
@@ -405,6 +412,7 @@ async function addItemRowsLoop(numberOfRows, modalDetailsItemsTable) {
     for (let i = 0; i < numberOfRows; ++i) {
         console.log("counterRowItem : " + counterRowItem);
         await addItem(modalDetailsItemsTable);
+        autonumericItemRow(modalDetailsItemsTable);
     }
     return new Promise((resolve, reject) => resolve(true));
 }
@@ -650,6 +658,7 @@ async function DefaultModalCommandInputs(modal, min_row = 1) {
     removeItemRows(itemRows);
     if (min_row != 0) {
         await addItem(modal);
+        autonumericItemRow(modal);
     };
     defaultButtons(modal);
     //clean an dput to deafult value
@@ -1003,9 +1012,9 @@ document.addEventListener("DOMContentLoaded", () => {
             let checkingRequired = checkRequiredInputs(modalCommandeNew);
             if (!checkingRequired[0]) {
                 console.log("required not fulfill1");
-                identifyInvalidType(checkingRequired, modalCommandeNew);
+                let errorFlag = identifyInvalidType(checkingRequired, modalCommandeNew);
                 bsModalConfirmation.hide();
-                ToastShowClosured("failure", "Veuillez remplir correctement le champ en rouge")
+                ToastShowClosured("failure", ERROR_FLAG_MESSAGE_OBJ[errorFlag])
                 return;
             }
             let dataModalCommandeNew = grabCommandeDataForm(modalCommandeNew);
@@ -1069,9 +1078,9 @@ document.addEventListener("DOMContentLoaded", () => {
             let checkingRequired = checkRequiredInputs(modalCommandeNew);
             if (!checkingRequired[0]) {
                 console.log("required not fulfill1");
-                identifyInvalidType(checkingRequired, modalCommandeNew);
+                let errorFlag = (checkingRequired, modalCommandeNew);
                 bsModalConfirmation.hide();
-                ToastShowClosured("failure", "Veuillez remplir correctement le champ en rouge")
+                ToastShowClosured("failure", ERROR_FLAG_MESSAGE_OBJ[errorFlag])
                 return;
             }
             let dataModalCommandeNew = grabCommandeDataForm(modalCommandeNew);
@@ -1465,7 +1474,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (modificationWatcher) {
                     openModalConfirmation(
                         confirmationObj,
-                        cancelCreationObj, event.currentTarget
+                        cancelCreationObj
                     );
                 } else {
                     bsModalCommandeNew.hide();

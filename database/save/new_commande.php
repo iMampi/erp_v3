@@ -27,13 +27,17 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
 
     //check the inventory item disponibilities 
     $disponibilities = [];
+    $identifiables_to_check = [];
     try {
+        //code...
+
         // TODO : dont forget to put me back to normal
-        if ($data["header"]["state"] === 2) {
-        // if (true) {
+        // if ($data["header"]["state"] === 2) {
+        if (true) {
+            // group quantities for easy stock checking
+
             foreach ($data["items"] as $array_values) {
                 // stockable?
-                # code...
                 if ($array_values[7]) {
                     if (!array_key_exists($array_values[0], $disponibilities)) {
                         $disponibilities[$array_values[1]] = 0;
@@ -42,6 +46,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
                     // identifiable? 
                     if ($array_values[6]) {
                         // check if in stock identifiable
+
                     }
                     // }
                 }
@@ -53,11 +58,11 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
             $teste = check_available_stock($code, $quantity);
             if ($teste[0]) {
                 if ($teste[1][0][1] < $quantity) {
-                    print(json_encode([false, [["not enough stock//".$code]]]));
+                    print(json_encode([false, [["not enough stock//" . $code]]]));
                     return;
                 }
             } else {
-                throw new Exception("Error Processing Request teh query");
+                throw new Exception("Error Processing Request check query");
             }
         }
     } catch (\Throwable $th) {

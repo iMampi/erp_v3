@@ -1029,3 +1029,16 @@ cyclce commandes :
 implemented required verification for form when saving new or validating new commandes.
 added some is-invalid handling when submitting.
 implemented AutoNumeric in all in all newForm. relacing .toLocaleString() by autonumeric.
+
+-------------------------
+146_an:
+added     "item-num-serie": true to DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_NEW.
+
+updated php class NewCommandeItem fixed with new number of argument.
+
+implementation of ERROR_FLAG_MESSAGE_OBJ for ToastShowClosured.
+
+modified inputRequired() and outOfStock() to return a value. value to be used with ERROR_FLAG_MESSAGE_OBJ.
+
+implemented autonumericItemRow() after every call od addItem()
+
