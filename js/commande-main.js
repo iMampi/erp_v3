@@ -20,8 +20,10 @@ const NUMBER_INPUT_ITEM_ROW = [
 const validNonCharInput = ["Backspace", "Enter", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Delete", ","];
 
 const ERROR_FLAG_MESSAGE_OBJ = {
-    "out-of-stock": "",
-    "required": "Veuillez remplir correctement le champ en rouge",
+    "out-of-stock": "Stock insufficant pour un article. Ajustez la quantité.",
+    "required": "Veuillez remplir correctement le champ en rouge.",
+    "num serie not available": "Numero de serie n'est plus disponible.",
+    "num serie double": "Numero de serie répété. Corrigez le."
 
 }
 
@@ -91,7 +93,7 @@ const DTO_FILL_INPUT_ITEMS_ROWS = {
 
 }
 
-const DefaultValuesCommandeNewFormObj = {
+const DEFAULT_VALUES_COMMANDE_NEW_FORM_OBJ = {
     uid: "",
     state: 1,
     commercial: currentUser,
@@ -109,6 +111,7 @@ const DefaultValuesCommandeNewFormObj = {
     "identifiable": "",
     "stockable": "",
     "prix-variable": "",
+    "item-uid": "Choisissez un article",
 };
 
 const InputsDisabledByDefaultCommandeNewFormArray = [
@@ -234,14 +237,36 @@ function checkRequiredInputItemRow(itemRow) {
 }
 
 function identifyInvalidType(array_message, modal) {
+
     // for required
     if (!array_message[0]) {
         return inputRequired(array_message[1]);
     }
+    // for numSerie problems
+    if (array_message[0].includes("num serie")) {
+        return invalidNumSerie(array_message[0], modal);
+    }
+
     // for stock verification
     if (array_message[0].includes("not enough stock")) {
         return outOfStock(array_message[0].split("//")[1], modal);
     }
+}
+
+function invalidNumSerie(message, modal) {
+
+    let msg = message.split("//");
+    let tbody = modal.querySelector("#table-facture > tbody");
+    let btnTargetObj = tbody.querySelectorAll("button[value=\"" + msg[1] + "\"]");
+
+
+    let inputFail = btnTargetObj[btnTargetObj.length - 1].parentNode.parentNode.parentNode.parentNode.querySelector("#item-num-serie");
+    inputFail.classList.add("is-invalid");
+
+    // return "num serie double" or "num serie not available"
+    return msg[0];
+
+
 }
 
 function outOfStock(item_code, modal) {
@@ -641,7 +666,7 @@ function cleanNewForm(modal, disable = false) {
         } else {
             input.disabled = disable;
         }
-        let myValue = DefaultValuesCommandeNewFormObj[input.id];
+        let myValue = DEFAULT_VALUES_COMMANDE_NEW_FORM_OBJ[input.id];
         if (myValue == undefined) {
             myValue = DefaultValuesCommandeRowItem[input.id];
             if (myValue == undefined) {
@@ -759,7 +784,15 @@ async function saveCommandeNew(inputObj, modal = null) {
     if (result[0] == "success") {
         ToastShowClosured(result[0], "Commandes sauvegardées avec succès");
     } else if (result[0] == "failure") {
-        ToastShowClosured(result[0], "Echec de la sauvegarde de la commande");
+        let customMessage = "Echec de la sauvegarde de la commande.";
+        // identifyInvalidType(result[1], modal);
+        try {
+            customMessage = ERROR_FLAG_MESSAGE_OBJ[identifyInvalidType(result[1], modal)];
+
+        } catch (error) {
+            console.log("e message : " + error);
+        }
+        ToastShowClosured(result[0], customMessage);
     } else {
         throw new Error("wrong value returned");
     }
@@ -1021,7 +1054,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("dataModalCommandeNew");
             console.log(dataModalCommandeNew);
 
-            saveCommandeNew(dataModalCommandeNew).then((result) => {
+            saveCommandeNew(dataModalCommandeNew, modalCommandeNew).then((result) => {
                 if (result[0]) {
                     // insert uid of newly created client
                     dataModalCommandeNew["header"]["uid"] = result[1][0];
@@ -1060,7 +1093,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     //TODO : show error
 
                     // TODO : dont forget to put me in the correct place. here is just for test
-                    identifyInvalidType(result[1], modalCommandeNew);
+                    // identifyInvalidType(result[1], modalCommandeNew);
                     return true;
                 }
             });
@@ -1087,7 +1120,7 @@ document.addEventListener("DOMContentLoaded", () => {
             dataModalCommandeNew["header"]["state"] = 2;
             console.log("dataModalCommandeNew");
             console.log(dataModalCommandeNew);
-            saveCommandeNew(dataModalCommandeNew).then((result) => {
+            saveCommandeNew(dataModalCommandeNew, modalCommandeNew).then((result) => {
                 if (result[0]) {
                     // insert uid of newly created client
                     dataModalCommandeNew["header"]["uid"] = result[1][0];
@@ -1400,6 +1433,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (event.target.classList.contains("dropdown-toggle")) {
                 if (event.target.classList.contains("is-invalid")) {
                     event.target.classList.remove("is-invalid");
+                    modificationWatcher = true;
                 }
             }
 
@@ -1421,6 +1455,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (event.target.classList.contains("dropdown-toggle")) {
                 if (event.target.classList.contains("is-invalid")) {
                     event.target.classList.remove("is-invalid");
+                    modificationWatcher = true;
                 }
             }
 

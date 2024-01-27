@@ -387,6 +387,9 @@ class Queries
     static public $check_item_stock = "
         select code, stock from items where code=?;
         ";
+    static public $check_identifiable = "
+        select item_code, num_serie, actif from identifiables where item_code=? and num_serie=?;
+        ";
 
 
     public function __construct($mode)
@@ -581,6 +584,9 @@ class Queries
                 break;
             case 'check_item_stock':
                 $this->query = self::$check_item_stock;
+                break;
+            case 'check_identifiable':
+                $this->query = self::$check_identifiable;
                 break;
 
             default:

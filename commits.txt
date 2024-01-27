@@ -1042,3 +1042,20 @@ modified inputRequired() and outOfStock() to return a value. value to be used wi
 
 implemented autonumericItemRow() after every call od addItem()
 
+-------------------------
+1467_an:
+DEFAULT_VALUES_COMMANDE_NEW_FORM_OBJ have "item-uid" as new item. for cleaning form correctly.
+
+implementing the process of checking disponibilities of an identifiable item. it works. 
+but now we found something else. the need to remove a suggested num serie from other lines if one is already in one line...
+check_available_stock() refactored.
+check_identifiables() implemented.
+refactored saveCommandeNew() by implementing let customMessage = ERROR_FLAG_MESSAGE_OBJ[identifyInvalidType(result[1], modal)] for custom message when gettingg response from backend after verification idetifiable or stock.
+
+updated ERROR_FLAG_MESSAGE_OBJ["out-of-stock"] to return a message.
+
+removed one call of identifyInvalidType() at line 1096. not needed anymore cause of refactoring.
+
+when a field is invalidand and it is a btn .dropdown-toggle, the .is-invalid is remove on update but modificationWatcher=false. implementing changing modificationWatcher=true when changing a  btn .dropdown-toggle.
+
+implemented handling for "num serie double" and "num serie not available".

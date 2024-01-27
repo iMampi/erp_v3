@@ -14,6 +14,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 session_start();
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/utilities/check_stocks.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/utilities/check_identifiables.php";
 
 if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
     $data = json_decode(file_get_contents('php://input'), true);
@@ -25,8 +26,8 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
     $conn->begin_transaction();
 
 
-    //check the inventory item disponibilities 
-    $disponibilities = [];
+    //check the inventory item disponibilities_to_check 
+    $disponibilities_to_check = [];
     $identifiables_to_check = [];
     try {
         //code...
@@ -39,35 +40,46 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
             foreach ($data["items"] as $array_values) {
                 // stockable?
                 if ($array_values[7]) {
-                    if (!array_key_exists($array_values[0], $disponibilities)) {
-                        $disponibilities[$array_values[1]] = 0;
+                    // item alredy listed?
+                    if (!array_key_exists($array_values[1], $disponibilities_to_check)) {
+                        $disponibilities_to_check[$array_values[1]] = 0;
                     }
-                    $disponibilities[$array_values[1]] += $array_values[2];
+                    $disponibilities_to_check[$array_values[1]] += $array_values[2];
                     // identifiable? 
                     if ($array_values[6]) {
-                        // check if in stock identifiable
-
+                        // item alredy listed?
+                        if (!array_key_exists($array_values[1], $identifiables_to_check)) {
+                            $identifiables_to_check[$array_values[1]] = [];
+                        }
+                        // num-serie already listed?
+                        if (!in_array($array_values[4], $identifiables_to_check[$array_values[1]])) {
+                            $identifiables_to_check[$array_values[1]][] = $array_values[4];
+                            $test = check_identifiables($array_values[1], $array_values[4]);
+                            if ($test[0] === false) {
+                                print(json_encode($test));
+                                return;
+                            }
+                        } else {
+                            print(json_encode([false, [["num serie double//" . $array_values[4]]]]));
+                            return;
+                        }
                     }
-                    // }
                 }
             }
-        }
-        // check stocks
-        foreach ($disponibilities as $code => $quantity) {
-            // TODO : insert directlu $teste in the if condition
-            $teste = check_available_stock($code, $quantity);
-            if ($teste[0]) {
-                if ($teste[1][0][1] < $quantity) {
-                    print(json_encode([false, [["not enough stock//" . $code]]]));
+            // check stocks
+            foreach ($disponibilities_to_check as $code => $quantity) {
+                // TODO : insert directlu $teste in the if condition
+                $teste = check_available_stock($code, $quantity);
+                if ($teste[0] === false) {
+                    print(json_encode($teste));
                     return;
                 }
-            } else {
-                throw new Exception("Error Processing Request check query");
             }
         }
     } catch (\Throwable $th) {
         $conn->rollback();
         print("error000");
+        return;
     }
 
     $NewObj = new NewCommandeHeader($data["header"]);
@@ -84,6 +96,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
         $conn->rollback();
         print("error01");
         print(json_encode($temp_array_result));
+        return;
     } else {
         $new_commande_uid = $temp_array_result[1][0][0];
 
@@ -102,12 +115,13 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
                     print("error02");
 
                     $conn->rollback();
-                    break;
+                    return;
                 }
             }
         } catch (\Throwable $th) {
             $conn->rollback();
             print("error03");
+            return;
         }
 
         if (($_SERVER["REQUEST_METHOD"] == "POST") &&  (can_create("facture_client"))) {
@@ -124,10 +138,12 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
                 $conn->rollback();
                 //error with new facture client
                 print("error04" . $th);
+                return;
             }
         } else {
             $conn->rollback();
             print("error05 : NOT AUTHORIZED TO CREATE FACTURE CLIENT");
+            return;
         }
     }
     $conn->commit();

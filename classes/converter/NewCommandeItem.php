@@ -9,6 +9,18 @@ class NewCommandeItem extends Converter
     function __construct(array $data)
     {
         parent::__construct($data);
+        // $data=[
+        //     uid,
+        //     item-uid,
+        //     quantity,
+        //     prix-unitaire,
+        //     num-serie,
+        //     description-item,
+        //     identifiable,
+        //     stockable,
+        //     commande-uid,
+        //     (commande-initial-uid)
+        // ]
         $this->converter_for_db();
     }
 

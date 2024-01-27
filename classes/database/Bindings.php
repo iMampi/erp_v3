@@ -429,6 +429,12 @@ class Bindings
                 's',
                 $this->converter->data_for_db["code"]
             ];
+        } elseif ($this->converter::class == "Converter\IdentifiableChecker") {
+            $this->binding = [
+                'ss',
+                $this->converter->data_for_db["item_code"],
+                $this->converter->data_for_db["num_serie"]
+            ];
         } else {
             echo "NOT VALID";
         }
