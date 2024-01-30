@@ -6,6 +6,8 @@ use Database\DbHandler;
 use Converter\NewCommandeItem;
 use Converter\NewFactureClient;
 use Converter\NewCommandeHeader;
+use Converter\UpdateIdentifiable;
+use Converter\UpdateStock;
 
 use function Session\can_create;
 use Database\StandardPreparedStatement;
@@ -19,35 +21,30 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/utilities/check_identifiables.php";
 if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
     $data = json_decode(file_get_contents('php://input'), true);
 
-
     // DbHandler::$connection->autocommit(\false);
     $step1 = new DbHandler();
     $conn = $step1::$connection;
     $conn->begin_transaction();
 
-
-    //check the inventory item disponibilities_to_check 
-    $disponibilities_to_check = [];
+    //check the inventory item stock_to_check 
+    $stock_to_check = [];
     $identifiables_to_check = [];
     try {
-        //code...
-
         // TODO : dont forget to put me back to normal
-        // if ($data["header"]["state"] === 2) {
-        if (true) {
+        if ($data["header"]["state"] === 2) {
+            // if (true) {
             // group quantities for easy stock checking
-
             foreach ($data["items"] as $array_values) {
                 // stockable?
                 if ($array_values[7]) {
                     // item alredy listed?
-                    if (!array_key_exists($array_values[1], $disponibilities_to_check)) {
-                        $disponibilities_to_check[$array_values[1]] = 0;
+                    if (!array_key_exists($array_values[1], $stock_to_check)) {
+                        $stock_to_check[$array_values[1]] = 0;
                     }
-                    $disponibilities_to_check[$array_values[1]] += $array_values[2];
+                    $stock_to_check[$array_values[1]] += $array_values[2];
                     // identifiable? 
                     if ($array_values[6]) {
-                        // item alredy listed?
+                        // item already listed?
                         if (!array_key_exists($array_values[1], $identifiables_to_check)) {
                             $identifiables_to_check[$array_values[1]] = [];
                         }
@@ -67,7 +64,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
                 }
             }
             // check stocks
-            foreach ($disponibilities_to_check as $code => $quantity) {
+            foreach ($stock_to_check as $code => $quantity) {
                 // TODO : insert directlu $teste in the if condition
                 $teste = check_available_stock($code, $quantity);
                 if ($teste[0] === false) {
@@ -82,6 +79,8 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
         return;
     }
 
+    // effectively saving to db
+    ////saving general details order and getting new order uid
     $NewObj = new NewCommandeHeader($data["header"]);
 
     $Query1 = new Queries("save_new_commande");
@@ -98,6 +97,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
         print(json_encode($temp_array_result));
         return;
     } else {
+        ////saving itemrow with the new order uid
         $new_commande_uid = $temp_array_result[1][0][0];
 
         try {
@@ -124,7 +124,9 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
             return;
         }
 
+        //saving turning order to facture
         if (($_SERVER["REQUEST_METHOD"] == "POST") &&  (can_create("facture_client"))) {
+            ////creating facture
             try {
                 if ($data["header"]["state"] === 2) {
 
@@ -137,7 +139,40 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
             } catch (\Throwable $th) {
                 $conn->rollback();
                 //error with new facture client
-                print("error04" . $th);
+                print("error04 " . $th);
+                return;
+            }
+            ////updating stock quantity for facture effectively created
+            try {
+                foreach ($stock_to_check as $item_code => $quantity) {
+                    $UpdateStockObj = new UpdateStock(["code" => $item_code, "quantity" => $quantity]);
+                    $Query4 = new Queries("update_stock_sub");
+                    $Binding4 = new Bindings($UpdateStockObj);
+                    $Statement4 = new StandardPreparedStatement($Query4, $Binding4);
+                    $temp_array_stock_update = DbHandler::execute_prepared_statement($Statement4, MYSQLI_NUM);
+                }
+            } catch (\Throwable $th) {
+                $conn->rollback();
+                //error while updating stock quantity
+                print("error06 " . $th);
+                return;
+            }
+            ////updating status of identifiables
+            try {
+                foreach ($identifiables_to_check as $item_code => $num_serie_array) {
+                    foreach($num_serie_array as $num_serie){
+                        $UpdateIdentifiabletockObj = new UpdateIdentifiable(["code" => $item_code, "num_serie" => $num_serie,"actif"=>0]);
+                        $Query5 = new Queries("update_identifiable");
+                        $Binding5 = new Bindings($UpdateIdentifiabletockObj);
+                        $Statement5 = new StandardPreparedStatement($Query5, $Binding5);
+                        $temp_array_identifiable_update = DbHandler::execute_prepared_statement($Statement5, MYSQLI_NUM);
+                    }
+
+                }
+            } catch (\Throwable $th) {
+                $conn->rollback();
+                //error while updating stock quantity
+                print("error06 " . $th);
                 return;
             }
         } else {

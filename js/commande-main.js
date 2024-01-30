@@ -1083,7 +1083,6 @@ document.addEventListener("DOMContentLoaded", () => {
                             );
                             bsModalCommandeNew.hide();
                             DefaultModalCommandInputs(modalCommandeNew);
-                            bsModalConfirmation.hide();
                             console.log("yes saving called");
                             return false;
                         });
@@ -1111,7 +1110,7 @@ document.addEventListener("DOMContentLoaded", () => {
             let checkingRequired = checkRequiredInputs(modalCommandeNew);
             if (!checkingRequired[0]) {
                 console.log("required not fulfill1");
-                let errorFlag = (checkingRequired, modalCommandeNew);
+                let errorFlag = identifyInvalidType(checkingRequired, modalCommandeNew);
                 bsModalConfirmation.hide();
                 ToastShowClosured("failure", ERROR_FLAG_MESSAGE_OBJ[errorFlag])
                 return;
@@ -1150,16 +1149,17 @@ document.addEventListener("DOMContentLoaded", () => {
                             );
                             bsModalCommandeNew.hide();
                             DefaultModalCommandInputs(modalCommandeNew);
-                            bsModalConfirmation.hide();
                             console.log("yes saving called");
                             return false;
                         });
+                    bsModalCommandeNew.hide();
+
                 } else {
                     //TODO : show error
                     return true;
                 }
             });
-            bsModalCommandeNew.hide();
+            bsModalConfirmation.hide();
         }
     }
 

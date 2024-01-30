@@ -322,6 +322,19 @@ class Bindings
                 $arr["total_ttc_apres_remise"],
                 $arr["uid"]
             ];
+        } elseif ($this->converter::class == "Converter\UpdateStock") {
+            $this->binding = [
+                'ds',
+                $arr["quantity"],
+                $arr["code"]
+            ];
+        } elseif ($this->converter::class == "Converter\UpdateIdentifiable") {
+            $this->binding = [
+                'iss',
+                $arr["actif"],
+                $arr["code"],
+                $arr["num_serie"]
+            ];
         } elseif ($this->converter::class == "Converter\SelectOneClient") {
             $this->binding = [
                 'i',

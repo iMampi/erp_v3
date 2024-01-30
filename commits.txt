@@ -1043,7 +1043,7 @@ modified inputRequired() and outOfStock() to return a value. value to be used wi
 implemented autonumericItemRow() after every call od addItem()
 
 -------------------------
-1467_an:
+147_an:
 DEFAULT_VALUES_COMMANDE_NEW_FORM_OBJ have "item-uid" as new item. for cleaning form correctly.
 
 implementing the process of checking disponibilities of an identifiable item. it works. 
@@ -1059,3 +1059,7 @@ removed one call of identifyInvalidType() at line 1096. not needed anymore cause
 when a field is invalidand and it is a btn .dropdown-toggle, the .is-invalid is remove on update but modificationWatcher=false. implementing changing modificationWatcher=true when changing a  btn .dropdown-toggle.
 
 implemented handling for "num serie double" and "num serie not available".
+-------------------------
+148_an:
+backend process for UPdateIdentifiable. DTO, Binding, Queries, etc
+all implented to saveCreationObj and validateCreationObj.
