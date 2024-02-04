@@ -8,6 +8,13 @@ var myCache = {};
 
 var counterRowItem = 1;
 
+var defaultAutoNumericOptions =
+{
+    decimalCharacter: ",",
+    digitGroupSeparator: " ",
+    watchExternalChanges: true
+}
+
 const URL_TABLE_DETAILS_OBJ = {
     view: "/elements/commandes/commande_table_details_base.html",
     new: "/elements/avoirs_clt/avoir_clt_based_table_details_base.html"
@@ -119,24 +126,24 @@ function updateTotalPrice(baseMontantInput, priceListNode) {
     console.log("updateTotalPrice");
     const pricesRaw = [];
     priceListNode.forEach(element => {
-        pricesRaw.push(formatedNumberToFloat(element.value));
+        pricesRaw.push(parseFloat(AutoNumeric.unformat(element.value, defaultAutoNumericOptions)));
     });
-    return baseMontantInput.value = formatNumber(pricesRaw.reduce((partialSum, a) => partialSum + formatedNumberToFloat(a), 0));
+    return baseMontantInput.value = pricesRaw.reduce((partialSum, a) => partialSum + AutoNumeric.unformat(a, defaultAutoNumericOptions), 0);
 }
 
 function updateItemTotalPrice(rowNode) {
     const price = rowNode.querySelector("#item-pu").value;
     const quantity = rowNode.querySelector("#item-quantity").value;
-    rowNode.querySelector("#item-prix-total").value = formatNumber(formatedNumberToFloat(price) * formatedNumberToFloat(quantity) * -1);
+    rowNode.querySelector("#item-prix-total").value = parseFloat(AutoNumeric.unformat(price, defaultAutoNumericOptions)) * parseFloat(AutoNumeric.unformat(quantity, defaultAutoNumericOptions)) * -1;
 }
 
 function tauxAndMontantDiscountInputHandler(baseMontantInput, tauxInput, montantInput, mode) {
     // mode: 1 = taux changed ; 2 = montant changed 
-    let baseMontant = formatedNumberToFloat(baseMontantInput.value);
+    let baseMontant = parseFloat(AutoNumeric.unformat(baseMontantInput.value, defaultAutoNumericOptions));
     if (mode == 1) {
-        montantInput.value = (baseMontant * formatedNumberToFloat(tauxInput.value) / 100 || 0).toFixed(2);
+        montantInput.value = (baseMontant * parseFloat(AutoNumeric.unformat(tauxInput.value, defaultAutoNumericOptions)) / 100) || 0;
     } else if (mode == 2) {
-        tauxInput.value = (formatedNumberToFloat(montantInput.value) / formatedNumberToFloat(baseMontant) * 100 || 0).toFixed(2);
+        tauxInput.value = parseFloat(AutoNumeric.unformat(montantInput.value, defaultAutoNumericOptions)) / parseFloat(AutoNumeric.unformat(baseMontant, defaultAutoNumericOptions) * 100 || 0);
     }
 }
 
@@ -150,7 +157,7 @@ function updateAllHeaderPrices(montantHTAvantRemiseInput, TVAAvantRemiseInput, m
 
 function totalTTCDiscountedHandler(baseMontantInput, discountedMontantInput, montantDiscount) {
     console.log("totalTTCDiscountedHandler");
-    discountedMontantInput.value = formatNumber(formatedNumberToFloat(baseMontantInput.value) - formatedNumberToFloat(montantDiscount.value))
+    discountedMontantInput.value = parseFloat(AutoNumeric.unformat(baseMontantInput.value, defaultAutoNumericOptions)) - parseFloat(AutoNumeric.unformat(montantDiscount.value, defaultAutoNumericOptions));
 }
 
 function TVAHandler(discountedMontantInput, TVAInput, TotalTTCInput, mode) {
@@ -159,13 +166,13 @@ function TVAHandler(discountedMontantInput, TVAInput, TotalTTCInput, mode) {
     console.log("TVAHandler");
     if (mode == 1) {
 
-        let TVA = formatedNumberToFloat(discountedMontantInput.value) * 0.20;
-        TVAInput.value = formatNumber(TVA || 0);
-        TotalTTCInput.value = formatNumber(formatedNumberToFloat(discountedMontantInput.value) + TVA);
+        let TVA = parseFloat(AutoNumeric.unformat(discountedMontantInput.value, defaultAutoNumericOptions)) * 0.20;
+        TVAInput.value = TVA || 0;
+        TotalTTCInput.value = parseFloat(AutoNumeric.unformat(discountedMontantInput.value, defaultAutoNumericOptions)) + TVA;
     } else if (mode == 2) {
-        let HT = formatedNumberToFloat(TotalTTCInput.value) / 1.2;
-        discountedMontantInput.value = formatNumber(HT);
-        TVAInput.value = formatNumber(formatedNumberToFloat(TotalTTCInput.value) - HT);
+        let HT = parseFloat(AutoNumeric.unformat(TotalTTCInput.value, defaultAutoNumericOptions)) / 1.2;
+        discountedMontantInput.value = HT;
+        TVAInput.value = parseFloat(AutoNumeric.unformat(TotalTTCInput.value, defaultAutoNumericOptions)) - HT;
 
     } else {
 
@@ -300,7 +307,9 @@ function grabAvoirDataForm(modal) {
         let prixUnitaire = row.querySelector("#item-pu").value;
         let numSerie = row.querySelector("#num-serie").value;
         let libelle = row.querySelector("#libelle").value;
-        data["items"].push([rowID, itemID, quantity, prixUnitaire, numSerie, libelle]);
+        let identifiable = row.querySelector("#identifiable").value;
+        let stockable = row.querySelector("#stockable").value;
+        data["items"].push([rowID, itemID, quantity, prixUnitaire, numSerie, libelle, identifiable, stockable]);
     });
     return data;
 }
@@ -333,14 +342,14 @@ function formatFloatsForDatabase(inputObj) {
     let headersKeys = Object.keys(inputObj["header"])
     headersKeys.forEach(key => {
         if (keysWithNumbers.includes(key)) {
-            inputObj["header"][key] = formatedNumberToFloat(inputObj["header"][key]);
+            inputObj["header"][key] = parseFloat(AutoNumeric.format(inputObj["header"][key], defaultAutoNumericOptions));
         }
     });
     inputObj["items"].forEach(row_array => {
-        row_array[2] = formatedNumberToFloat(row_array[2]);
-        row_array[3] = formatedNumberToFloat(row_array[3]);
+        row_array[2] = parseFloat(AutoNumeric.format(row_array[2], defaultAutoNumericOptions));
+        row_array[3] = parseFloat(AutoNumeric.format(row_array[3], defaultAutoNumericOptions));
     });
-    return inputObj
+    return inputObj;
 }
 
 function generateRowItem(nodeModel, DataObj) {
@@ -450,16 +459,8 @@ function addDatalistElement(datalistNode, arrayData, mode, term = "") {
     } else {
         console.log("empty arrayy");
 
-        let newLi = document.createElement("li");
-        newLi.classList.add("dropdown-item", "fst-italic", "search-result");
-        newLi.textContent = "aucun résultat pour \"" + term + "\"";
-        datalistNode.append(newLi);
+        addName(datalistNode, "aucun résultat pour \"" + term + "\"", false)
 
-
-        // let option_ = document.createElement("option");
-        // option_.value = "Néant";
-        // option_.label = "aucun résultat pour \"" + term + "\"";
-        // datalistNode.append(option_);
         return;
     }
 
@@ -488,12 +489,10 @@ async function searchFacture(inputObj) {
     console.log("error?");
     console.log(response);
     let myjson = await responseHandlerSelectOneCommande(response);
-    // let myjson = JSON.parse(await response);
 
     console.log(myjson);
 
     return myjson;
-    // return await fillMainTable(myjson, tableBodyCategorie);
 
 }
 
@@ -600,6 +599,13 @@ function addItem(tableFactureBody, mode) {
     })
 }
 
+function autonumericItemRow(tableFactureBody) {
+    let currentRow = tableFactureBody.querySelector("#row-" + zeroLeftPadding(counterRowItem, 3, false));
+    new AutoNumeric(currentRow.querySelector("#item-pu"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
+    new AutoNumeric(currentRow.querySelector("#item-quantity"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
+    new AutoNumeric(currentRow.querySelector("#item-prix-total"), [defaultAutoNumericOptions, { maximumValue: 0 }]);
+}
+
 function addName(listNode, value, selectable, myJSON = {}) {
     let newLi = document.createElement("li");
     if (selectable) {
@@ -620,6 +626,7 @@ async function addItemRowsLoop(numberOfRows, modalDetailsItemsTable, mode) {
     for (let i = 0; i < numberOfRows; ++i) {
         console.log("counterRowItem : " + counterRowItem);
         await addItem(modalDetailsItemsTable, mode);
+        autonumericItemRow(modalDetailsItemsTable);
     }
     return new Promise((resolve, reject) => resolve(true));
 }
@@ -711,11 +718,14 @@ function fillInputsDetailsItem(arrayData, rowNode, mode) {
         "libelle": "description_item",
         "num-serie": "num_serie",
         "item-pu": "prix_unitaire",
+        "identifiable": "identifiable",
+        "stockable": "stockable",
     }
     if (mode === "view") {
         idToKey["item-quantity"] = "remaining_quantity";
     } else {
-        rowNode.querySelector("#item-quantity").setAttribute("max", arrayData["remaining_quantity"]);
+        AutoNumeric.getAutoNumericElement(rowNode.querySelector(".input#item-quantity")).update({ maximumValue: arrayData["remaining_quantity"] });
+        // rowNode.querySelector("#item-quantity").setAttribute("max", arrayData["remaining_quantity"]);
         rowNode.querySelector("#initial-quantity").textContent = arrayData["remaining_quantity"];
     }
     let inputs = rowNode.querySelectorAll(".input");
@@ -788,6 +798,7 @@ async function openNewAvoirFactureSimple(modal, bsModal) {
     });
 
     await addItem(modal.querySelector("#table-avoir"), "new");
+    autonumericItemRow(modal.querySelector("#table-avoir"));
 
     let defautItemAvoirSimpleJSON = await getCachedData("defautItemAvoirSimpleJSON");
 
@@ -1242,7 +1253,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 let term = event.target.value.trim();
                 if (term) {
                     // TODO : sanitize here
-                    clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
+                    clientDataList.innerHTML = "<li value='Searching for \"" + event.target.value.trim() + "\"'></li>";
                     typingTimer = setTimeout(() => { searchLive(term, clientDataList, "client") }, 1500);
                 }
                 // } else if ((event.target.id === "fact-origin") && (["insertText"].includes(event.inputType))) {
@@ -1439,4 +1450,19 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
         console.log("error 356");
     }
+
+    // autonumeric Listener
+    new AutoNumeric.multiple(".input.totalHT-avant-remise", [defaultAutoNumericOptions, { maximumValue: 0 }]);
+    new AutoNumeric.multiple(".input.TVA-avant-remise", [defaultAutoNumericOptions, { maximumValue: 0 }]);
+    new AutoNumeric.multiple(".input.totalTTC-avant-remise", [defaultAutoNumericOptions, { maximumValue: 0 }]);
+
+    new AutoNumeric.multiple(".input.remise-taux", [defaultAutoNumericOptions, { maximumValue: 100 }]);
+    new AutoNumeric.multiple(".input.remise-montant", [defaultAutoNumericOptions, { maximumValue: 0 }]);
+
+
+
+    new AutoNumeric.multiple(".totalHT-apres-remise", [defaultAutoNumericOptions, { maximumValue: 0 }]);
+    new AutoNumeric.multiple(".input.TVA-apres-remise", [defaultAutoNumericOptions, { maximumValue: 0 }]);
+    new AutoNumeric.multiple(".input.totalTTC-apres-remise", [defaultAutoNumericOptions, { maximumValue: 0 }]);
+
 })

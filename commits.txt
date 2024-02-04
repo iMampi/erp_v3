@@ -1063,3 +1063,15 @@ implemented handling for "num serie double" and "num serie not available".
 148_an:
 backend process for UPdateIdentifiable. DTO, Binding, Queries, etc
 all implented to saveCreationObj and validateCreationObj.
+-------------------------
+149_an:
+working on avoir :
+fixing fillInputsDetailsItem()
+fixing grabAvoirDataForm()
+updated database view_all_commandes_details
+updated avoir_clt_based_table_details_base.html : added input identifiable, stockable to work with the updated grabAvoirDataForm() and fillInputsDetailsItem()
+fixing addDatalistElement() by using addName() as abstraction...
+implemented AutoNumeric in html and in js logic.
+Removed all call of formatedNumberToFloat() and formatedNumber().
+changed input type of .remise-taux and .remise-montant to text instead of number for facture,avoir, and commandes 's html(used in avoir cycle)
+

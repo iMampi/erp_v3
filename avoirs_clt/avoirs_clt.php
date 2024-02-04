@@ -22,6 +22,7 @@ is_logged();
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/autoNumeric.min.js"></script>
     <script src="/js/luxon.min.js"></script>
     <script src="/js/helpers.js"></script>
 
