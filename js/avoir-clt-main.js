@@ -390,69 +390,38 @@ function addDatalistElement(datalistNode, arrayData, mode, term = "") {
         }
 
         arrayData.forEach(element => {
-            let option_ = document.createElement("option");
+            // let option_ = document.createElement("option");
             if (mode === "facture") {
                 // TODO : encapsulate in addName()
                 console.log("facture xxx");
                 console.log(element[1]["items"]);
                 let headers_ = element[1]["header"];
 
-                let newLi = document.createElement("li");
-                let newA = document.createElement("a");
-                newA.classList.add("dropdown-item", "fst-italic", "search-result");
-                newA.setAttribute("href", "#");
-                newA.textContent = headers_['num_facture'] + " - ";
-                newA.dataset.headers = JSON.stringify(headers_);
-                newA.dataset.items = JSON.stringify(element[1]["items"]);
-                newA.dataset.value = headers_['num_facture'];
+                let text = headers_['num_facture'] + " - ";
 
-
-                if (headers_.noms == "") {
-                    console.log("client company");
-
-                    newA.textContent += (headers_["raison_sociale"] || "") + " / " + (headers_["nom_commercial"] || "");
-                    // option_.label += (headers_["raison_sociale"] || "") + " / " + (headers_["nom_commercial"] || "");
-                } else if (headers_["raison_sociale"] == "") {
-                    console.log("client humain");
-                    newA.textContent += headers_.noms + " " + headers_.prenoms;
-                    // option_.label += headers_.noms + " " + headers_.prenoms;
-                }
+                // TODO : use formatName
+                text += formatClientName(headers_);
 
                 console.log("xmar");
-                newA.textContent += " - " + formatNumber(headers_['total_ttc_apres_remise']);
-                newLi.appendChild(newA);
-                datalistNode.appendChild(newLi);
+                text += " - " + formatNumber(headers_['total_ttc_apres_remise']);
 
-                // option_.label += " - " + formatNumber(headers_['total_ttc_apres_remise']);
-                // datalistNode.append(option_);
+                addName(datalistNode, text, true, element[1]);
+
                 return;
             } else if (mode == "item") {
-                option_.value = element.code;
-                option_.label = element.name;
-                option_.dataset.prix = element.prix_vente;
+                // option_.value = element.code;
+                // option_.label = element.name;
+                // option_.dataset.prix = element.prix_vente;
+
+                addName(datalistNode, element.code + " - " + element.name, true, element);
             } else if (mode == "client") {
                 console.log("client xxx");
+
+                let clientName = formatCLientNameSearchResult(element);
+                addName(datalistNode, clientName, true);
+
                 console.log(element);
-                let newLi = document.createElement("li");
-                let newA = document.createElement("a");
-                newA.classList.add("dropdown-item", "fst-italic", "search-result");
-                newA.setAttribute("href", "#");
-                newA.textContent = element['uid'] + " - ";
-                newA.dataset.uid = element['uid'];
-                // newA.dataset.items = JSON.stringify(element[1]["items"]);
-                // newA.dataset.value = headers_['num_facture'];
-                if (element.noms == "") {
-                    console.log("client company");
 
-                    newA.textContent += (element["raison_sociale"] || "") + " / " + (element["nom_commercial"] || "");
-                } else if (element["raison_sociale"] == "") {
-                    console.log("client humain");
-                    newA.textContent += element.noms + " " + element.prenoms;
-                }
-                console.log("xmars");
-
-                newLi.appendChild(newA);
-                datalistNode.appendChild(newLi);
             }
             return;
         });
@@ -464,6 +433,20 @@ function addDatalistElement(datalistNode, arrayData, mode, term = "") {
         return;
     }
 
+}
+
+function formatClientName(objectData) {
+    if (objectData.noms == "") {
+        return (objectData["raison_sociale"] || "") + " / " + (objectData["nom_commercial"] || "");
+    } else if (objectData["raison_sociale"] == "") {
+        return objectData.noms + " " + objectData.prenoms;
+    };
+}
+
+function formatCLientNameSearchResult(objectData) {
+    let val = objectData.uid + " - ";
+    val += formatClientName(objectData);
+    return val;
 }
 
 async function searchClient(inputObj) {
@@ -610,12 +593,16 @@ function addName(listNode, value, selectable, myJSON = {}) {
     let newLi = document.createElement("li");
     if (selectable) {
         let newA = document.createElement("a");
-        newA.textContent = typeof value == "string" ? value : formatName(value);
+        // if string put it in directly. if not, it is array , it is for name (theorically)
+        newA.textContent = typeof value == "string" ? value : formatCLientNameSearchResult(value);
         newA.classList.add("dropdown-item", "fst-italic", "search-result");
         newA.setAttribute("href", "#");
+        if (myJSON) {
+            newA.dataset.infos = JSON.stringify(myJSON);
+        }
         newLi.appendChild(newA);
     } else {
-        newLi.textContent = typeof value == "string" ? value : formatName(value);
+        newLi.textContent = typeof value == "string" ? value : formatCLientNameSearchResult(value);
         newLi.classList.add("fst-italic", "px-2",);
     }
 
@@ -1147,8 +1134,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function getDataFacture(target) {
         // return [JSON.parse(document.querySelector("option[value='" + code + "']").getAttribute("data-headers")),
         // JSON.parse(document.querySelector("option[value='" + code + "']").getAttribute("data-items"))];
-        return [JSON.parse(target.getAttribute("data-headers")),
-        JSON.parse(target.getAttribute("data-items"))];
+        let myJson = JSON.parse(target.getAttribute("data-infos"));
+        return [myJson["header"],
+        myJson["items"]];
     }
 
 

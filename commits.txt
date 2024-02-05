@@ -1074,4 +1074,9 @@ fixing addDatalistElement() by using addName() as abstraction...
 implemented AutoNumeric in html and in js logic.
 Removed all call of formatedNumberToFloat() and formatedNumber().
 changed input type of .remise-taux and .remise-montant to text instead of number for facture,avoir, and commandes 's html(used in avoir cycle)
+-------------------------
+150_an:
+renamed function to formatClientName to formatCLientNameSearchResult();
+created abstraction another formatClientName();
+refactored addDatalistElement();
 

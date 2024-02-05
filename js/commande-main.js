@@ -377,7 +377,7 @@ function addName(listNode, value, selectable, myJSON = {}) {
     newLi.classList.add("result");
     if (selectable) {
         let newA = document.createElement("a");
-        newA.textContent = typeof value == "string" ? value : formatName(value);
+        newA.textContent = typeof value == "string" ? value : formatCLientNameSearchResult(value);
         newA.classList.add("dropdown-item", "fst-italic", "search-result");
         newA.setAttribute("href", "#");
         if (myJSON) {
@@ -386,7 +386,7 @@ function addName(listNode, value, selectable, myJSON = {}) {
 
         newLi.appendChild(newA);
     } else {
-        newLi.textContent = typeof value == "string" ? value : formatName(value);
+        newLi.textContent = typeof value == "string" ? value : formatCLientNameSearchResult(value);
         newLi.classList.add("fst-italic", "px-2",);
     }
 
@@ -451,7 +451,7 @@ function disableInputsAndButtons(tableNode) {
     }
 }
 
-function formatCLientName(objectData) {
+function formatCLientNameSearchResult(objectData) {
     let val = objectData.uid + " - ";
     if (objectData.noms == "") {
         // console.log("client company");
@@ -466,7 +466,7 @@ function formatCLientName(objectData) {
 
 function fillClientButton(objectData, BtnNode) {
     // TODO: too much responsability here.
-    let client = formatCLientName(objectData);
+    let client = formatCLientNameSearchResult(objectData);
     setInputValue(BtnNode, client);
 }
 
@@ -1359,7 +1359,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     addName(datalistNode, element.code + " - " + element.name, true, element);
                     return;
                 } else if (mode == "client") {
-                    let val = formatCLientName(element);
+                    let val = formatCLientNameSearchResult(element);
                     addName(datalistNode, val, true, element);
                     return;
                 } else if (mode == "num-serie") {
