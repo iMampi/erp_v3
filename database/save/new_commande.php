@@ -89,8 +89,6 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
     $temp_array_result = DbHandler::execute_prepared_statement($Statement, MYSQLI_NUM);
     $data["header"]["uid"] = $temp_array_result[1][0][0];
 
-    // echo "<br>jk<br>";
-    // var_dump($temp_array_result);
     if (!$temp_array_result) {
         $conn->rollback();
         print("error01");
@@ -103,9 +101,6 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
         try {
             foreach ($data["items"] as $array_values) {
                 $ItemRowObj = new NewCommandeItem([...$array_values, $new_commande_uid]);
-                // echo "xxxx";
-                // var_dump($ItemRowObj);
-                // echo "xxxx";
                 $Query2 = new Queries("save_new_commande_row");
                 $Binding = new Bindings($ItemRowObj);
                 $Statement = new StandardPreparedStatement($Query2, $Binding);

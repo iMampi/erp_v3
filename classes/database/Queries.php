@@ -391,7 +391,7 @@ class Queries
         select item_code, num_serie, actif from identifiables where item_code=? and num_serie=?;
         ";
     static public $update_stock_add = "
-        update items set stock = stock + ? where code=?;
+        update items set stock = stock - ? where code=?;
         ";
     static public $update_stock_sub = "
         update items set stock = stock - ? where code=?;

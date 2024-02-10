@@ -3,8 +3,10 @@
 use Database\Queries;
 use Database\Bindings;
 use Database\DbHandler;
+use Converter\UpdateStock;
 use Converter\NewAvoirClient;
 use function Session\can_create;
+use Converter\UpdateIdentifiable;
 use Converter\NewCommandeAvoirItem;
 use Converter\NewCommandeAvoirHeader;
 use Database\StandardPreparedStatement;
@@ -28,6 +30,8 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("avoir_client"))) {
     $conn = $step1::$connection;
     $conn->begin_transaction();
 
+
+    // CREATE NEW COMMANDE GET COMMANDE UID. SAVE HEADERS
     $NewObj = new NewCommandeAvoirHeader($data["header"]);
 
     $Query1 = new Queries("save_new_commande");
@@ -48,6 +52,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("avoir_client"))) {
         $new_commande_uid = $temp_array_result[1][0][0];
 
         try {
+            // SAVE ITEM DETAILS FOR COMMANDE
             foreach ($data["items"] as $array_values) {
                 $ItemRowObj = new NewCommandeAvoirItem([...$array_values, $new_commande_uid, $data["header"]["commande-uid"]]);
                 // echo "xxxx";
@@ -65,6 +70,34 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("avoir_client"))) {
                     break;
                     exit;
                 }
+                // IF RETURN OF ITEMS
+                try {
+                    if ($data["header"]["type"] === "1" && $ItemRowObj->data_for_db["stockable"]) {
+                        $UpdateStockObj = new UpdateStock(["code" => $ItemRowObj->data_for_db["item_uid"], "quantity" => $ItemRowObj->data_for_db["quantity"]]);
+                        $Query4 = new Queries("update_stock_add");
+                        $Binding4 = new Bindings($UpdateStockObj);
+                        $Statement4 = new StandardPreparedStatement($Query4, $Binding4);
+                        $temp_array_stock_update = DbHandler::execute_prepared_statement($Statement4, MYSQLI_NUM);
+                    }
+                } catch (\Throwable $th) {
+                    $conn->rollback();
+                    print("error03b");
+                    exit;
+                }
+
+                try {
+                    if ($data["header"]["type"] === "1" && $ItemRowObj->data_for_db["identifiable"]) {
+                        $UpdateIdentifiabletockObj = new UpdateIdentifiable(["code" => $ItemRowObj->data_for_db["item_uid"], "num_serie" => $ItemRowObj->data_for_db["num_serie"], "actif" => 1]);
+                        $Query5 = new Queries("update_identifiable");
+                        $Binding5 = new Bindings($UpdateIdentifiabletockObj);
+                        $Statement5 = new StandardPreparedStatement($Query5, $Binding5);
+                        $temp_array_identifiable_update = DbHandler::execute_prepared_statement($Statement5, MYSQLI_NUM);
+                    }
+                } catch (\Throwable $th) {
+                    $conn->rollback();
+                    print("error03c");
+                    exit;
+                }
             }
         } catch (\Throwable $th) {
             $conn->rollback();
@@ -74,6 +107,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("avoir_client"))) {
 
         if (($_SERVER["REQUEST_METHOD"] == "POST") &&  (can_create("avoir_client"))) {
             try {
+                // EFFECTIVELY CREATING AVOIR
                 if ($data["header"]["state"] === "3") {
 
                     $NewAvoirClientObj = new NewAvoirClient([$data["header"]["uid"], $data["header"]["commercial"], $data["header"]["type"], $data["header"]["fact-origin"]]);

@@ -62,7 +62,6 @@ const InputsDisabledByDefaultAvoirSimpleNewFormArray = [
     'num-avoir',
     "commercial",
     "magasin",
-    "note",
     "date",
     "totalHT-avant-remise",
     "TVA-avant-remise",
@@ -1092,7 +1091,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-    async function showCommandeDetails(event) {
+    async function showAvoirDetails(event) {
         // TODO : refactor
         console.log("called here");
         let parent = event.target.parentNode.parentNode;
@@ -1103,7 +1102,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(myuid);
         console.log("num-fact tr");
         console.log(parent.querySelector(".input.num-fact").value);
-        sendData("/database/select/one_facture_client_details.php", {
+        sendData("/database/select/one_avoir_client_details.php", {
             uid: myuid,
             "num-facture": parent.querySelector(".input.num-fact").value,
         })
@@ -1150,6 +1149,15 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
 
     }
+
+    try {
+        tableBody.addEventListener("click", (event) => {
+            if (event.target.classList.contains("btn-details")) {
+                showAvoirDetails(event);
+                bsModalCommandeDetails.show();
+            }
+        })
+    } catch (error) { }
 
     try {
         modalChooseNew.addEventListener('click', (event) => {

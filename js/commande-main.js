@@ -480,15 +480,14 @@ function fillInputsDetailsItemRow(arrayData, rowNode, mode = "read") {
     rowNode.querySelector(".input#item-num-serie").disabled = !Boolean(parseInt(arrayData["identifiable"]));
     rowNode.querySelector(".input#item-pu").disabled = !Boolean(parseInt(arrayData["prix_variable"]));
 
-    rowNode.querySelector(".input#item-quantity").value = "";
-    rowNode.querySelector(".input#item-quantity").disabled = false;
-
-    if (parseInt(arrayData["identifiable"])) {
-        rowNode.querySelector(".input#item-quantity").value = 1;
-        rowNode.querySelector(".input#item-quantity").disabled = true;
-    }
-
     if (mode === "new") {
+        rowNode.querySelector(".input#item-quantity").value = "";
+        rowNode.querySelector(".input#item-quantity").disabled = false;
+
+        if (parseInt(arrayData["identifiable"])) {
+            rowNode.querySelector(".input#item-quantity").value = 1;
+            rowNode.querySelector(".input#item-quantity").disabled = true;
+        }
         AutoNumeric.getAutoNumericElement(rowNode.querySelector(".input#item-quantity")).update({ maximumValue: arrayData["stock"] });
     }
 
