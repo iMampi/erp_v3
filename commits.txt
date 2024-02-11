@@ -1088,3 +1088,10 @@ implemented return of stockable item. ok, tested
 implemented return of stockable item. ok, TO TEST...
 
 when choosing a facture with identifiable item, not showing correctly. just  one line combined for all
+-------------------------
+152_an:
+when choosing a facture with identifiable item, not showing correctly. just  one line combined for all>>> fixed. edited class Queries::$selection_commande_items_for_avoir to "group by num_serie, item_uid".
+
+returning item with avoir now works great. it updates stock and identifiables.
+fixed implementation of updating stock and identifiable : 
+if quantity==0, skip the itemrow for new commande or avoir. to implement everywhere in the future

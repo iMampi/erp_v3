@@ -621,6 +621,7 @@ async function fillInputsDetailsItems(itemsArray, modalDetailsItemsTable, mode) 
     if (!['new', 'view'].includes(mode)) {
         throw new Error("Mode must be 'new' or 'view'.");
     };
+    
     let numberOfRows = itemsArray.length;
     await addItemRowsLoop(numberOfRows, modalDetailsItemsTable, mode);
     // disableInputsAndButtons(modalDetailsItemsTable);

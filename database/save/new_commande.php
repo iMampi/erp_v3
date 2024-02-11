@@ -37,6 +37,9 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
             foreach ($data["items"] as $array_values) {
                 // stockable?
                 if ($array_values[7]) {
+                    if ($array_values[2] == 0) {
+                        continue;
+                    }
                     // item alredy listed?
                     if (!array_key_exists($array_values[1], $stock_to_check)) {
                         $stock_to_check[$array_values[1]] = 0;
@@ -44,6 +47,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
                     $stock_to_check[$array_values[1]] += $array_values[2];
                     // identifiable? 
                     if ($array_values[6]) {
+
                         // item already listed?
                         if (!array_key_exists($array_values[1], $identifiables_to_check)) {
                             $identifiables_to_check[$array_values[1]] = [];
@@ -100,6 +104,9 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
 
         try {
             foreach ($data["items"] as $array_values) {
+                if ($array_values[2] == 0) {
+                    continue;
+                }
                 $ItemRowObj = new NewCommandeItem([...$array_values, $new_commande_uid]);
                 $Query2 = new Queries("save_new_commande_row");
                 $Binding = new Bindings($ItemRowObj);
@@ -137,9 +144,12 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
                 print("error04 " . $th);
                 return;
             }
-            ////updating stock quantity for facture effectively created
+            ////updating stock quantity for facture effectively created with no problem
             try {
                 foreach ($stock_to_check as $item_code => $quantity) {
+                    if ($quantity == 0) {
+                        continue;
+                    }
                     $UpdateStockObj = new UpdateStock(["code" => $item_code, "quantity" => $quantity]);
                     $Query4 = new Queries("update_stock_sub");
                     $Binding4 = new Bindings($UpdateStockObj);
@@ -155,14 +165,13 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
             ////updating status of identifiables
             try {
                 foreach ($identifiables_to_check as $item_code => $num_serie_array) {
-                    foreach($num_serie_array as $num_serie){
-                        $UpdateIdentifiabletockObj = new UpdateIdentifiable(["code" => $item_code, "num_serie" => $num_serie,"actif"=>0]);
+                    foreach ($num_serie_array as $num_serie) {
+                        $UpdateIdentifiabletockObj = new UpdateIdentifiable(["code" => $item_code, "num_serie" => $num_serie, "actif" => 0]);
                         $Query5 = new Queries("update_identifiable");
                         $Binding5 = new Bindings($UpdateIdentifiabletockObj);
                         $Statement5 = new StandardPreparedStatement($Query5, $Binding5);
                         $temp_array_identifiable_update = DbHandler::execute_prepared_statement($Statement5, MYSQLI_NUM);
                     }
-
                 }
             } catch (\Throwable $th) {
                 $conn->rollback();

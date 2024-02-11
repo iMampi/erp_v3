@@ -54,6 +54,9 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("avoir_client"))) {
         try {
             // SAVE ITEM DETAILS FOR COMMANDE
             foreach ($data["items"] as $array_values) {
+                if ($array_values[2] == 0) {
+                    continue;
+                }
                 $ItemRowObj = new NewCommandeAvoirItem([...$array_values, $new_commande_uid, $data["header"]["commande-uid"]]);
                 // echo "xxxx";
                 // var_dump($ItemRowObj);
