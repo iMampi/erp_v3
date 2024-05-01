@@ -1095,3 +1095,26 @@ when choosing a facture with identifiable item, not showing correctly. just  one
 returning item with avoir now works great. it updates stock and identifiables.
 fixed implementation of updating stock and identifiable : 
 if quantity==0, skip the itemrow for new commande or avoir. to implement everywhere in the future
+-------------------------
+153_an:
+facts_clt.php : #modal-details  : ajout de modal-xl modal-fullscreen-xl-down
+
+fact-clt-main : modified fillInputsDetailsItem. 
+                added new element into idToKey :
+                    "item-libelle": "description_item",
+                    "item-num-serie": "num_serie", ;
+                TO CHANGE INTO DTO_FILL_INPUT_ITEM_ROW;
+
+                created setInputValue();
+
+                imlemented calling of setInputValue() dans fillInputsDetailsItem();
+
+                fillInputsDetailsItem was defined 2 times;
+
+avoir-clt-main.js : 
+    implemented setInputValue();
+    created inputNameToKey() to use why DTO;
+
+rewrote  elements\avoirs_clt\avoir_clt_based_table_details_base.html
+
+rewrite all DTO to match the strucutre of DTO_FILL_INPUT_ITEM_ROW...

@@ -1,4 +1,60 @@
+var currentUser;
+var defaultAutoNumericOptions =
+{
+    decimalCharacter: ",",
+    digitGroupSeparator: " ",
+    watchExternalChanges: true
+}
+
 const TODAY = luxon.DateTime.now().toFormat('yyyy-MM-dd');
+
+var typingTimer;
+
+const NUMBER_INPUT_ITEM_ROW = [
+    "item-pu",
+    "item-prix-total",
+];
+
+const ERROR_FLAG_MESSAGE_OBJ = {
+    "out-of-stock": "Stock insufficant pour un article. Ajustez la quantité.",
+    "required": "Veuillez remplir correctement le champ en rouge.",
+    "num serie not available": "Numero de serie n'est plus disponible.",
+    "num serie double": "Numero de serie répété. Corrigez le."
+
+}
+
+const REQUIRED_INPUT_HEADERS = [
+    "state",
+    "commercial",
+    "client",
+    "date",
+    "magasin",
+    "totalHT-avant-remise",
+    "TVA-avant-remise",
+    "totalTTC-avant-remise",
+    "totalHT-apres-remise",
+    "TVA-apres-remise",
+    "totalTTC-apres-remise"
+]
+const REQUIRED_STANDARD_INPUT_ITEM_ROW = [
+    "item-uid",
+    "item-pu",
+    "item-quantity"
+]
+
+const DTO_FILL_INPUT_ITEM_ROW = [
+    { inputId: "row-uid", objectKey: ["uid"] },
+    { inputId: "item-uid", objectKey: ["code", "item_uid"] },
+    { inputId: "item-name", objectKey: ["name", "item_name"] },
+    { inputId: "item-libelle", objectKey: ["description_item", "libelle"] },
+    { inputId: "item-num-serie", objectKey: ["num_serie"] },
+    { inputId: "item-pu", objectKey: ["prix_unitaire", "prix_vente"] },
+    { inputId: "item-prix-total", objectKey: ["prix_total"] },
+    { inputId: "stockable", objectKey: ["stockable"] },
+    { inputId: "identifiable", objectKey: ["identifiable"] },
+    { inputId: "item-quantity", objectKey: ["quantity"] },
+    { inputId: "prix-variable", objectKey: ["prix-variable"] }
+];
 
 
 const DTO_FILL_INPUT_HEADERS = {
@@ -90,8 +146,236 @@ const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
 var myCache = {};
 
+// start FAILURE/invalid Handler
+// TODO : to refactor. to combine with grab. now, looping 2 times. make it 1.
+function checkRequiredInputs(modalNode) {
+    let result = [true];
+
+    let checkingHeaders = checkRequiredInputHeaders(modalNode.querySelector("#commande-header"));
+    if (!checkingHeaders[0]) {
+        return checkingHeaders;
+    };
+
+    let itemRows = modalNode.querySelectorAll(".item-commande-row");
+    for (let index = 0; index < itemRows.length; index++) {
+
+        let checkingRow = checkRequiredInputItemRow(itemRows[index]);
+        if (!checkingRow[0]) {
+            result = checkingRow;
+        }
+    };
+
+    return result;
+}
+
+function checkRequiredInputHeaders(headerContainer) {
+    let result = [true];
+    for (let index = 0; index < REQUIRED_INPUT_HEADERS.length; index++) {
+        let myInput = headerContainer.querySelector("#" + REQUIRED_INPUT_HEADERS[index]);
+        let value = getInputValue(myInput).trim();
+        let test = [value.startsWith('Chois'), value == "", value == null, value == "..."];
+        if (test.some((val) => val)) {
+            result = [false, myInput];
+            break;
+
+        }
+    }
+
+    return result;
+}
+
+function checkRequiredInputItemRow(itemRow) {
+    let result = [true];
+
+    let requiredSet = JSON.parse(JSON.stringify(REQUIRED_STANDARD_INPUT_ITEM_ROW));
+    let identifiable = itemRow.querySelector(".input.identifiable").value;
+    let prixVariable = itemRow.querySelector(".input.prix-variable").value;
+
+    if (identifiable == 1) {
+        requiredSet.push("identifiable")
+    }
+    if (prixVariable == 1) {
+        requiredSet.push("prix-variable")
+    }
+    for (let index = 0; index < REQUIRED_STANDARD_INPUT_ITEM_ROW.length; index++) {
+        let myInput = itemRow.querySelector("#" + REQUIRED_STANDARD_INPUT_ITEM_ROW[index]);
+        let value = getInputValue(myInput).trim();
+        let test = [value.startsWith('Chois'), value == "", value == null, value == "...", parseInt(value) == 0];
+        if (test.some((val) => val)) {
+            result = [false, myInput];
+            break;
+        }
+    };
+    return result;
+
+}
+
+function identifyInvalidType(array_message, modal) {
+
+    // for required
+    if (!array_message[0]) {
+        return inputRequired(array_message[1]);
+    }
+    // for numSerie problems
+    if (array_message[0].includes("num serie")) {
+        return invalidNumSerie(array_message[0], modal);
+    }
+
+    // for stock verification
+    if (array_message[0].includes("not enough stock")) {
+        return outOfStock(array_message[0].split("//")[1], modal);
+    }
+}
+
+function invalidNumSerie(message, modal) {
+
+    let msg = message.split("//");
+    let tbody = modal.querySelector("#table-facture > tbody");
+    let btnTargetObj = tbody.querySelectorAll("button[value=\"" + msg[1] + "\"]");
 
 
+    let inputFail = btnTargetObj[btnTargetObj.length - 1].parentNode.parentNode.parentNode.parentNode.querySelector("#item-num-serie");
+    inputFail.classList.add("is-invalid");
+
+    // return "num serie double" or "num serie not available"
+    return msg[0];
+
+
+}
+
+function outOfStock(item_code, modal) {
+    let tbody = modal.querySelector("#table-facture > tbody");
+    // let btnTarget = tbody.querySelector("button[contains(.,\"" + item_code + "\")]");
+    let btnTarget = tbody.querySelector("button[value=\"" + item_code + "\"]");
+    let inputFail = btnTarget.parentNode.parentNode.parentNode.parentNode.querySelector("#item-quantity");
+    inputFail.classList.add("is-invalid");
+    return "out-of-stock";
+}
+
+function inputRequired(inputNode) {
+    inputNode.classList.add("is-invalid");
+    return "required";
+}
+// end FAILURE/invalid Handler
+
+function filterNumSerie(nodeListLI, term) {
+    term = term.trim();
+    if (term) {
+        nodeListLI.forEach(LI => {
+            LI.classList.remove("visually-hidden");
+            if (!LI.querySelector("a").textContent.includes(term)) {
+                LI.classList.add("visually-hidden");
+            }
+        });
+    }
+}
+
+function cleanDropdown(dropdownNode) {
+    // TODO : replace the hard coding with the funciton in the rest of the script replace 
+    let LIs = dropdownNode.querySelectorAll("li");
+    LIs.forEach(LI => {
+        console.log(LI.id);
+        if (LI.id !== "search-container") {
+            dropdownNode.removeChild(LI);
+        }
+    })
+}
+
+function getInputValue(node) {
+    if (node.tagName == "BUTTON") {
+        return node.textContent;
+    }
+    return node.value;
+}
+
+function setInputValue(node, value) {
+    if (node.tagName == "BUTTON") {
+        node.textContent = value;
+    }
+    return node.value = value;
+}
+
+function disableInputs(inputElements) {
+    inputElements.forEach(element => {
+        element.disabled = true;
+    });
+}
+
+function updateTableRow(mytable, dataObj) {
+    let correspondances_ = { "uid": 'uid', "date": 'date', "client": 'client', "totalTTC": 'totalTTC-apres-remise', "state": 'state' }
+    let row = mytable.querySelector("#row-" + dataObj["uid"]);
+    console.log("dataObj table's row");
+    console.log(dataObj);
+    console.log(mytable);
+    let inputsRow = row.querySelectorAll(".input");
+    inputsRow.forEach((input) => {
+        input.value = dataObj[correspondances_[input.id]];
+        if (input.id === "totalTTC") {
+            input.value = parseFloat(input.value).toFixed(2);
+        }
+    });
+}
+
+function makeCommandeFormEditabble(modal) {
+    let notEditable = ["uid", "state", "commercial", "date", "totalHT-avant-remise", "TVA-avant-remise", "totalTTC-avant-remise", "totalHT-apres-remise", "TVA-apres-remise", "totalTTC-apres-remise", "item-name", "item-pu", "item-prix-total"];
+    let inputs = modal.querySelectorAll(".input");
+    inputs.forEach(input => {
+        if (!notEditable.includes(input.id)) {
+
+            input.disabled = false;
+        }
+    });
+
+    let identifiablesInputs = modal.querySelectorAll("#identifiable");
+    identifiablesInputs.forEach(input => {
+
+    });
+
+    let btns = modal.querySelectorAll(".btn");
+    btns.forEach(btn => {
+        if (btn.id !== "btn-modify") {
+            btn.disabled = false;
+        } else {
+            btn.disabled = true;
+
+        }
+    });
+}
+
+function formatCLientNameSearchResult(objectData) {
+    let val = objectData.uid + " - ";
+    if (objectData.noms == "") {
+        // console.log("client company");
+
+        val += (objectData["raison_sociale"] || "") + " / " + (objectData["nom_commercial"] || "");
+    } else if (objectData["raison_sociale"] == "") {
+        // console.log("client humain");
+        val += objectData.noms + " " + objectData.prenoms;
+    };
+    return val;
+}
+
+function addName(listNode, value, selectable, myJSON = {}) {
+    console.log("addname");
+    let newLi = document.createElement("li");
+    newLi.classList.add("result");
+    if (selectable) {
+        let newA = document.createElement("a");
+        newA.textContent = typeof value == "string" ? value : formatCLientNameSearchResult(value);
+        newA.classList.add("dropdown-item", "fst-italic", "search-result");
+        newA.setAttribute("href", "#");
+        if (myJSON) {
+            newA.dataset.infos = JSON.stringify(myJSON);
+        }
+
+        newLi.appendChild(newA);
+    } else {
+        newLi.textContent = typeof value == "string" ? value : formatCLientNameSearchResult(value);
+        newLi.classList.add("fst-italic", "px-2",);
+    }
+
+    listNode.appendChild(newLi);
+}
 
 function grabCommandeDataForm(modal) {
     let data = { header: {}, items: [] };
@@ -200,7 +484,15 @@ async function saveCommandeNew(inputObj) {
     if (result[0] == "success") {
         ToastShowClosured(result[0], "Commandes sauvegardées avec succès");
     } else if (result[0] == "failure") {
-        ToastShowClosured(result[0], "Echec de la sauvegarde de la commande");
+        let customMessage = "Echec de la sauvegarde de la commande.";
+        // identifyInvalidType(result[1], modal);
+        try {
+            customMessage = ERROR_FLAG_MESSAGE_OBJ[identifyInvalidType(result[1], modal)];
+
+        } catch (error) {
+            console.log("e message : " + error);
+        }
+        ToastShowClosured(result[0], customMessage);
     } else {
         throw new Error("wrong value returned");
     }
@@ -218,8 +510,8 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
     console.log("responseJSON : ");
     console.log(responseJSON);
     valueObj = responseJSON["header"];
-    valueObj["TVA-avant-remise"] = roundToTwo(valueObj["total_ht_avant_remise"]);
-    valueObj["TVA-apres-remise"] = roundToTwo(valueObj["total_ht_apres_remise"]);
+    valueObj["TVA-avant-remise"] = valueObj["total_ht_avant_remise"];
+    valueObj["TVA-apres-remise"] = valueObj["total_ht_apres_remise"];
     // let inputsElements = md.querySelectorAll(".input");
 
     let inputsElements =
@@ -234,20 +526,17 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
     for (let index = 0; index < inputsElements.length; index++) {
         let element = inputsElements[index];
         if (element.id === "client") {
-            if (valueObj["raison_sociale"]) {
-                element.value = valueObj["client_uid"] + " - " + valueObj["raison_sociale"] + " / " + valueObj["nom_commercial"];
-            } else {
-                element.value = valueObj["client_uid"] + " - " + valueObj["noms"] + " " + valueObj["prenoms"];
-            }
-        } else if (element.id === "commercial") {
+            fillClientButton(valueObj, element);
+        }
+        else if (element.id === "commercial") {
             element.value = valueObj["user_uid"] + "//" + valueObj["user_name"];
-        } else if (element.id === "date") {
-            console.log("datetime");
-            console.log(valueObj["datetime"].slice(0, 11));
-            element.value = valueObj["datetime"].slice(0, 10);
 
         } else {
-            element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
+            if (NUMBER_INPUT_HEADERS.includes(element.id)) {
+                element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
+            } else {
+                element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
+            }
         }
 
         // console.log(element.id);
@@ -261,6 +550,7 @@ async function addItemRowsLoop(numberOfRows, modalDetailsItemsTable) {
     for (let i = 0; i < numberOfRows; ++i) {
         console.log("counterRowItem : " + counterRowItem);
         await addItem(modalDetailsItemsTable);
+        autonumericItemRow(modalDetailsItemsTable);
     }
     return new Promise((resolve, reject) => resolve(true));
 }
@@ -275,20 +565,50 @@ function disableInputsAndButtons(tableNode) {
 }
 
 
-function fillInputsDetailsItem(arrayData, rowNode) {
-    const idToKey = {
-        "row-uid": "uid",
-        "item-uid": "item_uid",
-        "item-name": "item_name",
-        "num-serie": "description_item",
-        "item-pu": "prix_unitaire",
-        "item-prix-total": "prix_total",
-        "item-quantity": "quantity"
+function fillInputsDetailsItemRow(arrayData, rowNode, mode = "read") {
+    if (!["read", "new"].includes(mode)) {
+        throw new Error("mode must be read or new.");
     }
+    console.log("arrayData");
+    console.log(arrayData);
     let inputs = rowNode.querySelectorAll(".input");
+    rowNode.querySelector(".input#item-num-serie").disabled = !Boolean(parseInt(arrayData["identifiable"]));
+    rowNode.querySelector(".input#item-pu").disabled = !Boolean(parseInt(arrayData["prix_variable"]));
+
+    if (mode === "new") {
+        rowNode.querySelector(".input#item-quantity").value = "";
+        rowNode.querySelector(".input#item-quantity").disabled = false;
+
+        if (parseInt(arrayData["identifiable"])) {
+            rowNode.querySelector(".input#item-quantity").value = 1;
+            rowNode.querySelector(".input#item-quantity").disabled = true;
+        }
+        AutoNumeric.getAutoNumericElement(rowNode.querySelector(".input#item-quantity")).update({ maximumValue: arrayData["stock"] });
+    }
+
+
     for (let k = 0; k < inputs.length; k++) {
         let input = inputs[k];
-        input.value = arrayData[idToKey[input.id]];
+        try {
+            let objectKeyArray = DTO_FILL_INPUT_ITEM_ROW.find((entrie) => entrie.inputId === input.id).objectKey;
+            objectKeyArray.some(function (value) {
+                let val = arrayData[value];
+                console.log(input.id + " - " + val);
+                if (val !== undefined) {
+                    if (NUMBER_INPUT_ITEM_ROW.includes(input.id)) {
+                        setInputValue(input, parseFloat(val));
+                    } else {
+                        setInputValue(input, val);
+                    }
+                    return true;
+                }
+                return false;
+            });
+        } catch (err) {
+            console.log(" error 564");
+            continue;
+        }
+
     }
 }
 
@@ -300,27 +620,27 @@ async function fillInputsDetailsItems(itemsArray, modalDetailsItemsTable) {
     let rowsToFill = modalDetailsItemsTable.querySelectorAll(".item-commande-row");
 
     for (let j = 0; j < numberOfRows; j++) {
-        fillInputsDetailsItem(itemsArray[j], rowsToFill[j]);
+        fillInputsDetailsItemRow(itemsArray[j], rowsToFill[j]);
 
     }
 }
 
-function fillInputsDetailsItem(arrayData, rowNode) {
-    const idToKey = {
-        "row-uid": "uid",
-        "item-uid": "item_uid",
-        "item-name": "item_name",
-        "num-serie": "description_item",
-        "item-pu": "prix_unitaire",
-        "item-prix-total": "prix_total",
-        "item-quantity": "quantity"
-    }
-    let inputs = rowNode.querySelectorAll(".input");
-    for (let k = 0; k < inputs.length; k++) {
-        let input = inputs[k];
-        input.value = arrayData[idToKey[input.id]];
-    }
-}
+// function fillInputsDetailsItemRow(arrayData, rowNode) {
+//     const idToKey = {
+//         "row-uid": "uid",
+//         "item-uid": "item_uid",
+//         "item-name": "item_name",
+//         "num-serie": "description_item",
+//         "item-pu": "prix_unitaire",
+//         "item-prix-total": "prix_total",
+//         "item-quantity": "quantity"
+//     }
+//     let inputs = rowNode.querySelectorAll(".input");
+//     for (let k = 0; k < inputs.length; k++) {
+//         let input = inputs[k];
+//         input.value = arrayData[idToKey[input.id]];
+//     }
+// }
 
 async function responseHandlerSelectOneCommande(response) {
     try {
@@ -422,6 +742,60 @@ function addItem(tableFactureBody) {
     })
 }
 
+function fillInputsDetailsItemRow(arrayData, rowNode, mode = "read") {
+    if (!["read", "new"].includes(mode)) {
+        throw new Error("mode must be read or new.");
+    }
+    console.log("arrayData");
+    console.log(arrayData);
+    let inputs = rowNode.querySelectorAll(".input");
+    rowNode.querySelector(".input#item-num-serie").disabled = !Boolean(parseInt(arrayData["identifiable"]));
+    rowNode.querySelector(".input#item-pu").disabled = !Boolean(parseInt(arrayData["prix_variable"]));
+
+    if (mode === "new") {
+        rowNode.querySelector(".input#item-quantity").value = "";
+        rowNode.querySelector(".input#item-quantity").disabled = false;
+
+        if (parseInt(arrayData["identifiable"])) {
+            rowNode.querySelector(".input#item-quantity").value = 1;
+            rowNode.querySelector(".input#item-quantity").disabled = true;
+        }
+
+        AutoNumeric.getAutoNumericElement(rowNode.querySelector(".input#item-quantity")).update({ maximumValue: arrayData["stock"] });
+    }
+
+
+    for (let k = 0; k < inputs.length; k++) {
+        let input = inputs[k];
+        try {
+            let objectKeyArray = DTO_FILL_INPUT_ITEM_ROW.find((entrie) => entrie.inputId === input.id).objectKey;
+            objectKeyArray.some(function (value) {
+                let val = arrayData[value];
+                console.log(input.id + " - " + val);
+                if (val !== undefined) {
+                    if (NUMBER_INPUT_ITEM_ROW.includes(input.id)) {
+                        setInputValue(input, parseFloat(val));
+                    } else {
+                        setInputValue(input, val);
+                    }
+                    return true;
+                }
+                return false;
+            });
+        } catch (err) {
+            console.log("564");
+            continue;
+        }
+
+    }
+}
+
+function fillClientButton(objectData, BtnNode) {
+    // TODO: too much responsability here.
+    let client = formatCLientNameSearchResult(objectData);
+    setInputValue(BtnNode, client);
+}
+
 function defaultButtons(modal) {
     const refObj = {
         "modal-details": DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_DETAILS,
@@ -470,6 +844,13 @@ async function DefaultModalCommandInputs(modal, min_row = 1) {
 
 }
 
+
+function autonumericItemRow(tableFactureBody) {
+    let currentRow = tableFactureBody.querySelector("#row-" + zeroLeftPadding(counterRowItem, 3, false));
+    new AutoNumeric(currentRow.querySelector("#item-pu"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
+    new AutoNumeric(currentRow.querySelector("#item-quantity"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
+}
+
 function generateRowItem(nodeModel, DataObj) {
     // console.log(DataObj);
     let newNode = nodeModel.cloneNode(true);
@@ -506,7 +887,12 @@ function tauxAndMontantDiscountInputHandler(baseMontantInput, tauxInput, montant
 
 function totalTTCDiscountedHandler(baseMontantInput, discountedMontantInput, montantDiscount) {
     console.log("totalTTCDiscountedHandler");
-    discountedMontantInput.value = formatNumber(formatedNumberToFloat(baseMontantInput.value) - formatedNumberToFloat(montantDiscount.value))
+    try {
+        discountedMontantInput.value = AutoNumeric.format(parseFloat(AutoNumeric.unformat(baseMontantInput.value, defaultAutoNumericOptions)) - parseFloat(AutoNumeric.unformat(montantDiscount.value, defaultAutoNumericOptions)), defaultAutoNumericOptions);
+    } catch (error) {
+        console.log("HERE ERROR");
+        discountedMontantInput.value = AutoNumeric.format(0, defaultAutoNumericOptions)
+    }
 }
 
 function TVAHandler(discountedMontantInput, TVAInput, TotalTTCInput, mode) {
@@ -619,26 +1005,61 @@ document.addEventListener("DOMContentLoaded", () => {
 				Êtes vous sûr de vouloir sauvegarder vos modifications?",
         yes: () => {
 
+            let checkingRequired = checkRequiredInputs(modalCommandeNew);
+            if (!checkingRequired[0]) {
+                console.log("required not fulfill1");
+                let errorFlag = identifyInvalidType(checkingRequired, modalCommandeNew);
+                bsModalConfirmation.hide();
+                ToastShowClosured("failure", ERROR_FLAG_MESSAGE_OBJ[errorFlag])
+                return;
+            }
+
             let dataModalCommandeNew = grabCommandeDataForm(modalCommandeNew);
             console.log("dataModalCommandeNew");
             console.log(dataModalCommandeNew);
             saveCommandeNew(dataModalCommandeNew).then((result) => {
                 if (result[0]) {
-                    // insert uid of newly created client
+                    // insert uid of newly created commande
+                    dataModalCommandeNew["header"]["uid"] = result[1][0];
+                    dataModalCommandeNew["header"]["state"] = 1;
+                    // console.log(dataObj);
+                    // TODO : cache html
+                    fetch(
+                        "/elements/commandes/liste_commandes_table_001_base.html"
+                    )
+                        .then((response) => {
+                            let tt = response.text();
+                            console.log("tt");
+                            console.log(tt);
+                            return tt;
+                        })
+                        .then((txt) => {
+                            // TODO : abstract this process
+                            let doc = new DOMParser().parseFromString(
+                                txt,
+                                "text/html"
+                            );
+                            let trModel = doc.querySelector("#row-001");
 
+                            tableBody.append(
+                                generateRowTable(trModel, dataModalCommandeNew["header"])
+                            );
+                            bsModalCommandeNew.hide();
+                            DefaultModalCommandInputs(modalCommandeNew);
+                            console.log("yes saving called");
+                            return false;
+                        });
                     bsModalCommandeNew.hide();
-                    DefaultModalCommandInputs(modalCommandeNew);
-                    bsModalConfirmation.hide();
-                    console.log("yes saving called");
-                    return false;
 
                 } else {
                     //TODO : show error
+
+                    // TODO : dont forget to put me in the correct place. here is just for test
+                    // identifyInvalidType(result[1], modalCommandeNew);
                     return true;
                 }
-
-                bsModalCommandeNew.hide();
-            })
+            });
+            bsModalCommandeNew.hide();
         }
     }
 
@@ -648,7 +1069,15 @@ document.addEventListener("DOMContentLoaded", () => {
 				Aucune modification ne sera possible.<br>\
 				Êtes vous sûr de vouloir sauvegarder vos modifications?",
         yes: () => {
-
+            // TODO : to abstract reauiredchecking
+            let checkingRequired = checkRequiredInputs(modalCommandeNew);
+            if (!checkingRequired[0]) {
+                console.log("required not fulfill1");
+                let errorFlag = identifyInvalidType(checkingRequired, modalCommandeNew);
+                bsModalConfirmation.hide();
+                ToastShowClosured("failure", ERROR_FLAG_MESSAGE_OBJ[errorFlag])
+                return;
+            }
             let dataModalCommandeNew = grabCommandeDataForm(modalCommandeNew);
             dataModalCommandeNew["header"]["state"] = 2;
             console.log("dataModalCommandeNew");
@@ -687,12 +1116,14 @@ document.addEventListener("DOMContentLoaded", () => {
                             console.log("yes saving called");
                             return false;
                         });
+                    bsModalCommandeNew.hide();
+
                 } else {
                     //TODO : show error
                     return true;
                 }
             });
-            bsModalCommandeNew.hide();
+            bsModalConfirmation.hide();
         }
     }
 
@@ -791,55 +1222,75 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function searchLive(term, datalistNode, mode) {
-        let search = { "client": searchClient, "item": searchItem }
+        // term: string if client or item or nom-commercial
+        // term: array if num-serie
+        console.log("term");
+        console.log(term);
+        try {
+            term = term.trim();
+        } catch (error) {
 
-        let inputObj = {
-            "client": { uid: term, noms: term, prenoms: term, "nom-commercial": term, "raison-sociale": term },
-            "item": { code: term, name: term }
-        };
-        let result = await search[mode](inputObj[mode]);
-        // let result = await searchItem(inputObj);
-        addDatalistElement(datalistNode, result, mode, term);
+        }
+        if (term) {
+            let search = { "client": searchClient, "item": searchItem, "num-serie": searchNumSerie }
+
+            let inputObj = {
+                "client": { uid: term, noms: term, prenoms: term, "nom-commercial": term, "raison-sociale": term },
+                "item": { code: term, name: term },
+                "num-serie": { code: term[0], "num-serie": term[1] },
+            };
+            let result = await search[mode](inputObj[mode]);
+            addDatalistElement(datalistNode, result, mode, term);
+        } else {
+            cleanDropdown(datalistNode);
+        }
+        return;
     }
 
     function addDatalistElement(datalistNode, arrayData, mode, term = "") {
-        datalistNode.innerHTML = "";
+        // datalistNode.innerHTML = "";
+        cleanDropdown(datalistNode);
         if ((Array.isArray(arrayData)) && (arrayData.length || arrayData[0] != undefined)) {
-            console.log("array is ok");
+            console.log("array is okadddata");
+            console.log(arrayData);
             arrayData.forEach(element => {
                 let option_ = document.createElement("option");
+                // use keys from database
                 if (mode == "item") {
-                    option_.value = element.code;
-                    option_.label = element.name;
-                    option_.dataset.prix = element.prix_vente;
+                    addName(datalistNode, element.code + " - " + element.name, true, element);
+                    return;
                 } else if (mode == "client") {
-                    let val = element.uid + " - ";
-                    if (element.noms == "") {
-                        console.log("client company");
-
-                        val += (element["raison_sociale"] || "") + " / " + (element["nom_commercial"] || "");
-                    } else if (element["raison_sociale"] == "") {
-                        console.log("client humain");
-                        val += element.noms + " " + element.prenoms;
-                    }
-                    option_.value = val;
-                    option_.label = val;
+                    let val = formatCLientNameSearchResult(element);
+                    addName(datalistNode, val, true, element);
+                    return;
+                } else if (mode == "num-serie") {
+                    addName(datalistNode, element.num_serie, true);
+                    return;
                 }
-                datalistNode.append(option_);
             });
         } else {
             console.log("empty arrayy");
-            let option_ = document.createElement("option");
-            option_.value = "Néant";
-            option_.label = "aucun résultat pour \"" + term + "\"";
-            datalistNode.append(option_);
+            addName(datalistNode, "aucun résultat pour \"" + term + "\"", false);
         }
-
     }
 
     async function searchItem(inputObj) {
         console.log("searching ITEM");
         let url = "/database/select/selection_items.php";
+        let response = await sendData(url, inputObj);
+
+        console.log("error?");
+        console.log(response);
+        let myjson = JSON.parse(response);
+
+        return myjson;
+        // return await fillMainTable(myjson, tableBodyCategorie);
+
+    }
+
+    async function searchNumSerie(inputObj) {
+        console.log("searching num-serie");
+        let url = "/database/select/selection_num_serie.php";
         let response = await sendData(url, inputObj);
 
         console.log("error?");
@@ -884,59 +1335,207 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) { }
 
     ////modalCommandeNew event handler
+
     try {
-        modalCommandeNew.addEventListener('keyup', (event) => {
-            console.log("event keyup");
-            console.log(event);
-            if ((event.target.id == "item-uid") && (event.key)) {
-                console.log("searching item");
-                itemDataList.innerHTML = "";
+        modalCommandeNew.addEventListener('input', (event) => {
+            console.log("event input");
+            modificationWatcher = true;
+            if (event.target.classList.contains("is-invalid")) {
+                event.target.classList.remove("is-invalid");
+            }
+
+
+            // business logic start
+            if (event.target.id == "search-item") {
+                // item searching with btn dropdown
+                console.log("searching item 23");
+                let hint = event.target.value;
+                // TODO : sanitize hint
+                let itemDropdown = event.target.parentNode.parentNode.parentNode;
+                console.log("hint");
+                console.log(hint);
+                cleanDropdown(itemDropdown);
+                //// START - grabing data
                 clearTimeout(typingTimer);
-                let term = event.target.value.trim();
-                if (term) {
-                    // TODO : sanitize here
-                    itemDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
-                    typingTimer = setTimeout(() => { searchLive(term, itemDataList, "item") }, 1500);
+                if (!hint.trim()) {
+                    cleanDropdown(itemDropdown);
+                    return;
                 }
-            } else if ((event.target.id == "client") && (event.key)) {
-                console.log("searching client");
-                clientDataList.innerHTML = "";
+                addName(itemDropdown, "Searching for \"" + event.target.value + "\"", false);
+                typingTimer = setTimeout(() => { searchLive(hint, itemDropdown, "item") }, 1500);
+                //// END - grabing data
+                console.log("markman");
+
+            } else if (event.target.id == "search-num-serie") {
+                console.log("searching num-serie 23");
+                let numSerieDropdown = event.target.parentNode.parentNode.parentNode;
+                filterNumSerie(numSerieDropdown.querySelectorAll("li.result"), event.target.value);
+
+            } else if (event.target.id == "search-client") {
+                console.log("searching client 78");
+
+                let hint = event.target.value;
+                // TODO : sanitize hint
+                let clientDropdown = event.target.parentNode.parentNode.parentNode;
+                cleanDropdown(clientDropdown);
+                //// START - grabing data
                 clearTimeout(typingTimer);
-                let term = event.target.value.trim();
-                if (term) {
-                    // TODO : sanitize here
-                    clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
-                    typingTimer = setTimeout(() => { searchLive(term, clientDataList, "client") }, 1500);
+                if (!hint.trim()) {
+                    cleanDropdown(clientDropdown);
+                    return;
                 }
-            } else if ((event.target.id == "item-uid") && (!event.key)) {
-                console.log("item selected 26");
-                let val = event.target.value;
-                console.log(getName(val));
-                if (event.target.parentNode.parentNode.querySelector("#item-quantity").value > 0) {
-                    fillItemNameAndPrice(event.target, 0);
-                } else {
-                    fillItemNameAndPrice(event.target, 1);
-                }
-                const itemTotalPriceInputs = modalCommandeNew.querySelectorAll(".item-prix-total");
-                console.log("itemTotalPriceInputs");
-                console.log(itemTotalPriceInputs);
-                updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
-                updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
-            } else if ((event.target.id == "client") && (!event.key)) {
-                console.log("client selected");
-            } else if (event.target.id == "item-quantity") {
+                addName(clientDropdown, "Searching for \"" + event.target.value + "\"", false);
+                typingTimer = setTimeout(() => { searchLive(hint, clientDropdown, "client") }, 1500);
+                //// END - grabing data
+
+            } else if (["item-quantity", "item-pu"].includes(event.target.id)) {
+                console.log("update qty or pu");
                 updateItemTotalPrice(event.target.parentNode.parentNode)
                 const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
                 updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
                 updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+            } else if (event.target.id == 'remise-taux') {
+                tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, 1);
+            } else if (event.target.id == 'remise-montant') {
 
+                console.log("remise montant!");
+                tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, 2);
 
             }
-        })
+            totalTTCDiscountedHandler(montantTTCAvantRemiseInputNew, montantTTCApresRemiseInputNew, remiseMontantInputNew);
+            TVAHandler(montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew, 2);
 
+        });
     } catch (error) {
-        console.log("err 011 " + error);
     }
+
+    try {
+        modalCommandeNew.querySelector("#new-modal-body-heads").addEventListener('click', (event) => {
+            if (event.target.classList.contains("dropdown-toggle")) {
+                if (event.target.classList.contains("is-invalid")) {
+                    event.target.classList.remove("is-invalid");
+                    modificationWatcher = true;
+                }
+            }
+
+            if (event.target.classList.contains("search-result")) {
+                console.log("chossed client");
+                console.log(event);
+                fillClientButton(JSON.parse(event.target.dataset.infos), event.target.parentNode.parentNode.parentNode.querySelector(".dropdown-toggle"));
+
+            } else if (event.target.id === "client") {
+                event.target.parentNode.querySelector("#search-client").focus();
+            }
+        }, true)
+    } catch (error) {
+
+    }
+
+    try {
+        tableItemsFactureNew.addEventListener('click', (event) => {
+            if (event.target.classList.contains("dropdown-toggle")) {
+                if (event.target.classList.contains("is-invalid")) {
+                    event.target.classList.remove("is-invalid");
+                    modificationWatcher = true;
+                }
+            }
+
+            if (event.target.classList.contains("search-result")) {
+                console.log("chossed item");
+                console.log(event);
+                let trNOde = event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+                let dropdownNode = event.target.parentNode.parentNode;
+                if (dropdownNode.id == "item-dropdown") {
+                    fillInputsDetailsItemRow(JSON.parse(event.target.dataset.infos), trNOde, "new");
+                    searchLive([JSON.parse(event.target.dataset.infos)["code"], ''], event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('#num-serie-dropdown'), "num-serie");
+
+                    trNOde.querySelector("#item-num-serie").textContent = "...";
+
+                    updateItemTotalPrice(trNOde);
+                    const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
+                    updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
+
+                    updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+                } else if (dropdownNode.id == "num-serie-dropdown") {
+                    setInputValue(trNOde.querySelector("#item-num-serie"), event.target.textContent);
+
+                    updateItemTotalPrice(trNOde);
+                    const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
+                    updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
+                    updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+                }
+
+            } else if (event.target.id === "item-uid") {
+                event.target.parentNode.querySelector("#search-item").focus();
+            } else if (event.target.id == "btn-add-item") {
+                addItem(tableItemsFactureNew).
+                    then(() => autonumericItemRow(tableItemsFactureNew)).
+                    then(() => modificationWatcher = true);
+            } else if (event.target.classList.contains("btn-del")) {
+                removeItem(event.target, "target");
+                modificationWatcher = true;
+                console.log("remove");
+                updateTotalPrice(montantHTAvantRemiseInputNew, modalCommandeNew.querySelectorAll("#item-prix-total"))
+                updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+            }
+        }, true)
+    } catch (error) {
+
+    }
+
+    // try {
+    //     modalCommandeNew.addEventListener('keyup', (event) => {
+    //         console.log("event keyup");
+    //         console.log(event);
+    //         if ((event.target.id == "item-uid") && (event.key)) {
+    //             console.log("searching item");
+    //             itemDataList.innerHTML = "";
+    //             clearTimeout(typingTimer);
+    //             let term = event.target.value.trim();
+    //             if (term) {
+    //                 // TODO : sanitize here
+    //                 itemDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
+    //                 typingTimer = setTimeout(() => { searchLive(term, itemDataList, "item") }, 1500);
+    //             }
+    //         } else if ((event.target.id == "client") && (event.key)) {
+    //             console.log("searching client");
+    //             clientDataList.innerHTML = "";
+    //             clearTimeout(typingTimer);
+    //             let term = event.target.value.trim();
+    //             if (term) {
+    //                 // TODO : sanitize here
+    //                 clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
+    //                 typingTimer = setTimeout(() => { searchLive(term, clientDataList, "client") }, 1500);
+    //             }
+    //         } else if ((event.target.id == "item-uid") && (!event.key)) {
+    //             console.log("item selected 26");
+    //             let val = event.target.value;
+    //             console.log(getName(val));
+    //             if (event.target.parentNode.parentNode.querySelector("#item-quantity").value > 0) {
+    //                 fillItemNameAndPrice(event.target, 0);
+    //             } else {
+    //                 fillItemNameAndPrice(event.target, 1);
+    //             }
+    //             const itemTotalPriceInputs = modalCommandeNew.querySelectorAll(".item-prix-total");
+    //             console.log("itemTotalPriceInputs");
+    //             console.log(itemTotalPriceInputs);
+    //             updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
+    //             updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+    //         } else if ((event.target.id == "client") && (!event.key)) {
+    //             console.log("client selected");
+    //         } else if (event.target.id == "item-quantity") {
+    //             updateItemTotalPrice(event.target.parentNode.parentNode)
+    //             const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
+    //             updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
+    //             updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+
+
+    //         }
+    //     })
+
+    // } catch (error) {
+    //     console.log("err 011 " + error);
+    // }
 
     try {
         modalCommandeNew.addEventListener('click', (event) => {
@@ -950,14 +1549,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     bsModalCommandeNew.hide();
                     defaultButtons(modalCommandeNew)
                 }
-            } else if (event.target.id == "btn-add-item") {
-                addItem(tableItemsFactureNew).then(() => modificationWatcher = true);
-            } else if (event.target.classList.contains("btn-del")) {
-                removeItem(event.target, "target");
-                modificationWatcher = true;
-                console.log("remove");
-                updateTotalPrice(montantHTAvantRemiseInputNew, modalCommandeNew.querySelectorAll("#item-prix-total"))
-                updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
             } else if (event.target.id == "btn-save-new") {
                 if (modificationWatcher) {
                     openModalConfirmation(
@@ -1005,31 +1596,38 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     ////CALCUL
-    try {
-        modalCommandeNew.addEventListener('input', (event) => {
-            console.log("event input");
-            console.log(event);
-            modificationWatcher = true;
-            // TODO : restrict event
-            if ((event.target.id == "item-uid") && (event.key)) {
+    // try {
+    //     modalCommandeNew.addEventListener('input', (event) => {
+    //         console.log("event input");
+    //         console.log(event);
+    //         modificationWatcher = true;
+    //         // TODO : restrict event
+    //         if ((event.target.id == "item-uid") && (event.key)) {
 
-            } else if ((event.target.id == "item-uid") && (!event.key)) {
-            } else if (event.target.id == "item-quantity") {
-                updateItemTotalPrice(event.target.parentNode.parentNode)
-                const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
-                updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
-                updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
-            } else if (event.target.id == 'remise-taux') {
-                tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, 1);
-            } else if (event.target.id == 'remise-montant') {
-                tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, 2);
+    //         } else if ((event.target.id == "item-uid") && (!event.key)) {
+    //         } else if (event.target.id == "item-quantity") {
+    //             updateItemTotalPrice(event.target.parentNode.parentNode)
+    //             const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
+    //             updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
+    //             updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+    //         } else if (event.target.id == 'remise-taux') {
+    //             tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, 1);
+    //         } else if (event.target.id == 'remise-montant') {
+    //             tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, 2);
 
-            }
-            totalTTCDiscountedHandler(montantTTCAvantRemiseInputNew, montantTTCApresRemiseInputNew, remiseMontantInputNew);
-            TVAHandler(montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew, 2);
-        })
+    //         }
+    //         totalTTCDiscountedHandler(montantTTCAvantRemiseInputNew, montantTTCApresRemiseInputNew, remiseMontantInputNew);
+    //         TVAHandler(montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew, 2);
+    //     })
 
-    } catch (error) {
+    // } catch (error) {
 
-    }
+    // }
+
+
+    // autonumeric Listener
+    new AutoNumeric.multiple(".remise-taux", [defaultAutoNumericOptions, { minimumValue: 0, maximumValue: 100 }]);
+    new AutoNumeric.multiple(".remise-montant", [defaultAutoNumericOptions, { minimumValue: 0 }]);
+    new AutoNumeric.multiple(".item-pu", [defaultAutoNumericOptions, { minimumValue: 0 }]);
+    new AutoNumeric.multiple(".item-quantity", [defaultAutoNumericOptions, { minimumValue: 0 }]);
 })

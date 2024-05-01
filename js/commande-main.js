@@ -17,8 +17,6 @@ const NUMBER_INPUT_ITEM_ROW = [
     "item-prix-total",
 ];
 
-const validNonCharInput = ["Backspace", "Enter", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Delete", ","];
-
 const ERROR_FLAG_MESSAGE_OBJ = {
     "out-of-stock": "Stock insufficant pour un article. Ajustez la quantité.",
     "required": "Veuillez remplir correctement le champ en rouge.",
@@ -174,6 +172,11 @@ var listDOM = {};
 
 // start FAILURE/invalid Handler
 // TODO : to refactor. to combine with grab. now, looping 2 times. make it 1.
+
+
+
+
+
 function checkRequiredInputs(modalNode) {
     let result = [true];
 
@@ -285,6 +288,23 @@ function inputRequired(inputNode) {
 // end FAILURE/invalid Handler
 
 
+
+function inputNameToKey(inputName, ObjectData, DTO) {
+    let objectKeyArray = DTO.find((entrie) => entrie.inputId === inputName).objectKey;
+
+    if (objectKeyArray.length == 1) {
+        return objectKeyArray[0];
+    } else if (objectKeyArray.length == 0) {
+        return "NOT IN DTO"
+    } else {
+        objectKeyArray.forEach(KeyArray => {
+            if (KeyArray in ObjectData) {
+                return KeyArray;
+            }
+        });
+    }
+
+}
 
 function filterNumSerie(nodeListLI, term) {
     term = term.trim();
@@ -510,7 +530,7 @@ function fillInputsDetailsItemRow(arrayData, rowNode, mode = "read") {
                 return false;
             });
         } catch (err) {
-            console.log("564");
+            console.log(" error 564");
             continue;
         }
 
@@ -701,7 +721,7 @@ function generateRowTable(nodeModel, DataObj) {
 
     newNode.querySelector(".client.input").value = DataObj["client"];
     //TODO : format the numbers
-    newNode.querySelector(".totalTTC.input").value = DataObj["totalTTC-apres-remise"];
+    newNode.querySelector(".totalTTC.input").value = AutoNumeric.format(DataObj["totalTTC-apres-remise"], defaultAutoNumericOptions);
     newNode.querySelector(".uid.input").value = DataObj["uid"];
     newNode.querySelector(".state.input").value = DataObj["state"];
     return newNode;
@@ -1055,7 +1075,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             saveCommandeNew(dataModalCommandeNew, modalCommandeNew).then((result) => {
                 if (result[0]) {
-                    // insert uid of newly created client
+                    // insert uid of newly created commande
                     dataModalCommandeNew["header"]["uid"] = result[1][0];
                     dataModalCommandeNew["header"]["state"] = 1;
                     // console.log(dataObj);
@@ -1148,6 +1168,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             );
                             bsModalCommandeNew.hide();
                             DefaultModalCommandInputs(modalCommandeNew);
+                            bsModalConfirmation.hide();
                             console.log("yes saving called");
                             return false;
                         });

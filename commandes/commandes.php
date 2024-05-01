@@ -31,7 +31,7 @@ is_logged();
 
     <script src="/js/confirmation.js"></script>
     <script src="/js/toast.js"></script>
-    <script src="/js/commande-main.js"></script>
+    <script src="/js/commande-main.js" defer></script>
     <link rel="stylesheet" href="/style/mampi.css">
     <title>commandes</title>
 
@@ -159,7 +159,7 @@ is_logged();
                 <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-xl-down">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">détails affaire</h5>
+                            <h5 class="modal-title" id="staticBackdropLabel">détails commande</h5>
                         </div>
                         <div class="modal-body">
 

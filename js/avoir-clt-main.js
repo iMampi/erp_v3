@@ -106,6 +106,41 @@ const DEFAULT_BUTTONS_DISABLED_STATE_AVOIR_NEW = {
     "btn-create-avoir": true
 }
 
+const DTO_FILL_INPUT_HEADERS = {
+    "commande-uid": "commande_uid",
+    "fact-origin": "facture_client_uid",
+    "num-avoir": "num_avoir",
+    date: "date",
+    note: "libelle",
+    payment: "payment",
+    magasin: "magasin_uid",
+    "totalHT-avant-remise": "total_ht_avant_remise",
+    "totalTTC-avant-remise": "total_ttc_avant_remise",
+    "remise-taux": "remise_taux",
+    "remise-montant": "remise_montant",
+    "totalHT-apres-remise": "total_ht_apres_remise",
+    "totalTTC-apres-remise": "total_ttc_apres_remise",
+    "TVA-avant-remise": "TVA-avant-remise",
+    "TVA-apres-remise": "TVA-apres-remise"
+}
+
+const DTO_FILL_INPUT_ITEM_ROW = [
+    { inputId: "row-uid", objectKey: ["uid"] },
+    { inputId: "item-uid", objectKey: ["code", "item_uid"] },
+    { inputId: "item-name", objectKey: ["name", "item_name"] },
+    { inputId: "item-libelle", objectKey: ["description_item", "libelle"] },
+    { inputId: "initial-quantity", objectKey: ["quantity"] },
+    { inputId: "item-num-serie", objectKey: ["num_serie"] },
+    { inputId: "item-pu", objectKey: ["prix_unitaire", "prix_vente"] },
+    { inputId: "item-prix-total", objectKey: ["prix_total"] },
+    { inputId: "stockable", objectKey: ["stockable"] },
+    { inputId: "identifiable", objectKey: ["identifiable"] },
+    { inputId: "item-quantity", objectKey: ["quantity"] },
+    { inputId: "prix-variable", objectKey: ["prix_variable"] },
+    { inputId: "search-item", objectKey: [""] },
+    { inputId: "search-num-serie", objectKey: [""] }
+];
+
 // const inputAvoirToDbFieldObject = {
 //     "fact-origin": "num_facture",
 //     "row-uid": "commande_uid",
@@ -127,7 +162,7 @@ function updateTotalPrice(baseMontantInput, priceListNode) {
     priceListNode.forEach(element => {
         pricesRaw.push(parseFloat(AutoNumeric.unformat(element.value, defaultAutoNumericOptions)));
     });
-    return baseMontantInput.value = pricesRaw.reduce((partialSum, a) => partialSum + AutoNumeric.unformat(a, defaultAutoNumericOptions), 0);
+    return baseMontantInput.value = pricesRaw.reduce((partialSum, a) => partialSum + parseFloat(AutoNumeric.unformat(a, defaultAutoNumericOptions)), 0);
 }
 
 function updateItemTotalPrice(rowNode) {
@@ -175,6 +210,24 @@ function TVAHandler(discountedMontantInput, TVAInput, TotalTTCInput, mode) {
 
     } else {
 
+    }
+}
+
+///////////////////////////////
+
+function inputNameToKey(inputName, ObjectData, DTO) {
+    let objectKeyArray = DTO.find((entrie) => entrie.inputId === inputName).objectKey;
+
+    if (objectKeyArray.length == 1) {
+        return objectKeyArray[0];
+    } else {
+        let result;
+        objectKeyArray.forEach((KeyArray) => {
+            if (KeyArray in ObjectData) {
+                result = KeyArray
+            }
+        });
+        return result;
     }
 }
 
@@ -313,6 +366,20 @@ function grabAvoirDataForm(modal) {
     return data;
 }
 
+function getInputValue(node) {
+    if (node.tagName == "BUTTON") {
+        return node.textContent;
+    }
+    return node.value;
+}
+
+function setInputValue(node, value) {
+    if (node.tagName == "BUTTON") {
+        node.textContent = value;
+    }
+    return node.value = value;
+}
+
 async function saveAvoirNew(inputObj) {
     console.log("saving avoir");
     formatFloatsForDatabase(inputObj);
@@ -341,12 +408,12 @@ function formatFloatsForDatabase(inputObj) {
     let headersKeys = Object.keys(inputObj["header"])
     headersKeys.forEach(key => {
         if (keysWithNumbers.includes(key)) {
-            inputObj["header"][key] = parseFloat(AutoNumeric.format(inputObj["header"][key], defaultAutoNumericOptions));
+            inputObj["header"][key] = parseFloat(AutoNumeric.unformat(inputObj["header"][key], defaultAutoNumericOptions));
         }
     });
     inputObj["items"].forEach(row_array => {
-        row_array[2] = parseFloat(AutoNumeric.format(row_array[2], defaultAutoNumericOptions));
-        row_array[3] = parseFloat(AutoNumeric.format(row_array[3], defaultAutoNumericOptions));
+        row_array[2] = parseFloat(AutoNumeric.unformat(row_array[2], defaultAutoNumericOptions));
+        row_array[3] = parseFloat(AutoNumeric.unformat(row_array[3], defaultAutoNumericOptions));
     });
     return inputObj;
 }
@@ -526,7 +593,7 @@ function addItem(tableFactureBody, mode) {
             trModel.querySelectorAll(".input").forEach(input_ => {
                 input_.disabled = input_.id != "item-quantity";
             });
-            trModel.querySelector("#btn-new-item").disabled = true;
+            // trModel.querySelector("#btn-new-item").disabled = true;
             trModel.querySelector("#btn-del-item").disabled = tableFactureBody.parentNode.parentNode.parentNode.parentNode.parentNode.id == "modal-avoir-new-based";
 
             console.log("trModel");
@@ -561,7 +628,7 @@ function addItem(tableFactureBody, mode) {
                     trModel.querySelectorAll(".input").forEach(input_ => {
                         input_.disabled = input_.id != "item-quantity";
                     });
-                    trModel.querySelector("#btn-new-item").disabled = true;
+                    // trModel.querySelector("#btn-add-item").disabled = true;
                     trModel.querySelector("#btn-del-item").disabled = tableFactureBody.parentNode.parentNode.parentNode.parentNode.parentNode.id == "modal-avoir-new-based";
 
                     console.log("trModel");
@@ -621,7 +688,7 @@ async function fillInputsDetailsItems(itemsArray, modalDetailsItemsTable, mode) 
     if (!['new', 'view'].includes(mode)) {
         throw new Error("Mode must be 'new' or 'view'.");
     };
-    
+
     let numberOfRows = itemsArray.length;
     await addItemRowsLoop(numberOfRows, modalDetailsItemsTable, mode);
     // disableInputsAndButtons(modalDetailsItemsTable);
@@ -655,6 +722,7 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
     console.log(responseJSON);
     valueObj = responseJSON["header"];
     valueObj["TVA-apres-remise"] = roundToTwo(valueObj["total_ht_apres_remise"]);
+    valueObj["num_avoir"] = valueObj["num_avoir"].padStart(5, "0");
     // let inputsElements = md.querySelectorAll(".input");
 
     let inputsElements =
@@ -668,9 +736,11 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
     //TODO : use a DTO>> TO DUPLICATE EVERYWHERE ELSE
     for (let index = 0; index < inputsElements.length; index++) {
         let element = inputsElements[index];
+
         if (element.id === "client") {
             if (valueObj["raison_sociale"]) {
-                element.value = valueObj["client_uid"] + " - " + valueObj["raison_sociale"] + " / " + valueObj["nom_commercial"];
+                setInputValue(element, valueObj["client_uid"] + " - " + valueObj["raison_sociale"] + " / " + valueObj["nom_commercial"])
+
             } else {
                 element.value = valueObj["client_uid"] + " - " + valueObj["noms"] + " " + valueObj["prenoms"];
             }
@@ -682,7 +752,8 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
             element.value = valueObj["datetime"].slice(0, 10);
 
         } else {
-            element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
+            setInputValue(element, valueObj[DTO_FILL_INPUT_HEADERS[element.id]])
+            // element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
         }
 
         // console.log(element.id);
@@ -697,17 +768,24 @@ function fillInputsDetailsItem(arrayData, rowNode, mode) {
     if (!['new', 'view'].includes(mode)) {
         throw new Error("Mode must be 'new' or 'view'.");
     }
-    let idToKey = {
-        "initial-quantity": "remaining_quantity",
-        "row-uid": "uid",
-        "item-uid": "item_uid",
-        "item-name": "item_name",
-        "libelle": "description_item",
-        "num-serie": "num_serie",
-        "item-pu": "prix_unitaire",
-        "identifiable": "identifiable",
-        "stockable": "stockable",
-    }
+    console.log("arrayData");
+    console.log(arrayData);
+    let inputs = rowNode.querySelectorAll(".input.fillable");
+    // WHEN AVOIR, ALWAYS DISABLED 
+    rowNode.querySelector(".input#item-num-serie").disabled = true;
+    rowNode.querySelector(".input#item-pu").disabled = !Boolean(parseInt(arrayData["prix_variable"]));
+
+    // let idToKey = {
+    //     "initial-quantity": "remaining_quantity",
+    //     "row-uid": "uid",
+    //     "item-uid": "item_uid",
+    //     "item-name": "item_name",
+    //     "libelle": "description_item",
+    //     "num-serie": "num_serie",
+    //     "item-pu": "prix_unitaire",
+    //     "identifiable": "identifiable",
+    //     "stockable": "stockable",
+    // }
     if (mode === "view") {
         idToKey["item-quantity"] = "remaining_quantity";
     } else {
@@ -715,15 +793,20 @@ function fillInputsDetailsItem(arrayData, rowNode, mode) {
         // rowNode.querySelector("#item-quantity").setAttribute("max", arrayData["remaining_quantity"]);
         rowNode.querySelector("#initial-quantity").textContent = arrayData["remaining_quantity"];
     }
-    let inputs = rowNode.querySelectorAll(".input");
+    // let inputs = rowNode.querySelectorAll(".input");
+
     for (let k = 0; k < inputs.length; k++) {
         let input = inputs[k];
+        console.log(input.id);
         if (["item-prix-total", "item-quantity"].includes(input.id)) {
             input.value = 0;
         } else if (input.id === "item-pu") {
-            input.value = formatNumber(arrayData[idToKey[input.id]]);
+            // input.value = formatNumber(arrayData[idToKey[input.id]]);
+            setInputValue(
+                input, arrayData[inputNameToKey(input.id, arrayData, DTO_FILL_INPUT_ITEM_ROW)]);
         } else {
-            input.value = arrayData[idToKey[input.id]];
+            setInputValue(input,
+                arrayData[inputNameToKey(input.id, arrayData, DTO_FILL_INPUT_ITEM_ROW)]);
         }
     }
 
@@ -789,12 +872,14 @@ async function openNewAvoirFactureSimple(modal, bsModal) {
 
     let defautItemAvoirSimpleJSON = await getCachedData("defautItemAvoirSimpleJSON");
 
-    modal.querySelector("#item-uid").value = defautItemAvoirSimpleJSON["code"];
+    // TODO : to refactor by implementing the class .fillable
+    setInputValue(modal.querySelector("#item-uid"), defautItemAvoirSimpleJSON["code"])
+    // modal.querySelector("#item-uid").value = defautItemAvoirSimpleJSON["code"];
     modal.querySelector("#item-name").value = defautItemAvoirSimpleJSON["name"];
     modal.querySelector("#item-quantity").value = "1";
     modal.querySelector("#initial-quantity").textContent = "1";
     modal.querySelector("#item-quantity").disabled = true;
-    modal.querySelector("#libelle").disabled = false;
+    modal.querySelector("#item-libelle").disabled = false;
     modal.querySelector("#item-pu").disabled = false;
     modal.querySelector("#btn-del-item").disabled = true;
 
@@ -947,6 +1032,16 @@ document.addEventListener("DOMContentLoaded", () => {
         keyboard: false,
         focus: true,
     });
+
+    ////modal see avoir detail
+    const modalAvoirDetails = document.getElementById("modal-details");
+    const bsModalAvoirDetails = new bootstrap.Modal(modalAvoirDetails, {
+        backdrop: "static",
+        keyboard: false,
+        focus: true,
+    });
+
+
 
     const montantHTAvantRemiseInputNewBased = modalAvoirNewBased.querySelector("#totalHT-avant-remise");
     const TVAAvantRemiseInputNewBased = modalAvoirNewBased.querySelector("#TVA-avant-remise");
@@ -1102,10 +1197,10 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("myuid tr");
         console.log(myuid);
         console.log("num-fact tr");
-        console.log(parent.querySelector(".input.num-fact").value);
+        console.log(parent.querySelector(".input.num-avoir").value);
         sendData("/database/select/one_avoir_client_details.php", {
             uid: myuid,
-            "num-facture": parent.querySelector(".input.num-fact").value,
+            "num-avoir": parent.querySelector(".input.num-avoir").value,
         })
             .then((resp) => {
                 console.log("shwodetail :");
@@ -1122,9 +1217,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.log("result[1]");
                     console.log(result[1]);
 
-                    let inputsHeader = modalAvoirNewBased.querySelector("#commande-header")
+                    let inputsHeader = modalAvoirDetails.querySelector("#commande-header")
                     fillInputsDetailsHeaders(result[1], inputsHeader);
-                    fillInputsDetailsItems(result[1]["items"], modalFactureDetails.querySelector("#table-facture"));
+                    fillInputsDetailsItems(result[1]["items"], modalAvoirDetails.querySelector("#table-facture"), "view");
                 } else {
                     throw new Error(result);
                 }
@@ -1155,7 +1250,7 @@ document.addEventListener("DOMContentLoaded", () => {
         tableBody.addEventListener("click", (event) => {
             if (event.target.classList.contains("btn-details")) {
                 showAvoirDetails(event);
-                bsModalCommandeDetails.show();
+                bsModalAvoirDetails.show();
             }
         })
     } catch (error) { }

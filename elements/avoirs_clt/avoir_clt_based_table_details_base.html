@@ -18,36 +18,40 @@
 	</thead>
 	<tbody>
 		<tr id="row-001" class="item-commande-row border-bottom">
-			<input type="hidden" id="row-uid" class='input row-uid'>
-			<input type="hidden" id="stockable" class='input stockable'>
-			<input type="hidden" id="identifiable" class='input identifiable'>
-			<td class="ps-0 my-auto btn-group">
-				<input
-					list="item-list"
-					type="text"
-					id="item-uid"
-					class="form-control form-control-sm input item-id"
-					autocomplete="off"
-					placeholder="Choississez un article"
-				/>
-				<button
-					type="button"
-					class="btn btn-sm btn-success"
-					id="btn-new-item"
-				>
-					+
-				</button>
+			<input type="hidden" id="row-uid" class='input fillable row-uid'>
+			<input type="hidden" id="stockable" class='input fillable stockable'>
+			<input type="hidden" id="identifiable" class='input fillable identifiable'>
+			<input type="hidden" id="prix-variable" class='input fillable prix-variable'>
+			<td>
+				<div class=" my-auto " >
+					<div class="dropdown btn-group d-flex" role="group">
+						<button class="btn btn-sm input fillable item-uid btn-outline-secondary form-control form-control-sm dropdown-toggle right-corners w-100 text-start input" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="item-uid" >
+							Choississez un article
+						</button>
+		
+						<ul class="dropdown-menu " id="item-dropdown">
+							<li id="search-container">
+								<div class="px-2 pb-2">
+									<input  type="text" placeholder="Search" id="search-item" autocomplete="off" class="form-control form-control-sm input">               
+								</div>
+							</li>
+						</ul>
+						<button class="mytbn btn btn-sm btn-success text-center left-corners form-control-sm"type="button" id="btn-see-client">
+							see</button>
+				
+					</div>
+				</div>
 			</td>
 			<td>
 				<input
 					type="text"
 					disabled
 					id="item-name"
-					class=" form-control form-control-sm input item-name"
+					class=" form-control form-control-sm input fillable item-name"
 				/>
 			</td>
 			<td>
-				<textarea class="form-control form-control-sm num-serie input" id="libelle" rows="1"></textarea>
+				<textarea class="form-control form-control-sm item-libelle input fillable" id="item-libelle" rows="1"></textarea>
 
 				<!-- <input
 					type="text"
@@ -57,30 +61,37 @@
 
 			</td>
 			<td>
-
-				<input
-					type="text"
-					class=" form-control form-control-sm num-serie input"
-					id="num-serie"
-				/>
-
+				<div class=" my-auto " >
+					<div class="dropdown btn-group d-flex" role="group">
+						<button class="btn btn-sm input fillable form-control form-control-sm item-num-serie btn-outline-secondary dropdown-toggle w-100 text-start input" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="item-num-serie" disabled>
+							...
+						</button>
+						<ul class="dropdown-menu " id="num-serie-dropdown">
+							<li id="search-container">
+								<div class="px-2 pb-2">
+									<input  type="text" placeholder="Search" id="search-num-serie" autocomplete="off" class="form-control form-control-sm input">               
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
 			</td>
 			<td>
 				<input
 					type="text"
-					class="form-control form-control-sm item-pu input"
+					class="form-control form-control-sm item-pu input fillable"
 					disabled
-					id="item-pu"
+					id="item-pu" placeholder="0,00"
 				/>
 			</td>
 			<td class="input-group input-group-sm pull-end">
-					<input type="text" min="0" class=" form-control form-control-sm input item-quantity" id="item-quantity" /><span class="input-group-text initial-quantity justify-content-center" id="initial-quantity">0</span>
+					<input type="text" min="0" class=" form-control form-control-sm input fillable item-quantity" id="item-quantity" /><span class="input-group-text initial-quantity justify-content-center" id="initial-quantity">0</span>
 			</td>
 			<td>
 				<input
 					type="text"
 					disabled
-					class="form-control form-control-sm item-prix-total input"
+					class="form-control form-control-sm item-prix-total input fillable"
 					id="item-prix-total"
 					placeholder="0,00"
 				/>

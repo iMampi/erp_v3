@@ -191,7 +191,9 @@ class Queries
     static public $select_one_facture_client = "
         select * from view_all_factures_client_headers where num_facture=? 
         ";
-
+    static public $select_one_avoir_client = "
+        select * from view_all_avoirs_client_headers where num_avoir=? 
+        ";
     static public $select_all_clients = "
         call all_clients 
         ";
@@ -509,6 +511,9 @@ class Queries
                 break;
             case 'select_one_facture_client':
                 $this->query = self::$select_one_facture_client;
+                break;
+            case 'select_one_avoir_client':
+                $this->query = self::$select_one_avoir_client;
                 break;
             case 'select_one_employee':
                 $this->query = self::$select_one_employee;

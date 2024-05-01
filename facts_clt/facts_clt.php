@@ -22,6 +22,7 @@ is_logged();
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/autoNumeric.min.js"></script>
     <script src="/js/luxon.min.js"></script>
     <script src="/js/helpers.js"></script>
 
@@ -31,7 +32,7 @@ is_logged();
 
     <script src="/js/confirmation.js"></script>
     <script src="/js/toast.js"></script>
-    <script src="/js/fact-clt-main.js"></script>
+    <script src="/js/fact-clt-main.js" defer></script>
     <link rel="stylesheet" href="/style/mampi.css">
     <title>factures client</title>
 
@@ -119,10 +120,10 @@ is_logged();
             <div class="modal fade" id="modal-details" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <!-- <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button> -->
                 <!-- <div class="modal-dialog modal-dialog-scrollable modal-xl"> -->
-                <div class="modal-dialog modal-dialog-scrollable modal-lg ">
+                <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-xl-down ">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">détails affaire</h5>
+                            <h5 class="modal-title" id="staticBackdropLabel">détails facture</h5>
                         </div>
                         <div class="modal-body">
 
