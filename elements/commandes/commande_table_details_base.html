@@ -18,14 +18,14 @@
 	</thead>
 	<tbody>
 		<tr id="row-001" class="item-commande-row border-bottom">
-			<input type="hidden" id="row-uid" class='input row-uid'>
-			<input type="hidden" id="stockable" class='input stockable'>
-			<input type="hidden" id="identifiable" class='input identifiable'>
-			<input type="hidden" id="prix-variable" class='input prix-variable'>
+			<input type="hidden" id="row-uid" class='input fillable row-uid'>
+			<input type="hidden" id="stockable" class='input fillable stockable'>
+			<input type="hidden" id="identifiable" class='input fillable identifiable'>
+			<input type="hidden" id="prix-variable" class='input fillable prix-variable'>
 			<td>
 				<div class=" my-auto " >
 					<div class="dropdown btn-group d-flex" role="group">
-						<button class="btn btn-sm input item-uid btn-outline-secondary form-control form-control-sm dropdown-toggle right-corners w-100 text-start input" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="item-uid" >
+						<button class="btn btn-sm input fillable item-uid btn-outline-secondary form-control form-control-sm dropdown-toggle right-corners w-100 text-start input" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="item-uid" >
 							Choississez un article
 						</button>
 		
@@ -47,11 +47,11 @@
 					type="text"
 					disabled
 					id="item-name"
-					class=" form-control form-control-sm input item-name"
+					class=" form-control form-control-sm input fillable item-name"
 				/>
 			</td>
 			<td>
-				<textarea class="form-control form-control-sm libelle input" id="item-libelle" rows="1"></textarea>
+				<textarea class="form-control form-control-sm item-libelle input fillable" id="item-libelle" rows="1"></textarea>
 			</td>
 
 			<!-- <td>
@@ -65,7 +65,7 @@
 			<td>
 				<div class=" my-auto " >
 					<div class="dropdown btn-group d-flex" role="group">
-						<button class="btn btn-sm input form-control form-control-sm num-serie btn-outline-secondary dropdown-toggle w-100 text-start input" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="item-num-serie" disabled>
+						<button class="btn btn-sm input fillable form-control form-control-sm item-num-serie btn-outline-secondary dropdown-toggle w-100 text-start input" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="item-num-serie" disabled>
 							...
 						</button>
 						<ul class="dropdown-menu " id="num-serie-dropdown">
@@ -81,19 +81,19 @@
 			<td>
 				<input
 					type="text"
-					class="form-control number-text form-control-sm item-pu input"
+					class="form-control number-text form-control-sm item-pu input fillable"
 					disabled
 					id="item-pu" placeholder="0,00"
 				/>
 			</td>
 			<td>
-				<input type="text" class=" form-control form-control-sm input item-quantity" id="item-quantity" placeholder="0,00" />
+				<input type="text" class=" form-control form-control-sm input fillable item-quantity" id="item-quantity" placeholder="0,00" />
 			</td>
 			<td>
 				<input
 					type="text"
 					disabled
-					class="form-control form-control-sm item-prix-total input"
+					class="form-control form-control-sm item-prix-total input fillable"
 					id="item-prix-total"
 					placeholder="0,00"
 				/>

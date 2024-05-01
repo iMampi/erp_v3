@@ -83,8 +83,8 @@ const DTO_FILL_INPUT_HEADERS = {
     "remise-montant": "remise_montant",
     "totalHT-apres-remise": "total_ht_apres_remise",
     "totalTTC-apres-remise": "total_ttc_apres_remise",
-    "TVA-avant-remise": "TVA-avant-remise",
-    "TVA-apres-remise": "TVA-apres-remise"
+    "TVA-avant-remise": "TVA_avant_remise",
+    "TVA-apres-remise": "TVA_apres_remise"
 }
 
 const DTO_FILL_INPUT_ITEMS_ROWS = {
@@ -294,16 +294,15 @@ function inputNameToKey(inputName, ObjectData, DTO) {
 
     if (objectKeyArray.length == 1) {
         return objectKeyArray[0];
-    } else if (objectKeyArray.length == 0) {
-        return "NOT IN DTO"
     } else {
-        objectKeyArray.forEach(KeyArray => {
+        let result;
+        objectKeyArray.forEach((KeyArray) => {
             if (KeyArray in ObjectData) {
-                return KeyArray;
+                result = KeyArray
             }
         });
+        return result;
     }
-
 }
 
 function filterNumSerie(nodeListLI, term) {
@@ -417,8 +416,12 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
     console.log("responseJSON : ");
     console.log(responseJSON);
     valueObj = responseJSON["header"];
-    valueObj["TVA-avant-remise"] = valueObj["total_ht_avant_remise"];
-    valueObj["TVA-apres-remise"] = valueObj["total_ht_apres_remise"];
+    valueObj["TVA_avant_remise"] = AutoNumeric.format(parseFloat(valueObj["total_ttc_avant_remise"]) - parseFloat(valueObj["total_ht_avant_remise"]), defaultAutoNumericOptions);
+    console.log(" tva");
+    console.log(valueObj["TVA_avant_remise"]);
+    valueObj["TVA_apres_remise"] = AutoNumeric.format(valueObj["total_ttc_apres_remise"] - valueObj["total_ht_apres_remise"], defaultAutoNumericOptions);
+    console.log(valueObj["TVA_apres_remise"]);
+
     // let inputsElements = md.querySelectorAll(".input");
 
     let inputsElements =

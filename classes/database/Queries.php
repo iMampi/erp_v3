@@ -209,6 +209,15 @@ class Queries
         view_all_clients on view_all_clients.uid=commandes.client_uid 
         order by uid,date desc limit 100 ;
         ";
+    static public $select_all_commandes_positives_header_limit = "
+        select commandes.uid as uid, commandes.date as date, commandes.total_ttc_apres_remise as total_ttc_apres_remise, commandes.state as state,commandes.client_uid,
+        view_all_clients.noms as noms, view_all_clients.prenoms as prenoms, view_all_clients.nom_commercial as nom_commercial, view_all_clients.raison_sociale as raison_sociale
+        from commandes 
+        join
+        view_all_clients on view_all_clients.uid=commandes.client_uid
+        where  state <> 3
+        order by uid,date desc limit 100 ;
+        ";
     static public $select_all_factures_client_header_limit = "
         select num_facture,commande_uid, datetime, client_uid, noms, prenoms, nom_commercial, raison_sociale,total_ttc_apres_remise,payment
         from view_all_factures_client_headers 
@@ -481,6 +490,9 @@ class Queries
                 break;
             case 'select_all_commandes_header_limit':
                 $this->query = self::$select_all_commandes_header_limit;
+                break;
+            case 'select_all_commandes_positives_header_limit':
+                $this->query = self::$select_all_commandes_positives_header_limit;
                 break;
             case 'select_all_factures_client_header_limit':
                 $this->query = self::$select_all_factures_client_header_limit;

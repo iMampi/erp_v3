@@ -1118,3 +1118,15 @@ avoir-clt-main.js :
 rewrote  elements\avoirs_clt\avoir_clt_based_table_details_base.html
 
 rewrite all DTO to match the strucutre of DTO_FILL_INPUT_ITEM_ROW...
+-------------------------
+154_an:
+
+avoir-clt-main.js : 
+fixed tva display for details
+
+commande-main.js :
+fixed tva display for details
+fixed DTO for tva display
+
+created new query "select_all_commandes_positives_header_limit"
+from the problem that in the commande cycle, commandes for avoir were not displayed correctly becasue of the limitation for quantity "cannot be inferioir to zero"

@@ -120,8 +120,8 @@ const DTO_FILL_INPUT_HEADERS = {
     "remise-montant": "remise_montant",
     "totalHT-apres-remise": "total_ht_apres_remise",
     "totalTTC-apres-remise": "total_ttc_apres_remise",
-    "TVA-avant-remise": "TVA-avant-remise",
-    "TVA-apres-remise": "TVA-apres-remise"
+    "TVA-avant-remise": "TVA_avant_remise",
+    "TVA-apres-remise": "TVA_apres_remise"
 }
 
 const DTO_FILL_INPUT_ITEM_ROW = [
@@ -651,7 +651,8 @@ function addItem(tableFactureBody, mode) {
 function autonumericItemRow(tableFactureBody) {
     let currentRow = tableFactureBody.querySelector("#row-" + zeroLeftPadding(counterRowItem, 3, false));
     new AutoNumeric(currentRow.querySelector("#item-pu"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
-    new AutoNumeric(currentRow.querySelector("#item-quantity"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
+    // in avoir quantity can be negative
+    new AutoNumeric(currentRow.querySelector("#item-quantity"), [defaultAutoNumericOptions]);
     new AutoNumeric(currentRow.querySelector("#item-prix-total"), [defaultAutoNumericOptions, { maximumValue: 0 }]);
 }
 
@@ -721,7 +722,12 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
     console.log("responseJSON : ");
     console.log(responseJSON);
     valueObj = responseJSON["header"];
-    valueObj["TVA-apres-remise"] = roundToTwo(valueObj["total_ht_apres_remise"]);
+    // valueObj["TVA-avant-remise"] = roundToTwo(valueObj["total_ht_avant_remise"]);
+    valueObj["TVA_avant_remise"] = AutoNumeric.format(parseFloat(valueObj["total_ttc_avant_remise"]) - parseFloat(valueObj["total_ht_avant_remise"]), defaultAutoNumericOptions);
+    console.log("my tva");
+    console.log(valueObj["TVA_avant_remise"]);
+    // valueObj["TVA-apres-remise"] = roundToTwo(valueObj["total_ht_apres_remise"]);
+    valueObj["TVA_apres_remise"] = AutoNumeric.format(valueObj["total_ttc_apres_remise"] - valueObj["total_ht_apres_remise"], defaultAutoNumericOptions);
     valueObj["num_avoir"] = valueObj["num_avoir"].padStart(5, "0");
     // let inputsElements = md.querySelectorAll(".input");
 
@@ -775,19 +781,10 @@ function fillInputsDetailsItem(arrayData, rowNode, mode) {
     rowNode.querySelector(".input#item-num-serie").disabled = true;
     rowNode.querySelector(".input#item-pu").disabled = !Boolean(parseInt(arrayData["prix_variable"]));
 
-    // let idToKey = {
-    //     "initial-quantity": "remaining_quantity",
-    //     "row-uid": "uid",
-    //     "item-uid": "item_uid",
-    //     "item-name": "item_name",
-    //     "libelle": "description_item",
-    //     "num-serie": "num_serie",
-    //     "item-pu": "prix_unitaire",
-    //     "identifiable": "identifiable",
-    //     "stockable": "stockable",
-    // }
+
     if (mode === "view") {
-        idToKey["item-quantity"] = "remaining_quantity";
+        rowNode.querySelector(".input#item-quantity").disabled = true;
+
     } else {
         AutoNumeric.getAutoNumericElement(rowNode.querySelector(".input#item-quantity")).update({ maximumValue: arrayData["remaining_quantity"] });
         // rowNode.querySelector("#item-quantity").setAttribute("max", arrayData["remaining_quantity"]);
@@ -798,9 +795,10 @@ function fillInputsDetailsItem(arrayData, rowNode, mode) {
     for (let k = 0; k < inputs.length; k++) {
         let input = inputs[k];
         console.log(input.id);
-        if (["item-prix-total", "item-quantity"].includes(input.id)) {
+        if ((["item-prix-total", "item-quantity"].includes(input.id)) && (mode === "new")) {
             input.value = 0;
-        } else if (input.id === "item-pu") {
+        }
+        if (input.id === "item-pu") {
             // input.value = formatNumber(arrayData[idToKey[input.id]]);
             setInputValue(
                 input, arrayData[inputNameToKey(input.id, arrayData, DTO_FILL_INPUT_ITEM_ROW)]);
@@ -1190,6 +1188,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function showAvoirDetails(event) {
         // TODO : refactor
         console.log("called here");
+        // cache pertinent node
         let parent = event.target.parentNode.parentNode;
         console.log("parent");
         console.log(parent);
@@ -1198,11 +1197,14 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(myuid);
         console.log("num-fact tr");
         console.log(parent.querySelector(".input.num-avoir").value);
+
+        // ajax call to get data
         sendData("/database/select/one_avoir_client_details.php", {
             uid: myuid,
             "num-avoir": parent.querySelector(".input.num-avoir").value,
         })
             .then((resp) => {
+                // format response
                 console.log("shwodetail :");
                 console.log(resp);
                 return responseHandlerSelectOneCommande(resp);
@@ -1541,6 +1543,25 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     } catch (error) {
         console.log("error 356");
+    }
+
+    try {
+        modalAvoirDetails.addEventListener('input', (event) => {
+
+        })
+    } catch (error) {
+
+    }
+
+    try {
+        modalAvoirDetails.querySelector(".modal-footer").addEventListener('click', (event) => {
+            if (event.target.id === "btn-cancel") {
+                bsModalAvoirDetails.hide()
+
+            }
+        })
+    } catch (error) {
+
     }
 
     // autonumeric Listener
