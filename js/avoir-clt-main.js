@@ -351,14 +351,15 @@ function grabAvoirDataForm(modal) {
     });
 
     // console.log(tableBodyRows);
+    // TODO : to refactor using DTO
     tableBodyRows.forEach(row => {
         // console.log(row);
         let rowID = row.querySelector("#row-uid").value;
         let itemID = row.querySelector("#item-uid").value;
         let quantity = row.querySelector("#item-quantity").value;
         let prixUnitaire = row.querySelector("#item-pu").value;
-        let numSerie = row.querySelector("#num-serie").value;
-        let libelle = row.querySelector("#libelle").value;
+        let numSerie = row.querySelector("#item-num-serie").value;
+        let libelle = row.querySelector("#item-libelle").value;
         let identifiable = row.querySelector("#identifiable").value;
         let stockable = row.querySelector("#stockable").value;
         data["items"].push([rowID, itemID, quantity, prixUnitaire, numSerie, libelle, identifiable, stockable]);
@@ -649,10 +650,21 @@ function addItem(tableFactureBody, mode) {
 }
 
 function autonumericItemRow(tableFactureBody) {
+    let modal = tableFactureBody.parentNode.parentNode.parentNode.parentNode.parentNode;
+    console.log("se parrent node");
+    console.log(parent);
     let currentRow = tableFactureBody.querySelector("#row-" + zeroLeftPadding(counterRowItem, 3, false));
     new AutoNumeric(currentRow.querySelector("#item-pu"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
-    // in avoir quantity can be negative
-    new AutoNumeric(currentRow.querySelector("#item-quantity"), [defaultAutoNumericOptions]);
+
+    if (modal.id === "modal-details") {
+        new AutoNumeric(currentRow.querySelector("#item-quantity"), [defaultAutoNumericOptions]);
+    } else {
+        // for modal new
+        new AutoNumeric(currentRow.querySelector("#item-quantity"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
+    }
+
+
+
     new AutoNumeric(currentRow.querySelector("#item-prix-total"), [defaultAutoNumericOptions, { maximumValue: 0 }]);
 }
 
@@ -742,6 +754,7 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
     //TODO : use a DTO>> TO DUPLICATE EVERYWHERE ELSE
     for (let index = 0; index < inputsElements.length; index++) {
         let element = inputsElements[index];
+        console.log(element.id);
 
         if (element.id === "client") {
             if (valueObj["raison_sociale"]) {
@@ -797,8 +810,9 @@ function fillInputsDetailsItem(arrayData, rowNode, mode) {
         console.log(input.id);
         if ((["item-prix-total", "item-quantity"].includes(input.id)) && (mode === "new")) {
             input.value = 0;
-        }
-        if (input.id === "item-pu") {
+            // }else if(input.id === "item-quantity"){
+
+        } else if (input.id === "item-pu") {
             // input.value = formatNumber(arrayData[idToKey[input.id]]);
             setInputValue(
                 input, arrayData[inputNameToKey(input.id, arrayData, DTO_FILL_INPUT_ITEM_ROW)]);
@@ -806,7 +820,25 @@ function fillInputsDetailsItem(arrayData, rowNode, mode) {
             setInputValue(input,
                 arrayData[inputNameToKey(input.id, arrayData, DTO_FILL_INPUT_ITEM_ROW)]);
         }
+
+        // if ((["item-prix-total", "item-quantity"].includes(input.id)) && (mode === "new")) {
+        //     input.value = 0;
+        // }
     }
+
+}
+
+async function DefaultModalCommandInputs(modal, min_row = 1) {
+    //remove other item rows
+    let itemRows = modal.querySelectorAll(".item-commande-row");
+    removeItemRows(itemRows);
+    if (min_row != 0) {
+        await addItem(modal);
+        autonumericItemRow(modal);
+    };
+    defaultButtons(modal);
+    //clean an dput to deafult value
+    cleanNewForm(modal, modal.id === "modal-details");
 
 }
 
@@ -942,7 +974,8 @@ async function cleanNewForm(modal, disable = false) {
     console.log("cleaning");
     let dictSelectorObj = {
         'modal-avoir-new-based': InputsDisabledByDefaultAvoirBasedNewFormArray,
-        'modal-avoir-new-simple': InputsDisabledByDefaultAvoirBasedNewFormArray
+        'modal-avoir-new-simple': InputsDisabledByDefaultAvoirBasedNewFormArray,
+        'modal-details': InputsDisabledByDefaultAvoirBasedNewFormArray,
     }
     let array1 = dictSelectorObj[modal.id].concat(InputsDisabledByDefaultAvoirBasedRowItemArray);
 
@@ -1556,7 +1589,10 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
         modalAvoirDetails.querySelector(".modal-footer").addEventListener('click', (event) => {
             if (event.target.id === "btn-cancel") {
-                bsModalAvoirDetails.hide()
+                // no need for confirmation, you cant modify an avoir. they are definitive
+                DefaultModalCommandInputs(modalAvoirDetails, 0);
+                defaultButtons(modalAvoirDetails);
+                bsModalAvoirDetails.hide();
 
             }
         })

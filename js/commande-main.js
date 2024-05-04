@@ -443,7 +443,7 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
 
         } else {
             if (NUMBER_INPUT_HEADERS.includes(element.id)) {
-                element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
+                element.value = AutoNumeric.format(valueObj[DTO_FILL_INPUT_HEADERS[element.id]], defaultAutoNumericOptions);
             } else {
                 element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
             }
@@ -476,6 +476,9 @@ function disableInputsAndButtons(tableNode) {
 
 function formatCLientNameSearchResult(objectData) {
     let val = objectData.uid + " - ";
+    if ("client_uid" in objectData) {
+        val = objectData.client_uid + " - ";
+    }
     if (objectData.noms == "") {
         // console.log("client company");
 
@@ -500,18 +503,24 @@ function fillInputsDetailsItemRow(arrayData, rowNode, mode = "read") {
     console.log("arrayData");
     console.log(arrayData);
     let inputs = rowNode.querySelectorAll(".input");
-    rowNode.querySelector(".input#item-num-serie").disabled = !Boolean(parseInt(arrayData["identifiable"]));
+    rowNode.querySelector(".input#item-num-serie").disabled = true;
+
     rowNode.querySelector(".input#item-pu").disabled = !Boolean(parseInt(arrayData["prix_variable"]));
+
 
     if (mode === "new") {
         rowNode.querySelector(".input#item-quantity").value = "";
         rowNode.querySelector(".input#item-quantity").disabled = false;
+        rowNode.querySelector(".input#item-num-serie").disabled = !Boolean(parseInt(arrayData["identifiable"]));
 
         if (parseInt(arrayData["identifiable"])) {
             rowNode.querySelector(".input#item-quantity").value = 1;
             rowNode.querySelector(".input#item-quantity").disabled = true;
         }
-        AutoNumeric.getAutoNumericElement(rowNode.querySelector(".input#item-quantity")).update({ maximumValue: arrayData["stock"] });
+        if (arrayData["stockable"]) {
+            AutoNumeric.getAutoNumericElement(rowNode.querySelector(".input#item-quantity")).update({ maximumValue: arrayData["stock"] });
+        }
+
     }
 
 
@@ -1300,7 +1309,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     let inputsHeader = modalCommandeDetails.querySelector("#commande-header")
                     fillInputsDetailsHeaders(result[1], inputsHeader);
-                    fillInputsDetailsItems(result[1]["items"], modalCommandeDetails.querySelector("#table-facture"));
+                    fillInputsDetailsItems(result[1]["items"], modalCommandeDetails.querySelector("#table-facture"),);
                 } else {
                     throw new Error(result);
                 }

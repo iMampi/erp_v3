@@ -56,6 +56,16 @@ const DTO_FILL_INPUT_ITEM_ROW = [
     { inputId: "prix-variable", objectKey: ["prix-variable"] }
 ];
 
+const NUMBER_INPUT_HEADERS = [
+    "totalHT-avant-remise",
+    "totalTTC-avant-remise",
+    "remise-taux",
+    "remise-montant",
+    "totalHT-apres-remise",
+    "totalTTC-apres-remise",
+    "TVA-avant-remise",
+    "TVA-apres-remise"
+];
 
 const DTO_FILL_INPUT_HEADERS = {
     uid: "num_facture",
@@ -69,14 +79,14 @@ const DTO_FILL_INPUT_HEADERS = {
     "remise-montant": "remise_montant",
     "totalHT-apres-remise": "total_ht_apres_remise",
     "totalTTC-apres-remise": "total_ttc_apres_remise",
-    "TVA-avant-remise": "TVA-avant-remise",
-    "TVA-apres-remise": "TVA-apres-remise"
+    "TVA-avant-remise": "TVA_avant_remise",
+    "TVA-apres-remise": "TVA_apres_remise"
 }
 const DefaultValuesCommandeNewFormObj = {
     uid: "",
     state: 1,
     commercial: currentUser,
-    client: "",
+    client: "Choisissez un client",
     date: TODAY,
     "totalHT-avant-remise": "",
     "TVA-avant-remise": "",
@@ -122,18 +132,19 @@ const DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_DETAILS = {
 }
 
 const DefaultValuesCommandeRowItem = {
-    "item-uid": "",
+    "item-uid": "Choisissez un article",
     "item-name": "",
-    "num-serie": "",
     "item-pu": "",
     "item-quantity": "",
-    "item-prix-total": ""
+    "item-prix-total": "",
+
 };
 
 const InputsDisabledByDefaultCommandeRowItemArray = [
     "item-name",
     "item-pu",
-    "item-prix-total"
+    "item-prix-total",
+    "item-num-serie"
 ]
 
 var currentUser;
@@ -344,6 +355,9 @@ function makeCommandeFormEditabble(modal) {
 
 function formatCLientNameSearchResult(objectData) {
     let val = objectData.uid + " - ";
+    if ("client_uid" in objectData) {
+        val = objectData.client_uid + " - ";
+    }
     if (objectData.noms == "") {
         // console.log("client company");
 
@@ -510,8 +524,12 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
     console.log("responseJSON : ");
     console.log(responseJSON);
     valueObj = responseJSON["header"];
-    valueObj["TVA-avant-remise"] = valueObj["total_ht_avant_remise"];
-    valueObj["TVA-apres-remise"] = valueObj["total_ht_apres_remise"];
+    // valueObj["TVA-avant-remise"] = valueObj["total_ht_avant_remise"];
+    // valueObj["TVA-apres-remise"] = valueObj["total_ht_apres_remise"];
+
+    valueObj["TVA_avant_remise"] = AutoNumeric.format(parseFloat(valueObj["total_ttc_avant_remise"]) - parseFloat(valueObj["total_ht_avant_remise"]), defaultAutoNumericOptions);
+    valueObj["TVA_apres_remise"] = AutoNumeric.format(valueObj["total_ttc_apres_remise"] - valueObj["total_ht_apres_remise"], defaultAutoNumericOptions);
+
     // let inputsElements = md.querySelectorAll(".input");
 
     let inputsElements =
@@ -533,7 +551,7 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
 
         } else {
             if (NUMBER_INPUT_HEADERS.includes(element.id)) {
-                element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
+                element.value = AutoNumeric.format(valueObj[DTO_FILL_INPUT_HEADERS[element.id]], defaultAutoNumericOptions);
             } else {
                 element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
             }
@@ -557,7 +575,8 @@ async function addItemRowsLoop(numberOfRows, modalDetailsItemsTable) {
 
 function disableInputsAndButtons(tableNode) {
     console.log('disable this shit');
-    let nodesToDisable = tableNode.querySelectorAll(".input, .btn");
+    let nodesToDisable = tableNode.querySelectorAll(".input.fillable");
+    // let nodesToDisable = tableNode.querySelectorAll(".input, .btn");
 
     for (let index = 0; index < nodesToDisable.length; index++) {
         nodesToDisable[index].disabled = true;
@@ -565,14 +584,18 @@ function disableInputsAndButtons(tableNode) {
 }
 
 
-function fillInputsDetailsItemRow(arrayData, rowNode, mode = "read") {
-    if (!["read", "new"].includes(mode)) {
-        throw new Error("mode must be read or new.");
+function fillInputsDetailsItemRow(arrayData, rowNode, mode = "view") {
+    if (!["view", "new"].includes(mode)) {
+        throw new Error("mode must be view or new.");
     }
     console.log("arrayData");
     console.log(arrayData);
     let inputs = rowNode.querySelectorAll(".input");
     rowNode.querySelector(".input#item-num-serie").disabled = !Boolean(parseInt(arrayData["identifiable"]));
+    if (mode === "view") {
+        rowNode.querySelector(".input#item-num-serie").disabled = true;
+    }
+
     rowNode.querySelector(".input#item-pu").disabled = !Boolean(parseInt(arrayData["prix_variable"]));
 
     if (mode === "new") {
@@ -742,9 +765,9 @@ function addItem(tableFactureBody) {
     })
 }
 
-function fillInputsDetailsItemRow(arrayData, rowNode, mode = "read") {
-    if (!["read", "new"].includes(mode)) {
-        throw new Error("mode must be read or new.");
+function fillInputsDetailsItemRow(arrayData, rowNode, mode = "view") {
+    if (!["view", "new"].includes(mode)) {
+        throw new Error("mode must be view or new.");
     }
     console.log("arrayData");
     console.log(arrayData);
@@ -761,7 +784,9 @@ function fillInputsDetailsItemRow(arrayData, rowNode, mode = "read") {
             rowNode.querySelector(".input#item-quantity").disabled = true;
         }
 
-        AutoNumeric.getAutoNumericElement(rowNode.querySelector(".input#item-quantity")).update({ maximumValue: arrayData["stock"] });
+        if (parseInt(arrayData["stockable"])) {
+            AutoNumeric.getAutoNumericElement(rowNode.querySelector(".input#item-quantity")).update({ maximumValue: arrayData["stock"] });
+        }
     }
 
 
@@ -827,7 +852,7 @@ function cleanNewForm(modal, disable = false) {
                 return false;
             }
         }
-        input.value = myValue;
+        setInputValue(input, myValue);
     });
 }
 
@@ -837,6 +862,7 @@ async function DefaultModalCommandInputs(modal, min_row = 1) {
     removeItemRows(itemRows);
     if (min_row != 0) {
         await addItem(modal);
+        autonumericItemRow(modal);
     };
     defaultButtons(modal);
     //clean an dput to deafult value
@@ -1175,7 +1201,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     let inputsHeader = modalFactureDetails.querySelector("#commande-header")
                     fillInputsDetailsHeaders(result[1], inputsHeader);
-                    fillInputsDetailsItems(result[1]["items"], modalFactureDetails.querySelector("#table-facture"));
+                    fillInputsDetailsItems(result[1]["items"], modalFactureDetails.querySelector("#table-facture"), "view");
                 } else {
                     throw new Error(result);
                 }

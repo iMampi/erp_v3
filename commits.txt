@@ -1130,3 +1130,31 @@ fixed DTO for tva display
 
 created new query "select_all_commandes_positives_header_limit"
 from the problem that in the commande cycle, commandes for avoir were not displayed correctly becasue of the limitation for quantity "cannot be inferioir to zero"
+-------------------------
+155_an:
+on command  cycle :
+formatCLientNameSearchResult(ObjectData) : rewrote the management of ObjectData . because different for searchClient and ShowCommandDetails
+
+on avoir cycle :
+fillInputsDetailsItem() : refactored the last part. since last commit, the input #item-quantity was being filled when created.
+
+autonumericItemRow(): change behavior on #item-quantity if new or view. condition is based on modal name.
+
+fixed behavior for avoir without any line to return anymore, the input #item-quantity
+
+implemented DefaultModalCommandInputs()
+
+fillInputsDetailsHeaders() : autonumeric  if (NUMBER_INPUT_HEADERS.includes(element.id)) 
+
+
+on facture client cycle:
+added  "item-num-serie" to const InputsDisabledByDefaultCommandeRowItemArray
+filled DefaultValuesCommandeNewFormObj for "client"
+updated autonumericItemRow(modal); so i should really consider centralizing all the commun funcitons
+fixed formatCLientNameSearchResult() as in the command cycle comment (155_an)
+
+fillInputsDetailsHeaders() : autonumeric  if (NUMBER_INPUT_HEADERS.includes(element.id)) 
+
+cycle facture client...
+fix this save for later...
+custom message "voir dans commande. ici, il n'y a que des factures validé ici"...
