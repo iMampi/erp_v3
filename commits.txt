@@ -1158,3 +1158,14 @@ fillInputsDetailsHeaders() : autonumeric  if (NUMBER_INPUT_HEADERS.includes(elem
 cycle facture client...
 fix this save for later...
 custom message "voir dans commande. ici, il n'y a que des factures validé ici"...
+-------------------------
+156_an:
+
+cycle facture_client:
+savegarde pour plus tard > ok.
+validation facture > ok.
+saveCreationObj > added the "no" key and process. changed the html base used when calling generateRowTable().
+validateCreationObj> added the "no" key and process. remove the generateRowTable() calling.
+generateRowTable() > updated the keys coz of the update of th ebase html mentionned above. add the part for formatting number. hard coded default fill for #payment.payment.input.
+
+fix the initial generation of row in the tableau for facture_client...

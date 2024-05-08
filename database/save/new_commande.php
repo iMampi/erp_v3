@@ -107,7 +107,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
                 if ($array_values[2] == 0) {
                     continue;
                 }
-                $ItemRowObj = new NewCommandeItem([...$array_values, $new_commande_uid]);
+                $ItemRowObj = new NewCommandeItem([...$array_values, $new_commande_uid, null]);
                 $Query2 = new Queries("save_new_commande_row");
                 $Binding = new Bindings($ItemRowObj);
                 $Statement = new StandardPreparedStatement($Query2, $Binding);
@@ -189,9 +189,11 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
 
 
     //just returning the command uid in the end
-    if (\str_contains($_SERVER["HTTP_REFERER"], "facts_clt.php")) {
+    if (\str_contains($_SERVER["HTTP_REFERER"], "facts_clt.php") && (intval($data["header"]["state"]) === 2)) {
+
         print(json_encode($temp_array_result_fact));
-    } else if (\str_contains($_SERVER["HTTP_REFERER"], "commandes.php")) {
+        // } else if (\str_contains($_SERVER["HTTP_REFERER"], "commandes.php")) {
+    } else if ((intval( $data["header"]["state"]) === 1) || (\str_contains($_SERVER["HTTP_REFERER"], "commandes.php"))) {
 
         print(json_encode($temp_array_result));
     }

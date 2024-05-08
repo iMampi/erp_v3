@@ -517,9 +517,7 @@ function fillInputsDetailsItemRow(arrayData, rowNode, mode = "read") {
             rowNode.querySelector(".input#item-quantity").value = 1;
             rowNode.querySelector(".input#item-quantity").disabled = true;
         }
-        if (arrayData["stockable"]) {
-            AutoNumeric.getAutoNumericElement(rowNode.querySelector(".input#item-quantity")).update({ maximumValue: arrayData["stock"] });
-        }
+
 
     }
 
@@ -1192,6 +1190,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
             bsModalConfirmation.hide();
+        },
+        no: () => {
+            bsModalConfirmation.hide();
         }
     }
 
@@ -1208,7 +1209,7 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         no: () => {
             bsModalConfirmation.hide();
-        },
+        }
     };
 
     const validateCommandeDetailsObj = {

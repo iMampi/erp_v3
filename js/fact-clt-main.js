@@ -424,8 +424,11 @@ function grabCommandeDataForm(modal) {
         let itemID = row.querySelector("#item-uid").value;
         let quantity = row.querySelector("#item-quantity").value;
         let prixUnitaire = row.querySelector("#item-pu").value;
-        let numSerie = row.querySelector("#num-serie").value;
-        data["items"].push([rowID, itemID, quantity, prixUnitaire, numSerie]);
+        let numSerie = row.querySelector("#item-num-serie").value;
+        let libelle = row.querySelector("#item-libelle").value;
+        let identifiable = row.querySelector("#identifiable").value;
+        let stockable = row.querySelector("#stockable").value;
+        data["items"].push([rowID, itemID, quantity, prixUnitaire, numSerie, libelle, identifiable, stockable]);
     });
     return data;
 }
@@ -434,16 +437,20 @@ function grabCommandeDataForm(modal) {
 function generateRowTable(nodeModel, DataObj) {
     //MARQUE PAGE
     console.log(DataObj);
+
     let newNode = nodeModel.cloneNode(true);
-    DataObj["num-avoir"] = zeroLeftPadding(DataObj["num-avoir"], 5)
-    newNode.id = "row-" + DataObj["num-avoir"];
-    // newNode.querySelector("input.uid").value = DataObj["uid"];
+    DataObj["num-facture"] = zeroLeftPadding(DataObj["num-facture"], 5)
+    newNode.id = "row-" + DataObj["num-facture"];
+
     // TODO : use a dto or something
+    newNode.querySelector(".num-fact.input").value = DataObj["num-facture"];
     newNode.querySelector("input.date").value = DataObj["date"];
     newNode.querySelector(".client.input").value = DataObj["client"];
-    //TODO : format the numbers
-    newNode.querySelector(".total.input").value = DataObj["totalTTC-apres-remise"];
-    newNode.querySelector(".uid.input").value = DataObj["uid"];
+
+    newNode.querySelector(".totalTTC.input").value = AutoNumeric.format(parseFloat(DataObj["totalTTC-apres-remise"]));
+
+    newNode.querySelector(".payment.input").value = DataObj["payment"] || "impayé";
+
     return newNode;
 }
 
@@ -606,7 +613,9 @@ function fillInputsDetailsItemRow(arrayData, rowNode, mode = "view") {
             rowNode.querySelector(".input#item-quantity").value = 1;
             rowNode.querySelector(".input#item-quantity").disabled = true;
         }
-        AutoNumeric.getAutoNumericElement(rowNode.querySelector(".input#item-quantity")).update({ maximumValue: arrayData["stock"] });
+        if (parseInt(arrayData["stockable"])) {
+            AutoNumeric.getAutoNumericElement(rowNode.querySelector(".input#item-quantity")).update({ maximumValue: arrayData["stock"] });
+        }
     }
 
 
@@ -1043,50 +1052,34 @@ document.addEventListener("DOMContentLoaded", () => {
             let dataModalCommandeNew = grabCommandeDataForm(modalCommandeNew);
             console.log("dataModalCommandeNew");
             console.log(dataModalCommandeNew);
+            let final_output;
             saveCommandeNew(dataModalCommandeNew).then((result) => {
                 if (result[0]) {
                     // insert uid of newly created commande
-                    dataModalCommandeNew["header"]["uid"] = result[1][0];
+                    dataModalCommandeNew["header"]["num-facture"] = result[1][0];
                     dataModalCommandeNew["header"]["state"] = 1;
-                    // console.log(dataObj);
-                    // TODO : cache html
-                    fetch(
-                        "/elements/commandes/liste_commandes_table_001_base.html"
-                    )
-                        .then((response) => {
-                            let tt = response.text();
-                            console.log("tt");
-                            console.log(tt);
-                            return tt;
-                        })
-                        .then((txt) => {
-                            // TODO : abstract this process
-                            let doc = new DOMParser().parseFromString(
-                                txt,
-                                "text/html"
-                            );
-                            let trModel = doc.querySelector("#row-001");
+                    // in facture client, we dont create row if it is not creating a facture.
 
-                            tableBody.append(
-                                generateRowTable(trModel, dataModalCommandeNew["header"])
-                            );
-                            bsModalCommandeNew.hide();
-                            DefaultModalCommandInputs(modalCommandeNew);
-                            console.log("yes saving called");
-                            return false;
-                        });
                     bsModalCommandeNew.hide();
+                    DefaultModalCommandInputs(modalCommandeNew);
+                    console.log("yes saving called");
+                    final_output = false;
 
                 } else {
                     //TODO : show error
 
                     // TODO : dont forget to put me in the correct place. here is just for test
                     // identifyInvalidType(result[1], modalCommandeNew);
-                    return true;
+                    final_output = true;
                 }
-            });
-            bsModalCommandeNew.hide();
-        }
+            })
+            bsModalConfirmation.hide();
+            console.log("flag hh");
+            return final_output;
+        },
+        no: () => {
+            bsModalConfirmation.hide();
+        },
     }
 
     const validateCreationObj = {
@@ -1110,14 +1103,16 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(dataModalCommandeNew);
             saveCommandeNew(dataModalCommandeNew).then((result) => {
                 if (result[0]) {
-                    // insert uid of newly created client
-                    dataModalCommandeNew["header"]["uid"] = result[1][0];
-                    // dataModalCommandeNew["header"]["state"] = 1;
+                    // insert uid of newly created facture client
+                    console.log("result va");
+                    console.log(result);
+                    dataModalCommandeNew["header"]["num-facture"] = result[1][0];
+                    dataModalCommandeNew["header"]["state"] = 1;
                     // console.log(dataObj);
                     // TODO : cache html
 
                     fetch(
-                        "/elements/commandes/liste_commandes_table_001_base.html"
+                        "/elements/facts_clt/liste_facts_clt_table_001_base.html"
                     )
                         .then((response) => {
                             let tt = response.text();
@@ -1149,6 +1144,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     return true;
                 }
             });
+            bsModalConfirmation.hide();
+        },
+        no: () => {
             bsModalConfirmation.hide();
         }
     }
