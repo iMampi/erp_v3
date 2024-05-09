@@ -68,8 +68,9 @@ const NUMBER_INPUT_HEADERS = [
 ];
 
 const DTO_FILL_INPUT_HEADERS = {
-    uid: "num_facture",
-    date: "date",
+    "num-fact": "num_facture",
+    // date: "date",
+    date: "datetime",
     note: "libelle",
     payment: "payment",
     magasin: "magasin_uid",
@@ -447,7 +448,7 @@ function generateRowTable(nodeModel, DataObj) {
     newNode.querySelector("input.date").value = DataObj["date"];
     newNode.querySelector(".client.input").value = DataObj["client"];
 
-    newNode.querySelector(".totalTTC.input").value = AutoNumeric.format(parseFloat(DataObj["totalTTC-apres-remise"]));
+    newNode.querySelector(".totalTTC.input").value = AutoNumeric.format(parseFloat(DataObj["totalTTC-apres-remise"]), defaultAutoNumericOptions);
 
     newNode.querySelector(".payment.input").value = DataObj["payment"] || "impayé";
 
@@ -560,7 +561,14 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
             if (NUMBER_INPUT_HEADERS.includes(element.id)) {
                 element.value = AutoNumeric.format(valueObj[DTO_FILL_INPUT_HEADERS[element.id]], defaultAutoNumericOptions);
             } else {
-                element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
+                if (element.id === "date") {
+                    element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]].substring(0, 10)
+                } else {
+
+                    element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
+                }
+
+
             }
         }
 
@@ -574,7 +582,7 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
 async function addItemRowsLoop(numberOfRows, modalDetailsItemsTable) {
     for (let i = 0; i < numberOfRows; ++i) {
         console.log("counterRowItem : " + counterRowItem);
-        await addItem(modalDetailsItemsTable);
+        await addItem(modalDetailsItemsTable, 'view');
         autonumericItemRow(modalDetailsItemsTable);
     }
     return new Promise((resolve, reject) => resolve(true));
@@ -591,58 +599,6 @@ function disableInputsAndButtons(tableNode) {
 }
 
 
-function fillInputsDetailsItemRow(arrayData, rowNode, mode = "view") {
-    if (!["view", "new"].includes(mode)) {
-        throw new Error("mode must be view or new.");
-    }
-    console.log("arrayData");
-    console.log(arrayData);
-    let inputs = rowNode.querySelectorAll(".input");
-    rowNode.querySelector(".input#item-num-serie").disabled = !Boolean(parseInt(arrayData["identifiable"]));
-    if (mode === "view") {
-        rowNode.querySelector(".input#item-num-serie").disabled = true;
-    }
-
-    rowNode.querySelector(".input#item-pu").disabled = !Boolean(parseInt(arrayData["prix_variable"]));
-
-    if (mode === "new") {
-        rowNode.querySelector(".input#item-quantity").value = "";
-        rowNode.querySelector(".input#item-quantity").disabled = false;
-
-        if (parseInt(arrayData["identifiable"])) {
-            rowNode.querySelector(".input#item-quantity").value = 1;
-            rowNode.querySelector(".input#item-quantity").disabled = true;
-        }
-        if (parseInt(arrayData["stockable"])) {
-            AutoNumeric.getAutoNumericElement(rowNode.querySelector(".input#item-quantity")).update({ maximumValue: arrayData["stock"] });
-        }
-    }
-
-
-    for (let k = 0; k < inputs.length; k++) {
-        let input = inputs[k];
-        try {
-            let objectKeyArray = DTO_FILL_INPUT_ITEM_ROW.find((entrie) => entrie.inputId === input.id).objectKey;
-            objectKeyArray.some(function (value) {
-                let val = arrayData[value];
-                console.log(input.id + " - " + val);
-                if (val !== undefined) {
-                    if (NUMBER_INPUT_ITEM_ROW.includes(input.id)) {
-                        setInputValue(input, parseFloat(val));
-                    } else {
-                        setInputValue(input, val);
-                    }
-                    return true;
-                }
-                return false;
-            });
-        } catch (err) {
-            console.log(" error 564");
-            continue;
-        }
-
-    }
-}
 
 async function fillInputsDetailsItems(itemsArray, modalDetailsItemsTable) {
 
@@ -718,10 +674,15 @@ function removeItemRows(nodeList) {
     return true;
 }
 
-function addItem(tableFactureBody) {
+function addItem(tableFactureBody, mode = "new") {
+    if (!["view", "new"].includes(mode)) {
+        throw new Error("mode must be view or new.");
+    }
     return new Promise((resolve, reject) => {
         console.log("addding item");
         if (myCache["itemRow"]) {
+            // check if cached 
+
             console.log("from cahce");
             counterRowItem++;
             let doc = new DOMParser().parseFromString(
@@ -731,14 +692,16 @@ function addItem(tableFactureBody) {
             let trModel = doc.querySelector("#row-001");
             console.log("trModel");
             console.log(trModel);
-
+            if (mode === "view") {
+                trModel.querySelector("#btn-del-item").disabled = true;
+            }
             tableFactureBody.querySelector('tbody').append(
                 generateRowItem(trModel, ["", "", "", "", "", ""])
             );
             resolve(true);
 
         } else {
-
+            // fetch base
             fetch("/elements/commandes/commande_table_details_base.html")
                 .then((response) =>
                     response.text()
@@ -759,6 +722,10 @@ function addItem(tableFactureBody) {
                     let trModel = doc.querySelector("#row-001");
                     console.log("trModel");
                     console.log(trModel);
+
+                    if (mode === "view") {
+                        trModel.querySelector("#btn-del-item").disabled = true;
+                    }
 
                     tableFactureBody.querySelector('tbody').append(
                         generateRowItem(trModel, ["", "", "", "", "", ""])
@@ -808,7 +775,7 @@ function fillInputsDetailsItemRow(arrayData, rowNode, mode = "view") {
                 console.log(input.id + " - " + val);
                 if (val !== undefined) {
                     if (NUMBER_INPUT_ITEM_ROW.includes(input.id)) {
-                        setInputValue(input, parseFloat(val));
+                        setInputValue(input, AutoNumeric.format(parseFloat(val), defaultAutoNumericOptions));
                     } else {
                         setInputValue(input, val);
                     }
@@ -1160,6 +1127,8 @@ document.addEventListener("DOMContentLoaded", () => {
     async function showCommandeDetails(event) {
         // TODO : refactor
         console.log("called here");
+
+        // caching data
         let parent = event.target.parentNode.parentNode;
         console.log("parent");
         console.log(parent);
@@ -1168,6 +1137,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(myuid);
         console.log("num-fact tr");
         console.log(parent.querySelector(".input.num-fact").value);
+
         sendData("/database/select/one_facture_client_details.php", {
             uid: myuid,
             "num-facture": parent.querySelector(".input.num-fact").value,
@@ -1339,8 +1309,10 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
         divBtns.addEventListener('click', (event) => {
             if (event.target.id == "btn-main-new") {
-
                 bsModalCommandeNew.show();
+                modalCommandeNew.querySelector("#btn-save-new").disabled = true;
+                modalCommandeNew.querySelector("#btn-validate-new").disabled = true;
+
             } else if (event.target.id == "btn-main-filter") {
                 console.log("filter me");
                 bsModalFilter.show();
@@ -1418,6 +1390,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
                 updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
                 updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+
+                if (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) > 0) {
+                    modalCommandeNew.querySelector("#btn-save-new").disabled = false;
+                    modalCommandeNew.querySelector("#btn-validate-new").disabled = false;
+                } else {
+                    modalCommandeNew.querySelector("#btn-save-new").disabled = true;
+                    modalCommandeNew.querySelector("#btn-validate-new").disabled = true;
+                }
             } else if (event.target.id == 'remise-taux') {
                 tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, 1);
             } else if (event.target.id == 'remise-montant') {
@@ -1480,6 +1460,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
 
                     updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+
+                    if (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) > 0) {
+                        modalCommandeNew.querySelector("#btn-save-new").disabled = false;
+                        modalCommandeNew.querySelector("#btn-validate-new").disabled = false;
+                    } else {
+                        modalCommandeNew.querySelector("#btn-save-new").disabled = true;
+                        modalCommandeNew.querySelector("#btn-validate-new").disabled = true;
+                    }
+
                 } else if (dropdownNode.id == "num-serie-dropdown") {
                     setInputValue(trNOde.querySelector("#item-num-serie"), event.target.textContent);
 
@@ -1487,6 +1476,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
                     updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
                     updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+
+                    if (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) > 0) {
+                        modalCommandeNew.querySelector("#btn-save-new").disabled = false;
+                        modalCommandeNew.querySelector("#btn-validate-new").disabled = false;
+                    } else {
+                        modalCommandeNew.querySelector("#btn-save-new").disabled = true;
+                        modalCommandeNew.querySelector("#btn-validate-new").disabled = true;
+                    }
                 }
 
             } else if (event.target.id === "item-uid") {
@@ -1501,6 +1498,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("remove");
                 updateTotalPrice(montantHTAvantRemiseInputNew, modalCommandeNew.querySelectorAll("#item-prix-total"))
                 updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+
+                if (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) > 0) {
+                    modalCommandeNew.querySelector("#btn-save-new").disabled = false;
+                    modalCommandeNew.querySelector("#btn-validate-new").disabled = false;
+                } else {
+                    modalCommandeNew.querySelector("#btn-save-new").disabled = true;
+                    modalCommandeNew.querySelector("#btn-validate-new").disabled = true;
+                }
             }
         }, true)
     } catch (error) {
@@ -1654,4 +1659,12 @@ document.addEventListener("DOMContentLoaded", () => {
     new AutoNumeric.multiple(".remise-montant", [defaultAutoNumericOptions, { minimumValue: 0 }]);
     new AutoNumeric.multiple(".item-pu", [defaultAutoNumericOptions, { minimumValue: 0 }]);
     new AutoNumeric.multiple(".item-quantity", [defaultAutoNumericOptions, { minimumValue: 0 }]);
+    new AutoNumeric.multiple(".totalHT-avant-remise", [defaultAutoNumericOptions, { minimumValue: 0 }])
+    new AutoNumeric.multiple(".TVA-avant-remise", [defaultAutoNumericOptions, { minimumValue: 0 }])
+    new AutoNumeric.multiple(".totalTTC-avant-remise", [defaultAutoNumericOptions, { minimumValue: 0 }])
+    new AutoNumeric.multiple(".totalHT-apres-remise", [defaultAutoNumericOptions, { minimumValue: 0 }])
+    new AutoNumeric.multiple(".TVA-apres-remise", [defaultAutoNumericOptions, { minimumValue: 0 }])
+    new AutoNumeric.multiple(".totalTTC-apres-remise", [defaultAutoNumericOptions, { minimumValue: 0 }])
+
+
 })

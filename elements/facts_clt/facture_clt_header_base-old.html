@@ -2,11 +2,11 @@
 	<div class="row">
 		<span class="col-form-label col-2">numéro facture</span>
 		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" disabled/>
+			<input type="text" class="form-control form-control-sm input fillable num-fact" id="num-fact" disabled/>
 		</div>
 		<span class="col-form-label col-2">état</span>
 		<div class="col-2 my-auto">
-			<select disabled class="nd input form-control form-control-sm">
+			<select disabled class="nd input form-control form-control-sm" id="nd">
 				<option value="0">impayée</option>
 				<option value="1">payée</option>
 			</select>
@@ -14,7 +14,7 @@
 		<!-- TODO:delete dummy options -->
 		<span class="col-form-label col-2">commercial</span>
 		<div class="col-2 my-auto">
-			<select disabled class="nd input form-control form-control-sm">
+			<select disabled class="commercial input form-control form-control-sm" id="commercial">
 				<option value="0">mampi</option>
 				<option value="1">sophie</option>
 			</select>
@@ -60,7 +60,7 @@
 	<div class="row my-auto">
 		<span class="col-form-label col-2">date</span>
 		<div class="col-2 my-auto">
-			<input type="date" class="form-control form-control-sm" />
+			<input type="date" class="form-control form-control-sm date input fillable" id="date"/>
 		</div>
 		<span class="col-form-label col-2">affaire</span>
 		<div class="col-2 my-auto">

@@ -16,6 +16,7 @@ $dom = new DOMDocument();
 //to be able to use new html5 tag with DOMDocument
 libxml_use_internal_errors(true);
 $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
+// cache the base row
 $tbody_ = $dom->getElementsByTagName("tbody")[0];
 $tr_model = $dom->getElementById("row-001");
 $tbody_->removeChild($tr_model);
@@ -45,7 +46,7 @@ if (can_visit($cycle_facture_client)) {
                 $el_input->setAttribute("value", date_format(date_create($el["datetime"]), "Y-m-d"));
             } elseif (in_array("num-fact", $classes_array)) {
                 $el_input->setAttribute("value", $el["num_facture"]);
-            } elseif (in_array("total", $classes_array)) {
+            } elseif (in_array("totalTTC", $classes_array)) {
                 $el_input->setAttribute("value", number_format($el["total_ttc_apres_remise"], 2, ",", " "));
             } elseif (in_array("commande-uid", $classes_array)) {
                 $el_input->setAttribute("value", $el["commande_uid"]);

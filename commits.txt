@@ -1169,3 +1169,24 @@ validateCreationObj> added the "no" key and process. remove the generateRowTable
 generateRowTable() > updated the keys coz of the update of th ebase html mentionned above. add the part for formatting number. hard coded default fill for #payment.payment.input.
 
 fix the initial generation of row in the tableau for facture_client...
+-------------------------
+157_an:
+fix the initial generation of row in the tableau for facture_client... >> fixed
+
+cycle facture... implemented the follwing :
+"#btn-save-new" and "#btn-validate-new" are disabled if the totalTTCapresremise is not superior to zero.
+it was hard coded. need to refactor.
+caling the process after every call of updateAllHeaderPrices().
+ and updated the process of clicking on "#btn-main-new" : disabling "#btn-save-new" and "#btn-validate-new"
+
+fixed the code of filling the inputs headers not dealing correctly with the date.
+
+updated DTO_FILL_INPUT cow of "datetime" key from DB.
+
+
+the imput .remise-taux must be limited. a maximum must be set. > do constant update of its autonumeric > right now, we can type whaever amount we want...
+
+
+
+fix the html base for facture header...
+done for the details part. do the new modal part now...
