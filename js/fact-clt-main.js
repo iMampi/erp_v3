@@ -559,6 +559,9 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
 
         } else {
             if (NUMBER_INPUT_HEADERS.includes(element.id)) {
+                if (element.id === "remise-montant") {
+                    AutoNumeric.getAutoNumericElement(element).update({ maximumValue: AutoNumeric.unformat(valueObj["total_ttc_avant_remise"], defaultAutoNumericOptions) });
+                }
                 element.value = AutoNumeric.format(valueObj[DTO_FILL_INPUT_HEADERS[element.id]], defaultAutoNumericOptions);
             } else {
                 if (element.id === "date") {
@@ -800,7 +803,7 @@ function fillClientButton(objectData, BtnNode) {
 function defaultButtons(modal) {
     const refObj = {
         "modal-details": DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_DETAILS,
-        'modal-commande-new': DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_NEW
+        'modal-main-new': DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_NEW
     };
     let btns = modal.querySelectorAll(".btn");
     btns.forEach(myBtn => {
@@ -919,7 +922,12 @@ function TVAHandler(discountedMontantInput, TVAInput, TotalTTCInput, mode) {
 function updateAllHeaderPrices(montantHTAvantRemiseInput, TVAAvantRemiseInput, montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, montantHTApresRemiseInput, TVAApresRemiseInput, montantTTCApresRemiseInput) {
 
     TVAHandler(montantHTAvantRemiseInput, TVAAvantRemiseInput, montantTTCAvantRemiseInput, 1);
-    tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, 1)
+
+    AutoNumeric.getAutoNumericElement(remiseMontantInput).update({ maximumValue: AutoNumeric.unformat(montantTTCAvantRemiseInput.value, defaultAutoNumericOptions) });
+
+
+
+    tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, 1);
     totalTTCDiscountedHandler(montantTTCAvantRemiseInput, montantTTCApresRemiseInput, remiseMontantInput);
     TVAHandler(montantHTApresRemiseInput, TVAApresRemiseInput, montantTTCApresRemiseInput, 2);
 }
@@ -928,7 +936,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //CACHING ELEMENTS
     const divBtns = document.getElementById("div-btns");
     const tableBody = document.getElementById("ze-tbody");
-    const tableFacture = document.getElementById("modal-commande-new").querySelector("#table-facture");
+    const tableFacture = document.getElementById("modal-main-new").querySelector("#table-facture");
     tableFacture
     const itemDataList = document.getElementById("item-list");
     const clientDataList = document.getElementById("client-list");
@@ -946,7 +954,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
     ////modal new
-    const modalCommandeNew = document.getElementById("modal-commande-new");
+    const modalCommandeNew = document.getElementById("modal-main-new");
     const bsModalCommandeNew = new bootstrap.Modal(modalCommandeNew, {
         backdrop: "static",
         keyboard: false,
@@ -1656,7 +1664,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // autonumeric Listener
     new AutoNumeric.multiple(".remise-taux", [defaultAutoNumericOptions, { minimumValue: 0, maximumValue: 100 }]);
-    new AutoNumeric.multiple(".remise-montant", [defaultAutoNumericOptions, { minimumValue: 0 }]);
+    new AutoNumeric.multiple(".remise-montant", [defaultAutoNumericOptions, { minimumValue: 0, maximumValue: 0 }]);
     new AutoNumeric.multiple(".item-pu", [defaultAutoNumericOptions, { minimumValue: 0 }]);
     new AutoNumeric.multiple(".item-quantity", [defaultAutoNumericOptions, { minimumValue: 0 }]);
     new AutoNumeric.multiple(".totalHT-avant-remise", [defaultAutoNumericOptions, { minimumValue: 0 }])

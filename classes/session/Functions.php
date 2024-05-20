@@ -4,7 +4,7 @@ namespace Session;
 
 use Authorizations\UserAuthorizations;
 
-require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
+require_once __DIR__ . "/../../vendor/autoload.php";
 
 function is_logged()
 {
@@ -14,9 +14,8 @@ function is_logged()
         || (!isset($_SESSION["user"]))
         || ($_SESSION["user"]->authorizations->active != 1)
     ) {
-
-        $host  = $_SERVER['HTTP_HOST'];
-        header("Location: http://$host/index.php");
+        $dir = __DIR__;
+        header("Location: {$dir}/../../index.php");
         exit;
     }
 }

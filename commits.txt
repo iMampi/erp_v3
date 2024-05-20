@@ -1187,6 +1187,24 @@ updated DTO_FILL_INPUT cow of "datetime" key from DB.
 the imput .remise-taux must be limited. a maximum must be set. > do constant update of its autonumeric > right now, we can type whaever amount we want...
 
 
-
+in facture_client
 fix the html base for facture header...
 done for the details part. do the new modal part now...
+-------------------------
+158_an:
+in facture_client cycle :
+fix the html base for facture header...
+done for the details part. do the new modal part now...
+done for the new.
+renamed modal name from modal-commande-new to modal-main-new
+
+the imput .remise-taux must be limited. a maximum must be set. > do constant update of its autonumeric > right now, we can type whaever amount we want...FIXED
+
+when filling the headers .remise-taux in details, update maximumvalue. > ok
+updated updateAllHeaderPrices() so it updates update maximumvalue for .remise-taux everytime the value is changed. > ok
+
+updated to :
+    new AutoNumeric.multiple(".remise-montant", [defaultAutoNumericOptions, { minimumValue: 0, maximumValue: 0 }]);
+
+
+tried to acces the site from myphone. I realized some file path were wrong coz hardcoded. So i updated them using __DIR__.> some fixed. not sure if all was done. gotta see it when beta testing.

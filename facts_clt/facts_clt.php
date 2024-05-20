@@ -80,7 +80,7 @@ is_logged();
             </div>
             <!-- END TABLEAU -->
             <!-- modal commandes new -->
-            <div class="modal fade" id="modal-commande-new" tabindex="-1">
+            <div class="modal fade" id="modal-main-new" tabindex="-1">
                 <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Close">
                 </button>
                 <div class="modal-dialog modal-dialog-scrollable modal-xl">
@@ -96,7 +96,7 @@ is_logged();
                                 <?php
                                 //TODO : make the header of factures in details readonly
                                 require __DIR__ . "
-                                /../modals_processors/commande_formulaire_body_new.php"
+                                /../modals_processors/facture_client_formulaire_body_new.php"
                                 ?>
                             </div>
                             <!-- TODO : to delete. we gonna use only JS here -->

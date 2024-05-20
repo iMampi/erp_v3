@@ -1,7 +1,7 @@
 <?php
 // TODO:HASH PASSWORD 
-require_once $_SERVER["DOCUMENT_ROOT"] . "/database/db.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
+require_once __DIR__ . "/../database/db.php";
+require_once __DIR__ . "/../vendor/autoload.php";
 
 use Session\User;
 
@@ -11,11 +11,6 @@ echo "<br>";
 // var_dump(Myquery($connection,$query));
 $signing_in = login($connection, $_POST["login"], $_POST["password"]);
 
-// var_dump($signing_in);
-$host  = $_SERVER['HTTP_HOST'];
-
-
-
 
 // TODO:  put this into a function to autoload
 if ($signing_in) {
@@ -24,10 +19,14 @@ if ($signing_in) {
     $_SESSION["user"] = new User(intval($signing_in[0]), $signing_in[1], $permissions);
     $_SESSION["logged"] = $signing_in["logged"];
     // va:r_dump($_SESSION["user"]);
-    header("Location: http://$host/index.php");
-    exit;
+    // header("Location: $index_page/index.php");
+    header("Location: {$__DIR__}/../index.php");
+    // exit();
+    die();
+    // echo "tehere u r";
 } else {
-    header("Location: http://$host/index.php");
-    exit;
+    header("Location: {$__DIR__}/../index.php");
+    exit();
+    // echo "tehere a t";
 }
 ?>;

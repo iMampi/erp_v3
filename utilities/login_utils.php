@@ -14,7 +14,7 @@ function Destroysession()
 function generate_logged_header($name, ?string $tag_id = null)
 {
     $txt = "<h4>Bienvenue $name</h4>";
-    $base = $_SERVER["DOCUMENT_ROOT"] . "/elements/header.html";
+    $base = __DIR__ . "/../elements/header.html";
     $dom = new DOMDocument();
     libxml_use_internal_errors(true);
     $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));

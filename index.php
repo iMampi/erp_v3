@@ -31,7 +31,7 @@ session_start();
 
         $output = "
     <div class='d-flex flex-column min-vh-100 justify-content-center align-items-center'>
-        <form action='\g_processes\login.php' method='POST'>
+        <form action='.\g_processes\login.php' method='POST'>
             <div>
                 <div class='mb-3'>
                     <label for='exampleInputEmail1' class='form-label'>Login</label>
