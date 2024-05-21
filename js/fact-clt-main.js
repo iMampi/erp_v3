@@ -847,6 +847,8 @@ async function DefaultModalCommandInputs(modal, min_row = 1) {
     //clean an dput to deafult value
     cleanNewForm(modal, modal.id === "modal-details");
 
+    AutoNumeric.getAutoNumericElement(modal.querySelector("#remise-montant")).update({ maximumValue: 0 });
+
 }
 
 

@@ -1208,3 +1208,20 @@ updated to :
 
 
 tried to acces the site from myphone. I realized some file path were wrong coz hardcoded. So i updated them using __DIR__.> some fixed. not sure if all was done. gotta see it when beta testing.
+-------------------------
+159_an:
+fact-clt-main.js:
+updated to :
+    new AutoNumeric.multiple(".remise-montant", [defaultAutoNumericOptions, { minimumValue: 0, maximumValue: 0 }]);
+DefaultModalCommandInputs() :
+added this to reset the maximumValue of .remise-montant
+    AutoNumeric.getAutoNumericElement(modal.querySelector("#remise-montant")).update({ maximumValue: 0 });
+
+commande-main.js:
+updated to :
+    new AutoNumeric.multiple(".remise-montant", [defaultAutoNumericOptions, { minimumValue: 0, maximumValue: 0 }]);
+DefaultModalCommandInputs() :
+added this to reset the maximumValue of .remise-montant
+    AutoNumeric.getAutoNumericElement(modal.querySelector("#remise-montant")).update({ maximumValue: 0 });
+showCommandeDetails() : rewrote to this        
+    let parent = event.target.parentNode.parentNode;

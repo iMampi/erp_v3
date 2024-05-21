@@ -443,6 +443,10 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
 
         } else {
             if (NUMBER_INPUT_HEADERS.includes(element.id)) {
+                if (element.id === "remise-montant") {
+                    AutoNumeric.getAutoNumericElement(element).update({ maximumValue: AutoNumeric.unformat(valueObj["total_ttc_avant_remise"], defaultAutoNumericOptions) });
+                }
+
                 element.value = AutoNumeric.format(valueObj[DTO_FILL_INPUT_HEADERS[element.id]], defaultAutoNumericOptions);
             } else {
                 element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
@@ -718,6 +722,7 @@ async function DefaultModalCommandInputs(modal, min_row = 1) {
     //clean an dput to deafult value
     cleanNewForm(modal, modal.id === "modal-details");
 
+    AutoNumeric.getAutoNumericElement(modal.querySelector("#remise-montant")).update({ maximumValue: 0 });
 }
 
 
@@ -978,6 +983,9 @@ function TVAHandler(discountedMontantInput, TVAInput, TotalTTCInput, mode, remis
 function updateAllHeaderPrices(montantHTAvantRemiseInput, TVAAvantRemiseInput, montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, montantHTApresRemiseInput, TVAApresRemiseInput, montantTTCApresRemiseInput) {
 
     TVAHandler(montantHTAvantRemiseInput, TVAAvantRemiseInput, montantTTCAvantRemiseInput, 1, remiseMontantInput);
+
+    AutoNumeric.getAutoNumericElement(remiseMontantInput).update({ maximumValue: AutoNumeric.unformat(montantTTCAvantRemiseInput.value, defaultAutoNumericOptions) });
+
     tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, 1)
     totalTTCDiscountedHandler(montantTTCAvantRemiseInput, montantTTCApresRemiseInput, remiseMontantInput);
     TVAHandler(montantHTApresRemiseInput, TVAApresRemiseInput, montantTTCApresRemiseInput, 2);
@@ -1274,7 +1282,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function showCommandeDetails(event) {
         // TODO : refactor
         console.log("called here");
-        let parent = event.target.parentNode.parentNode.parentNode;
+        let parent = event.target.parentNode.parentNode;
         // console.log("parent");
         // console.log(parent);
         let myuid = parent.querySelector(".input.uid").value;
@@ -1794,7 +1802,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // autonumeric Listener
     new AutoNumeric.multiple(".remise-taux", [defaultAutoNumericOptions, { minimumValue: 0, maximumValue: 100 }]);
-    new AutoNumeric.multiple(".remise-montant", [defaultAutoNumericOptions, { minimumValue: 0 }]);
+    new AutoNumeric.multiple(".remise-montant", [defaultAutoNumericOptions, { minimumValue: 0, maximumValue: 0 }]);
     new AutoNumeric.multiple(".item-pu", [defaultAutoNumericOptions, { minimumValue: 0 }]);
     new AutoNumeric.multiple(".item-quantity", [defaultAutoNumericOptions, { minimumValue: 0 }]);
 
