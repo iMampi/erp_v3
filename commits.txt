@@ -1225,3 +1225,13 @@ added this to reset the maximumValue of .remise-montant
     AutoNumeric.getAutoNumericElement(modal.querySelector("#remise-montant")).update({ maximumValue: 0 });
 showCommandeDetails() : rewrote to this        
     let parent = event.target.parentNode.parentNode;
+-------------------------
+160_an:
+cycle_facture_fournisseur:
+edited db for simple table factures_fournisseur. saved it in OneDrive
+
+rewrote the facture_frnsr_header_base.html to coreespond to the current standard(my standard),
+and change the table_details. now we use commande_table_details_base.html
+
+the php part where we arrange the display of header (user, magasin)...
+the js part of factures_fournisseur...

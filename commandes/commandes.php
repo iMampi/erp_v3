@@ -28,7 +28,6 @@ is_logged();
     <script src="/js/fixed-header.js"></script>
     <link rel="stylesheet" href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
     <script src="/js/server-communication.js"></script>
-
     <script src="/js/confirmation.js"></script>
     <script src="/js/toast.js"></script>
     <script src="/js/commande-main.js" defer></script>
@@ -41,7 +40,8 @@ is_logged();
     <div id="main-container" class="container-fluid px-0">
         <div id="header-top" class=" bg-light-blue">
             <?php
-            require_once $_SERVER["DOCUMENT_ROOT"] . '/utilities/login_utils.php';
+            require_once __DIR__."/../utilities/login_utils.php";
+            // require_once $_SERVER["DOCUMENT_ROOT"] . '/utilities/login_utils.php';
             $header = generate_logged_header($_SESSION['user']->name, "link-commandes");
             echo $header;
             ?>

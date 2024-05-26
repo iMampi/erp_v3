@@ -1,78 +1,148 @@
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
 <div>
 	<div class="row">
 		<span class="col-form-label col-2">numéro facture</span>
 		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" />
+			<input type="text" class="form-control form-control-sm" id="num-facture"/>
+			<input type="hidden" class="input facture-uid" disabled id="facture-uid"/>
+			<input type="hidden" class="input user-uid" disabled id="user-uid"/>
 		</div>
+		<span class="col-form-label col-2">déclarable</span>
+		<div class="col-2 my-auto">
+			<select class="nd input form-control form-control-sm">
+				<option value="0">déclarable</option>
+				<option value="1">non déclarable</option>
+			</select>
+		</div>
+		
 	</div>
-	<div id="frnsr-selection" class="row nowrap">
-		<span class="col-form-label col-2">fournisseur ID</span>
-		<div class="col my-auto btn-group">
-			<input
-				list="frnsr-list"
-				type="text"
-				name="frnsr-choice"
-				class="form-control form-control-sm"
-				placeholder="Choississez un fournisseur"
-			/>
-			<!-- </div> -->
-			<!-- <div class="col-1 my-auto pe-1"> -->
-			<button
-				class="mytbn btn btn-sm btn-success text-center"
-				data-bs-toggle="modal"
-				data-bs-target="#modal-creer-frnsr"
-			>
-				+
-			</button>
-			<!-- </div> -->
+	
+	<div id="fournisseur-selection" class="row my-auto py-1">
+		<span class="align-self-center col-2 lh-1">fournisseur id</span>
+		<div class="col-10 my-auto">
+			<div class="dropdown btn-group d-flex" role="group">
+				<button class="btn input fournisseur btn-outline-secondary dropdown-toggle form-control form-control-sm btn-sm w-100 text-start right-corners" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="fournisseur" >
+					Choisissez un fournisseur
+				</button>
+				<ul class="dropdown-menu" id="fournisseur-dropdown">
+					<li id="search-container">
+						<div class="px-2 pb-2">
+							<input  type="text" placeholder="Search" id="search-fournisseur" autocomplete="off" class="form-control form-control-sm input">               
+						</div>
+					</li>
+				</ul>
+				<button class="mytbn btn btn-sm btn-success text-center left-corners form-control-sm"type="button" id="btn-add-fournisseur">
+					+</button>
+				<button class="mytbn btn btn-sm btn-success text-center left-corners form-control-sm"type="button" id="btn-see-fournisseur">
+					see</button>
+			</div>
+			<input type="hidden" class="input fournisseur-uid" disabled id="fournisseur-uid"/>
 
-			<!-- <div class="col-1 my-auto ps-1"> -->
-			<button class="mytbn btn btn-sm btn-success text-center">se</button>
 		</div>
-		<datalist id="frnsr-list">
-			<option value="001">001-biens</option>
-			<option value="002">002-services</option>
-		</datalist>
 	</div>
+
 	<div class="row my-auto">
 		<span class="col-form-label col-2 my-auto">date</span>
 		<div class="col-2 my-auto">
 			<input type="date" class="form-control form-control-sm" />
 		</div>
-		<!-- <span class="col-form-label col-2">numéro facture</span>
+
+		<span class="col-form-label col-2">magasin</span>
 		<div class="col-2 my-auto">
-			<input type="text" class="form-control form-control-sm" />
-		</div> -->
-		<span class="col-form-label col-2 my-auto">total TTC</span>
+			<select type="text" class="form-control form-control-sm input magasin" id="magasin">
+
+			</select>
+		</div>
+
+		<span class="col-form-label col-2">note</span>
 		<div class="col-2 my-auto">
-			<input type="number" class="form-control form-control-sm" disabled id="grand-total"/>
+			<textarea type="text" class="form-control form-control-sm input note" id="note" rows="1">
+			</textarea>
+		</div>
+
+	</div>
+	<div class="row my-auto">
+		
+		<!-- <div class="col-4 my-auto"></div> -->
+		
+	</div>
+
+	<div class="row my-auto">
+		<span class="col-form-label col-2 ">total HT avant remise</span>
+		<div class="col-2 my-auto">
+			<input type="text" class="form-control form-control-sm input totalHT-avant-remise" disabled 
+			id="totalHT-avant-remise" placeholder="0,00"
+			/>
+		</div>
+
+		<span class="col-form-label col-2">TVA avant remise</span>
+		<div class="col-2 my-auto">
+			<input type="text" class="form-control form-control-sm input TVA-avant-remise" disabled 
+			id="TVA-avant-remise" placeholder="0,00"
+			/>
+		</div>
+		<span class="col-form-label col-2">total TTC avant remise</span>
+		<div class="col-2 my-auto">
+			<input
+				type="text"
+				class="form-control form-control-sm input totalTTC-avant-remise"
+				disabled
+				id="totalTTC-avant-remise" placeholder="0,00"
+			/>
 		</div>
 	</div>
 	<div class="row my-auto">
-		<span class="col-form-label col-2">affaire</span>
-		<div class="col-6 my-auto">
-			<div class="my-auto input-group">
-				<input
-					type="text"
-					disabled
-					class="form-control form-control-sm"
-				/>
-				<button
-					class="btn btn-sm btn-success text-center"
-					data-bs-toggle="modal"
-					data-bs-target="#modal-affect-affaire"
-				>
-					->
-				</button>
-			</div>
-		</div>
-		<!-- <div class="col-4 my-auto"></div> -->
-		<span class="col-form-label col-2">déclarable</span>
+		<span class="col-form-label col-2">taux remise (%)</span>
 		<div class="col-2 my-auto">
-			<select disabled class="nd input form-control form-control-sm">
-				<option value="0">déclarable</option>
-				<option value="1">non déclarable</option>
-			</select>
+			<input
+				type="text"
+				class="form-control form-control-sm input number-text min-max-text remise-taux"
+				placeholder="0,00"
+				id="remise-taux"
+				data-min="0" data-max="100"
+			/>
+		</div>
+		<span class="col-form-label col-2">montant remise</span>
+		<div class="col-2 my-auto">
+			<input
+				type="text"
+				class="form-control number-text form-control-sm input remise-montant"
+				placeholder="0,00"
+				id="remise-montant"
+				
+			/>
+		</div>
+		<span class="col-form-label col-4 my-auto">
+			<div class="form-check my-auto" id="tva-flag-div">
+				<input class="form-check-input input tva-flag" type="checkbox" value="" id="tva-flag">
+				<label class="form-check-label" for="tva-flag">
+				avec tva
+				</label>
+			  </div>
+
+		</span>
+	</div>
+	<div class="row my-auto">
+		<span class="col-form-label col-2">total HT aprés remise</span>
+		<div class="col-2 my-auto">
+			<input type="text" class="form-control form-control-sm input totalHT-apres-remise" disabled 
+			id="totalHT-apres-remise" placeholder="0,00"
+			/>
+		</div>
+
+		<span class="col-form-label col-2">TVA aprés remise</span>
+		<div class="col-2 my-auto">
+			<input type="text" class="form-control form-control-sm input TVA-apres-remise" disabled 
+			id="TVA-apres-remise" placeholder="0,00"/>
+		</div>
+		<span class="col-form-label col-2 fw-bold">total TTC à payer</span>
+		<div class="col-2 my-auto">
+			<input
+				type="text"
+				class="form-control form-control-sm fw-bold input totalTTC-apres-remise"
+				disabled
+				id="totalTTC-apres-remise" placeholder="0,00"
+			/>
 		</div>
 	</div>
 </div>

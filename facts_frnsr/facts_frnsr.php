@@ -18,6 +18,8 @@ is_logged();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/autoNumeric.min.js"></script>
+    <script src="/js/luxon.min.js"></script>
     <script src="/js/helpers.js"></script>
     <script src="/js/fixed-header.js"></script>
     <link rel="stylesheet" href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
@@ -36,7 +38,8 @@ is_logged();
             <?php
 
             // generate headers
-            require_once $_SERVER["DOCUMENT_ROOT"] . '/utilities/login_utils.php';
+            require_once __DIR__ . "/../utilities/login_utils.php";
+            // require_once $_SERVER["DOCUMENT_ROOT"] . '/utilities/login_utils.php';
             $header = generate_logged_header($_SESSION['user']->name, "link-facts-frnsr");
             echo $header;
             ?>
@@ -50,10 +53,13 @@ is_logged();
                         // TODO : IMPLEMENT ME CORRECTLY
                         // TODO : create a global variable for those message. maybe a constant to autoload
                         // ob_start();
-                        require_once $_SERVER["DOCUMENT_ROOT"] . '/elements/sub_header_cannot_visit.html';
+                        // require_once $_SERVER["DOCUMENT_ROOT"] . '/elements/sub_header_cannot_visit.html';
+                        require_once __DIR__ . '/../elements/sub_header_cannot_visit.html';
                     } else {
-                        require_once $_SERVER["DOCUMENT_ROOT"] . '/elements/sub_header_facts_frnsr.html';
-                        require_once $_SERVER["DOCUMENT_ROOT"] . '/elements/sub_header_div_btns.html';
+                        // require_once $_SERVER["DOCUMENT_ROOT"] . '/elements/sub_header_facts_frnsr.html';
+                        require_once __DIR__ . '/../elements/sub_header_facts_frnsr.html';
+                        // require_once $_SERVER["DOCUMENT_ROOT"] . '/elements/sub_header_div_btns.html';
+                        require_once __DIR__ . '/../elements/sub_header_div_btns.html';
                     }
                     ?>
                 </div>
@@ -76,7 +82,7 @@ is_logged();
             <!-- modal détails facture -->
             <div class="modal fade" id="modal-facture-details" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                <div class="modal-dialog modal-dialog-scrollable modal-xl">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel">Détails facture fourniseur</h5>
@@ -107,9 +113,9 @@ is_logged();
             </div>
             <!-- end modal détails facture -->
             <!-- modal creer facture fournisseur -->
-            <div class="modal fade" id="modal-facture-new" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <button type="button" class="btn-close position-absolute top-0 end-0" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal fade" id="modal-facture-new" tabindex="-1">
+                <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Close"></button>
+                <div class="modal-dialog modal-dialog-scrollable modal-xl">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel">création facture fourniseur</h5>
@@ -125,12 +131,12 @@ is_logged();
                             <!-- TODO : to elete. we gonna use only JS here -->
                             <div id="modal-body-table">
                                 <?php
-                                require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_table_details_base.html";
+                                require __DIR__ . "/../elements/commandes/commande_table_details_base.html";
                                 ?>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-info" data-bs-dismiss="modal">imprimer</button>
+                            <button type="button" class="btn btn-info">imprimer</button>
                             <button type="button" class="btn btn-secondary" id="btn-cancel">annuler</button>
                             <button type="button" class="btn btn-primary">Save</button>
                         </div>
