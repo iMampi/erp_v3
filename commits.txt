@@ -1235,3 +1235,15 @@ and change the table_details. now we use commande_table_details_base.html
 
 the php part where we arrange the display of header (user, magasin)...
 the js part of factures_fournisseur...
+-------------------------
+160_an:
+the php part where we arrange the display of header (user, magasin)...DONE 
+
+edited db:
+table items : addes 2 new fields : pour_achat, pour_vente.
+edited view_all_items as well
+erpv2-20240601.sql
+
+created 2 new converter class:
+SelectionItemsAchat et SelectionItemsVente (les 2 extends SelectionItems)
+

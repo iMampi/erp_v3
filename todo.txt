@@ -195,3 +195,5 @@ when filling item-quantity, if stock is not enough when typing, create a notific
 for all table liste on each page. change it all into classic table clickable.. and with a button. (parce que c'est trop gros trop long pour rien. peut etre que ca aidera pour la version telephone)
 
 errors handling, required field in fournisseur
+
+sur les class SelectionXXX, les parametre actif/active. voir comment ca marche et l'arrangé en fonction des besoins

@@ -3,14 +3,13 @@
 use Database\Queries;
 use Database\Bindings;
 use Database\DbHandler;
-use Converter\SelectionItems;
-use function Session\can_visit;
-use Converter\SelectionItemsAchat;
 
-use Converter\SelectionItemsVente;
+use function Session\can_visit;
+
+use Converter\SelectionFournisseurs;
 use Database\StandardPreparedStatement;
 
-require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
+require_once __DIR__ . "/../../vendor/autoload.php";
 
 session_start();
 
@@ -22,16 +21,10 @@ new DbHandler();
 if (($_SERVER["REQUEST_METHOD"] == "POST")) {
     $data = json_decode(file_get_contents('php://input'), true);
     // var_dump($data);
-    $SelectionObj;
-    if (str_contains($_SERVER["HTTP_REFERER"], "facts_clt.php")) {
-        $SelectionObj = new SelectionItemsVente($data);
-    } else if (str_contains($_SERVER["HTTP_REFERER"], "facts_frnsr.php")) {
-        $SelectionObj = new SelectionItemsAchat($data);
-    } else {
-        $SelectionObj = new SelectionItems($data);
-    }
+
+    $SelectionObj = new SelectionFournisseurs($data);
     // var_dump($NewClientObj);
-    $Query = new Queries("selection_items");
+    $Query = new Queries("selection_clients");
     $myquery = $Query->query . $SelectionObj->conditions;
     // print($SelectOneCLientObj->conditions);
     // $Binding = new Bindings($SelectOneCLientObj);

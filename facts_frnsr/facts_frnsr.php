@@ -122,15 +122,17 @@ is_logged();
                         </div>
                         <div class="modal-body">
 
-                            <div id="modal-body-heads">
+                            <div id="new-modal-body-heads">
                                 <?php
                                 //TODO : make the header of factures in details readonly
-                                require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_header_base.html";
+                                // require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_header_base.html";
+                                require __DIR__ . "/../modals_processors/facture_fournisseur_formulaire_body_new.php";
                                 ?>
                             </div>
                             <!-- TODO : to elete. we gonna use only JS here -->
                             <div id="modal-body-table">
                                 <?php
+
                                 require __DIR__ . "/../elements/commandes/commande_table_details_base.html";
                                 ?>
                             </div>

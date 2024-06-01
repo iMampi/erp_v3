@@ -1522,60 +1522,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-    // try {
-    //     modalCommandeNew.addEventListener('keyup', (event) => {
-    //         console.log("event keyup");
-    //         console.log(event);
-    //         if ((event.target.id == "item-uid") && (event.key)) {
-    //             console.log("searching item");
-    //             itemDataList.innerHTML = "";
-    //             clearTimeout(typingTimer);
-    //             let term = event.target.value.trim();
-    //             if (term) {
-    //                 // TODO : sanitize here
-    //                 itemDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
-    //                 typingTimer = setTimeout(() => { searchLive(term, itemDataList, "item") }, 1500);
-    //             }
-    //         } else if ((event.target.id == "client") && (event.key)) {
-    //             console.log("searching client");
-    //             clientDataList.innerHTML = "";
-    //             clearTimeout(typingTimer);
-    //             let term = event.target.value.trim();
-    //             if (term) {
-    //                 // TODO : sanitize here
-    //                 clientDataList.innerHTML = "<option value='Searching for \"" + event.target.value.trim() + "\"'></option>";
-    //                 typingTimer = setTimeout(() => { searchLive(term, clientDataList, "client") }, 1500);
-    //             }
-    //         } else if ((event.target.id == "item-uid") && (!event.key)) {
-    //             console.log("item selected 26");
-    //             let val = event.target.value;
-    //             console.log(getName(val));
-    //             if (event.target.parentNode.parentNode.querySelector("#item-quantity").value > 0) {
-    //                 fillItemNameAndPrice(event.target, 0);
-    //             } else {
-    //                 fillItemNameAndPrice(event.target, 1);
-    //             }
-    //             const itemTotalPriceInputs = modalCommandeNew.querySelectorAll(".item-prix-total");
-    //             console.log("itemTotalPriceInputs");
-    //             console.log(itemTotalPriceInputs);
-    //             updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
-    //             updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
-    //         } else if ((event.target.id == "client") && (!event.key)) {
-    //             console.log("client selected");
-    //         } else if (event.target.id == "item-quantity") {
-    //             updateItemTotalPrice(event.target.parentNode.parentNode)
-    //             const itemTotalPriceInputs = modalCommandeNew.querySelectorAll("#item-prix-total");
-    //             updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
-    //             updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
-
-
-    //         }
-    //     })
-
-    // } catch (error) {
-    //     console.log("err 011 " + error);
-    // }
-
     try {
         modalCommandeNew.addEventListener('click', (event) => {
             if (event.target.id == "btn-cancel-new") {
