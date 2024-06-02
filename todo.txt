@@ -197,3 +197,5 @@ for all table liste on each page. change it all into classic table clickable.. a
 errors handling, required field in fournisseur
 
 sur les class SelectionXXX, les parametre actif/active. voir comment ca marche et l'arrangé en fonction des besoins
+
+test if num serie is required for item with num serie

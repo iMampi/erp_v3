@@ -19,6 +19,7 @@ class Queries
     static public $selection_items = "select code,name,prix_vente,stockable,identifiable,prix_variable,stock,pour_achat, pour_vente from items";
     static public $selection_num_serie = "select * from identifiables";
     static public $selection_clients = "select uid,noms,prenoms,nom_commercial,raison_sociale from view_all_clients";
+    static public $selection_fournisseurs = "select uid,noms,prenoms,nom_commercial,raison_sociale from view_all_fournisseurs";
     static public $selection_commande_items = "select * from view_all_commandes_details where commande_uid=?";
     static public $selection_commande_items_for_avoir = "select *, sum(quantity) as remaining_quantity from view_all_commandes_details where commande_uid=? or commande_initial_uid=? group by num_serie, item_uid";
 
@@ -604,6 +605,9 @@ class Queries
                 break;
             case 'selection_clients':
                 $this->query = self::$selection_clients;
+                break;
+            case 'selection_fournisseurs':
+                $this->query = self::$selection_fournisseurs;
                 break;
             case 'selection_commande_items':
                 $this->query = self::$selection_commande_items;

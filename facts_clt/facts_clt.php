@@ -143,7 +143,7 @@ is_logged();
                             ?>
                             <!-- </div> -->
                         </div>
-                        <div class="modal-footer">
+                        <div class="modal-footer" id="modal-footer-new">
                             <?php
                             require __DIR__ . "/../modals_processors/buttons_footer_view_facture_client.php"
                             ?>

@@ -82,7 +82,27 @@ function formatedNumberToFloat(val) {
 	}
 }
 
+function getInputValue(node) {
+	if (node.tagName == "BUTTON") {
+		return node.textContent;
+	}
 
+	if (node.type == "checkbox") {
+		return node.checked;
+	}
+
+	return node.value;
+}
+
+function setInputValue(node, value) {
+	if (node.tagName == "BUTTON") {
+		return node.textContent = value;
+	}
+	if (node.type == "checkbox") {
+		return node.checked = value;
+	}
+	return node.value = value;
+}
 
 //add "0" to the left as padding according to the length defined
 function zeroLeftPadding(number, targetLength, forceSign) {

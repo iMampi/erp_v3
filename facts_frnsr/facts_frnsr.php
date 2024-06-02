@@ -133,14 +133,14 @@ is_logged();
                             <div id="modal-body-table">
                                 <?php
 
-                                require __DIR__ . "/../elements/commandes/commande_table_details_base.html";
+                                require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_table_details_base.html";
                                 ?>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-info">imprimer</button>
-                            <button type="button" class="btn btn-secondary" id="btn-cancel">annuler</button>
-                            <button type="button" class="btn btn-primary">Save</button>
+                        <div class="modal-footer" id="modal-footer-new">
+                            <?php
+                            require_once __DIR__ . "/../modals_processors/buttons_footer_new_facture_fournisseur.php";
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -302,6 +302,23 @@ is_logged();
                 </div>
             </div>
             <!-- end modal affectation affaire -->
+            <!-- modal confirmation -->
+            <div class="modal fade bg-confirmation" tabindex="-1" id="modal-confirmation">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Etes-vous sûr?</h5>
+                        </div>
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer d-flex justify-content-end">
+                            <button type="button" class="col-auto btn  btn-success" id="btn-confirmation-yes">confirmer</button>
+                            <button type="button" class="col-auto btn btn-danger" id="btn-confirmation-no">annuler</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- endconfirmation  modal-->
 
         </div>
 </body>

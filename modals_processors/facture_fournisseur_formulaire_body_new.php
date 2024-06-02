@@ -11,7 +11,7 @@ $xpath = new DOMXPath($dom);
 
 $user_input = $xpath->query(".//input[@id='user-uid']");
 
-$user_input[0]->setAttribute("value", $_SESSION["user"]->uid . "//" . $_SESSION["user"]->name);
+$user_input[0]->setAttribute("value", $_SESSION["user"]->uid);
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/database/select/all_places_name_nolimit.php";
 $magasin_select = $xpath->query(".//select[@id='magasin']")[0];

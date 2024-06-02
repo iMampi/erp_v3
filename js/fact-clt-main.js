@@ -293,19 +293,9 @@ function cleanDropdown(dropdownNode) {
     })
 }
 
-function getInputValue(node) {
-    if (node.tagName == "BUTTON") {
-        return node.textContent;
-    }
-    return node.value;
-}
 
-function setInputValue(node, value) {
-    if (node.tagName == "BUTTON") {
-        node.textContent = value;
-    }
-    return node.value = value;
-}
+
+
 
 function disableInputs(inputElements) {
     inputElements.forEach(element => {
@@ -971,7 +961,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const TVAApresRemiseInputNew = modalCommandeNew.querySelector("#TVA-apres-remise");
     const montantTTCAvantRemiseInputNew = modalCommandeNew.querySelector("#totalTTC-avant-remise");
     const montantTTCApresRemiseInputNew = modalCommandeNew.querySelector("#totalTTC-apres-remise");
-    currentUser = modalCommandeNew.querySelector("#commercial").value; const btnSaveNew = modalCommandeNew.querySelector("#btn-save-new");
+    currentUser = modalCommandeNew.querySelector("#commercial").value;
+    const btnSaveNew = modalCommandeNew.querySelector("#btn-save-new");
     const btnCancelNew = modalCommandeNew.querySelector("#btn-cancel-new");
     const btnAddItem = modalCommandeNew.querySelector("#btn-add-item");
 
@@ -1461,7 +1452,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 let dropdownNode = event.target.parentNode.parentNode;
                 if (dropdownNode.id == "item-dropdown") {
                     fillInputsDetailsItemRow(JSON.parse(event.target.dataset.infos), trNOde, "new");
-                    searchLive([JSON.parse(event.target.dataset.infos)["code"], ''], event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('#num-serie-dropdown'), "num-serie");
+                    if (JSON.parse(event.target.dataset.infos)["identifiable"] == "1") {
+
+                        searchLive([JSON.parse(event.target.dataset.infos)["code"], ''], event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('#num-serie-dropdown'), "num-serie");
+                    }
 
                     trNOde.querySelector("#item-num-serie").textContent = "...";
 

@@ -82,7 +82,7 @@ class SelectionFournisseurs extends Converter
 
                     $this->conditions = \preg_replace('/\s*or\s*$/', "", $this->conditions);
                     $this->conditions = \preg_replace('/\s*where\s*$/', "", $this->conditions);
-                    $this->conditions .= " ) and active_client='1';";
+                    $this->conditions .= " ) and active_fournisseur='1';";
                 }
             }
         }

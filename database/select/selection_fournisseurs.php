@@ -24,7 +24,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST")) {
 
     $SelectionObj = new SelectionFournisseurs($data);
     // var_dump($NewClientObj);
-    $Query = new Queries("selection_clients");
+    $Query = new Queries("selection_fournisseurs");
     $myquery = $Query->query . $SelectionObj->conditions;
     // print($SelectOneCLientObj->conditions);
     // $Binding = new Bindings($SelectOneCLientObj);

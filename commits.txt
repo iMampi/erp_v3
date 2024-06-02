@@ -1246,4 +1246,13 @@ erpv2-20240601.sql
 
 created 2 new converter class:
 SelectionItemsAchat et SelectionItemsVente (les 2 extends SelectionItems)
+-------------------------
+161_an:
 
+the js part of factures_fournisseur...
+
+line  946
+// TODO : it should update the tva avant remise too
+
+clean default unserie not disabled...
+checkpoint before rebuilding the calc part...
