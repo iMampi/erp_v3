@@ -1256,3 +1256,11 @@ line  946
 
 clean default unserie not disabled...
 checkpoint before rebuilding the calc part...
+-------------------------
+162_an:
+
+bon, ca déconne surment dans ma logique, dans ma concpetion, mais la meilleur solution que j'ai trouvé pour l'instant, c'est de ne pas créer d'abstraction pour chaque event. >>> pour chaque event, on va implementer et appeller les functions une par une POUR L'INSTANT. apres, on pourra résumer et créer une couche d'abstraction.
+
+la gestion de tva-variable et tva-flag est OK. les premier tests sont bon. mais il faudra surement tester en profondeur.
+
+on commence à mettre à jour le cycle article/item... 

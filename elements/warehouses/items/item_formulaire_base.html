@@ -40,44 +40,50 @@
 			</select>
 		</div>
 
-		<span class="col-form-label col-2">famille</span>
-		<div class="col-2 my-auto">
-			<!-- <select
-				class="form-control form-control-sm famille input" id="famille"
-			>
-		<option value="1">Socolait</option>
-		</select> -->
-		<input
-				list="famille-list"
-				type="text"
-				id="famille"
-				class="form-control form-control-sm input famille"
-				placeholder="Choississez une famille"
-				
-			/>
-			<!-- <datalist id="famille-list"> -->
-			  <!-- </datalist>	 -->
-		</div>
+		<div id="famille-selection" class="row my-auto py-1">
+			<span class="align-self-center col-2 lh-1">famille</span>
+			<div class="col-4 my-auto">
+				<div class="dropdown btn-group d-flex" role="group">
+					<button class="btn input famille btn-outline-secondary dropdown-toggle form-control form-control-sm btn-sm w-100 text-start right-corners" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="famille" >
+						Choisissez une famille
+					</button>
+					<ul class="dropdown-menu" id="famille-dropdown">
+						<li id="search-container">
+							<div class="px-2 pb-2">
+								<input  type="text" placeholder="Search" id="search-famille" autocomplete="off" class="form-control form-control-sm input">               
+							</div>
+						</li>
+					</ul>
+					<button class="mytbn btn btn-sm btn-success text-center left-corners form-control-sm"type="button" id="btn-add-famille">
+						+</button>
+					<button class="mytbn btn btn-sm btn-success text-center left-corners form-control-sm"type="button" id="btn-see-famille">
+						see</button>
+				</div>
+				<input type="hidden" class="input famille-uid" disabled id="famille-uid"/>
+			</div>
+		</div>	
 
-		<span class="col-form-label col-2">catégorie</span>
-		<div class="col-2 my-auto">
-			<!-- <select
-				
-				class="form-control form-control-sm category input " id="category"
-			>
-			<option value="2">biscuit</option>
-
-		</select> -->
-		<input
-				list="category-list"
-				type="text"
-				id="categorie"
-				class="form-control form-control-sm input category"
-				placeholder="Choississez une catégorie"
-				
-			/>
-			<!-- <datalist id="category-list">
-			  </datalist>	 -->
+		<div id="categorie-selection" class="row my-auto py-1">
+			<span class="align-self-center col-2 lh-1">categorie</span>
+			<div class="col-4 my-auto">
+				<div class="dropdown btn-group d-flex" role="group">
+					<button class="btn input categorie btn-outline-secondary dropdown-toggle form-control form-control-sm btn-sm w-100 text-start right-corners" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="categorie" >
+						Choisissez une categorie
+					</button>
+					<ul class="dropdown-menu" id="categorie-dropdown">
+						<li id="search-container">
+							<div class="px-2 pb-2">
+								<input  type="text" placeholder="Search" id="search-categorie" autocomplete="off" class="form-control form-control-sm input">               
+							</div>
+						</li>
+					</ul>
+					<button class="mytbn btn btn-sm btn-success text-center left-corners form-control-sm"type="button" id="btn-add-categorie">
+						+</button>
+					<button class="mytbn btn btn-sm btn-success text-center left-corners form-control-sm"type="button" id="btn-see-categorie">
+						see</button>
+				</div>
+				<input type="hidden" class="input categorie-uid" disabled id="categorie-uid"/>
+			</div>
 		</div>
 	</div>
 	<div class="row">

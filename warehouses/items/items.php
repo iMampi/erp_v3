@@ -133,7 +133,7 @@ require __DIR__ . '/../../database/select/all_familles_name_nolimit.php';
                             <div id="new-modal-body-heads">
                                 <?php
                                 //TODO : make the header of factures in details readonly
-                                // require __DIR__ . "/../../elements/warehouses/items/item_formulaire_base.html";
+
                                 require __DIR__ . "/../../modals_processors/item_formulaire_body_new.php"
                                 ?>
                             </div>

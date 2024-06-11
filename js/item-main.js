@@ -1,3 +1,11 @@
+var currentUser;
+var defaultAutoNumericOptions =
+{
+    decimalCharacter: ",",
+    digitGroupSeparator: " ",
+    watchExternalChanges: true
+};
+
 const DefaultValuesItemNewFormObj = {
 	code: "",
 	actif: "1",
@@ -231,6 +239,7 @@ function getFormInputsValues(modalRef) {
 	let inputs = modalRef.querySelectorAll(".input");
 	// console.log("inputs");
 	// console.log(inputs);
+	// TODO : use getInputValue() instead
 	inputs.forEach((input) => {
 		if (input.tagName == "BUTTON") {
 			inputObj[input.id] = input.textContent;

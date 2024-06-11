@@ -22,11 +22,13 @@ is_logged();
     <script src="/js/luxon.min.js"></script>
     <script src="/js/helpers.js"></script>
     <script src="/js/fixed-header.js"></script>
+    <script src="/js/price-calculation.js"></script>
+
     <link rel="stylesheet" href="/vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
     <script src="/js/server-communication.js"></script>
     <script src="/js/confirmation.js"></script>
     <script src="/js/toast.js"></script>
-    <script src="/js/fact-frnsr-main.js"></script>
+    <script src="/js/fact-frnsr-main.js" defer></script>
     <link rel="stylesheet" href="/style/mampi.css">
     <title>factures fourniseur</title>
 

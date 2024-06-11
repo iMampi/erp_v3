@@ -1,4 +1,5 @@
 var currentUser;
+var tvaRate = { true: 0.20, false: 0 }
 var defaultAutoNumericOptions =
 {
     decimalCharacter: ",",
@@ -11,6 +12,39 @@ var tvaFlag = true;
 const TODAY = luxon.DateTime.now().toFormat('yyyy-MM-dd');
 
 var typingTimer;
+
+const NUMBER_INPUT_ITEM_ROW = [
+    "item-pu",
+    "item-prix-total",
+];
+
+const ERROR_FLAG_MESSAGE_OBJ = {
+    "out-of-stock": "Stock insufficant pour un article. Ajustez la quantité.",
+    "required": "Veuillez remplir correctement le champ en rouge.",
+    "num serie not available": "Numero de serie n'est plus disponible.",
+    "num serie double": "Numero de serie répété. Corrigez le."
+
+}
+
+const REQUIRED_INPUT_HEADERS = [
+    "num-facture",
+    "nd",
+    "fournisseur",
+    "date",
+    "magasin",
+    "totalHT-avant-remise",
+    "TVA-avant-remise",
+    "totalTTC-avant-remise",
+    "totalHT-apres-remise",
+    "TVA-apres-remise",
+    "totalTTC-apres-remise"
+]
+const REQUIRED_STANDARD_INPUT_ITEM_ROW = [
+    "item-uid",
+    "item-pu",
+    "item-quantity"
+]
+
 
 
 const DTO_FILL_INPUT_ITEM_ROW = [
@@ -27,10 +61,7 @@ const DTO_FILL_INPUT_ITEM_ROW = [
     { inputId: "prix-variable", objectKey: ["prix-variable"] }
 ];
 
-const NUMBER_INPUT_ITEM_ROW = [
-    "item-pu",
-    "item-prix-total",
-];
+
 
 const DefaultValuesCommandeNewFormObj = {
     "num-facture": "",
@@ -106,7 +137,82 @@ var modificationWatcher = false;
 var myCache = {};
 
 
+function updateFormOnTvaVariable(eventTargetChecked,
+    modalFacture
+) {
+    const remiseTauxInput = modalFacture.querySelector("#remise-taux");
+    const remiseMontantInput = modalFacture.querySelector("#remise-montant");
 
+    const montantHTAvantRemiseInput = modalFacture.querySelector("#totalHT-avant-remise");
+    const TVAAvantRemiseInput = modalFacture.querySelector("#TVA-avant-remise");
+    const montantTTCAvantRemiseInput = modalFacture.querySelector("#totalTTC-avant-remise");
+
+    const montantHTApresRemiseInput = modalFacture.querySelector("#totalHT-apres-remise");
+    const TVAApresRemiseInput = modalFacture.querySelector("#TVA-apres-remise");
+    const montantTTCApresRemiseInput = modalFacture.querySelector("#totalTTC-apres-remise");
+
+
+    TVAApresRemiseInput.disabled = !eventTargetChecked;
+    remiseTauxInput.disabled = eventTargetChecked;
+    setInputValue(remiseTauxInput, "");
+    remiseMontantInput.disabled = eventTargetChecked;
+    setInputValue(remiseMontantInput, "");
+
+    if (!eventTargetChecked) {
+        // if not variable
+
+        // *start calculating
+        // *the avant remise part
+        // updateItemRowTotalPrice(event.target.parentNode.parentNode);
+        updateTotalPriceHT(montantHTAvantRemiseInput, modalFacture.querySelectorAll(".item-prix-total"));
+        setInputValue(TVAAvantRemiseInput, calculateTva(montantHTAvantRemiseInput, tvaRate[tvaFlag]));
+        setInputValue(montantTTCAvantRemiseInput, calculateTTC(montantHTAvantRemiseInput, TVAAvantRemiseInput));
+
+        // *update max for remiseMontantInput
+        AutoNumeric.getAutoNumericElement(remiseMontantInput).update({ maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInput) })
+
+
+        // *update the remise montant
+        setInputValue(remiseMontantInput,
+            calculateDiscountFromRemiseTaux(remiseTauxInput, montantTTCAvantRemiseInput));
+        // *the apres remise
+        setInputValue(montantHTApresRemiseInput,
+            (AutoNumeric.getNumber(montantTTCAvantRemiseInput) -
+                AutoNumeric.getNumber(remiseMontantInput))
+            / (1 + tvaRate[tvaFlag])
+        )
+        setInputValue(TVAApresRemiseInput,
+            AutoNumeric.getNumber(montantHTApresRemiseInput) * tvaRate[tvaFlag]
+        )
+        setInputValue(montantTTCApresRemiseInput, calculateTTC(montantHTApresRemiseInput, TVAApresRemiseInput));
+    } else {
+        // *start calculating
+        // *the avant remise part
+        // updateItemRowTotalPrice(event.target.parentNode.parentNode);
+        updateTotalPriceHT(montantHTAvantRemiseInput, modalFacture.querySelectorAll(".item-prix-total"));
+        setInputValue(TVAAvantRemiseInput, calculateTva(montantHTAvantRemiseInput, tvaRate[tvaFlag]));
+        setInputValue(montantTTCAvantRemiseInput, calculateTTC(montantHTAvantRemiseInput, TVAAvantRemiseInput));
+
+        // *update max for remiseMontantInput
+        AutoNumeric.getAutoNumericElement(remiseMontantInput).update({ maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInput) })
+
+
+        // *update the remise montant
+        setInputValue(remiseMontantInput,
+            calculateDiscountFromRemiseTaux(remiseTauxInput, montantTTCAvantRemiseInput));
+        // *the apres remise
+        setInputValue(montantHTApresRemiseInput,
+            (AutoNumeric.getNumber(montantTTCAvantRemiseInput) -
+                AutoNumeric.getNumber(remiseMontantInput))
+            / (1 + tvaRate[tvaFlag])
+        )
+        setInputValue(TVAApresRemiseInput,
+            AutoNumeric.getNumber(montantHTApresRemiseInput) * tvaRate[tvaFlag]
+        )
+        setInputValue(montantTTCApresRemiseInput, calculateTTC(montantHTApresRemiseInput, TVAApresRemiseInput));
+    }
+
+}
 
 function generateRowAddItem(nodeModel, DataObj) {
     // console.log(DataObj);
@@ -150,10 +256,10 @@ function fillInputsDetailsItemRow(arrayData, rowNode, mode = "view") {
             rowNode.querySelector(".input#item-quantity").value = 1;
             rowNode.querySelector(".input#item-quantity").disabled = true;
         }
-
-        if (parseInt(arrayData["stockable"])) {
-            AutoNumeric.getAutoNumericElement(rowNode.querySelector(".input#item-quantity")).update({ maximumValue: arrayData["stock"] });
-        }
+        //! not needed it achat cycle
+        // if (parseInt(arrayData["stockable"])) {
+        //     AutoNumeric.getAutoNumericElement(rowNode.querySelector(".input#item-quantity")).update({ maximumValue: arrayData["stock"] });
+        // }
     }
 
 
@@ -396,6 +502,7 @@ function autonumericItemRow(tableFactureBody) {
     let currentRow = tableFactureBody.querySelector("#row-" + zeroLeftPadding(counterRowItem, 3, false));
     new AutoNumeric(currentRow.querySelector("#item-pu"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
     new AutoNumeric(currentRow.querySelector("#item-quantity"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
+    new AutoNumeric(currentRow.querySelector("#item-prix-total"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
 }
 
 function generateRowItem(nodeModel, DataObj) {
@@ -406,80 +513,6 @@ function generateRowItem(nodeModel, DataObj) {
     return newNode;
 }
 
-//PRICE MANIPULATION
-function updateTotalPrice(baseMontantInput, priceListNode) {
-    console.log("updateTotalPrice");
-    const pricesRaw = [];
-    priceListNode.forEach(element => {
-        pricesRaw.push(formatedNumberToFloat(element.value));
-    });
-    return baseMontantInput.value = formatNumber(pricesRaw.reduce((partialSum, a) => partialSum + formatedNumberToFloat(a), 0));
-}
-
-function updateItemTotalPrice(rowNode) {
-    const price = rowNode.querySelector("#item-pu").value;
-    const quantity = rowNode.querySelector("#item-quantity").value;
-    rowNode.querySelector("#item-prix-total").value = formatNumber(formatedNumberToFloat(price) * formatedNumberToFloat(quantity));
-}
-
-function tauxAndMontantDiscountInputHandler(baseMontantInput, tauxInput, montantInput, mode) {
-    // mode: 1 = taux changed ; 2 = montant changed 
-    let baseMontant = formatedNumberToFloat(baseMontantInput.value);
-    if (mode == 1) {
-        montantInput.value = (baseMontant * formatedNumberToFloat(tauxInput.value) / 100 || 0).toFixed(2);
-    } else if (mode == 2) {
-        tauxInput.value = (formatedNumberToFloat(montantInput.value) / formatedNumberToFloat(baseMontant) * 100 || 0).toFixed(2);
-    }
-}
-
-function totalTTCDiscountedHandler(baseMontantInput, discountedMontantInput, montantDiscount) {
-    console.log("totalTTCDiscountedHandler");
-    try {
-        discountedMontantInput.value = AutoNumeric.format(parseFloat(AutoNumeric.unformat(baseMontantInput.value, defaultAutoNumericOptions)) - parseFloat(AutoNumeric.unformat(montantDiscount.value, defaultAutoNumericOptions)), defaultAutoNumericOptions);
-    } catch (error) {
-        console.log("HERE ERROR");
-        discountedMontantInput.value = AutoNumeric.format(0, defaultAutoNumericOptions)
-    }
-}
-
-function TVAHandler(discountedMontantInput, TVAInput, TotalTTCInput, mode) {
-    // Handles TVA and total update
-    // NOTE : mode = 1: ht to ttc;mode = 2: ttc to ht;
-    console.log("TVAHandler");
-    let rate = 0.20;
-    if (tvaFlag === false) {
-        rate = 0;
-    }
-
-    if (mode == 1) {
-
-        let TVA = formatedNumberToFloat(discountedMontantInput.value) * rate;
-        TVAInput.value = formatNumber(TVA || 0);
-        TotalTTCInput.value = formatNumber(formatedNumberToFloat(discountedMontantInput.value) + TVA);
-    } else if (mode == 2) {
-        let HT = formatedNumberToFloat(TotalTTCInput.value) / (1 + rate);
-        discountedMontantInput.value = formatNumber(HT);
-        TVAInput.value = formatNumber(formatedNumberToFloat(TotalTTCInput.value) - HT);
-
-    } else if (mode == 3) {
-        let TVA = formatedNumberToFloat(TVAInput.value);
-        TVAInput.value = formatNumber(TVA || 0);
-        TotalTTCInput.value = formatNumber(formatedNumberToFloat(discountedMontantInput.value) + TVA);
-    }
-}
-
-function updateAllHeaderPrices(montantHTAvantRemiseInput, TVAAvantRemiseInput, montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, montantHTApresRemiseInput, TVAApresRemiseInput, montantTTCApresRemiseInput) {
-
-    TVAHandler(montantHTAvantRemiseInput, TVAAvantRemiseInput, montantTTCAvantRemiseInput, 1);
-
-    AutoNumeric.getAutoNumericElement(remiseMontantInput).update({ maximumValue: AutoNumeric.unformat(montantTTCAvantRemiseInput.value, defaultAutoNumericOptions) });
-
-
-
-    tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInput, remiseTauxInput, remiseMontantInput, 1);
-    totalTTCDiscountedHandler(montantTTCAvantRemiseInput, montantTTCApresRemiseInput, remiseMontantInput);
-    TVAHandler(montantHTApresRemiseInput, TVAApresRemiseInput, montantTTCApresRemiseInput, 2);
-}
 
 document.addEventListener("DOMContentLoaded", () => {
     //CACHING ELEMENTS
@@ -516,6 +549,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const TVAApresRemiseInputNew = modalFactureNew.querySelector("#TVA-apres-remise");
     const montantTTCAvantRemiseInputNew = modalFactureNew.querySelector("#totalTTC-avant-remise");
     const montantTTCApresRemiseInputNew = modalFactureNew.querySelector("#totalTTC-apres-remise");
+    const tvaFlagCheckboxNew = modalFactureNew.querySelector("#tva-flag");
+    const tvaVariableCheckboxNew = modalFactureNew.querySelector("#tva-variable");
 
 
     const btnSaveNew = modalFactureNew.querySelector("#btn-save-new");
@@ -784,18 +819,38 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (dropdownNode.id == "item-dropdown") {
                     console.log("item are here called");
                     fillInputsDetailsItemRow(JSON.parse(event.target.dataset.infos), trNOde, "new");
-                    if (JSON.parse(event.target.dataset.infos)["identifiable"] == "1") {
-                        searchLive([JSON.parse(event.target.dataset.infos)["code"], ''], event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('#num-serie-dropdown'), "num-serie");
-                    }
+                    //! no need to autofill num - serie for cycle achat
+                    // if (JSON.parse(event.target.dataset.infos)["identifiable"] == "1") {
+                    //     searchLive([JSON.parse(event.target.dataset.infos)["code"], ''], event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('#num-serie-dropdown'), "num-serie");
+                    // }
+                    // trNOde.querySelector("#item-num-serie").textContent = "...";
+
+                    // *start calculating
+                    // *the avant remise part
+                    updateItemRowTotalPrice(event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode);
+                    updateTotalPriceHT(montantHTAvantRemiseInputNew, modalFactureNew.querySelectorAll(".item-prix-total"));
+                    setInputValue(TVAAvantRemiseInputNew, calculateTva(montantHTAvantRemiseInputNew, tvaRate[tvaFlag]));
+                    setInputValue(montantTTCAvantRemiseInputNew, calculateTTC(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew));
+
+                    // *update max for remiseMontantInputNew
+                    AutoNumeric.getAutoNumericElement(remiseMontantInputNew).update({ maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInputNew) })
 
 
-                    trNOde.querySelector("#item-num-serie").textContent = "...";
+                    // *update the remise montant
+                    setInputValue(remiseMontantInputNew,
+                        calculateDiscountFromRemiseTaux(remiseTauxInputNew, montantTTCAvantRemiseInputNew));
 
-                    updateItemTotalPrice(trNOde);
-                    const itemTotalPriceInputs = modalFactureNew.querySelectorAll("#item-prix-total");
-                    updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
+                    // *the apres remise
+                    setInputValue(montantHTApresRemiseInputNew,
+                        (AutoNumeric.getNumber(montantTTCAvantRemiseInputNew) -
+                            AutoNumeric.getNumber(remiseMontantInputNew))
+                        / (1 + tvaRate[tvaFlag])
+                    )
+                    setInputValue(TVAApresRemiseInputNew,
+                        AutoNumeric.getNumber(montantHTApresRemiseInputNew) * tvaRate[tvaFlag]
+                    )
+                    setInputValue(montantTTCApresRemiseInputNew, calculateTTC(montantHTApresRemiseInputNew, TVAApresRemiseInputNew));
 
-                    updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
 
                     if (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) > 0) {
                         modalFactureNew.querySelector("#btn-save-new").disabled = false;
@@ -807,10 +862,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.log("numserie dropdo called");
                     setInputValue(trNOde.querySelector("#item-num-serie"), event.target.textContent);
 
-                    updateItemTotalPrice(trNOde);
-                    const itemTotalPriceInputs = modalFactureNew.querySelectorAll("#item-prix-total");
-                    updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
-                    updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+
 
                     if (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) > 0) {
                         modalFactureNew.querySelector("#btn-save-new").disabled = false;
@@ -831,15 +883,40 @@ document.addEventListener("DOMContentLoaded", () => {
                 removeItem(event.target, "target");
                 modificationWatcher = true;
                 console.log("remove");
-                updateTotalPrice(montantHTAvantRemiseInputNew, modalFactureNew.querySelectorAll("#item-prix-total"))
-                updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+
+                // *start calculating
+                // *the avant remise part
+                // updateItemRowTotalPrice(event.target.parentNode.parentNode);
+                updateTotalPriceHT(montantHTAvantRemiseInputNew, modalFactureNew.querySelectorAll(".item-prix-total"));
+                setInputValue(TVAAvantRemiseInputNew, calculateTva(montantHTAvantRemiseInputNew, tvaRate[tvaFlag]));
+                setInputValue(montantTTCAvantRemiseInputNew, calculateTTC(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew));
+
+                // *update max for remiseMontantInputNew
+                AutoNumeric.getAutoNumericElement(remiseMontantInputNew).update({ maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInputNew) })
+
+
+                // *update the remise montant
+                setInputValue(remiseMontantInputNew,
+                    calculateDiscountFromRemiseTaux(remiseTauxInputNew, montantTTCAvantRemiseInputNew));
+
+                // *the apres remise
+                setInputValue(montantHTApresRemiseInputNew,
+                    (AutoNumeric.getNumber(montantTTCAvantRemiseInputNew) -
+                        AutoNumeric.getNumber(remiseMontantInputNew))
+                    / (1 + tvaRate[tvaFlag])
+                )
+                setInputValue(TVAApresRemiseInputNew,
+                    AutoNumeric.getNumber(montantHTApresRemiseInputNew) * tvaRate[tvaFlag]
+                )
+                setInputValue(montantTTCApresRemiseInputNew, calculateTTC(montantHTApresRemiseInputNew, TVAApresRemiseInputNew));
+
 
                 if (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) > 0) {
                     modalFactureNew.querySelector("#btn-save-new").disabled = false;
-                    modalFactureNew.querySelector("#btn-validate-new").disabled = false;
+                    // modalFactureNew.querySelector("#btn-validate-new").disabled = false;
                 } else {
                     modalFactureNew.querySelector("#btn-save-new").disabled = true;
-                    modalFactureNew.querySelector("#btn-validate-new").disabled = true;
+                    // modalFactureNew.querySelector("#btn-validate-new").disabled = true;
                 }
             }
         }, true)
@@ -856,8 +933,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
 
+            // normal case
             // business logic start
             // TODO a deplacer dans une autre section peutetre? un eventlistener pour le liste factreu?
+
             if (event.target.id == "search-item") {
                 // item searching with btn dropdown
                 console.log("searching item 23");
@@ -899,48 +978,181 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 addName(fournisseurDropdown, "Searching for \"" + event.target.value + "\"", false);
                 typingTimer = setTimeout(() => { searchLive(hint, fournisseurDropdown, "fournisseur") }, 1500);
-                //// END - grabing data
+                // END - grabing data
 
             } else if (["item-quantity", "item-pu"].includes(event.target.id)) {
                 console.log("update qty or pu");
-                updateItemTotalPrice(event.target.parentNode.parentNode)
-                const itemTotalPriceInputs = modalFactureNew.querySelectorAll("#item-prix-total");
-                updateTotalPrice(montantHTAvantRemiseInputNew, itemTotalPriceInputs);
-                updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew);
+                // *cache remise montant and reset it
+                let cacheMontantRemise = AutoNumeric.getNumber(remiseMontantInputNew);
+                setInputValue(remiseMontantInputNew, 0);
+
+                // *start calculating
+                // *the avant remise part
+                updateItemRowTotalPrice(event.target.parentNode.parentNode);
+                updateTotalPriceHT(montantHTAvantRemiseInputNew, modalFactureNew.querySelectorAll(".item-prix-total"));
+                setInputValue(TVAAvantRemiseInputNew, calculateTva(montantHTAvantRemiseInputNew, tvaRate[tvaFlag]));
+                setInputValue(montantTTCAvantRemiseInputNew, calculateTTC(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew));
+
+                // *update max for remiseMontantInputNew
+                AutoNumeric.getAutoNumericElement(remiseMontantInputNew).update({ maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInputNew) })
+
+
+                // *update the remise montant
+                setInputValue(remiseMontantInputNew,
+                    calculateDiscountFromRemiseTaux(remiseTauxInputNew, montantTTCAvantRemiseInputNew));
+
+                // *the apres remise
+                setInputValue(montantHTApresRemiseInputNew,
+                    (AutoNumeric.getNumber(montantTTCAvantRemiseInputNew) -
+                        AutoNumeric.getNumber(remiseMontantInputNew))
+                    / (1 + tvaRate[tvaFlag])
+                )
+                setInputValue(TVAApresRemiseInputNew,
+                    AutoNumeric.getNumber(montantHTApresRemiseInputNew) * tvaRate[tvaFlag]
+                )
+                setInputValue(montantTTCApresRemiseInputNew, calculateTTC(montantHTApresRemiseInputNew, TVAApresRemiseInputNew));
+
+
 
                 if (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) > 0) {
                     modalFactureNew.querySelector("#btn-save-new").disabled = false;
                 } else {
                     modalFactureNew.querySelector("#btn-save-new").disabled = true;
                 }
+
             } else if (event.target.id == 'remise-taux') {
-                tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, 1);
+                console.log("remise taux!");
+                updateDiscountFromRemiseTaux(remiseTauxInputNew, remiseMontantInputNew, montantTTCAvantRemiseInputNew);
+                updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew, tvaRate[tvaFlag]);
+
             } else if (event.target.id == 'remise-montant') {
 
                 console.log("remise montant!");
-                tauxAndMontantDiscountInputHandler(montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, 2);
+                updateDiscountFromRemiseMontant(remiseTauxInputNew, remiseMontantInputNew, montantTTCAvantRemiseInputNew);
+                updateAllHeaderPrices(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew, montantTTCAvantRemiseInputNew, remiseTauxInputNew, remiseMontantInputNew, montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew, tvaRate[tvaFlag]);
+
 
             } else if (event.target.id == 'tva-flag') {
+                console.log("tva flag here");
                 tvaFlag = event.target.checked;
-            } else if (event.target.id == 'tva-variable') {
-                TVAApresRemiseInputNew.disabled = !event.target.checked;
+                tvaVariableCheckboxNew.disabled = !event.target.checked;
+                if (!event.target.checked) {
+                    tvaVariableCheckboxNew.checked = event.target.checked;
+                    TVAApresRemiseInputNew.disabled = !event.target.checked;
+                    remiseTauxInputNew.disabled = event.target.checked;
+                    remiseMontantInputNew.disabled = event.target.checked;
 
+                }
+                // *start calculating
+                // *the avant remise part
+                // updateItemRowTotalPrice(event.target.parentNode.parentNode);
+                updateTotalPriceHT(montantHTAvantRemiseInputNew, modalFactureNew.querySelectorAll(".item-prix-total"));
+                setInputValue(TVAAvantRemiseInputNew, calculateTva(montantHTAvantRemiseInputNew, tvaRate[tvaFlag]));
+                setInputValue(montantTTCAvantRemiseInputNew, calculateTTC(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew));
+
+                // *update max for remiseMontantInputNew
+                AutoNumeric.getAutoNumericElement(remiseMontantInputNew).update({ maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInputNew) })
+
+
+                // *update the remise montant
+                setInputValue(remiseMontantInputNew,
+                    calculateDiscountFromRemiseTaux(remiseTauxInputNew, montantTTCAvantRemiseInputNew));
+
+                // *the apres remise
+                setInputValue(montantHTApresRemiseInputNew,
+                    (AutoNumeric.getNumber(montantTTCAvantRemiseInputNew) -
+                        AutoNumeric.getNumber(remiseMontantInputNew))
+                    / (1 + tvaRate[tvaFlag])
+                )
+                setInputValue(TVAApresRemiseInputNew,
+                    AutoNumeric.getNumber(montantHTApresRemiseInputNew) * tvaRate[tvaFlag]
+                )
+                setInputValue(montantTTCApresRemiseInputNew, calculateTTC(montantHTApresRemiseInputNew, TVAApresRemiseInputNew));
+
+            } else if (event.target.id == 'tva-variable') {
+
+                updateFormOnTvaVariable(event.target.checked, modalFactureNew);
+                // TVAApresRemiseInputNew.disabled = !event.target.checked;
+                // remiseTauxInputNew.disabled = event.target.checked;
+                // setInputValue(remiseTauxInputNew, "");
+                // remiseMontantInputNew.disabled = event.target.checked;
+                // setInputValue(remiseMontantInputNew, "");
+
+                // if (!event.target.checked) {
+                //     // if not variable
+
+                //     // *start calculating
+                //     // *the avant remise part
+                //     // updateItemRowTotalPrice(event.target.parentNode.parentNode);
+                //     updateTotalPriceHT(montantHTAvantRemiseInputNew, modalFactureNew.querySelectorAll(".item-prix-total"));
+                //     setInputValue(TVAAvantRemiseInputNew, calculateTva(montantHTAvantRemiseInputNew, tvaRate[tvaFlag]));
+                //     setInputValue(montantTTCAvantRemiseInputNew, calculateTTC(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew));
+
+                //     // *update max for remiseMontantInputNew
+                //     AutoNumeric.getAutoNumericElement(remiseMontantInputNew).update({ maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInputNew) })
+
+
+                //     // *update the remise montant
+                //     setInputValue(remiseMontantInputNew,
+                //         calculateDiscountFromRemiseTaux(remiseTauxInputNew, montantTTCAvantRemiseInputNew));
+                //     // *the apres remise
+                //     setInputValue(montantHTApresRemiseInputNew,
+                //         (AutoNumeric.getNumber(montantTTCAvantRemiseInputNew) -
+                //             AutoNumeric.getNumber(remiseMontantInputNew))
+                //         / (1 + tvaRate[tvaFlag])
+                //     )
+                //     setInputValue(TVAApresRemiseInputNew,
+                //         AutoNumeric.getNumber(montantHTAvantRemiseInputNew) * tvaRate[tvaFlag]
+                //     )
+                //     setInputValue(montantTTCApresRemiseInputNew, calculateTTC(montantHTApresRemiseInputNew, TVAApresRemiseInputNew));
+                // } else {
+                //     // *start calculating
+                //     // *the avant remise part
+                //     // updateItemRowTotalPrice(event.target.parentNode.parentNode);
+                //     updateTotalPriceHT(montantHTAvantRemiseInputNew, modalFactureNew.querySelectorAll(".item-prix-total"));
+                //     setInputValue(TVAAvantRemiseInputNew, calculateTva(montantHTAvantRemiseInputNew, tvaRate[tvaFlag]));
+                //     setInputValue(montantTTCAvantRemiseInputNew, calculateTTC(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew));
+
+                //     // *update max for remiseMontantInputNew
+                //     AutoNumeric.getAutoNumericElement(remiseMontantInputNew).update({ maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInputNew) })
+
+
+                //     // *update the remise montant
+                //     setInputValue(remiseMontantInputNew,
+                //         calculateDiscountFromRemiseTaux(remiseTauxInputNew, montantTTCAvantRemiseInputNew));
+                //     // *the apres remise
+                //     setInputValue(montantHTApresRemiseInputNew,
+                //         (AutoNumeric.getNumber(montantTTCAvantRemiseInputNew) -
+                //             AutoNumeric.getNumber(remiseMontantInputNew))
+                //         / (1 + tvaRate[tvaFlag])
+                //     )
+                //     setInputValue(TVAApresRemiseInputNew,
+                //         AutoNumeric.getNumber(montantHTAvantRemiseInputNew) * tvaRate[tvaFlag]
+                //     )
+                //     setInputValue(montantTTCApresRemiseInputNew, calculateTTC(montantHTApresRemiseInputNew, TVAApresRemiseInputNew));
+                // }
+
+
+            } else if (event.target.id == 'TVA-apres-remise') {
+
+
+                // *the apres remise
+                // setInputValue(montantHTApresRemiseInputNew,
+                //     (AutoNumeric.getNumber(montantTTCAvantRemiseInputNew) -
+                //         AutoNumeric.getNumber(remiseMontantInputNew))
+                //     / (1 + tvaRate[tvaFlag])
+                // )
+                // setInputValue(TVAApresRemiseInputNew,
+                //     AutoNumeric.getNumber(montantHTAvantRemiseInputNew) * tvaRate[tvaFlag]
+                // )
+                setInputValue(montantTTCApresRemiseInputNew, calculateTTC(montantHTApresRemiseInputNew, TVAApresRemiseInputNew));
 
             }
 
             if (['remise-montant', "remise-taux"].includes(event.target.id)) {
-                totalTTCDiscountedHandler(montantTTCAvantRemiseInputNew, montantTTCApresRemiseInputNew, remiseMontantInputNew);
-                TVAHandler(montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew, 2);
             } else if (['TVA-apres-remise'].includes(event.target.id)) {
-                montantTTCApresRemiseInputNew.value = AutoNumeric.getNumber(montantHTApresRemiseInputNew) + AutoNumeric.getNumber(TVAApresRemiseInputNew);
-                // TVAHandler(montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew, 3);
-                // totalTTCDiscountedHandler(montantTTCAvantRemiseInputNew, montantTTCApresRemiseInputNew, remiseMontantInputNew);
-
 
             } else {
-                totalTTCDiscountedHandler(montantTTCAvantRemiseInputNew, montantTTCApresRemiseInputNew, remiseMontantInputNew);
-                TVAHandler(montantHTApresRemiseInputNew, TVAApresRemiseInputNew, montantTTCApresRemiseInputNew, 1);
-                // TODO : it should update the tva avant remise too
             }
 
         });
@@ -974,9 +1186,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // autonumeric Listener
     new AutoNumeric.multiple(".remise-taux", [defaultAutoNumericOptions, { minimumValue: 0, maximumValue: 100 }]);
+    // new AutoNumeric.multiple(".remise-montant", [defaultAutoNumericOptions, { minimumValue: 0 }]);
     new AutoNumeric.multiple(".remise-montant", [defaultAutoNumericOptions, { minimumValue: 0, maximumValue: 0 }]);
     new AutoNumeric.multiple(".item-pu", [defaultAutoNumericOptions, { minimumValue: 0 }]);
     new AutoNumeric.multiple(".item-quantity", [defaultAutoNumericOptions, { minimumValue: 0 }]);
+    new AutoNumeric.multiple(".item-prix-total", [defaultAutoNumericOptions, { minimumValue: 0 }]);
     new AutoNumeric.multiple(".totalHT-avant-remise", [defaultAutoNumericOptions, { minimumValue: 0 }])
     new AutoNumeric.multiple(".TVA-avant-remise", [defaultAutoNumericOptions, { minimumValue: 0 }])
     new AutoNumeric.multiple(".totalTTC-avant-remise", [defaultAutoNumericOptions, { minimumValue: 0 }])

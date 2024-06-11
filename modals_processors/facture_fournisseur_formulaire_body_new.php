@@ -13,6 +13,10 @@ $user_input = $xpath->query(".//input[@id='user-uid']");
 
 $user_input[0]->setAttribute("value", $_SESSION["user"]->uid);
 
+$avec_tva_input = $xpath->query(".//input[@id='tva-flag']");
+// TODO use the general setting in database with company profil
+$avec_tva_input[0]->setAttribute("checked", true);
+
 require_once $_SERVER["DOCUMENT_ROOT"] . "/database/select/all_places_name_nolimit.php";
 $magasin_select = $xpath->query(".//select[@id='magasin']")[0];
 foreach ($all_places_name_nolimit as $values) {
