@@ -310,7 +310,7 @@ function filterNumSerie(nodeListLI, term) {
     if (term) {
         nodeListLI.forEach(LI => {
             LI.classList.remove("visually-hidden");
-            if (!LI.querySelector("a").textContent.includes(term)) {
+            if (!LI.querySelector("a").textContent.toLowerCase().includes(term)) {
                 LI.classList.add("visually-hidden");
             }
         });

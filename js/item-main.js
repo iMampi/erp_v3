@@ -1,9 +1,9 @@
 var currentUser;
 var defaultAutoNumericOptions =
 {
-    decimalCharacter: ",",
-    digitGroupSeparator: " ",
-    watchExternalChanges: true
+	decimalCharacter: ",",
+	digitGroupSeparator: " ",
+	watchExternalChanges: true
 };
 
 const DefaultValuesItemNewFormObj = {
@@ -64,6 +64,17 @@ var modificationWatcher = false;
 const ToastShowClosured = showMe();
 var defaultFilterFlag = true;
 
+function fillButtonText(objectData, BtnNode) {
+	// TODO : to refactor. there's redondancy
+	if (["fournisseur", "client"].includes(BtnNode.id)) {
+		let client = formatCLientNameSearchResult(objectData);
+		setInputValue(BtnNode, client);
+	} else if (["categorie", "famille"].includes(BtnNode.id)) {
+		setInputValue(BtnNode, objectData.text);
+
+	}
+}
+
 function updateFamilleRow(mytable, dataObj) {
 	// let row = mytable.querySelector(
 	// "#row-" + zeroLeftPadding(parseInt(dataObj["uid"]), 3, false)
@@ -109,6 +120,8 @@ function updateFamilleRow(mytable, dataObj) {
 		}
 	});
 }
+
+
 
 function makeDetailsInputsEditable(inputElements) {
 	// console.log("inputElements");
@@ -239,15 +252,9 @@ function getFormInputsValues(modalRef) {
 	let inputs = modalRef.querySelectorAll(".input");
 	// console.log("inputs");
 	// console.log(inputs);
-	// TODO : use getInputValue() instead
 	inputs.forEach((input) => {
-		if (input.tagName == "BUTTON") {
-			inputObj[input.id] = input.textContent;
-		} else if (input.type == "checkbox") {
-			inputObj[input.id] = input.checked;
-		} else {
-			inputObj[input.id] = input.value;
-		}
+		inputObj[input.id] = getInputValue(myInput).trim();
+
 	});
 	// console.log("inputObj");
 	// console.log(inputObj);
@@ -467,15 +474,17 @@ document.addEventListener("DOMContentLoaded", () => {
 		mydiv.prepend(myNode.body.childNodes[0]);
 	}
 
-	async function filterFamille(inputObj, tableBodyCategorie) {
-		let url = "/database/select/select_filtered_familles.php";
-		let response = await sendData(url, inputObj);
-
-		console.log("error?");
-		console.log(response);
-		let myjson = JSON.parse(response);
-
-		return await fillMainTable(myjson, tableBodyCategorie);
+	function filterButtonDropdown(nodeListLI, term) {
+		console.log("fifi fafamille");
+		term = term.trim();
+		if (term) {
+			nodeListLI.forEach(LI => {
+				LI.classList.remove("visually-hidden");
+				if (!LI.querySelector("a").textContent.toLowerCase().includes(term)) {
+					LI.classList.add("visually-hidden");
+				}
+			});
+		}
 
 	}
 
@@ -837,7 +846,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	try {
 		modalNew.addEventListener('click', (event) => {
-			if (event.target.id == "btn-cancel-new") {
+			if (event.target.classList.contains("dropdown-toggle")) {
+				if (event.target.classList.contains("is-invalid")) {
+					event.target.classList.remove("is-invalid");
+					modificationWatcher = true;
+				}
+			}
+			if (event.target.classList.contains("search-result")) {
+				console.log("chossed item");
+				console.log(event);
+				let dropdownNode = event.target.parentNode.parentNode.parentNode;
+				fillButtonText({ text: event.target.textContent }, dropdownNode.querySelector(".dropdown-toggle"));
+				// trNOde.querySelector("#item-num-serie").textContent = "...";
+
+
+
+			} else if (event.target.id == "btn-cancel-new") {
 				if (modificationWatcher) {
 					openModalConfirmation(
 						confirmationObj,
@@ -868,6 +892,11 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (event.target.id === "prix-variable") {
 				modalNew.querySelector("#prix-vente").disabled = modalNew.querySelector("#prix-variable").checked;
 				modalNew.querySelector("#prix-vente").value = "0,00"
+			} else if (["search-famille", "search-categorie"].includes(event.target.id)) {
+				console.log("searching famille");
+				let myDropdown = event.target.parentNode.parentNode.parentNode;
+				filterButtonDropdown(myDropdown.querySelectorAll("li.result"), event.target.value);
+
 			}
 		})
 	} catch (error) {

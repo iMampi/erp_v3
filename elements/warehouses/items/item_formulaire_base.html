@@ -1,3 +1,4 @@
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
 <div class="container">
 	<div class="row my-auto">
 		<span class="col-form-label col-2">code article</span>
@@ -9,19 +10,22 @@
 		<span class="col-form-label col-2">actif</span>
 
 		<div class="col-2 my-auto">
-			<select disabled class="form-control form-control-sm actif input " id="actif">
+			<select disabled class="form-control form-control-sm actif input form-select" id="actif">
 				<option value="1">actif</option>
 				<option value="0">inactif</option>
 			</select>
 		</div>
+	</div>
+	<div class="row my-auto">
 		<span class="col-form-label col-2">déclarable</span>
 
 		<div class="col-2 my-auto">
-			<select class=" form-control form-control-sm declarable input" id="declarable">
+			<select class="form-control form-control-sm declarable input form-select form-select-sm" id="declarable">
 				<option value="1">oui</option>
 				<option value="0">non</option>
 			</select>
 		</div>
+
 	</div>
 	<div class="row">
 		<span class="col-form-label col-2">nom</span>
@@ -33,16 +37,20 @@
 
 	<div class="row">
 		<span class="col-form-label col-2">type</span>
-		<div class="col-2 my-auto">
+		<div class="col-6 my-auto">
 			<select class="form-control form-control-sm type input " id="type">
 				<option value="1">bien</option>
 				<option value="0">service</option>
 			</select>
 		</div>
 
+
+		
+	</div>
+	<div class="row my-auto">
 		<div id="famille-selection" class="row my-auto py-1">
 			<span class="align-self-center col-2 lh-1">famille</span>
-			<div class="col-4 my-auto">
+			<div class="col-6 my-auto">
 				<div class="dropdown btn-group d-flex" role="group">
 					<button class="btn input famille btn-outline-secondary dropdown-toggle form-control form-control-sm btn-sm w-100 text-start right-corners" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="famille" >
 						Choisissez une famille
@@ -63,9 +71,11 @@
 			</div>
 		</div>	
 
+	</div>
+	<div class="row my-auto">
 		<div id="categorie-selection" class="row my-auto py-1">
 			<span class="align-self-center col-2 lh-1">categorie</span>
-			<div class="col-4 my-auto">
+			<div class="col-6 my-auto">
 				<div class="dropdown btn-group d-flex" role="group">
 					<button class="btn input categorie btn-outline-secondary dropdown-toggle form-control form-control-sm btn-sm w-100 text-start right-corners" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="categorie" >
 						Choisissez une categorie

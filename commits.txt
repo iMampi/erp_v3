@@ -1264,3 +1264,12 @@ bon, ca déconne surment dans ma logique, dans ma concpetion, mais la meilleur s
 la gestion de tva-variable et tva-flag est OK. les premier tests sont bon. mais il faudra surement tester en profondeur.
 
 on commence à mettre à jour le cycle article/item... 
+-------------------------
+163_an:
+on continue à mettre à jour le cycle article/item... 
+on remplace les input avec datalist avec les boutons datalist  et search pour les champs famille et categorie.
+
+mettre à jour la partie js pour ce remplacement avec des boutons. la partie fill et search et filter. FAIT.
+
+ajout de .toLowerCase() dans filterButtonDropdown()
+il reste la partie getFormInputValues...

@@ -14,9 +14,10 @@ is_logged();
 
 <?php
 // CACHING CATEGORIES AND FAMILIES
-require __DIR__ . '/../../database/select/all_categories_name_nolimit.php';
+require_once __DIR__ . '/../../database/select/all_familles_name_nolimit.php';
 
-require __DIR__ . '/../../database/select/all_familles_name_nolimit.php';
+require_once __DIR__ . '/../../database/select/all_categories_name_nolimit.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -216,20 +217,7 @@ require __DIR__ . '/../../database/select/all_familles_name_nolimit.php';
         <!-- datalists  -->
         <datalist id="famille-list">
             <?php
-            $domfamille = new DOMDocument();
-            // //to be able to use new html5 tag with DOMDocument
-            libxml_use_internal_errors(true);
 
-            foreach ($all_familles_name as $array) {
-                $option_ = $domfamille->createElement("option");
-                $option_->setAttribute("value", $array["uid"] . " - " . $array["name"]);
-                // $option_->setAttribute("data-uid", $array["uid"]);
-                $option_->appendChild(
-                    $domfamille->createTextNode($array["uid"] . " - " . $array["name"])
-                );
-                $domfamille->appendChild($option_);
-            }
-            echo $domfamille->saveHTML();
             ?>
         </datalist>
         <datalist id="category-list">

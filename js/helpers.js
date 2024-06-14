@@ -84,14 +84,14 @@ function formatedNumberToFloat(val) {
 
 function getInputValue(node) {
 	if (node.tagName == "BUTTON") {
-		return node.textContent;
+		return node.textContent.trim();
 	}
 
 	if (node.type == "checkbox") {
 		return node.checked;
 	}
 
-	return node.value;
+	return node.value.trim();
 }
 
 function setInputValue(node, value) {
