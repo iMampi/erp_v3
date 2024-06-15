@@ -252,8 +252,8 @@ function getFormInputsValues(modalRef) {
 	let inputs = modalRef.querySelectorAll(".input");
 	// console.log("inputs");
 	// console.log(inputs);
-	inputs.forEach((input) => {
-		inputObj[input.id] = getInputValue(myInput).trim();
+	inputs.forEach((myInput) => {
+		inputObj[myInput.id] = getInputValue(myInput);
 
 	});
 	// console.log("inputObj");
@@ -344,10 +344,10 @@ document.addEventListener("DOMContentLoaded", () => {
 			bsModalConfirmation.hide();
 
 			let dataObj = getFormInputsValues(modalNew);
-			dataObj["categorie-uid"] = dataObj["categorie"].split(' - ')[0];
-			dataObj["categorie"] = dataObj["categorie"].split(' - ')[1];
-			dataObj["famille-uid"] = dataObj["famille"].split(' - ')[0];
-			dataObj["famille"] = dataObj["famille"].split(' - ')[1];
+			dataObj["categorie-uid"] = dataObj["categorie"].split('//')[0];
+			dataObj["categorie"] = dataObj["categorie"].split('//')[1];
+			dataObj["famille-uid"] = dataObj["famille"].split('//')[0];
+			dataObj["famille"] = dataObj["famille"].split('//')[1];
 			dataObj["prix-vente"] = parseFloat(dataObj["prix-vente"]).toFixed(2);
 			console.log("dataObj");
 			console.log(dataObj);
@@ -423,10 +423,10 @@ document.addEventListener("DOMContentLoaded", () => {
 			bsModalConfirmation.hide();
 
 			let dataObj = getFormInputsValues(modalItemDetails);
-			dataObj["categorie-uid"] = dataObj["categorie"].split(' - ')[0];
-			dataObj["categorie"] = dataObj["categorie"].split(' - ')[1];
-			dataObj["famille-uid"] = dataObj["famille"].split(' - ')[0];
-			dataObj["famille"] = dataObj["famille"].split(' - ')[1];
+			dataObj["categorie-uid"] = dataObj["categorie"].split('//')[0];
+			dataObj["categorie"] = dataObj["categorie"].split('//')[1];
+			dataObj["famille-uid"] = dataObj["famille"].split('//')[0];
+			dataObj["famille"] = dataObj["famille"].split('//')[1];
 			dataObj["prix-vente"] = parseFloat(dataObj["prix-vente"]).toFixed(2);
 
 			saveUpdatedItem(dataObj);

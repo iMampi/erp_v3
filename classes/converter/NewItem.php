@@ -44,5 +44,9 @@ class NewItem extends Converter
         $this->data_for_db["note"] = \array_key_exists("note", $input) ? \trim($input["note"]) != "" ?  \trim($input["note"]) : \null : \null;
 
         $this->data_for_db["prix_variable"] = \array_key_exists("prix-variable", $input) ? \boolval($input["prix-variable"]) : 0;
+
+        $this->data_for_db["pour_achat"] = \array_key_exists("pour-achat", $input) ? \boolval($input["pour-achat"]) : 0;
+
+        $this->data_for_db["pour_vente"] = \array_key_exists("pour-vente", $input) ? \boolval($input["pour-vente"]) : 0;
     }
 }

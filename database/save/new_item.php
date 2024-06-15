@@ -36,4 +36,6 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("item"))) {
 
     // foreach ($arr_banks as $value) {
     //     $converter_bank[$value["bank_name"]] = $value["bank_table"];
+} else {
+    // TODO : return "not authorized"
 }

@@ -1273,3 +1273,16 @@ mettre à jour la partie js pour ce remplacement avec des boutons. la partie fil
 
 ajout de .toLowerCase() dans filterButtonDropdown()
 il reste la partie getFormInputValues...
+-------------------------
+164_an:
+
+prix de vente disabled et set to zero if pour vente is not checked. same pour prix variable
+
+mise a jour de la DB : la function new_item()
+mise à jour Binding pour NewItem
+mise à jour NewItem
+mise à jour Queries
+
+mise à jour getFormInputValues()
+
+mettre à jour le cleanForm dans cycle item... 
