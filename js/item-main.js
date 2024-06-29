@@ -65,7 +65,9 @@ const DTO_FILL_INPUT = {
 	"prix-vente": "prix_vente",
 	"pamp": "prix_achat_mp",
 	"note": "note",
-	"prix-variable": "prix_variable"
+	"prix-variable": "prix_variable",
+	"pour-vente": "pour_vente",
+	"pour-achat": "pour_achat"
 }
 
 var listDOM = {};
@@ -146,15 +148,12 @@ function makeDetailsInputsEditable(inputElements) {
 	});
 }
 
-function fillInputsDetails(valueObj) {
+function fillInputsDetails(valueObj, modalDetails) {
 	console.log("valueObj : ");
 	console.log(valueObj);
 	// let inputsElements = md.querySelectorAll(".input");
-	let modalDetails_ = document.getElementById(
-		"modal-item-details"
-	);
-	let inputsElements =
-		modalDetails_.getElementsByClassName("input");
+
+	let inputsElements = modalDetails.getElementsByClassName("input");
 
 	// console.log("inputsElement :");
 	// console.log(inputsElements);
@@ -165,9 +164,9 @@ function fillInputsDetails(valueObj) {
 	for (let index = 0; index < inputsElements.length; index++) {
 		let element = inputsElements[index];
 		if (["famille", "categorie"].includes(element.id)) {
-			element.value = valueObj[DTO_FILL_INPUT[element.id] + "_uid"] + " - " + valueObj[DTO_FILL_INPUT[element.id]];
+			setInputValue(element, valueObj[DTO_FILL_INPUT[element.id] + "_uid"] + " - " + valueObj[DTO_FILL_INPUT[element.id]]);
 		} else {
-			element.value = valueObj[DTO_FILL_INPUT[element.id]];
+			setInputValue(element, valueObj[DTO_FILL_INPUT[element.id]]);
 		}
 		// console.log(element.id);
 		// console.log(DTO_FILL_INPUT[element.id]);
@@ -784,7 +783,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 					console.log("result[1]");
 					console.log(result[1][0]);
-					fillInputsDetails(result[1][0]);
+					fillInputsDetails(result[1][0], modalItemDetails);
 				}
 			});
 	}

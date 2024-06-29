@@ -1,5 +1,5 @@
 <?php
-// TODO grab role of user
+
 use function Session\can_create;
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
@@ -59,9 +59,9 @@ if (isset($_SESSION["user"])) {
     }
 }
 
-$domfamille = new DOMDocument();
+// $domfamille = new DOMDocument();
 // to be able to use new html5 tag with DOMDocument
-libxml_use_internal_errors(true);
+// libxml_use_internal_errors(true);
 
 
 // $inputs = $xpath->query(".//*[contains(@class,'input')]");

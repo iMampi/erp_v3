@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="./js/test.js"></script>
-    <title>Document</title>
-
-    <br />
-<font size='1'><table class='xdebug-error xe-parse-error' dir='ltr' border='1' cellspacing='0' cellpadding='1'>
-<tr><th align='left' bgcolor='#f57900' colspan="5"><span style='background-color: #cc0000; color: #fce94f; font-size: x-large;'>( ! )</span> Parse error: syntax error, unexpected token "||" in C:\xampp\htdocs\mymanager.local\database\save\new_commande.php on line <i>196</i></th></tr>
+<br />
+<font size='1'><table class='xdebug-error xe-uncaught-exception' dir='ltr' border='1' cellspacing='0' cellpadding='1'>
+<tr><th align='left' bgcolor='#f57900' colspan="5"><span style='background-color: #cc0000; color: #fce94f; font-size: x-large;'>( ! )</span> Fatal error: Uncaught mysqli_sql_exception: Table 'erpv2.view_all_items' doesn't exist in C:\xampp\htdocs\mymanager.local\classes\database\DbHandler.php on line <i>95</i></th></tr>
+<tr><th align='left' bgcolor='#f57900' colspan="5"><span style='background-color: #cc0000; color: #fce94f; font-size: x-large;'>( ! )</span> mysqli_sql_exception: Table 'erpv2.view_all_items' doesn't exist in C:\xampp\htdocs\mymanager.local\classes\database\DbHandler.php on line <i>95</i></th></tr>
+<tr><th align='left' bgcolor='#e9b96e' colspan='5'>Call Stack</th></tr>
+<tr><th align='center' bgcolor='#eeeeec'>#</th><th align='left' bgcolor='#eeeeec'>Time</th><th align='left' bgcolor='#eeeeec'>Memory</th><th align='left' bgcolor='#eeeeec'>Function</th><th align='left' bgcolor='#eeeeec'>Location</th></tr>
+<tr><td bgcolor='#eeeeec' align='center'>1</td><td bgcolor='#eeeeec' align='center'>0.4070</td><td bgcolor='#eeeeec' align='right'>411328</td><td bgcolor='#eeeeec'>{main}(  )</td><td title='C:\xampp\htdocs\mymanager.local\database\select\one_item_details.php' bgcolor='#eeeeec'>...\one_item_details.php<b>:</b>0</td></tr>
+<tr><td bgcolor='#eeeeec' align='center'>2</td><td bgcolor='#eeeeec' align='center'>0.4139</td><td bgcolor='#eeeeec' align='right'>672688</td><td bgcolor='#eeeeec'>Database\DbHandler::execute_prepared_statement( <span>$prepared_statement = </span><span>class Database\StandardPreparedStatement { public string $query = &#39;\r\n        select * from view_all_items where code=? \r\n        &#39;; public array $binding = [0 =&gt; &#39;s&#39;, 1 =&gt; &#39;vet056&#39;] }</span>, <span>$fetch_mode = </span>??? )</td><td title='C:\xampp\htdocs\mymanager.local\database\select\one_item_details.php' bgcolor='#eeeeec'>...\one_item_details.php<b>:</b>28</td></tr>
+<tr><td bgcolor='#eeeeec' align='center'>3</td><td bgcolor='#eeeeec' align='center'>0.4139</td><td bgcolor='#eeeeec' align='right'>682184</td><td bgcolor='#eeeeec'><a href='http://www.php.net/mysqli-stmt.prepare' target='_new'>prepare</a>( <span>$query = </span><span>&#39;\r\n        select * from view_all_items where code=? \r\n        &#39;</span> )</td><td title='C:\xampp\htdocs\mymanager.local\classes\database\DbHandler.php' bgcolor='#eeeeec'>...\DbHandler.php<b>:</b>95</td></tr>
 </table></font>
-</head>
-<body>
-    
-</body>
-</html>

@@ -1292,5 +1292,14 @@ savegarde new items apres la mise a jour des champs : OK
 
 prix de vente disabled et set to zero if pour vente is not checked. same pour prix variable...: DONE
 mettre à jour le cleanForm dans cycle item... :DONE 
+-------------------------
+166_an:
+item cycle update an entry
 
+updated modals_processors\item_formulaire_body_read_only.php
 
+added Boolean() called in setInputValue() for checkbox
+
+item-main.js
+updated DTO_FILL_INPUT with the new fields
+now using setInputValue() in fillInputsDetails()
