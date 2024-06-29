@@ -16,12 +16,21 @@ const DefaultValuesItemNewFormObj = {
 	stockable: "0",
 	identifiable: "0",
 	"prix-vente": "0,00",
-	"famille": "",
-	"categorie": "",
+	"famille": "Choississez une famille",
+	"categorie": "Choississez une catégorie",
+	"pour-vente": false,
+	"pour-achat": false,
 	pamp: "",
 	note: "",
 	"prix-variable": false
 };
+
+const DisabledByDefaultInputsItemNewFormObj = [
+	"prix-vente",
+	"pamp",
+	"prix-variable"
+];
+
 const DefaultValuesItemFilterObj = {
 	code: "",
 	actif: "1",
@@ -802,7 +811,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			modalNew.querySelectorAll(".input");
 		inputsForm.forEach((input) => {
 			// console.log(input);
-			input.value = DefaultValuesItemNewFormObj[input.id];
+			setInputValue(input, DefaultValuesItemNewFormObj[input.id]);
+			input.disabled = DisabledByDefaultInputsItemNewFormObj.includes(input.id);
 		});
 	}
 
@@ -847,10 +857,13 @@ document.addEventListener("DOMContentLoaded", () => {
 	try {
 		modalNew.addEventListener('click', (event) => {
 			if (event.target.classList.contains("dropdown-toggle")) {
+				console.log("cliecked");
 				if (event.target.classList.contains("is-invalid")) {
 					event.target.classList.remove("is-invalid");
 					modificationWatcher = true;
 				}
+				modificationWatcher = true;
+
 			}
 			if (event.target.classList.contains("search-result")) {
 				console.log("chossed item");
@@ -890,13 +903,20 @@ document.addEventListener("DOMContentLoaded", () => {
 			console.log("input done");
 			modificationWatcher = true;
 			if (event.target.id === "prix-variable") {
-				modalNew.querySelector("#prix-vente").disabled = modalNew.querySelector("#prix-variable").checked;
-				modalNew.querySelector("#prix-vente").value = "0,00"
+				modalNew.querySelector("#prix-vente").disabled = modalNew.querySelector("#prix-variable").checked && modalNew.querySelector("#pour-vente").checked;
+				modalNew.querySelector("#prix-vente").value = ""
 			} else if (["search-famille", "search-categorie"].includes(event.target.id)) {
 				console.log("searching famille");
 				let myDropdown = event.target.parentNode.parentNode.parentNode;
 				filterButtonDropdown(myDropdown.querySelectorAll("li.result"), event.target.value);
+			} else if (event.target.id === "pour-vente") {
+				console.log("pour vente eh ho");
 
+				modalNew.querySelector("#prix-vente").disabled = !event.target.checked;
+				modalNew.querySelector("#prix-vente").value = "";
+
+				modalNew.querySelector("#prix-variable ").disabled = !event.target.checked;
+				modalNew.querySelector("#prix-variable ").checked = !event.target.checked && modalNew.querySelector("#pour-vente ").checked;
 			}
 		})
 	} catch (error) {

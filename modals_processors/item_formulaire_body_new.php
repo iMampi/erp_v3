@@ -32,7 +32,7 @@ if (isset($_SESSION["user"])) {
             $a_->appendChild(
                 $dom->createTextNode($array["uid"] . "//" . $array["name"])
             );
-            $a_->setAttribute("class", "dropdown-item fst-italic search-result");
+            $a_->setAttribute("class", "dropdown-item fst-italic search-result ");
             $a_->setAttribute("href", "#");
             $li_->appendChild($a_);
             $ul_famille->appendChild($li_);

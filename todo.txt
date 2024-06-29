@@ -199,3 +199,5 @@ errors handling, required field in fournisseur
 sur les class SelectionXXX, les parametre actif/active. voir comment ca marche et l'arrangé en fonction des besoins
 
 test if num serie is required for item with num serie
+
+dropdown-menu for cutom btn list : add vertical scrolling bar and limit length of the dropdown-menu
