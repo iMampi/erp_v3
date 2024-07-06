@@ -201,3 +201,7 @@ sur les class SelectionXXX, les parametre actif/active. voir comment ca marche e
 test if num serie is required for item with num serie
 
 dropdown-menu for cutom btn list : add vertical scrolling bar and limit length of the dropdown-menu
+
+updated SelectionItem->generate_condition(): the "or" part needs "( ... )" to satisfy the priority between OR and AND; >>> to implement in all the selection Objects
+
+when putting  tva apres remise ( when tva variable) : update avant remise tva and totalTTC

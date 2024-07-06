@@ -55,7 +55,7 @@ class SelectionItems extends Converter
     public function generate_conditions()
     {
         $data = $this->data_from_user;
-
+        $temp_or = "";
         if (\count($data) > 0) {
             $this->conditions = " where ";
 
@@ -67,10 +67,18 @@ class SelectionItems extends Converter
                     case 'code':
                     case 'name':
                         $column_name = self::$correspondances[$key];
-                        $this->conditions .= " $column_name LIKE '%$value%' or";
+                        // $this->conditions .= " $column_name LIKE '%$value%' or";
+                        if (!\str_contains($temp_or, "(")) {
+                            $temp_or = "(";
+                        }
+                        $temp_or .= " $column_name LIKE '%$value%' or";
                         break;
                 }
                 if ($key == $last_key) {
+                    $temp_or = \preg_replace('/\s*or\s*$/', "", $temp_or);
+                    $temp_or .= " )";
+                    $this->conditions .= $temp_or;
+
                     $this->conditions = \preg_replace('/\s*or\s*$/', "", $this->conditions);
                     $this->conditions = \preg_replace('/\s*where\s*$/', "", $this->conditions);
                     $this->conditions .= " and active='1'";

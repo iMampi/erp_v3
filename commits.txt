@@ -1303,3 +1303,27 @@ added Boolean() called in setInputValue() for checkbox
 item-main.js
 updated DTO_FILL_INPUT with the new fields
 now using setInputValue() in fillInputsDetails()
+-------------------------
+167_an:
+
+updated SelectionItem->generate_condition(): the "or" part needs "( ... )" to satisfy the priority between OR and AND;
+
+updated const DefaultValuesItemNewFormObj in item-main.js : added search-famille and search-categorie;
+
+cycle facture fournisseur :
+when selecting an item, the pirx unitaire field must be enabled. always. must not behave like in facture client/commande...
+
+added to fillInputsDetailsItemRow():
+rowNode.querySelector(".input#item-pu").disabled = false;
+
+working on saveCreationObj...saveFactureNew()...
+
+facture_frnsr_header_base.html : input date had not correct class and no id
+
+updated db : erpv2-20240705.sql
+erpv2-20240706.sql : added function new_facture_fournisseur
+
+created NewFactureFournisseur.php, new_facture_fournisseur.php
+updated Binding.php, Queries.php
+
+test the process of saving a new facture fournisseur...

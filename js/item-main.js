@@ -22,7 +22,9 @@ const DefaultValuesItemNewFormObj = {
 	"pour-achat": false,
 	pamp: "",
 	note: "",
-	"prix-variable": false
+	"prix-variable": false,
+	"search-famille": "",
+	"search-categorie": ""
 };
 
 const DisabledByDefaultInputsItemNewFormObj = [

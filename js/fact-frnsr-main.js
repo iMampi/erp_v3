@@ -12,6 +12,7 @@ var tvaFlag = true;
 const TODAY = luxon.DateTime.now().toFormat('yyyy-MM-dd');
 
 var typingTimer;
+const ToastShowClosured = showMe();
 
 const NUMBER_INPUT_ITEM_ROW = [
     "item-pu",
@@ -42,7 +43,8 @@ const REQUIRED_INPUT_HEADERS = [
 const REQUIRED_STANDARD_INPUT_ITEM_ROW = [
     "item-uid",
     "item-pu",
-    "item-quantity"
+    "item-quantity",
+    "item-prix-total"
 ]
 
 
@@ -136,6 +138,120 @@ var counterRowItem = 1;
 var modificationWatcher = false;
 var myCache = {};
 
+// start FAILURE/invalid Handler
+// TODO : to refactor. to combine with grab. now, looping 2 times. make it 1.
+
+function checkRequiredInputs(modalNode) {
+    let result = [true];
+    let checkingHeaders = checkRequiredInputHeaders(modalNode.querySelector("#facture-header"));
+
+    if (!checkingHeaders[0]) {
+        return checkingHeaders;
+    };
+
+    let itemRows = modalNode.querySelectorAll(".item-commande-row");
+
+    for (let index = 0; index < itemRows.length; index++) {
+
+        let checkingRow = checkRequiredInputItemRow(itemRows[index]);
+        if (!checkingRow[0]) {
+            result = checkingRow;
+        }
+    };
+
+    return result;
+}
+
+function checkRequiredInputHeaders(headerContainer) {
+    let result = [true];
+    for (let index = 0; index < REQUIRED_INPUT_HEADERS.length; index++) {
+        let myInput = headerContainer.querySelector("#" + REQUIRED_INPUT_HEADERS[index]);
+        let value = getInputValue(myInput).trim();
+        let test = [value.startsWith('Chois'), value == "", value == null, value == "..."];
+        if (test.some((val) => val)) {
+            result = [false, myInput];
+            break;
+
+        }
+    }
+
+    return result;
+}
+
+function checkRequiredInputItemRow(itemRow) {
+    let result = [true];
+
+    let requiredSet = JSON.parse(JSON.stringify(REQUIRED_STANDARD_INPUT_ITEM_ROW));
+    let identifiable = itemRow.querySelector(".input.identifiable").value;
+    let prixVariable = itemRow.querySelector(".input.prix-variable").value;
+
+    if (identifiable == 1) {
+        requiredSet.push("identifiable")
+    }
+    if (prixVariable == 1) {
+        requiredSet.push("prix-variable")
+    }
+    for (let index = 0; index < REQUIRED_STANDARD_INPUT_ITEM_ROW.length; index++) {
+        let myInput = itemRow.querySelector("#" + REQUIRED_STANDARD_INPUT_ITEM_ROW[index]);
+        let value = getInputValue(myInput).trim();
+        let test = [value.startsWith('Chois'), value == "", value == null, value == "...", parseInt(value) == 0];
+        if (test.some((val) => val)) {
+            result = [false, myInput];
+            break;
+        }
+    };
+    return result;
+
+}
+
+function identifyInvalidType(array_message, modal) {
+
+    // for required
+    if (!array_message[0]) {
+        return inputRequired(array_message[1]);
+    }
+    // for numSerie problems
+    if (array_message[0].includes("num serie")) {
+        return invalidNumSerie(array_message[0], modal);
+    }
+
+    // for stock verification
+    if (array_message[0].includes("not enough stock")) {
+        return outOfStock(array_message[0].split("//")[1], modal);
+    }
+}
+
+function invalidNumSerie(message, modal) {
+
+    let msg = message.split("//");
+    let tbody = modal.querySelector("#table-facture > tbody");
+    let btnTargetObj = tbody.querySelectorAll("button[value=\"" + msg[1] + "\"]");
+
+
+    let inputFail = btnTargetObj[btnTargetObj.length - 1].parentNode.parentNode.parentNode.parentNode.querySelector("#item-num-serie");
+    inputFail.classList.add("is-invalid");
+
+    // return "num serie double" or "num serie not available"
+    return msg[0];
+
+
+}
+
+function outOfStock(item_code, modal) {
+    let tbody = modal.querySelector("#table-facture > tbody");
+    // let btnTarget = tbody.querySelector("button[contains(.,\"" + item_code + "\")]");
+    let btnTarget = tbody.querySelector("button[value=\"" + item_code + "\"]");
+    let inputFail = btnTarget.parentNode.parentNode.parentNode.parentNode.querySelector("#item-quantity");
+    inputFail.classList.add("is-invalid");
+    return "out-of-stock";
+}
+
+function inputRequired(inputNode) {
+    inputNode.classList.add("is-invalid");
+    return "required";
+}
+
+// end FAILURE/invalid Handler
 
 function updateFormOnTvaVariable(eventTargetChecked,
     modalFacture
@@ -214,6 +330,53 @@ function updateFormOnTvaVariable(eventTargetChecked,
 
 }
 
+function formatFloatsForDatabase(inputObj) {
+    //TODO : to put in helpers.js
+    const keysWithNumbers = ["remise-montant", "remise-taux", "totalHT-apres-remise", "totalHT-avant-remise", "totalTTC-apres-remise", "totalTTC-avant-remise"];
+    let headersKeys = Object.keys(inputObj["header"])
+    headersKeys.forEach(key => {
+        if (keysWithNumbers.includes(key)) {
+            inputObj["header"][key] = AutoNumeric.unformat(inputObj["header"][key], defaultAutoNumericOptions);
+        }
+    });
+    inputObj["items"].forEach(row_array => {
+        row_array[2] = AutoNumeric.unformat(row_array[2], defaultAutoNumericOptions);
+        row_array[2] = AutoNumeric.unformat(row_array[2], defaultAutoNumericOptions);
+        row_array[3] = AutoNumeric.unformat(row_array[3], defaultAutoNumericOptions);
+    });
+    return inputObj
+}
+
+async function saveFactureNew(inputObj) {
+    console.log("saving  comande");
+    formatFloatsForDatabase(inputObj);
+    // console.log("data");
+    // console.log(data);
+    let url = "/database/save/new_facture_fournisseur.php";
+
+    let response = await sendData(url, inputObj);
+
+    console.log("error?");
+    console.log(response);
+    let result = await responseHandlersaveFactureNew(response);
+    if (result[0] == "success") {
+        ToastShowClosured(result[0], "Commandes sauvegardées avec succès");
+    } else if (result[0] == "failure") {
+        let customMessage = "Echec de la sauvegarde de la commande.";
+        // identifyInvalidType(result[1], modal);
+        try {
+            customMessage = ERROR_FLAG_MESSAGE_OBJ[identifyInvalidType(result[1], modal)];
+
+        } catch (error) {
+            console.log("e message : " + error);
+        }
+        ToastShowClosured(result[0], customMessage);
+    } else {
+        throw new Error("wrong value returned");
+    }
+    return [result[0] == "success", result[1]];
+}
+
 function generateRowAddItem(nodeModel, DataObj) {
     // console.log(DataObj);
     console.log("fgrai");
@@ -251,6 +414,9 @@ function fillInputsDetailsItemRow(arrayData, rowNode, mode = "view") {
     if (mode === "new") {
         rowNode.querySelector(".input#item-quantity").value = "";
         rowNode.querySelector(".input#item-quantity").disabled = false;
+
+        rowNode.querySelector(".input#item-pu").disabled = false;
+
 
         if (parseInt(arrayData["identifiable"])) {
             rowNode.querySelector(".input#item-quantity").value = 1;
@@ -403,6 +569,49 @@ function addName(listNode, value, selectable, myJSON = {}) {
     listNode.appendChild(newLi);
 }
 
+function grabCommandeDataForm(modal) {
+    let data = { header: {}, items: [] };
+    const headersName = ["num-facture", "facture-uid", "nd", "fournisseur", "date", "note", "magasin", "totalHT-avant-remise", "totalTTC-avant-remise", "remise-taux", "remise-montant", "totalHT-apres-remise", "totalTTC-apres-remise", "tva-flag", "tva-variable"];
+    //grab only essential headers data
+    //grab only essential item data
+    // TODO : refactor me
+    let headerInputs;
+    let tableBodyRows;
+    if (modal.id === "modal-facture-details") {
+        headerInputs = modal.querySelector("#commande-header").querySelectorAll(".input");
+        tableBodyRows = modal.querySelector("#table-facture").querySelector('tbody').querySelectorAll("tr");
+    } else {
+        headerInputs = modal.querySelector("#new-modal-body-heads").querySelectorAll(".input");
+        tableBodyRows = modal.querySelector("#new-modal-body-table").querySelector('tbody').querySelectorAll("tr");
+    }
+
+    headerInputs.forEach(input => {
+        try {
+            if (headersName.includes(input.id)) {
+                data["header"][input.id] = input.value
+            }
+        } catch (error) {
+            console.log("ehrror : " + error);
+        }
+    });
+
+    // console.log(tableBodyRows);
+    tableBodyRows.forEach(row => {
+        // console.log(row);
+        let rowID = row.querySelector("#row-uid").value;
+        let itemID = row.querySelector("#item-uid").value;
+        let quantity = row.querySelector("#item-quantity").value;
+        let prixUnitaire = row.querySelector("#item-pu").value;
+        let numSerie = row.querySelector("#item-num-serie").value;
+        let libelle = row.querySelector("#item-libelle").value;
+        let identifiable = row.querySelector("#identifiable").value;
+        let stockable = row.querySelector("#stockable").value;
+        data["items"].push([rowID, itemID, quantity, prixUnitaire, numSerie, libelle, identifiable, stockable]);
+    });
+    return data;
+}
+
+
 function addItem(tableFactureBody, mode = "new") {
     if (!["view", "new"].includes(mode)) {
         throw new Error("mode must be view or new.");
@@ -532,7 +741,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnConfirmationNo = modalConfirmation.querySelector("#btn-confirmation-no"
     );
 
-    ////modal new
+    //#modal new
     const modalFactureNew = document.getElementById("modal-facture-new");
     const bsModalFactureNew = new bootstrap.Modal(modalFactureNew, {
         backdrop: "static",
@@ -588,6 +797,75 @@ document.addEventListener("DOMContentLoaded", () => {
             bsModalConfirmation.hide();
         },
     };
+
+    const saveCreationObj = {
+        message:
+            "<h2>La facture fournisseur va être sauvegardé et transformer en facture.</h2><br>\
+				Aucune modification ne sera possible.<br>\
+				Êtes vous sûr de vouloir sauvegarder vos modifications?",
+        yes: () => {
+            // TODO : to abstract reauiredchecking
+            let checkingRequired = checkRequiredInputs(modalFactureNew);
+            if (!checkingRequired[0]) {
+                console.log("required not fulfill1");
+                let errorFlag = identifyInvalidType(checkingRequired, modalFactureNew);
+                bsModalConfirmation.hide();
+                ToastShowClosured("failure", ERROR_FLAG_MESSAGE_OBJ[errorFlag])
+                return;
+            }
+            let dataModalNew = grabCommandeDataForm(modalFactureNew);
+            dataModalNew["header"]["state"] = 2;
+            console.log("dataModalNew");
+            console.log(dataModalNew);
+            saveFactureNew(dataModalNew).then((result) => {
+                if (result[0]) {
+                    // insert uid of newly created facture client
+                    console.log("result va");
+                    console.log(result);
+                    dataModalNew["header"]["num-facture"] = result[1][0];
+                    dataModalNew["header"]["state"] = 1;
+                    // console.log(dataObj);
+                    // TODO : cache html
+
+                    fetch(
+                        "/elements/facts_clt/liste_facts_clt_table_001_base.html"
+                    )
+                        .then((response) => {
+                            let tt = response.text();
+                            console.log("tt");
+                            console.log(tt);
+                            return tt;
+                        })
+                        .then((txt) => {
+                            // TODO : abstract this process
+                            let doc = new DOMParser().parseFromString(
+                                txt,
+                                "text/html"
+                            );
+                            let trModel = doc.querySelector("#row-001");
+
+                            tableBody.append(
+                                generateRowTable(trModel, dataModalNew["header"])
+                            );
+                            bsModalFactureNew.hide();
+                            DefaultModalCommandInputs(modalFactureNew);
+                            bsModalConfirmation.hide();
+                            console.log("yes saving called");
+                            return false;
+                        });
+                    bsModalFactureNew.hide();
+
+                } else {
+                    //TODO : show error
+                    return true;
+                }
+            });
+            bsModalConfirmation.hide();
+        },
+        no: () => {
+            bsModalConfirmation.hide();
+        }
+    }
 
     //FUNCTIONS
 
@@ -796,6 +1074,18 @@ document.addEventListener("DOMContentLoaded", () => {
                         bsModalFactureNew.hide();
                         defaultButtons(modalFactureNew)
                     }
+                } else if (event.target.id === "btn-save-new") {
+                    console.log("saving cliekede");
+
+                    if (modificationWatcher) {
+                        openModalConfirmation(
+                            confirmationObj,
+                            saveCreationObj
+                        );
+                    } else {
+                        bsModalFactureNew.hide();
+                    }
+
                 }
             }, true)
     } catch (error) {

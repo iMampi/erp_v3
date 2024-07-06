@@ -139,6 +139,25 @@ class Bindings
                 $arr["total_ht_apres_remise"],
                 $arr["total_ttc_apres_remise"]
             ];
+        } else if ($this->converter::class == "Converter\NewFactureFournisseur") {
+            $this->binding = [
+                'isssiiiiddddddd',
+                $arr["fournisseur_uid"],
+                $arr["num_facture"],
+                $arr["date"],
+                $arr["libelle"],
+                $arr["state"],
+                $arr["magasin_uid"],
+                $arr["user_uid"],
+                $arr["tva_flag"],
+                $arr["total_ht_avant_remise"],
+                $arr["total_ttc_avant_remise"],
+                $arr["remise_taux"],
+                $arr["remise_montant"],
+                $arr["total_ht_apres_remise"],
+                $arr["tva_apres_remise"],
+                $arr["total_ttc_apres_remise"]
+            ];
         } else if ($this->converter::class == "Converter\NewFactureClient") {
             $this->binding = [
                 'ii',

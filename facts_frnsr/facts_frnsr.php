@@ -132,7 +132,7 @@ is_logged();
                                 ?>
                             </div>
                             <!-- TODO : to elete. we gonna use only JS here -->
-                            <div id="modal-body-table">
+                            <div id="new-modal-body-table">
                                 <?php
 
                                 require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_table_details_base.html";
@@ -323,6 +323,11 @@ is_logged();
             <!-- endconfirmation  modal-->
 
         </div>
+        <!-- TOAST  -->
+        <div class="toast-container position-fixed top-0 end-0 p-3" id="toast-container">
+        </div>
+        <!-- end TOAST  -->
+
 </body>
 
 </html>

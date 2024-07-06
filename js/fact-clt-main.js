@@ -39,7 +39,8 @@ const REQUIRED_INPUT_HEADERS = [
 const REQUIRED_STANDARD_INPUT_ITEM_ROW = [
     "item-uid",
     "item-pu",
-    "item-quantity"
+    "item-quantity",
+    "item-prix-total"
 ]
 
 const DTO_FILL_INPUT_ITEM_ROW = [

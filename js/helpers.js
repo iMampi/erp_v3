@@ -83,6 +83,7 @@ function formatedNumberToFloat(val) {
 }
 
 function getInputValue(node) {
+	console.log(node.id);
 	if (node.tagName == "BUTTON") {
 		return node.textContent.trim();
 	}
