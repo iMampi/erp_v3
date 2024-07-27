@@ -121,6 +121,20 @@ is_logged();
                 <div class="modal-dialog modal-dialog-scrollable modal-xl">
                     <div class="modal-content">
                         <div class="modal-header">
+                            <!-- radio button facture-avoir-->
+                            <div class="facture-avoir-container d-block">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="facture-avoir" id="mode-facture" value="facture" checked>
+                                    <label class="form-check-label" for="mode-facture">facture</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="facture-avoir" id="mode-avoir" value="avoir">
+                                    <label class="form-check-label" for="inlineRadio2">avoir</label>
+                                </div>
+                            </div>
+
+
+                            <!-- END radio button facture-avoir-->
                             <h5 class="modal-title" id="staticBackdropLabel">création facture fourniseur</h5>
                         </div>
                         <div class="modal-body">

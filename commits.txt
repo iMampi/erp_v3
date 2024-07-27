@@ -1335,3 +1335,11 @@ btn.btn-details works correctly.
 cleaning and filling the modal-facture-details works correctly.
 fillInputsDetailsItemRow() updated.
 changed a few php file related to this facture fournisseur cycle.
+-------------------------
+169_an:
+working on the facture fournisseur cycle...
+added radio button to modal nfacture new : facture-avoir. pour choisir si c'est un avoir ou une facture.
+changed the html base of facture_frnsr_table_details_base.html.
+added switchMode() in the js.
+added global variable modeFacture.
+modified addItem()

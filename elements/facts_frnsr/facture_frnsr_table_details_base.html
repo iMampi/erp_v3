@@ -1,6 +1,6 @@
 <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
 <table class="table table-borderless" id="table-facture">
-	<thead class="border-start-0 border-top-0 border-end-0 border-3">
+	<thead class="facture-fournisseur border-start-0 border-top-0 border-end-0 border-3">
 		<tr>
 			<td class="ps-0">ID article</td>
 			<td>désignation</td>
@@ -9,6 +9,7 @@
 			<td>prix unitaire HT</td>
 			<td>quantité</td>
 			<td>total HT</td>
+			<td class="td-sortie-stock d-none">sortie stock</td>
 			<td class="pe-0">
 				<button type="button" class="btn btn-sm btn-success w-100" id="btn-add-item">
 					+
@@ -98,6 +99,10 @@
 					placeholder="0,00"
 				/>
 			</td>
+			<td class="td-sortie-stock d-none">
+					<input class="form-check-input input sortie-stock" type="checkbox" value="" id="sortie-stock">
+			</td>
+
 			<td class="pe-0">
 				<button type="button" class="btn btn-sm btn-danger btn-del"
 				id="btn-del-item">del</button>

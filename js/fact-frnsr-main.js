@@ -1,5 +1,6 @@
 var currentUser;
 var tvaRate = { true: 0.20, false: 0 }
+var modeFacture = "facture";
 var defaultAutoNumericOptions =
 {
     decimalCharacter: ",",
@@ -845,6 +846,7 @@ function addItem(tableFactureBody, mode = "new") {
     if (!["view", "new"].includes(mode)) {
         throw new Error("mode must be view or new.");
     }
+    console.log("add roww");
     return new Promise((resolve, reject) => {
         console.log("addding item");
         if (myCache["itemRow"]) {
@@ -859,6 +861,13 @@ function addItem(tableFactureBody, mode = "new") {
             let trModel = doc.querySelector("#row-001");
             console.log("trModel");
             console.log(trModel);
+
+            if (modeFacture == "facture") {
+                trModel.querySelector(".td-sortie-stock").classList.add("d-none");
+            } else {
+                trModel.querySelector(".td-sortie-stock").classList.remove("d-none");
+            }
+
             if (mode === "view") {
                 trModel.querySelector("#btn-del-item").disabled = true;
             }
@@ -876,6 +885,7 @@ function addItem(tableFactureBody, mode = "new") {
                 .then((txt) => {
                     // TODO : abstract this process
                     console.log("from fetch");
+                    console.log(txt);
                     counterRowItem++;
 
                     let doc = new DOMParser().parseFromString(
@@ -889,6 +899,12 @@ function addItem(tableFactureBody, mode = "new") {
                     let trModel = doc.querySelector("#row-001");
                     console.log("trModel");
                     console.log(trModel);
+
+                    if (modeFacture == "facture") {
+                        trModel.querySelector(".td-sortie-stock").classList.add("d-none");
+                    } else {
+                        trModel.querySelector(".td-sortie-stock").classList.remove("d-none");
+                    }
 
                     if (mode === "view") {
                         trModel.querySelector("#btn-del-item").disabled = true;
@@ -923,6 +939,28 @@ function generateRowItem(nodeModel, DataObj) {
     newNode.id = "row-" + zeroLeftPadding(counterRowItem, 3, false);
 
     return newNode;
+}
+
+function switchMode(myMode, table) {
+    if (!["avoir", "facture"].includes(myMode)) {
+        throw new Error("myMode must be avoir or facture.");
+    }
+
+    modeFacture = myMode;
+
+    // hide sortie-stock
+    table.querySelectorAll(".td-sortie-stock").forEach(element => {
+        if (myMode == "avoir") {
+            element.classList.remove("d-none");
+            console.log("hide me");
+        } else {
+            element.classList.add("d-none");
+            console.log("show me me");
+
+        }
+    });
+
+
 }
 
 
@@ -1472,6 +1510,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
         modalFactureNew.addEventListener('input', (event) => {
             console.log("event input");
+            console.log(event);
             modificationWatcher = true;
             if (event.target.classList.contains("is-invalid")) {
                 event.target.classList.remove("is-invalid");
@@ -1482,7 +1521,13 @@ document.addEventListener("DOMContentLoaded", () => {
             // business logic start
             // TODO a deplacer dans une autre section peutetre? un eventlistener pour le liste factreu?
 
-            if (event.target.id == "search-item") {
+            if (["mode-facture", "mode-avoir"].includes(event.target.id)) {
+
+                console.log("switch facture-avoir");
+                console.log(event.target.value);
+                switchMode(event.target.value, modalFactureNew.querySelector("#table-facture"));
+
+            } else if (event.target.id == "search-item") {
                 // item searching with btn dropdown
                 console.log("searching item 23");
                 let hint = event.target.value;
