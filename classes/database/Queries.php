@@ -21,6 +21,7 @@ class Queries
     static public $selection_clients = "select uid,noms,prenoms,nom_commercial,raison_sociale from view_all_clients";
     static public $selection_fournisseurs = "select uid,noms,prenoms,nom_commercial,raison_sociale from view_all_fournisseurs";
     static public $selection_commande_items = "select * from view_all_commandes_details where commande_uid=?";
+    static public $selection_facture_fournisseur_items = "select * from view_all_factures_fournisseur_details where facture_uid=?";
     static public $selection_commande_items_for_avoir = "select *, sum(quantity) as remaining_quantity from view_all_commandes_details where commande_uid=? or commande_initial_uid=? group by num_serie, item_uid";
 
     static public $update_client = "
@@ -195,6 +196,9 @@ class Queries
     static public $select_one_avoir_client = "
         select * from view_all_avoirs_client_headers where num_avoir=? 
         ";
+    static public $select_one_facture_fournisseur = "
+        select * from view_all_factures_fournisseur_headers where uid=? 
+        ";
     static public $select_all_clients = "
         call all_clients 
         ";
@@ -209,6 +213,11 @@ class Queries
         join
         view_all_clients on view_all_clients.uid=commandes.client_uid 
         order by uid,date desc limit 100 ;
+        ";
+    static public $select_all_factures_fournisseur_header_limit = "
+        select uid, date, num_facture, total_ttc_apres_remise, state, fournisseur_uid, noms, prenoms, nom_commercial, raison_sociale
+        from view_all_factures_fournisseur_headers 
+        order by date desc limit 20 ;
         ";
     static public $select_all_commandes_positives_header_limit = "
         select commandes.uid as uid, commandes.date as date, commandes.total_ttc_apres_remise as total_ttc_apres_remise, commandes.state as state,commandes.client_uid,
@@ -352,6 +361,9 @@ class Queries
     static public $save_new_commande_row = "
         insert into commandes_details values (NULL,?,?,?,?,?,?,?,?)
         ";
+    static public $save_new_facture_fournisseur_row = "
+        insert into factures_fournisseur_details values (NULL,?,?,?,?,?,?,?,?)
+        ";
     static public $save_new_facture_client = "
         select new_facture_client (?,?)
         ";
@@ -401,6 +413,8 @@ class Queries
             ?,
             ?)
         ";
+
+    static public $save_new_identifiable = " insert into identifiables values (?,?,?,?)";
     static public $check_item_stock = "
         select code, stock from items where code=?;
         ";
@@ -408,7 +422,7 @@ class Queries
         select item_code, num_serie, actif from identifiables where item_code=? and num_serie=?;
         ";
     static public $update_stock_add = "
-        update items set stock = stock - ? where code=?;
+        update items set stock = stock + ? where code=?;
         ";
     static public $update_stock_sub = "
         update items set stock = stock - ? where code=?;
@@ -440,6 +454,9 @@ class Queries
             case 'save_new_employee':
                 $this->query = self::$save_new_employee;
                 break;
+            case 'save_new_identifiable':
+                $this->query = self::$save_new_identifiable;
+                break;
             case 'save_new_item':
                 $this->query = self::$save_new_item;
                 break;
@@ -451,6 +468,9 @@ class Queries
                 break;
             case 'save_new_commande_row':
                 $this->query = self::$save_new_commande_row;
+                break;
+            case 'save_new_facture_fournisseur_row':
+                $this->query = self::$save_new_facture_fournisseur_row;
                 break;
             case 'save_new_facture_client':
                 $this->query = self::$save_new_facture_client;
@@ -500,6 +520,9 @@ class Queries
             case 'select_all_commandes_header_limit':
                 $this->query = self::$select_all_commandes_header_limit;
                 break;
+            case 'select_all_factures_fournisseur_header_limit':
+                $this->query = self::$select_all_factures_fournisseur_header_limit;
+                break;
             case 'select_all_commandes_positives_header_limit':
                 $this->query = self::$select_all_commandes_positives_header_limit;
                 break;
@@ -535,6 +558,9 @@ class Queries
                 break;
             case 'select_one_avoir_client':
                 $this->query = self::$select_one_avoir_client;
+                break;
+            case 'select_one_facture_fournisseur':
+                $this->query = self::$select_one_facture_fournisseur;
                 break;
             case 'select_one_employee':
                 $this->query = self::$select_one_employee;
@@ -619,6 +645,9 @@ class Queries
                 break;
             case 'selection_commande_items':
                 $this->query = self::$selection_commande_items;
+                break;
+            case 'selection_facture_fournisseur_items':
+                $this->query = self::$selection_facture_fournisseur_items;
                 break;
             case 'selection_commande_items_for_avoir':
                 $this->query = self::$selection_commande_items_for_avoir;

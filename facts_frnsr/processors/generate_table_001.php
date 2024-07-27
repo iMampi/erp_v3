@@ -17,8 +17,8 @@ $tbody_->removeChild($tr_model);
 $xpath = new DOMXPath($dom);
 
 $row_counter = 1;
-
-foreach ($dummy as $el) {
+require_once __DIR__ . "/../../database/select/all_factures_fournisseur_header_limit.php";
+foreach ($all_factures_fournisseur_header_limit as $el) {
     $tr_ = $tr_model->cloneNode(true);
 
     $id_ = sprintf('%03d', $row_counter);
@@ -32,21 +32,23 @@ foreach ($dummy as $el) {
         $classes_array = explode(" ", $classes);
 
         if (in_array("date", $classes_array)) {
-            $el_input->setAttribute("value", $el[1]);
-        } elseif (in_array("uid", $classes_array)) {
-            $el_input->setAttribute("value", $el[0]);
-        } elseif (in_array("frnsr", $classes_array)) {
-            $el_input->setAttribute("value", $el[2]);
-        } elseif (in_array("num", $classes_array)) {
-            $el_input->setAttribute("value", $el[3]);
-        } elseif (in_array("affaire", $classes_array)) {
-            $el_input->setAttribute("value", $el[4]);
+            $el_input->setAttribute("value", $el["date"]);
+        } elseif (in_array("num-facture", $classes_array)) {
+            $el_input->setAttribute("value", $el["num_facture"]);
+        } elseif (in_array("facture-uid", $classes_array)) {
+            $el_input->setAttribute("value", $el["uid"]);
+        } elseif (in_array("fournisseur", $classes_array)) {
+            if (!trim($el['raison_sociale'])) {
+                $el_input->setAttribute("value", $el['fournisseur_uid'] . " - " . $el['noms'] . " " . $el['prenoms']);
+            } else {
+                $el_input->setAttribute("value", $el['fournisseur_uid'] . " - " . $el['raison_sociale'] . " / " . $el['nom_commercial']);
+            }
         } elseif (in_array("total", $classes_array)) {
-            $el_input->setAttribute("value", $el[5]);
+            $el_input->setAttribute("value", $el["total_ttc_apres_remise"]);
         } elseif (in_array("detail", $classes_array)) {
             // $el_input->setAttribute("value", $el[6]);
         } elseif (in_array("nd", $classes_array)) {
-            $option_ = $xpath->query(".//*[(@value='" . $el[6] . "')]", $el_input);
+            $option_ = $xpath->query(".//*[(@value='" . $el["state"] . "')]", $el_input);
             $option_[0]->setAttribute("selected", "true");
         }
     }

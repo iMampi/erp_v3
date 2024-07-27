@@ -139,7 +139,7 @@ class Bindings
                 $arr["total_ht_apres_remise"],
                 $arr["total_ttc_apres_remise"]
             ];
-        } else if ($this->converter::class == "Converter\NewFactureFournisseur") {
+        } else if ($this->converter::class == "Converter\NewFactureFournisseurHeader") {
             $this->binding = [
                 'isssiiiiddddddd',
                 $arr["fournisseur_uid"],
@@ -172,6 +172,14 @@ class Bindings
                 $arr["type"],
                 $arr["user_uid"]
             ];
+        } else if ($this->converter::class == "Converter\NewIdentifiable") {
+            $this->binding = [
+                'ssii',
+                $arr["item_code"],
+                $arr["num_serie"],
+                $arr["actif"],
+                $arr["magasin_uid"]
+            ];
         } else if (\in_array($this->converter::class, ["Converter\NewCommandeItem", "Converter\NewCommandeAvoirItem"])) {
             $this->binding = [
                 'issdddis',
@@ -183,6 +191,18 @@ class Bindings
                 $arr["prix_total"],
                 $arr["commande_initial_uid"],
                 $arr["num_serie"]
+            ];
+        } else if ($this->converter::class == "Converter\NewFactureFournisseurItem") {
+            $this->binding = [
+                'sssdddsi',
+                $arr["facture_uid"],
+                $arr["item_uid"],
+                $arr["description_item"],
+                $arr["quantity"],
+                $arr["prix_unitaire"],
+                $arr["prix_total"],
+                $arr["num_serie"],
+                $arr["return_item"]
             ];
         } else if ($this->converter::class == "Converter\NewEmployee") {
             $this->binding = [
@@ -412,6 +432,11 @@ class Bindings
                 'i',
                 $this->converter->data_for_db["num_facture"]
             ];
+        } elseif ($this->converter::class == "Converter\SelectOneFactureFournisseur") {
+            $this->binding = [
+                'i',
+                $this->converter->data_for_db["uid"]
+            ];
         } elseif ($this->converter::class == "Converter\SelectOneAvoirClient") {
             $this->binding = [
                 'i',
@@ -421,6 +446,11 @@ class Bindings
             $this->binding = [
                 'i',
                 $this->converter->data_for_db["uid"]
+            ];
+        } elseif ($this->converter::class == "Converter\SelectionFactureFournisseurItems") {
+            $this->binding = [
+                'i',
+                $this->converter->data_for_db["facture_uid"]
             ];
         } elseif ($this->converter::class == "Converter\SelectionCommandeAvoirItems") {
             $this->binding = [

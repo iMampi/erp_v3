@@ -21,6 +21,10 @@ if (isset($_SESSION["user"])) {
         $dom->loadHTMLFile(mb_convert_encoding($base, 'HTML-ENTITIES', 'UTF-8'));
         $xpath = new DOMXPath($dom);
 
+        //set currentUser in form
+        $current_user = $xpath->query(".//input[@id='user-uid']");
+        $current_user[0]->setAttribute("value", $_SESSION["user"]->uid);
+
         $inputs = $xpath->query(".//*[contains(@class,'input')]");
 
         // load  human client  fields as default

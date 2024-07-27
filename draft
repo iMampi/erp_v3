@@ -1,100 +1,16 @@
-select `erpv2`.`avoirs_client`.`num_avoir` AS `num_avoir`,
-`erpv2`.`avoirs_client`.`commande_uid` AS `commande_uid`,
-`erpv2`.`avoirs_client`.`datetime` AS `datetime`,
-`erpv2`.`avoirs_client`.`facture_client_uid` AS `facture_client_uid`,
-`erpv2`.`avoirs_client`.`type` AS `type`,
-`erpv2`.`avoirs_client`.`user_uid` AS `user_uid`,
-`erpv2`.`users`.`login` AS `user_name`,
-`view_all_commandes_headers`.`client_uid` AS `client_uid`,
-`view_all_commandes_headers`.`libelle` AS `libelle`,
-`view_all_commandes_headers`.`state` AS `state`,
-`view_all_commandes_headers`.`total_ht_avant_remise` AS `total_ht_avant_remise`,
-`view_all_commandes_headers`.`total_ttc_avant_remise` AS `total_ttc_avant_remise`,
-`view_all_commandes_headers`.`remise_taux` AS `remise_taux`,
-`view_all_commandes_headers`.`remise_montant` AS `remise_montant`,
-`view_all_commandes_headers`.`total_ht_apres_remise` AS `total_ht_apres_remise`,
-`view_all_commandes_headers`.`total_ttc_apres_remise` AS `total_ttc_apres_remise`,
-`view_all_commandes_headers`.`noms` AS `noms`,
-`view_all_commandes_headers`.`prenoms` AS `prenoms`,
-`view_all_commandes_headers`.`nom_commercial` AS `nom_commercial`,
-`view_all_commandes_headers`.`raison_sociale` AS `raison_sociale`,
-`view_all_commandes_headers`.`magasin_uid` AS `magasin_uid`,
-`view_all_commandes_headers`.`magasin_name` AS `magasin_name` 
-from ((`erpv2`.`avoirs_client` join `erpv2`.`view_all_commandes_headers` on(`erpv2`.`avoirs_client`.`commande_uid` = `view_all_commandes_headers`.`uid`)) join `erpv2`.`users` on(`erpv2`.`users`.`uid` = `erpv2`.`avoirs_client`.`user_uid`))
-
-
-INSERT INTO `commandes`(`uid`, `client_uid`, `date`, `magasin_uid`, `libelle`, `state`, `user_uid`, `datetime`, `total_ht_avant_remise`, `total_ttc_avant_remise`, `remise_taux`, `remise_montant`, `total_ht_apres_remise`, `total_ttc_apres_remise`) VALUES (NULL,'18','2023-11-16','1','manuel','3','1',NULL,'-198000.00','-198000.00','0','0','-198000.00','-198000.00')
-
-
-return new Promise((resolve, reject) => {
-        console.log("addding item");
-        if (myCache["item-row-" + mode]) {
-            console.log("from cahce");
-            counterRowItem++;
-            let doc = new DOMParser().parseFromString(
-                myCache["item-row-" + mode],
-                "text/html"
-            );
-            let trModel = doc.querySelector("#row-001");
-
-            trModel.querySelectorAll(".input").forEach(input_ => {
-                input_.disabled = input_.id != "item-quantity";
-            });
-            trModel.querySelector("#btn-new-item").disabled = true;
-            trModel.querySelector("#btn-del-item").disabled = tableFactureBody.parentNode.parentNode.parentNode.parentNode.parentNode.id == "modal-avoir-new-based";
-
-            console.log("trModel");
-            console.log(trModel);
-
-            tableFactureBody.querySelector('tbody').append(
-                generateRowItem(trModel, ["", "", "", "", "", ""])
-            );
-            resolve(true);
-
-        } else {
-
-            fetch(URL_TABLE_DETAILS_OBJ[mode])
-                .then((response) =>
-                    response.text()
-                )
-                .then((txt) => {
-                    // TODO : abstract this process
-                    console.log("from fetch");
-                    counterRowItem++;
-
-                    let doc = new DOMParser().parseFromString(
-                        txt,
-                        "text/html"
-                    );
-
-                    // caching
-                    myCache["item-row-" + mode] = doc.body.innerHTML;
-
-                    let trModel = doc.querySelector("#row-001");
-
-                    trModel.querySelectorAll(".input").forEach(input_ => {
-                        input_.disabled = input_.id != "item-quantity";
-                    });
-                    trModel.querySelector("#btn-new-item").disabled = true;
-                    trModel.querySelector("#btn-del-item").disabled = tableFactureBody.parentNode.parentNode.parentNode.parentNode.parentNode.id == "modal-avoir-new-based";
-
-                    console.log("trModel");
-                    console.log(trModel);
-
-                    tableFactureBody.querySelector('tbody').append(
-                        generateRowItem(trModel, ["", "", "", "", "", ""])
-                    );
-                    // bsModalNew.hide();
-                    // _cleanNewForm();
-                    // console.log("yes saving called");
-                    resolve(true);
-
-
-                });
-        }
-    })
-
-
-
-
-
+SELECT 
+`factures_fournisseur_details`.`uid` AS `uid`,
+`factures_fournisseur_details`.`facture_uid` AS `facture_uid`,
+`factures_fournisseur_details`.`item_uid` AS `item_uid`,
+`items`.`stockable` AS `stockable`,
+`items`.`identifiable` AS `identifiable`,
+`items`.`prix_variable` AS `prix_variable`,
+`items`.`active` AS `active`,
+`factures_fournisseur_details`.`description_item` AS `description_item`, 
+`factures_fournisseur_details`.`num_serie` AS `num_serie`,
+`factures_fournisseur_details`.`quantity` AS `quantity`,
+`factures_fournisseur_details`.`prix_unitaire` AS `prix_unitaire`,
+`factures_fournisseur_details`.`prix_total` AS `prix_total`, 
+`items`.`name` AS `item_name`, 
+`factures_fournisseur_details`.`return_item` AS `return_item`
+FROM (`factures_fournisseur_details` join `items` on(`factures_fournisseur_details`.`item_uid` = `items`.`code`)) 

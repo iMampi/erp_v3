@@ -13,6 +13,7 @@ use function Session\can_create;
 use Database\StandardPreparedStatement;
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
+
 session_start();
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/utilities/check_stocks.php";
@@ -128,7 +129,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
 
         //saving turning order to facture
         if (($_SERVER["REQUEST_METHOD"] == "POST") &&  (can_create("facture_client"))) {
-            ////creating facture
+            //creating facture
             try {
                 if ($data["header"]["state"] === 2) {
 
@@ -144,7 +145,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
                 print("error04 " . $th);
                 return;
             }
-            ////updating stock quantity for facture effectively created with no problem
+            //updating stock quantity for facture effectively created with no problem
             try {
                 foreach ($stock_to_check as $item_code => $quantity) {
                     if ($quantity == 0) {
@@ -162,7 +163,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
                 print("error06 " . $th);
                 return;
             }
-            ////updating status of identifiables
+            //updating status of identifiables
             try {
                 foreach ($identifiables_to_check as $item_code => $num_serie_array) {
                     foreach ($num_serie_array as $num_serie) {
@@ -193,7 +194,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
 
         print(json_encode($temp_array_result_fact));
         // } else if (\str_contains($_SERVER["HTTP_REFERER"], "commandes.php")) {
-    } else if ((intval( $data["header"]["state"]) === 1) || (\str_contains($_SERVER["HTTP_REFERER"], "commandes.php"))) {
+    } else if ((intval($data["header"]["state"]) === 1) || (\str_contains($_SERVER["HTTP_REFERER"], "commandes.php"))) {
 
         print(json_encode($temp_array_result));
     }

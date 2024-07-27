@@ -1,0 +1,107 @@
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+<table class="table table-borderless" id="table-facture">
+	<thead class="border-start-0 border-top-0 border-end-0 border-3">
+		<tr>
+			<td class="ps-0">ID article</td>
+			<td>désignation</td>
+			<td>libellé</td>
+			<td>numéro de série</td>
+			<td>prix unitaire HT</td>
+			<td>quantité</td>
+			<td>total HT</td>
+			<td class="pe-0">
+				<button type="button" class="btn btn-sm btn-success w-100" id="btn-add-item">
+					+
+				</button>
+			</td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr id="row-001" class="item-commande-row border-bottom">
+			<input type="hidden" id="row-uid" class='input fillable row-uid'>
+			<input type="hidden" id="stockable" class='input fillable stockable'>
+			<input type="hidden" id="identifiable" class='input fillable identifiable'>
+			<input type="hidden" id="prix-variable" class='input fillable prix-variable'>
+			<td>
+				<div class=" my-auto " >
+					<div class="dropdown btn-group d-flex" role="group">
+						<button class="btn btn-sm input fillable item-uid btn-outline-secondary form-control form-control-sm dropdown-toggle right-corners w-100 text-start input" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="item-uid" >
+							Choississez un article
+						</button>
+		
+						<ul class="dropdown-menu " id="item-dropdown">
+							<li id="search-container">
+								<div class="px-2 pb-2">
+									<input  type="text" placeholder="Search" id="search-item" autocomplete="off" class="form-control form-control-sm input">               
+								</div>
+							</li>
+						</ul>
+						<button class="mytbn btn btn-sm btn-success text-center left-corners form-control-sm"type="button" id="btn-see-client">
+							see</button>
+				
+					</div>
+				</div>
+	        </td>
+			<td>
+				<input
+					type="text"
+					disabled
+					id="item-name"
+					class=" form-control form-control-sm input fillable item-name"
+				/>
+			</td>
+			<td>
+				<textarea class="form-control form-control-sm item-libelle input fillable" id="item-libelle" rows="1"></textarea>
+			</td>
+
+			<td>
+				<input
+					type="text"
+					class=" form-control form-control-sm num-serie input fillable "
+					id="item-num-serie" disabled
+				/>
+
+			</td>
+			<!-- <td>
+				<div class=" my-auto " >
+					<div class="dropdown btn-group d-flex" role="group">
+						<button class="btn btn-sm input fillable form-control form-control-sm item-num-serie btn-outline-secondary dropdown-toggle w-100 text-start input" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="item-num-serie" disabled>
+							...
+						</button>
+						<ul class="dropdown-menu " id="num-serie-dropdown">
+							<li id="search-container">
+								<div class="px-2 pb-2">
+									<input  type="text" placeholder="Search" id="search-num-serie" autocomplete="off" class="form-control form-control-sm input">               
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+	        </td> -->
+			<td>
+				<input
+					type="text"
+					class="form-control number-text form-control-sm item-pu input fillable"
+					disabled
+					id="item-pu" placeholder="0,00"
+				/>
+			</td>
+			<td>
+				<input type="text" class=" form-control form-control-sm input fillable item-quantity" id="item-quantity" placeholder="0,00" />
+			</td>
+			<td>
+				<input
+					type="text"
+					disabled
+					class="form-control form-control-sm item-prix-total input fillable"
+					id="item-prix-total"
+					placeholder="0,00"
+				/>
+			</td>
+			<td class="pe-0">
+				<button type="button" class="btn btn-sm btn-danger btn-del"
+				id="btn-del-item">del</button>
+			</td>
+		</tr>
+	</tbody>
+</table>

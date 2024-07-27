@@ -1327,3 +1327,11 @@ created NewFactureFournisseur.php, new_facture_fournisseur.php
 updated Binding.php, Queries.php
 
 test the process of saving a new facture fournisseur...
+-------------------------
+168_an:
+working on the facture fournisseur cycle...
+table list is correct.
+btn.btn-details works correctly.
+cleaning and filling the modal-facture-details works correctly.
+fillInputsDetailsItemRow() updated.
+changed a few php file related to this facture fournisseur cycle.

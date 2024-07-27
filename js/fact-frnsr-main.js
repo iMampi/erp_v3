@@ -47,7 +47,36 @@ const REQUIRED_STANDARD_INPUT_ITEM_ROW = [
     "item-prix-total"
 ]
 
+const NUMBER_INPUT_HEADERS = [
+    "totalHT-avant-remise",
+    "totalTTC-avant-remise",
+    "remise-taux",
+    "remise-montant",
+    "totalHT-apres-remise",
+    "totalTTC-apres-remise",
+    "TVA-avant-remise",
+    "TVA-apres-remise"
+];
 
+const DTO_FILL_INPUT_HEADERS = {
+    "num-facture": "num_facture",
+    date: "date",
+    note: "libelle",
+    // payment: "payment",
+    nd: "state",
+    "tva-flag": "tva_flag",
+    "tva-variable": "tva_variable",
+    "fournisseur-uid": "fournisseur_uid",
+    magasin: "magasin_uid",
+    "totalHT-avant-remise": "total_ht_avant_remise",
+    "totalTTC-avant-remise": "total_ttc_avant_remise",
+    "remise-taux": "remise_taux",
+    "remise-montant": "remise_montant",
+    "totalHT-apres-remise": "total_ht_apres_remise",
+    "totalTTC-apres-remise": "total_ttc_apres_remise",
+    "TVA-avant-remise": "TVA_avant_remise",
+    "TVA-apres-remise": "TVA_apres_remise"
+}
 
 const DTO_FILL_INPUT_ITEM_ROW = [
     { inputId: "row-uid", objectKey: ["uid"] },
@@ -253,6 +282,19 @@ function inputRequired(inputNode) {
 
 // end FAILURE/invalid Handler
 
+
+
+function defaultButtons(modal) {
+    const refObj = {
+        "modal-details": DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_DETAILS,
+        'modal-main-new': DEFAULT_BUTTONS_DISABLED_STATE_COMMANDE_NEW
+    };
+    let btns = modal.querySelectorAll(".btn");
+    btns.forEach(myBtn => {
+        myBtn.disabled = refObj[modal.id][myBtn.id];
+    });
+}
+
 function updateFormOnTvaVariable(eventTargetChecked,
     modalFacture
 ) {
@@ -358,7 +400,9 @@ async function saveFactureNew(inputObj) {
 
     console.log("error?");
     console.log(response);
-    let result = await responseHandlersaveFactureNew(response);
+    let result = await responseHandlerSaveFactureNew(response);
+    console.log("result xx");
+    console.log(result);
     if (result[0] == "success") {
         ToastShowClosured(result[0], "Commandes sauvegardées avec succès");
     } else if (result[0] == "failure") {
@@ -388,7 +432,7 @@ function generateRowAddItem(nodeModel, DataObj) {
 function formatFournisseurNameSearchResult(objectData) {
     let val = objectData.uid + " - ";
     if ("fournisseur_uid" in objectData) {
-        val = objectData.client_uid + " - ";
+        val = objectData.fournisseur_uid + " - ";
     }
     if (objectData.noms == "") {
         // console.log("client company");
@@ -513,6 +557,7 @@ function cleanNewForm(modal, disable = false) {
 }
 
 async function DefaultModalCommandInputs(modal, min_row = 1) {
+    console.log("deafulting inputs");
     //remove other item rows
     let itemRows = modal.querySelectorAll(".item-commande-row");
     removeItemRows(itemRows);
@@ -522,7 +567,7 @@ async function DefaultModalCommandInputs(modal, min_row = 1) {
     };
     defaultButtons(modal);
     //clean an dput to deafult value
-    cleanNewForm(modal, modal.id === "modal-details");
+    cleanNewForm(modal, modal.id === "modal-facture-details");
 
     AutoNumeric.getAutoNumericElement(modal.querySelector("#remise-montant")).update({ maximumValue: 0 });
 
@@ -571,7 +616,7 @@ function addName(listNode, value, selectable, myJSON = {}) {
 
 function grabCommandeDataForm(modal) {
     let data = { header: {}, items: [] };
-    const headersName = ["num-facture", "facture-uid", "nd", "fournisseur", "date", "note", "magasin", "totalHT-avant-remise", "totalTTC-avant-remise", "remise-taux", "remise-montant", "totalHT-apres-remise", "totalTTC-apres-remise", "tva-flag", "tva-variable"];
+    const headersName = ["user-uid", "num-facture", "facture-uid", "nd", "fournisseur", "date", "note", "magasin", "totalHT-avant-remise", "totalTTC-avant-remise", "remise-taux", "remise-montant", "totalHT-apres-remise", "totalTTC-apres-remise", "tva-flag", "tva-variable"];
     //grab only essential headers data
     //grab only essential item data
     // TODO : refactor me
@@ -588,7 +633,7 @@ function grabCommandeDataForm(modal) {
     headerInputs.forEach(input => {
         try {
             if (headersName.includes(input.id)) {
-                data["header"][input.id] = input.value
+                data["header"][input.id] = getInputValue(input);
             }
         } catch (error) {
             console.log("ehrror : " + error);
@@ -599,18 +644,202 @@ function grabCommandeDataForm(modal) {
     tableBodyRows.forEach(row => {
         // console.log(row);
         let rowID = row.querySelector("#row-uid").value;
-        let itemID = row.querySelector("#item-uid").value;
+        let itemID = getInputValue(row.querySelector("#item-uid"));
         let quantity = row.querySelector("#item-quantity").value;
         let prixUnitaire = row.querySelector("#item-pu").value;
         let numSerie = row.querySelector("#item-num-serie").value;
         let libelle = row.querySelector("#item-libelle").value;
         let identifiable = row.querySelector("#identifiable").value;
         let stockable = row.querySelector("#stockable").value;
-        data["items"].push([rowID, itemID, quantity, prixUnitaire, numSerie, libelle, identifiable, stockable]);
+        let returnItem = null;
+        try {
+            let returnItem = row.querySelector("#return-item").value;
+        } catch (error) {
+            console.log("returnItem does not exist");
+        }
+
+        data["items"].push([rowID, itemID, quantity, prixUnitaire, numSerie, libelle, identifiable, stockable, returnItem]);
     });
     return data;
 }
 
+async function responseHandlerSaveFactureNew(response) {
+    try {
+        let myjson = JSON.parse(await response);
+        //NOTE : the correct way for save. not correct for select query
+        //NOTE : works for error also
+        // TODO : handle for when it is an error
+        // TODO : all seems to use the same logic. DRY in all others occurence
+        console.log("myjson");
+        console.log(myjson);
+        if (myjson[0]) {
+            return ["success", Object.values(myjson[1])[0]];
+        } else {
+            return ["failure", Object.values(myjson[1])[0]];
+        }
+    } catch (e) {
+        // TODO : comment me
+        return "error js: " + e;
+    }
+}
+
+async function responseHandlerSelectOneFacture(response) {
+    try {
+        console.log("response++");
+        console.log(response);
+        let myjson = JSON.parse(await response);
+        //NOTE : the correct way for save. not correct for select query
+        //NOTE : works for error also
+        // TODO : handle for when it is an error
+        // TODO : all seems to use the same logic. DRY in all others occurence
+        console.log("myjson select");
+        console.log(myjson);
+        if (myjson["header"][0] && myjson["items"][0]) {
+            return ["success", { "header": myjson["header"][1][0], "items": myjson["items"][1] }];
+        } else {
+            return ["failure", myjson];
+        }
+    } catch (e) {
+        // TODO : comment me
+        return "error js: " + e;
+    }
+}
+
+function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
+    console.log("responseJSON : ");
+    console.log(responseJSON);
+    valueObj = responseJSON["header"];
+    // valueObj["TVA-avant-remise"] = valueObj["total_ht_avant_remise"];
+    // valueObj["TVA-apres-remise"] = valueObj["total_ht_apres_remise"];
+
+    valueObj["TVA_avant_remise"] = AutoNumeric.format(parseFloat(valueObj["total_ttc_avant_remise"]) - parseFloat(valueObj["total_ht_avant_remise"]), defaultAutoNumericOptions);
+    valueObj["TVA_apres_remise"] = AutoNumeric.format(valueObj["total_ttc_apres_remise"] - valueObj["total_ht_apres_remise"], defaultAutoNumericOptions);
+
+    // let inputsElements = md.querySelectorAll(".input");
+
+    let inputsElements =
+        modalDetailsHeaders.querySelectorAll(".input");
+
+    // console.log("inputsElement :");
+    // console.log(inputsElements);
+    // let inputsElements = document.querySelectorAll(
+    // "#modal-clt-details .input"
+    // );
+    //TODO : use a DTO>> TO DUPLICATE EVERYWHERE ELSE
+    for (let index = 0; index < inputsElements.length; index++) {
+        let element = inputsElements[index];
+        if (element.id === "fournisseur") {
+            fillFournisseurButton(valueObj, element);
+        }
+        else if (element.id === "commercial") {
+            element.value = valueObj["user_uid"] + "//" + valueObj["user_name"];
+        } else if (["tva-flag", "tva-variable"].includes(element.id)) {
+            element.checked = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
+
+        } else {
+            if (NUMBER_INPUT_HEADERS.includes(element.id)) {
+                if (element.id === "remise-montant") {
+                    AutoNumeric.getAutoNumericElement(element).update({ maximumValue: AutoNumeric.unformat(valueObj["total_ttc_avant_remise"], defaultAutoNumericOptions) });
+                }
+                element.value = AutoNumeric.format(valueObj[DTO_FILL_INPUT_HEADERS[element.id]], defaultAutoNumericOptions);
+            } else {
+                if (element.id === "date") {
+                    element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]].substring(0, 10)
+                } else {
+
+                    element.value = valueObj[DTO_FILL_INPUT_HEADERS[element.id]];
+                }
+
+
+            }
+        }
+    }
+}
+
+function fillInputsDetailsItemRow(arrayData, rowNode, mode = "view") {
+    if (!["view", "new"].includes(mode)) {
+        throw new Error("mode must be view or new.");
+    }
+    console.log("arrayData");
+    console.log(arrayData);
+    let inputs = rowNode.querySelectorAll(".input");
+
+    // rowNode.querySelector(".input#item-num-serie").disabled = !Boolean(parseInt(arrayData["identifiable"]));
+    // rowNode.querySelector(".input#item-pu").disabled = !Boolean(parseInt(arrayData["prix_variable"]));
+
+    if (mode === "new") {
+        rowNode.querySelector(".input#item-num-serie").disabled = !Boolean(parseInt(arrayData["identifiable"]));
+        rowNode.querySelector(".input#item-pu").disabled = !Boolean(parseInt(arrayData["prix_variable"]));
+        rowNode.querySelector(".input#item-quantity").value = "";
+        rowNode.querySelector(".input#item-quantity").disabled = false;
+
+        if (parseInt(arrayData["identifiable"])) {
+            rowNode.querySelector(".input#item-quantity").value = 1;
+            rowNode.querySelector(".input#item-quantity").disabled = true;
+        }
+
+        if (parseInt(arrayData["stockable"])) {
+            AutoNumeric.getAutoNumericElement(rowNode.querySelector(".input#item-quantity")).update({ maximumValue: arrayData["stock"] });
+        }
+    }
+
+
+    for (let k = 0; k < inputs.length; k++) {
+        let input = inputs[k];
+        try {
+            let objectKeyArray = DTO_FILL_INPUT_ITEM_ROW.find((entrie) => entrie.inputId === input.id).objectKey;
+            objectKeyArray.some(function (value) {
+                let val = arrayData[value];
+                // console.log(input.id + " - " + val);
+                if (val !== undefined) {
+                    if (NUMBER_INPUT_ITEM_ROW.includes(input.id)) {
+                        setInputValue(input, AutoNumeric.format(parseFloat(val), defaultAutoNumericOptions));
+                    } else {
+                        setInputValue(input, val);
+                    }
+                    return true;
+                }
+                return false;
+            });
+        } catch (err) {
+            console.log("564");
+            continue;
+        }
+
+    }
+}
+
+function disableInputsAndButtons(tableNode) {
+    console.log('disable this shit');
+    let nodesToDisable = tableNode.querySelectorAll(".input.fillable");
+    // let nodesToDisable = tableNode.querySelectorAll(".input, .btn");
+
+    for (let index = 0; index < nodesToDisable.length; index++) {
+        nodesToDisable[index].disabled = true;
+    }
+}
+
+async function addItemRowsLoop(numberOfRows, modalDetailsItemsTable) {
+    for (let i = 0; i < numberOfRows; ++i) {
+        console.log("counterRowItem : " + counterRowItem);
+        await addItem(modalDetailsItemsTable, 'view');
+        autonumericItemRow(modalDetailsItemsTable);
+    }
+    return new Promise((resolve, reject) => resolve(true));
+}
+
+async function fillInputsDetailsItems(itemsArray, modalDetailsItemsTable) {
+
+    let numberOfRows = itemsArray.length;
+    await addItemRowsLoop(numberOfRows, modalDetailsItemsTable);
+    disableInputsAndButtons(modalDetailsItemsTable);
+    let rowsToFill = modalDetailsItemsTable.querySelectorAll(".item-commande-row");
+
+    for (let j = 0; j < numberOfRows; j++) {
+        fillInputsDetailsItemRow(itemsArray[j], rowsToFill[j]);
+
+    }
+}
 
 function addItem(tableFactureBody, mode = "new") {
     if (!["view", "new"].includes(mode)) {
@@ -681,32 +910,6 @@ function addItem(tableFactureBody, mode = "new") {
 
 
 
-// function addItem() {
-//     console.log("addding item");
-//     fetch("/elements/facts_frnsr/facture_frnsr_table_details_base.html")
-//         .then((response) => {
-//             let tt = response.text();
-//             return tt;
-//         })
-//         .then((txt) => {
-//             // TODO : abstract this process
-//             let doc = new DOMParser().parseFromString(
-//                 txt,
-//                 "text/html"
-//             );
-//             let trModel = doc.querySelector("#row-001");
-
-//             console.log(tableFacture.querySelector('tbody'));
-//             tableFacture.querySelector('tbody').append(
-//                 generateRowAddItem(trModel, ["", "", "", "", "", ""])
-//             );
-//             // bsModalFactureNew.hide();
-//             // _cleanNewForm();
-//             // console.log("yes saving called");
-//             return true;
-//         });
-// }
-
 function autonumericItemRow(tableFactureBody) {
     let currentRow = tableFactureBody.querySelector("#row-" + zeroLeftPadding(counterRowItem, 3, false));
     new AutoNumeric(currentRow.querySelector("#item-pu"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
@@ -727,9 +930,9 @@ document.addEventListener("DOMContentLoaded", () => {
     //CACHING ELEMENTS
     const divBtns = document.getElementById("div-btns");
     const tableBody = document.getElementById("ze-tbody");
-    const tableFacture = document.getElementById("modal-facture-new").querySelector('#table-facture');
+    const tableFacture = document.getElementById("modal-facture-new").querySelector('#new-modal-body-table');
 
-    ////modal confirmation
+    //modal confirmation
     const modalConfirmation = document.getElementById("modal-confirmation");
     const bsModalConfirmation = new bootstrap.Modal(modalConfirmation, {
         backdrop: "static",
@@ -814,7 +1017,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             let dataModalNew = grabCommandeDataForm(modalFactureNew);
-            dataModalNew["header"]["state"] = 2;
             console.log("dataModalNew");
             console.log(dataModalNew);
             saveFactureNew(dataModalNew).then((result) => {
@@ -828,7 +1030,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     // TODO : cache html
 
                     fetch(
-                        "/elements/facts_clt/liste_facts_clt_table_001_base.html"
+                        "/elements/facts_frnsr/facture_frnsr_table_details_base.html"
                     )
                         .then((response) => {
                             let tt = response.text();
@@ -868,6 +1070,59 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     //FUNCTIONS
+
+
+
+    async function showFactureDetails(event) {
+        // TODO : refactor
+        console.log("called here");
+
+        // caching data
+        let parent = event.target.parentNode.parentNode;
+        // console.log("parent");
+        // console.log(parent);
+        let myuid = parent.querySelector(".input.facture-uid").value;
+        // console.log("myuid tr");
+        // console.log(myuid);
+        // console.log("num-fact tr");
+        // console.log(parent.querySelector(".input.num-fact").value);
+
+        sendData("/database/select/one_facture_fournisseur_details.php", {
+            "facture-uid": myuid
+        })
+            .then((resp) => {
+                console.log("shwodetail :");
+                console.log(resp);
+                return responseHandlerSelectOneFacture(resp);
+            })
+            .then((result) => {
+                // console.log("result : " + JSON.stringify(result[1]));
+                // TODO : implement this part in new-client into a function cleanClass(). and optimize : if same personnality called, no nedd to recall.
+                console.log("result+-+");
+                console.log(result);
+                if (result[0] === "success") {
+
+                    console.log("result[1]");
+                    console.log(result[1]);
+                    try {
+
+                        let btnModify = modalFactureDetails.querySelector('#btn-modify');
+                        btnModify.disabled = false;
+                        if (result[1]['header']["state"] == "2") {
+                            btnModify.disabled = true;
+                        }
+                    } catch {
+
+                    }
+
+                    let inputsHeader = modalFactureDetails.querySelector("#modal-body-heads")
+                    fillInputsDetailsHeaders(result[1], inputsHeader);
+                    fillInputsDetailsItems(result[1]["items"], modalFactureDetails.querySelector("#table-facture"), "view");
+                } else {
+                    throw new Error(result);
+                }
+            });
+    }
 
     function addDatalistElement(datalistNode, arrayData, mode, term = "") {
         // datalistNode.innerHTML = "";
@@ -1452,7 +1707,9 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
         modalFactureDetails.addEventListener('click', (event) => {
             if (event.target.id == "btn-cancel") {
+                console.log("canceling details");
                 bsModalFactureDetails.hide();
+                DefaultModalCommandInputs(modalFactureDetails, 0);
             }
             if (event.target.id == "btn-modify") {
                 enableInputs();
@@ -1461,12 +1718,14 @@ document.addEventListener("DOMContentLoaded", () => {
         })
 
     } catch (error) {
-
+        console.log("bb error");
+        console.log(error);
     }
 
     try {
         tableBody.addEventListener("click", (event) => {
             if (event.target.classList.contains('btn-details')) {
+                showFactureDetails(event);
                 bsModalFactureDetails.show()
             }
         })

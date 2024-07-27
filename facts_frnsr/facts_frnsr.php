@@ -95,19 +95,20 @@ is_logged();
                                 <?php
                                 //TODO : make the header of factures in details readonly. 
                                 //TODO : change to require once. 
-                                require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_header_base_disabled.html";
+                                require __DIR__ . "/../modals_processors/facture_fournisseur_formulaire_body_read_only.php";
                                 ?>
                             </div>
                             <!-- TODO : to elete. we gonna use only JS here -->
                             <div id="modal-body-table">
                                 <?php
                                 //TODO : change to require once.
-                                require __DIR__ . "/../elements/facts_frnsr/facture_frnsr_table_details_base_disabled.html";
+                                require __DIR__ . "/../modals_processors/facture_fournisseur_formulaire_body_table_read_only.php";
                                 ?>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X</button>
+                            <button type="button" class="btn btn-secondary btn-cancel" id="btn-cancel">X</button>
+
                             <button type="button" class="btn btn-primary">Save</button>
                         </div>
                     </div>

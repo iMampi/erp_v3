@@ -15,9 +15,10 @@ class NewFactureFournisseurHeader extends Converter
     public function converter_for_db()
     {
         $input = $this->data_from_user;
-        $this->data_for_db["uid"] = \array_key_exists("uid", $input) ? \intval($input["uid"]) != 0 ?  \intval($input["uid"]) : \null : \null;
+        $this->data_for_db["facture_uid"] = \array_key_exists("facture-uid", $input) ? \intval($input["facture-uid"]) != 0 ?  \intval($input["facture-uid"]) : \null : \null;
 
-        $this->data_for_db["tva_flag"] = \array_key_exists("tva-flag", $input) ? \intval($input["tva-flag"]) != 0 ?  \intval($input["tva-flag"]) : \null : \null;
+        // set default value as company tva default from db
+        $this->data_for_db["tva_flag"] = \array_key_exists("tva-flag", $input) ? \intval($input["tva-flag"]) != 0 ?  \intval($input["tva-flag"]) : 0 : 0;
 
         $this->data_for_db["user_uid"] = \array_key_exists("user-uid", $input) ? \intval($input["user-uid"]) != 0 ?  \intval($input["user-uid"]) : \null : \null;
 
@@ -54,7 +55,7 @@ class NewFactureFournisseurHeader extends Converter
         $this->data_for_db["total_ht_apres_remise"] = \array_key_exists("totalHT-apres-remise", $input) ? \floatval($input["totalHT-apres-remise"]) != "" ?  \floatval($input["totalHT-apres-remise"]) : 0 : 0;
 
         $this->data_for_db["total_ttc_apres_remise"] = \array_key_exists("totalTTC-apres-remise", $input) ? \floatval($input["totalTTC-apres-remise"]) != "" ?  \floatval($input["totalTTC-apres-remise"]) : 0 : 0;
-        
+
         $this->data_for_db["tva_apres_remise"] = \array_key_exists("tva-apres-remise", $input) ? \floatval($input["tva-apres-remise"]) != "" ?  \floatval($input["tva-apres-remise"]) : 0 : 0;
     }
 }
