@@ -1343,3 +1343,16 @@ changed the html base of facture_frnsr_table_details_base.html.
 added switchMode() in the js.
 added global variable modeFacture.
 modified addItem()
+-------------------------
+169_an:
+working on the facture fournisseur cycle...
+start to implement the negative value for all number input concerned...
+...working on switchMode() : the calcultation part, renamig argument to the coorect one using queryselector
+
+all the cycle new fact fournisseur (facture or avoir) work correctly now. 
+avec tvaflag, tva variable, update price...
+
+implemented modeFacture;
+rewrote updateTotalPriceHT() to add a flag to return postive or negative value;
+updated all "// *update max for remiseMontantInput";
+

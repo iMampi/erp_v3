@@ -328,7 +328,21 @@ function updateFormOnTvaVariable(eventTargetChecked,
         setInputValue(montantTTCAvantRemiseInput, calculateTTC(montantHTAvantRemiseInput, TVAAvantRemiseInput));
 
         // *update max for remiseMontantInput
-        AutoNumeric.getAutoNumericElement(remiseMontantInput).update({ maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInput) })
+        setInputValue(remiseMontantInput, 0)
+        if (modeFacture === "avoir") {
+            AutoNumeric.getAutoNumericElement(remiseMontantInput).update(
+                {
+                    maximumValue: 0,
+                    minimumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInput),
+                })
+        } else if (modeFacture === "facture") {
+            AutoNumeric.getAutoNumericElement(remiseMontantInput).update(
+                {
+                    maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInput),
+                    minimumValue: 0,
+
+                })
+        }
 
 
         // *update the remise montant
@@ -353,7 +367,21 @@ function updateFormOnTvaVariable(eventTargetChecked,
         setInputValue(montantTTCAvantRemiseInput, calculateTTC(montantHTAvantRemiseInput, TVAAvantRemiseInput));
 
         // *update max for remiseMontantInput
-        AutoNumeric.getAutoNumericElement(remiseMontantInput).update({ maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInput) })
+        setInputValue(remiseMontantInput, 0)
+        if (modeFacture === "avoir") {
+            AutoNumeric.getAutoNumericElement(remiseMontantInput).update(
+                {
+                    maximumValue: 0,
+                    minimumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInput),
+                })
+        } else if (modeFacture === "facture") {
+            AutoNumeric.getAutoNumericElement(remiseMontantInput).update(
+                {
+                    maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInput),
+                    minimumValue: 0,
+
+                })
+        }
 
 
         // *update the remise montant
@@ -446,58 +474,7 @@ function formatFournisseurNameSearchResult(objectData) {
     return val;
 }
 
-function fillInputsDetailsItemRow(arrayData, rowNode, mode = "view") {
-    if (!["view", "new"].includes(mode)) {
-        throw new Error("mode must be view or new.");
-    }
-    console.log("arrayData");
-    console.log(arrayData);
-    let inputs = rowNode.querySelectorAll(".input");
-    rowNode.querySelector(".input#item-num-serie").disabled = !Boolean(parseInt(arrayData["identifiable"]));
-    rowNode.querySelector(".input#item-pu").disabled = !Boolean(parseInt(arrayData["prix_variable"]));
 
-    if (mode === "new") {
-        rowNode.querySelector(".input#item-quantity").value = "";
-        rowNode.querySelector(".input#item-quantity").disabled = false;
-
-        rowNode.querySelector(".input#item-pu").disabled = false;
-
-
-        if (parseInt(arrayData["identifiable"])) {
-            rowNode.querySelector(".input#item-quantity").value = 1;
-            rowNode.querySelector(".input#item-quantity").disabled = true;
-        }
-        //! not needed it achat cycle
-        // if (parseInt(arrayData["stockable"])) {
-        //     AutoNumeric.getAutoNumericElement(rowNode.querySelector(".input#item-quantity")).update({ maximumValue: arrayData["stock"] });
-        // }
-    }
-
-
-    for (let k = 0; k < inputs.length; k++) {
-        let input = inputs[k];
-        try {
-            let objectKeyArray = DTO_FILL_INPUT_ITEM_ROW.find((entrie) => entrie.inputId === input.id).objectKey;
-            objectKeyArray.some(function (value) {
-                let val = arrayData[value];
-                console.log(input.id + " - " + val);
-                if (val !== undefined) {
-                    if (NUMBER_INPUT_ITEM_ROW.includes(input.id)) {
-                        setInputValue(input, AutoNumeric.format(parseFloat(val), defaultAutoNumericOptions));
-                    } else {
-                        setInputValue(input, val);
-                    }
-                    return true;
-                }
-                return false;
-            });
-        } catch (err) {
-            console.log("564");
-            continue;
-        }
-
-    }
-}
 
 function removeItem(target, mode) {
     console.log("remove me");
@@ -652,14 +629,14 @@ function grabCommandeDataForm(modal) {
         let libelle = row.querySelector("#item-libelle").value;
         let identifiable = row.querySelector("#identifiable").value;
         let stockable = row.querySelector("#stockable").value;
-        let returnItem = null;
+        let sortieStock = null;
         try {
-            let returnItem = row.querySelector("#return-item").value;
+            sortieStock = row.querySelector("#sortie-stock").value;
         } catch (error) {
-            console.log("returnItem does not exist");
+            console.log("sortie-stock does not exist");
         }
 
-        data["items"].push([rowID, itemID, quantity, prixUnitaire, numSerie, libelle, identifiable, stockable, returnItem]);
+        data["items"].push([rowID, itemID, quantity, prixUnitaire, numSerie, libelle, identifiable, stockable, sortieStock]);
     });
     return data;
 }
@@ -770,7 +747,7 @@ function fillInputsDetailsItemRow(arrayData, rowNode, mode = "view") {
 
     if (mode === "new") {
         rowNode.querySelector(".input#item-num-serie").disabled = !Boolean(parseInt(arrayData["identifiable"]));
-        rowNode.querySelector(".input#item-pu").disabled = !Boolean(parseInt(arrayData["prix_variable"]));
+        rowNode.querySelector(".input#item-pu").disabled = false;
         rowNode.querySelector(".input#item-quantity").value = "";
         rowNode.querySelector(".input#item-quantity").disabled = false;
 
@@ -779,9 +756,7 @@ function fillInputsDetailsItemRow(arrayData, rowNode, mode = "view") {
             rowNode.querySelector(".input#item-quantity").disabled = true;
         }
 
-        if (parseInt(arrayData["stockable"])) {
-            AutoNumeric.getAutoNumericElement(rowNode.querySelector(".input#item-quantity")).update({ maximumValue: arrayData["stock"] });
-        }
+
     }
 
 
@@ -793,7 +768,16 @@ function fillInputsDetailsItemRow(arrayData, rowNode, mode = "view") {
                 let val = arrayData[value];
                 // console.log(input.id + " - " + val);
                 if (val !== undefined) {
+                    if (mode === "new") {
+                        if (!NUMBER_INPUT_ITEM_ROW.includes(input.id)) {
+                            setInputValue(input, val);
+                            return true;
+                        }
+                        return false;
+                    }
+
                     if (NUMBER_INPUT_ITEM_ROW.includes(input.id)) {
+                        // TODO : delete me. not needed anymore since autonumeric handles it now
                         setInputValue(input, AutoNumeric.format(parseFloat(val), defaultAutoNumericOptions));
                     } else {
                         setInputValue(input, val);
@@ -862,14 +846,18 @@ function addItem(tableFactureBody, mode = "new") {
             console.log("trModel");
             console.log(trModel);
 
-            if (modeFacture == "facture") {
+
+            if (modeFacture === "facture") {
                 trModel.querySelector(".td-sortie-stock").classList.add("d-none");
-            } else {
+            } else if (modeFacture === "avoir") {
                 trModel.querySelector(".td-sortie-stock").classList.remove("d-none");
+
+
             }
 
             if (mode === "view") {
                 trModel.querySelector("#btn-del-item").disabled = true;
+                trModel.querySelector("#item-pu").disabled = true;
             }
             tableFactureBody.querySelector('tbody').append(
                 generateRowItem(trModel, ["", "", "", "", "", ""])
@@ -900,14 +888,17 @@ function addItem(tableFactureBody, mode = "new") {
                     console.log("trModel");
                     console.log(trModel);
 
-                    if (modeFacture == "facture") {
+                    if (modeFacture === "facture") {
                         trModel.querySelector(".td-sortie-stock").classList.add("d-none");
-                    } else {
+                    } else if (modeFacture === "avoir") {
                         trModel.querySelector(".td-sortie-stock").classList.remove("d-none");
+
                     }
 
                     if (mode === "view") {
                         trModel.querySelector("#btn-del-item").disabled = true;
+                        trModel.querySelector("#item-pu").disabled = true;
+
                     }
 
                     tableFactureBody.querySelector('tbody').append(
@@ -931,6 +922,11 @@ function autonumericItemRow(tableFactureBody) {
     new AutoNumeric(currentRow.querySelector("#item-pu"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
     new AutoNumeric(currentRow.querySelector("#item-quantity"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
     new AutoNumeric(currentRow.querySelector("#item-prix-total"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
+    if (modeFacture === "avoir") {
+        AutoNumeric.getAutoNumericElement(currentRow.querySelector("#item-prix-total")).update({ minimumValue: -999999999999 })
+    } else if (modeFacture === "facture") {
+        AutoNumeric.getAutoNumericElement(currentRow.querySelector("#item-prix-total")).update({ minimumValue: 0 })
+    }
 }
 
 function generateRowItem(nodeModel, DataObj) {
@@ -941,7 +937,8 @@ function generateRowItem(nodeModel, DataObj) {
     return newNode;
 }
 
-function switchMode(myMode, table) {
+function switchMode(myMode, modalFacture) {
+    let table = modalFacture.querySelector("#table-facture");
     if (!["avoir", "facture"].includes(myMode)) {
         throw new Error("myMode must be avoir or facture.");
     }
@@ -949,18 +946,96 @@ function switchMode(myMode, table) {
     modeFacture = myMode;
 
     // hide sortie-stock
-    table.querySelectorAll(".td-sortie-stock").forEach(element => {
+    table.querySelectorAll(".td-sortie-stock").forEach(td => {
         if (myMode == "avoir") {
-            element.classList.remove("d-none");
-            console.log("hide me");
-        } else {
-            element.classList.add("d-none");
+            td.classList.remove("d-none");
             console.log("show me me");
-
+        } else {
+            td.classList.add("d-none");
+            console.log("hide me");
         }
     });
 
+    table.querySelectorAll("tr .input").forEach(element => {
+        console.log("here here here");
 
+        if (element.id === "item-prix-total") {
+            let _initialValue = AutoNumeric.getNumber(element);
+            setInputValue(element, 0);
+            if (myMode === "avoir") {
+                AutoNumeric.getAutoNumericElement(element).update({ minimumValue: -999999999999 })
+            } else {
+                AutoNumeric.getAutoNumericElement(element).update({ minimumValue: 0 })
+            }
+
+            setInputValue(element, _initialValue * -1);
+            console.log("neg this");
+
+        } else if (element.id === "sortie-stock") {
+            element.checked = true;
+            console.log("check this for me");
+        }
+    })
+
+    setInputValue(modalFacture.querySelector("#totalHT-avant-remise"), 0);
+    setInputValue(modalFacture.querySelector("#TVA-avant-remise"), 0);
+    setInputValue(modalFacture.querySelector("#totalTTC-avant-remise"), 0);
+    setInputValue(modalFacture.querySelector("#totalHT-apres-remise"), 0);
+    setInputValue(modalFacture.querySelector("#remise-montant"), 0);
+    setInputValue(modalFacture.querySelector("#TVA-apres-remise"), 0);
+    setInputValue(modalFacture.querySelector("#totalHT-avant-remise"), 0);
+    setInputValue(modalFacture.querySelector("#totalTTC-apres-remise"), 0);
+
+    if (myMode === "avoir") {
+        AutoNumeric.getAutoNumericElement(modalFacture.querySelector("#totalHT-avant-remise")).update({ minimumValue: -999999999999 });
+        AutoNumeric.getAutoNumericElement(modalFacture.querySelector("#TVA-avant-remise")).update({ minimumValue: -999999999999 });
+        AutoNumeric.getAutoNumericElement(modalFacture.querySelector("#totalTTC-avant-remise")).update({ minimumValue: -999999999999 });
+        AutoNumeric.getAutoNumericElement(modalFacture.querySelector("#remise-montant")).update({ minimumValue: -999999999999 });
+        AutoNumeric.getAutoNumericElement(modalFacture.querySelector("#totalHT-apres-remise")).update({ minimumValue: -999999999999 });
+        AutoNumeric.getAutoNumericElement(modalFacture.querySelector("#TVA-apres-remise")).update({ minimumValue: -999999999999 });
+        AutoNumeric.getAutoNumericElement(modalFacture.querySelector("#totalTTC-apres-remise")).update({ minimumValue: -999999999999 });
+
+    } else {
+        AutoNumeric.getAutoNumericElement(modalFacture.querySelector("#totalHT-avant-remise")).update({ minimumValue: 0 });
+        AutoNumeric.getAutoNumericElement(modalFacture.querySelector("#TVA-avant-remise")).update({ minimumValue: 0 });
+        AutoNumeric.getAutoNumericElement(modalFacture.querySelector("#totalTTC-avant-remise")).update({ minimumValue: 0 });
+        AutoNumeric.getAutoNumericElement(modalFacture.querySelector("#remise-montant")).update({ minimumValue: 0 });
+        AutoNumeric.getAutoNumericElement(modalFacture.querySelector("#totalHT-apres-remise")).update({ minimumValue: 0 });
+        AutoNumeric.getAutoNumericElement(modalFacture.querySelector("#TVA-apres-remise")).update({ minimumValue: 0 });
+        AutoNumeric.getAutoNumericElement(modalFacture.querySelector("#totalTTC-apres-remise")).update({ minimumValue: 0 });
+    }
+
+
+    // *start calculating
+    // *the avant remise part
+    // updateItemRowTotalPrice(event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode);
+    updateTotalPriceHT(modalFacture.querySelector("#totalHT-avant-remise"), modalFacture.querySelectorAll(".item-prix-total"));
+    setInputValue(modalFacture.querySelector("#TVA-avant-remise"),
+        calculateTva(modalFacture.querySelector("#totalHT-avant-remise"), tvaRate[tvaFlag]));
+    setInputValue(
+        modalFacture.querySelector("#totalTTC-avant-remise"),
+        calculateTTC(modalFacture.querySelector("#totalHT-avant-remise"),
+            modalFacture.querySelector("#TVA-avant-remise")));
+
+    // *update max for remiseMontantInputNew
+    // AutoNumeric.getAutoNumericElement(modalFacture.querySelector("#remise-montant")).update({ maximumValue: AutoNumeric.getNumber(modalFacture.querySelector("#totalTTC-avant-remise")) })
+
+
+    // *update the remise montant
+    setInputValue(modalFacture.querySelector("#remise-montant"),
+        calculateDiscountFromRemiseTaux(modalFacture.querySelector("#remise-taux"),
+            modalFacture.querySelector("#totalTTC-avant-remise")));
+
+    // *the apres remise
+    setInputValue(modalFacture.querySelector("#totalHT-apres-remise"),
+        (AutoNumeric.getNumber(modalFacture.querySelector("#totalTTC-avant-remise")) -
+            AutoNumeric.getNumber(modalFacture.querySelector("#remise-montant")))
+        / (1 + tvaRate[tvaFlag])
+    )
+    setInputValue(modalFacture.querySelector("#TVA-apres-remise"),
+        AutoNumeric.getNumber(modalFacture.querySelector("#totalHT-apres-remise")) * tvaRate[tvaFlag]
+    )
+    setInputValue(modalFacture.querySelector("#totalTTC-apres-remise"), calculateTTC(modalFacture.querySelector("#totalHT-apres-remise"), modalFacture.querySelector("#TVA-apres-remise")));
 }
 
 
@@ -1410,13 +1485,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     // *start calculating
                     // *the avant remise part
-                    updateItemRowTotalPrice(event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode);
+                    let positive = true;
+                    if (modeFacture === "avoir") {
+                        positive = false;
+                        AutoNumeric.getAutoNumericElement(event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector("#item-prix-total")).update({ minimumValue: -999999999999 })
+                    } else if (modeFacture === "avoir") {
+                        AutoNumeric.getAutoNumericElement(event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector("#item-prix-total")).update({ minimumValue: 0 })
+                    }
+                    updateItemRowTotalPrice(event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode, positive);
                     updateTotalPriceHT(montantHTAvantRemiseInputNew, modalFactureNew.querySelectorAll(".item-prix-total"));
                     setInputValue(TVAAvantRemiseInputNew, calculateTva(montantHTAvantRemiseInputNew, tvaRate[tvaFlag]));
                     setInputValue(montantTTCAvantRemiseInputNew, calculateTTC(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew));
 
                     // *update max for remiseMontantInputNew
-                    AutoNumeric.getAutoNumericElement(remiseMontantInputNew).update({ maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInputNew) })
+                    setInputValue(remiseMontantInputNew, 0)
+                    if (modeFacture === "avoir") {
+                        AutoNumeric.getAutoNumericElement(remiseMontantInputNew).update(
+                            {
+                                maximumValue: 0,
+                                minimumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInputNew),
+                            })
+                    } else if (modeFacture === "facture") {
+                        AutoNumeric.getAutoNumericElement(remiseMontantInputNew).update(
+                            {
+                                maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInputNew),
+                                minimumValue: 0,
+
+                            })
+                    }
 
 
                     // *update the remise montant
@@ -1434,7 +1530,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     )
                     setInputValue(montantTTCApresRemiseInputNew, calculateTTC(montantHTApresRemiseInputNew, TVAApresRemiseInputNew));
 
-
+                    // TODO : deal with the fact that when mode is avoir, the total ttc will be negeative
                     if (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) > 0) {
                         modalFactureNew.querySelector("#btn-save-new").disabled = false;
                     } else {
@@ -1475,7 +1571,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 setInputValue(montantTTCAvantRemiseInputNew, calculateTTC(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew));
 
                 // *update max for remiseMontantInputNew
-                AutoNumeric.getAutoNumericElement(remiseMontantInputNew).update({ maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInputNew) })
+                setInputValue(remiseMontantInputNew, 0)
+                if (modeFacture === "avoir") {
+                    AutoNumeric.getAutoNumericElement(remiseMontantInputNew).update(
+                        {
+                            maximumValue: 0,
+                            minimumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInputNew),
+                        })
+                } else if (modeFacture === "facture") {
+                    AutoNumeric.getAutoNumericElement(remiseMontantInputNew).update(
+                        {
+                            maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInputNew),
+                            minimumValue: 0,
+
+                        })
+                }
 
 
                 // *update the remise montant
@@ -1525,7 +1635,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 console.log("switch facture-avoir");
                 console.log(event.target.value);
-                switchMode(event.target.value, modalFactureNew.querySelector("#table-facture"));
+                switchMode(event.target.value, modalFactureNew);
 
             } else if (event.target.id == "search-item") {
                 // item searching with btn dropdown
@@ -1560,7 +1670,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 // TODO : sanitize hint
                 let fournisseurDropdown = event.target.parentNode.parentNode.parentNode;
                 cleanDropdown(fournisseurDropdown);
-                //// START - grabing data
+                //* START - grabing data
                 clearTimeout(typingTimer);
                 if (!hint.trim()) {
                     cleanDropdown(fournisseurDropdown);
@@ -1578,13 +1688,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // *start calculating
                 // *the avant remise part
-                updateItemRowTotalPrice(event.target.parentNode.parentNode);
+                let positive = true;
+                if (modeFacture === "avoir") {
+                    positive = false;
+                    AutoNumeric.getAutoNumericElement(event.target.parentNode.parentNode.querySelector("#item-prix-total")).update({ minimumValue: -999999999999 })
+
+                } else if (modeFacture === "facture") {
+                    AutoNumeric.getAutoNumericElement(event.target.parentNode.parentNode.querySelector("#item-prix-total")).update({ minimumValue: 0 })
+
+                }
+                updateItemRowTotalPrice(event.target.parentNode.parentNode, positive);
                 updateTotalPriceHT(montantHTAvantRemiseInputNew, modalFactureNew.querySelectorAll(".item-prix-total"));
                 setInputValue(TVAAvantRemiseInputNew, calculateTva(montantHTAvantRemiseInputNew, tvaRate[tvaFlag]));
                 setInputValue(montantTTCAvantRemiseInputNew, calculateTTC(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew));
 
                 // *update max for remiseMontantInputNew
-                AutoNumeric.getAutoNumericElement(remiseMontantInputNew).update({ maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInputNew) })
+                setInputValue(remiseMontantInputNew, 0)
+                if (modeFacture === "avoir") {
+                    AutoNumeric.getAutoNumericElement(remiseMontantInputNew).update(
+                        {
+                            maximumValue: 0,
+                            minimumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInputNew),
+                        })
+                } else if (modeFacture === "facture") {
+                    AutoNumeric.getAutoNumericElement(remiseMontantInputNew).update(
+                        {
+                            maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInputNew),
+                            minimumValue: 0,
+
+                        })
+                }
 
 
                 // *update the remise montant
@@ -1641,7 +1774,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 setInputValue(montantTTCAvantRemiseInputNew, calculateTTC(montantHTAvantRemiseInputNew, TVAAvantRemiseInputNew));
 
                 // *update max for remiseMontantInputNew
-                AutoNumeric.getAutoNumericElement(remiseMontantInputNew).update({ maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInputNew) })
+                setInputValue(remiseMontantInputNew, 0)
+                if (modeFacture === "avoir") {
+                    AutoNumeric.getAutoNumericElement(remiseMontantInputNew).update(
+                        {
+                            maximumValue: 0,
+                            minimumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInputNew),
+                        })
+                } else if (modeFacture === "facture") {
+                    AutoNumeric.getAutoNumericElement(remiseMontantInputNew).update(
+                        {
+                            maximumValue: AutoNumeric.getNumber(montantTTCAvantRemiseInputNew),
+                            minimumValue: 0,
+
+                        })
+                }
+
 
 
                 // *update the remise montant

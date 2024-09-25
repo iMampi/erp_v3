@@ -414,7 +414,7 @@ class Queries
             ?)
         ";
 
-    static public $save_new_identifiable = " insert into identifiables values (?,?,?,?)";
+    static public $save_new_identifiable = " insert into identifiables values (?,?,?,?,?)";
     static public $check_item_stock = "
         select code, stock from items where code=?;
         ";
@@ -427,8 +427,14 @@ class Queries
     static public $update_stock_sub = "
         update items set stock = stock - ? where code=?;
         ";
-    static public $update_identifiable = "
-        update identifiables set actif = ? where item_code=? and num_serie=?;
+    // static public $update_identifiable = "
+    // update identifiables set actif = ?, ref_in=?, ref_out=? where item_code=? and num_serie=?;
+    // ";
+    static public $update_identifiable_in = "
+        update identifiables set actif = 1, ref_in=? where item_code=? and num_serie=?;
+        ";
+    static public $update_identifiable_out = "
+        update identifiables set actif = 0, ref_out=? where item_code=? and num_serie=?;
         ";
     // static public $update_stock_sub = "
     // update items set stock = stock - ? where code=?;
@@ -664,8 +670,11 @@ class Queries
             case 'update_stock_sub':
                 $this->query = self::$update_stock_sub;
                 break;
-            case 'update_identifiable':
-                $this->query = self::$update_identifiable;
+            case 'update_identifiable_in':
+                $this->query = self::$update_identifiable_in;
+                break;
+            case 'update_identifiable_out':
+                $this->query = self::$update_identifiable_out;
                 break;
             default:
                 # code...

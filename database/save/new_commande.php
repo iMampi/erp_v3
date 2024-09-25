@@ -100,7 +100,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("commande"))) {
         print(json_encode($temp_array_result));
         return;
     } else {
-        ////saving itemrow with the new order uid
+        //saving itemrow with the new order uid
         $new_commande_uid = $temp_array_result[1][0][0];
 
         try {

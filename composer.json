@@ -13,11 +13,12 @@
 			"Cotisation\\": "classes/cotisation/",
 			"Converter\\": "classes/converter/",
 			"Database\\": "classes/database/",
-			"Database\\Special\\": "classes/database/special"
+			"Database\\Special\\": "classes/database/special/"
 		},
 		"files": [
 			"classes/session/Functions.php",
-			"classes/tax/Functions.php"
+			"classes/tax/Functions.php",
+			"classes/database/special/Functions.php"
 		]
 	},
 	"require": {

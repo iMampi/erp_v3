@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : jeu. 16 nov. 2023 à 18:45
+-- Généré le : lun. 22 juil. 2024 à 19:32
 -- Version du serveur : 10.4.28-MariaDB
 -- Version de PHP : 8.1.17
 
@@ -18,226 +18,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données : `erpv2`
+-- Base de données : `test`
 --
 
 DELIMITER $$
---
--- Procédures
---
-CREATE DEFINER=`root`@`localhost` PROCEDURE `all_clients` ()   BEGIN
-select* from (
-select `tiers`.`uid`, `tiers`.`type_personnality_uid`,adress,nif,stat,rcs,phone1,phone2,mail1,mail2,`active_tiers`,note,
-type_vente,encours,nb_jour,evaluation,declarable,commissionable,
-`humans`.`noms` as noms,`humans`.`prenoms` as prenoms,cin as cin,cin_date as cin_date,cin_lieu as cin_lieu,naissance_date as naissance_date,naissance_lieu as naissance_lieu,
-"" as nom_commercial, "" as raison_sociale,
-active_client 
-from tiers
-join humans on `tiers`.`uid`= `humans`.`uid`
-join clients on `tiers`.`uid`= `clients`.`uid` 
-UNION
-select `tiers`.`uid`, `tiers`.`type_personnality_uid`,adress,nif,stat,rcs,phone1,phone2,mail1,mail2,`active_tiers`,note,
-type_vente,encours,nb_jour,evaluation,declarable,commissionable,
-"" as noms,"" as prenoms,"" as cin,"" as cin_date,"" as cin_lieu,"" as naissance_date,"" as naissance_lieu,
-`companies`.nom_commercial as nom_commercial, `companies`.raison_sociale as raison_sociale,
-active_client 
- from tiers
-join companies on `tiers`.`uid`= `companies`.`uid`
-join clients on `tiers`.`uid`= `clients`.`uid` ) sub
-order by uid asc;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `all_clients_active_only` ()   BEGIN
-select* from (
-select `tiers`.`uid`, `tiers`.`type_personnality_uid`,adress,nif,stat,rcs,phone1,phone2,mail1,mail2,`active_tiers`,note,
-type_vente,encours,nb_jour,evaluation,declarable,commissionable,
-`humans`.`noms` as noms,`humans`.`prenoms` as prenoms,cin as cin,cin_date as cin_date,cin_lieu as cin_lieu,naissance_date as naissance_date,naissance_lieu as naissance_lieu,
-"" as nom_commercial, "" as raison_sociale,
-active_client 
-from tiers
-join humans on `tiers`.`uid`= `humans`.`uid`
-join clients on `tiers`.`uid`= `clients`.`uid` where clients.active_client=1 and tiers.active_tiers=1
-UNION
-select `tiers`.`uid`, `tiers`.`type_personnality_uid`,adress,nif,stat,rcs,phone1,phone2,mail1,mail2,`active_tiers`,note,
-type_vente,encours,nb_jour,evaluation,declarable,commissionable,
-"" as noms,"" as prenoms,"" as cin,"" as cin_date,"" as cin_lieu,"" as naissance_date,"" as naissance_lieu,
-`companies`.nom_commercial as nom_commercial, `companies`.raison_sociale as raison_sociale,
-active_client 
- from tiers
-join companies on `tiers`.`uid`= `companies`.`uid`
-join clients on `tiers`.`uid`= `clients`.`uid` where clients.active_client=1 and tiers.active_tiers=1) sub
-order by uid asc;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `all_clients_name` ()   BEGIN
-select* from (
-select `tiers`.`uid`, `tiers`.`type_personnality_uid`,`active_tiers`,
-`humans`.`noms` as noms,`humans`.`prenoms` as prenoms,
-"" as nom_commercial, "" as raison_sociale 
-from tiers 
-join humans on `tiers`.`uid`= `humans`.`uid`
-join clients on `tiers`.`uid`= `clients`.`uid` where clients.active_client=1 and tiers.active_tiers=1
-UNION
-select `tiers`.`uid`, `tiers`.`type_personnality_uid`,`active_tiers`,
-
-"" as noms,"" as prenoms,
-`companies`.nom_commercial as nom_commercial, `companies`.raison_sociale as raison_sociale 
-from tiers
-join companies on `tiers`.`uid`= `companies`.`uid`
-join clients on `tiers`.`uid`= `clients`.`uid` where clients.active_client=1 and tiers.active_tiers=1) sub
-order by uid asc;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `all_fournisseurs` ()   BEGIN
-select* from (
-select `tiers`.`uid`, `tiers`.`type_personnality_uid`,adress,nif,stat,rcs,phone1,phone2,mail1,mail2,`active_tiers`,note,
-encours,nb_jour,evaluation,declarable,
-`humans`.`noms` as noms,`humans`.`prenoms` as prenoms,cin as cin,cin_date as cin_date,cin_lieu as cin_lieu,naissance_date as naissance_date,naissance_lieu as naissance_lieu,
-"" as nom_commercial, "" as raison_sociale,
-active_fournisseur
-from tiers
-join humans on `tiers`.`uid`= `humans`.`uid`
-join fournisseurs on `tiers`.`uid`= `fournisseurs`.`uid` 
-UNION
-select `tiers`.`uid`, `tiers`.`type_personnality_uid`,adress,nif,stat,rcs,phone1,phone2,mail1,mail2,`active_tiers`,note,
-encours,nb_jour,evaluation,declarable,
-"" as noms,"" as prenoms,"" as cin,"" as cin_date,"" as cin_lieu,"" as naissance_date,"" as naissance_lieu,
-`companies`.nom_commercial as nom_commercial, `companies`.raison_sociale as raison_sociale,
-active_fournisseur 
- from tiers
-join companies on `tiers`.`uid`= `companies`.`uid`
-join fournisseurs on `tiers`.`uid`= `fournisseurs`.`uid` ) sub
-order by uid asc;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `all_fournisseurs_name` ()   BEGIN
-select* from (
-select `tiers`.`uid`, `tiers`.`type_personnality_uid`,`active_tiers`,
-`humans`.`noms` as noms,`humans`.`prenoms` as prenoms,
-"" as nom_commercial, "" as raison_sociale 
-from tiers 
-join humans on `tiers`.`uid`= `humans`.`uid`
-join fournisseurs on `tiers`.`uid`= `fournisseurs`.`uid` where fournisseurs.active_fournisseur=1 and tiers.active_tiers=1
-UNION
-select `tiers`.`uid`, `tiers`.`type_personnality_uid`,`active_tiers`,
-
-"" as noms,"" as prenoms,
-`companies`.nom_commercial as nom_commercial, `companies`.raison_sociale as raison_sociale 
-from tiers
-join companies on `tiers`.`uid`= `companies`.`uid`
-join fournisseurs on `tiers`.`uid`= `fournisseurs`.`uid` where fournisseurs.active_fournisseur=1 and tiers.active_tiers=1) sub
-order by uid asc;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `new_client` (OUT `myuid` INT, IN `type_personnality_uid` INT, IN `adress` VARCHAR(45), IN `nif` VARCHAR(45), IN `stat` VARCHAR(45), IN `rcs` VARCHAR(12), IN `phone1` VARCHAR(15), IN `phone2` VARCHAR(15), IN `mail1` VARCHAR(45), IN `mail2` VARCHAR(45), IN `active_` TINYINT, IN `note` TINYTEXT, IN `nom_commercial` VARCHAR(45), IN `raison_social` VARCHAR(45), IN `noms` VARCHAR(45), IN `prenoms` VARCHAR(45), IN `cin` VARCHAR(12), IN `cin_date` DATE, IN `cin_lieu` VARCHAR(45), IN `naissance_date` DATE, IN `naissance_lieu` VARCHAR(45), IN `type_vente` TINYINT, IN `encours` DOUBLE(14,2), IN `nb_jour` INT, IN `evaluation` TINYINT, IN `declarable` TINYINT, IN `commissionable` TINYINT)   BEGIN
-
-	insert into `tiers` values(null,type_personnality_uid,adress,nif,stat,rcs,phone1,phone2,mail1,mail2,active_,note);
-    set @myuid=last_insert_id();
-    #select @final;
-    case type_personnality_uid
-    when 1 then
-    insert into `humans` values( myuid,noms,prenoms,cin,cin_date,cin_lieu,naissance_date,naissance_lieu);
-    when 2 then
-    insert into `companies` values(myuid,nom_commercial,raison_social);
-    end case;
-    insert into `clients` values(myuid,type_vente,encours,nb_jour,evaluation,declarable,commissionable);
-    
-
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `new_tiers` (OUT `myuid` INT, IN `type_personnality_uid` INT, IN `adress` VARCHAR(45), IN `nif` VARCHAR(45), IN `stat` VARCHAR(45), IN `rcs` VARCHAR(12), IN `phone1` VARCHAR(15), IN `phone2` VARCHAR(15), IN `mail1` VARCHAR(45), IN `mail2` VARCHAR(45), IN `active_` TINYINT, IN `note` TINYTEXT, IN `nom_commercial` VARCHAR(45), IN `raison_social` VARCHAR(45), IN `noms` VARCHAR(45), IN `prenoms` VARCHAR(45), IN `cin` VARCHAR(12), IN `cin_date` DATE, IN `cin_lieu` VARCHAR(45), IN `naissance_date` DATE, IN `naissance_lieu` VARCHAR(45))   BEGIN
-	insert into `tiers` values(null,type_personnality_uid,adress,nif,stat,rcs,phone1,phone2,mail1,mail2,active_,note);
-    set @myuid=last_insert_id();
-    #select @final;
-    case type_personnality_uid
-    when 1 then
-    insert into `humans` values( myuid,noms,prenoms,cin,cin_date,cin_lieu,naissance_date,naissance_lieu);
-    when 2 then
-    insert into `companies` values(myuid,nom_commercial,raison_social);
-    end case;
-    
-
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `one_client_details` (IN `myuid` INT)   BEGIN
-select * from (select `tiers`.`uid`, `tiers`.`type_personnality_uid`,adress,nif,stat,rcs,phone1,phone2,mail1,mail2,`active_tiers`,note,
-type_vente,encours,nb_jour,evaluation,declarable,commissionable,`active_client`,
-`humans`.`noms` as noms,`humans`.`prenoms` as prenoms,cin as cin,cin_date as cin_date,cin_lieu as cin_lieu,naissance_date as naissance_date,naissance_lieu as naissance_lieu,
-"" as nom_commercial, "" as raison_sociale 
-from tiers
-join humans on `tiers`.`uid`= `humans`.`uid`
-join clients on `tiers`.`uid`= `clients`.`uid`
-UNION
-select `tiers`.`uid`, `tiers`.`type_personnality_uid`,adress,nif,stat,rcs,phone1,phone2,mail1,mail2,`active_tiers`,note,
-type_vente,encours,nb_jour,evaluation,declarable,commissionable,`active_client`,
-"" as noms,"" as prenoms,"" as cin,"" as cin_date,"" as cin_lieu,"" as naissance_date,"" as naissance_lieu,
-`companies`.nom_commercial as nom_commercial, `companies`.raison_sociale as raison_sociale 
-from tiers
-join companies on `tiers`.`uid`= `companies`.`uid`
-join clients on `tiers`.`uid`= `clients`.`uid`) as sub_select where sub_select.uid=myuid;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `one_fournisseur_details` (IN `myuid` INT)   BEGIN
-select * from (select `tiers`.`uid`, `tiers`.`type_personnality_uid`,adress,nif,stat,rcs,phone1,phone2,mail1,mail2,`active_tiers`,note,
-encours,nb_jour,evaluation,declarable,`active_fournisseur`,
-`humans`.`noms` as noms,`humans`.`prenoms` as prenoms,cin as cin,cin_date as cin_date,cin_lieu as cin_lieu,naissance_date as naissance_date,naissance_lieu as naissance_lieu,
-"" as nom_commercial, "" as raison_sociale 
-from tiers
-join humans on `tiers`.`uid`= `humans`.`uid`
-join fournisseurs on `tiers`.`uid`= `fournisseurs`.`uid`
-UNION
-select `tiers`.`uid`, `tiers`.`type_personnality_uid`,adress,nif,stat,rcs,phone1,phone2,mail1,mail2,`active_tiers`,note,
-encours,nb_jour,evaluation,declarable,`active_fournisseur`,
-"" as noms,"" as prenoms,"" as cin,"" as cin_date,"" as cin_lieu,"" as naissance_date,"" as naissance_lieu,
-`companies`.nom_commercial as nom_commercial, `companies`.raison_sociale as raison_sociale 
-from tiers
-join companies on `tiers`.`uid`= `companies`.`uid`
-join fournisseurs on `tiers`.`uid`= `fournisseurs`.`uid`) as sub_select where sub_select.uid=myuid;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `testclient1` (IN `my_uid` INT, IN `my_type_personnality_uid` INT, IN `my_adress` VARCHAR(45), IN `my_nif` VARCHAR(45), IN `my_stat` VARCHAR(45), IN `my_rcs` VARCHAR(12), IN `my_phone1` VARCHAR(15), IN `my_phone2` VARCHAR(15), IN `my_mail1` VARCHAR(45), IN `my_mail2` VARCHAR(45), IN `my_active_` TINYINT, IN `my_note` TINYTEXT, IN `my_nom_commercial` VARCHAR(45), IN `my_raison_sociale` VARCHAR(45), IN `my_noms` VARCHAR(45), IN `my_prenoms` VARCHAR(45), IN `my_cin` VARCHAR(12), IN `my_cin_date` DATE, IN `my_cin_lieu` VARCHAR(45), IN `my_naissance_date` DATE, IN `my_naissance_lieu` VARCHAR(45), IN `my_type_vente` TINYINT, IN `my_encours` DOUBLE(14,2), IN `my_nb_jour` INT, IN `my_evaluation` TINYINT, IN `my_declarable` TINYINT, IN `my_commissionable` TINYINT)   BEGIN
-update tiers set 
-    type_personnality_uid=my_type_personnality_uid,
-    adress=my_adress,
-    nif=my_nif,
-    stat=my_stat,
-    rcs=my_rcs,
-    phone1=my_phone1,
-    phone2=my_phone2,
-    mail1=my_mail1,
-	mail2=my_mail2
-    where uid=my_uid
-    ;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `testclient2` (IN `my_uid` INT, IN `my_type_personnality_uid` INT, IN `my_adress` VARCHAR(45), IN `my_nif` VARCHAR(45), IN `my_stat` VARCHAR(45), IN `my_rcs` VARCHAR(12), IN `my_phone1` VARCHAR(15), IN `my_phone2` VARCHAR(15), IN `my_mail1` VARCHAR(45), IN `my_mail2` VARCHAR(45), IN `my_active_` TINYINT, IN `my_note` TINYTEXT, IN `my_nom_commercial` VARCHAR(45), IN `my_raison_sociale` VARCHAR(45), IN `my_noms` VARCHAR(45), IN `my_prenoms` VARCHAR(45), IN `my_cin` VARCHAR(12), IN `my_cin_date` DATE, IN `my_cin_lieu` VARCHAR(45), IN `my_naissance_date` DATE, IN `my_naissance_lieu` VARCHAR(45), IN `my_type_vente` TINYINT, IN `my_encours` DOUBLE(14,2), IN `my_nb_jour` INT, IN `my_evaluation` TINYINT, IN `my_declarable` TINYINT, IN `my_commissionable` TINYINT)   BEGIN
-update tiers set 
-    type_personnality_uid=my_type_personnality_uid,
-    adress=my_adress,
-    nif=my_nif,
-    stat=my_stat,
-    rcs=my_rcs,
-    phone1=my_phone1,
-    phone2=my_phone2,
-    mail1=my_mail1,
-	mail2=my_mail2
-    where uid=my_uid
-    ;
-update humans set
-    noms=my_noms,
-    prenoms=my_prenoms,
-    cin=my_cin,
-    cin_date=my_cin_date,
-    cin_lieu=my_cin_lieu,
-    naissance_date=my_naissance_date,
-    naissance_lieu=my_naissance_lieu
-    where uid=my_uid
-    ;    
-    
-    
-    
-END$$
-
 --
 -- Fonctions
 --
@@ -299,6 +83,30 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `new_facture_client` (`mycommandeuid`
 RETURN newid;
 END$$
 
+CREATE DEFINER=`root`@`localhost` FUNCTION `new_facture_fournisseur` (`myfounisseuruid` INT UNSIGNED, `mynumfacture` VARCHAR(50), `mydate` DATE, `mylibelle` VARCHAR(150), `mystate` TINYINT UNSIGNED, `mymagasinuid` INT UNSIGNED, `myuseruid` INT UNSIGNED, `mytvaflag` TINYINT UNSIGNED, `mytotalhtavantremise` DOUBLE(14,2), `mytotalttcavantremise` DOUBLE(14,2), `myremisetaux` DOUBLE(14,2), `myremisemontant` DOUBLE(14,2), `mytotalhtapresremise` DOUBLE(14,2), `mytvaapresremise` DOUBLE(14,2), `mytotalttcapresremise` DOUBLE(14,2)) RETURNS INT(11) UNSIGNED DETERMINISTIC BEGIN
+    declare newid int default 0;
+	insert into `factures_fournisseur` values(null,
+myfounisseuruid,
+mynumfacture,
+mydate,
+mylibelle,
+mystate,
+mymagasinuid,
+myuseruid,
+mytvaflag,
+null,
+mytotalhtavantremise,
+mytotalttcavantremise,
+myremisetaux,
+myremisemontant,
+mytotalhtapresremise,
+mytvaapresremise,
+mytotalttcapresremise
+);
+    select last_insert_id() into newid;
+RETURN newid;
+END$$
+
 CREATE DEFINER=`root`@`localhost` FUNCTION `new_famille` (`myname` VARCHAR(50) CHARSET utf8mb4, `myactif` TINYINT UNSIGNED) RETURNS INT(11) DETERMINISTIC BEGIN
     declare newid int default 0;
 	insert into `familles` values(null,myname,myactif);
@@ -322,7 +130,7 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `new_fournisseur` (`type_personnality
 RETURN newid;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `new_item` (`myuid` INT UNSIGNED, `mycode` VARCHAR(20) CHARSET utf8mb4, `myname` VARCHAR(45) CHARSET utf8mb4, `mytype` TINYINT UNSIGNED, `mydeclarable` TINYINT UNSIGNED, `mycategoryuid` TINYINT UNSIGNED, `myfamilyuid` TINYINT UNSIGNED, `mypv` DOUBLE(14,2) UNSIGNED, `mypamp` DOUBLE(14,2), `mystockable` TINYINT UNSIGNED, `myidentifiable` TINYINT UNSIGNED, `myuniteuid` INT UNSIGNED, `myactive` TINYINT UNSIGNED, `mynote` TINYTEXT CHARSET utf8mb4) RETURNS INT(10) UNSIGNED DETERMINISTIC BEGIN
+CREATE DEFINER=`root`@`localhost` FUNCTION `new_item` (`myuid` INT UNSIGNED, `mycode` VARCHAR(20) CHARSET utf8mb4, `myname` VARCHAR(45) CHARSET utf8mb4, `mytype` TINYINT UNSIGNED, `mydeclarable` TINYINT UNSIGNED, `mycategoryuid` TINYINT UNSIGNED, `myfamilyuid` TINYINT UNSIGNED, `mypv` DOUBLE(14,2) UNSIGNED, `mypamp` DOUBLE(14,2), `mystockable` TINYINT UNSIGNED, `myidentifiable` TINYINT UNSIGNED, `myuniteuid` INT UNSIGNED, `myactive` TINYINT UNSIGNED, `mynote` TINYTEXT CHARSET utf8mb4, `myprixvariable` TINYINT UNSIGNED, `mypourachat` TINYINT UNSIGNED, `mypourvente` TINYINT UNSIGNED) RETURNS INT(10) UNSIGNED DETERMINISTIC BEGIN
     declare newid int default 0;
 	insert into `items` values(
             null,
@@ -338,7 +146,11 @@ mystockable,
 myidentifiable,
 myuniteuid,
 myactive,
-mynote
+mynote,
+myprixvariable,
+0,
+mypourachat,
+mypourvente
 );
     select last_insert_id() into newid;
 RETURN newid;
@@ -572,7 +384,7 @@ CREATE TABLE `avoirs_client` (
   `num_avoir` int(4) UNSIGNED ZEROFILL NOT NULL,
   `commande_uid` int(10) UNSIGNED NOT NULL,
   `facture_client_uid` int(10) UNSIGNED DEFAULT NULL,
-  `type` tinyint(3) UNSIGNED DEFAULT 0 COMMENT '0 null\r\n1 credit\r\n2 remb',
+  `type` tinyint(3) UNSIGNED DEFAULT 0 COMMENT '0 sans retour\r\n1 avec retour',
   `datetime` timestamp NOT NULL DEFAULT current_timestamp(),
   `user_uid` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -588,7 +400,52 @@ INSERT INTO `avoirs_client` (`num_avoir`, `commande_uid`, `facture_client_uid`, 
 (0007, 107, 8, 1, '2023-11-16 16:59:39', 1),
 (0008, 109, 8, 1, '2023-11-16 17:15:08', 1),
 (0009, 110, 8, 1, '2023-11-16 17:22:05', 1),
-(0010, 112, 8, 1, '2023-11-16 17:44:02', 1);
+(0010, 112, 8, 1, '2023-11-16 17:44:02', 1),
+(0011, 113, 11, 1, '2023-11-19 09:58:12', 1),
+(0012, 114, 11, 1, '2023-11-19 09:59:07', 1),
+(0013, 115, 11, 1, '2023-11-19 10:00:43', 1),
+(0014, 116, 11, 1, '2023-11-19 10:29:21', 1),
+(0015, 117, 11, 1, '2023-11-19 10:52:01', 1),
+(0016, 118, 5, 1, '2023-11-19 10:56:36', 1),
+(0017, 119, 3, 1, '2023-11-19 13:09:01', 1),
+(0018, 120, 8, 1, '2023-11-19 13:10:43', 1),
+(0019, 121, 8, 1, '2023-11-19 14:01:16', 1),
+(0020, 122, 8, 0, '2023-11-19 15:40:39', 1),
+(0021, 123, 8, 0, '2023-11-19 15:45:10', 1),
+(0022, 124, 11, 0, '2023-11-19 15:48:19', 1),
+(0023, 0, NULL, 0, '2023-12-10 16:58:38', 1),
+(0024, 127, NULL, 0, '2023-12-10 17:00:49', 1),
+(0025, 128, NULL, 0, '2023-12-10 17:01:43', 1),
+(0026, 129, 11, 1, '2023-12-10 17:03:08', 1),
+(0027, 130, NULL, 0, '2023-12-10 17:04:18', 1),
+(0028, 132, NULL, 0, '2023-12-10 17:10:38', 1),
+(0029, 133, 4, 0, '2023-12-10 17:15:50', 1),
+(0030, 136, 1, 0, '2023-12-10 17:32:31', 1),
+(0031, 137, NULL, 0, '2023-12-10 17:33:02', 1),
+(0032, 139, NULL, 0, '2023-12-10 17:41:19', 1),
+(0033, 140, NULL, 0, '2023-12-10 17:43:45', 1),
+(0034, 141, NULL, 0, '2023-12-10 17:44:40', 1),
+(0035, 142, NULL, 0, '2023-12-10 17:45:12', 1),
+(0036, 143, 5, 0, '2023-12-13 19:25:31', 1),
+(0037, 195, 8, 0, '2024-02-03 17:17:39', 1),
+(0038, 196, 8, 0, '2024-02-03 17:39:18', 1),
+(0039, 197, 8, 0, '2024-02-03 18:35:45', 1),
+(0040, 198, NULL, 0, '2024-02-04 12:37:40', 1),
+(0041, 201, 8, 0, '2024-02-10 19:18:42', 1),
+(0042, 204, 8, 0, '2024-02-10 19:21:37', 1),
+(0043, 205, 8, 1, '2024-02-10 19:22:05', 1),
+(0044, 206, 15, 1, '2024-02-10 19:24:43', 1),
+(0045, 207, 20, 0, '2024-02-11 15:47:07', 1),
+(0046, 209, 20, 1, '2024-02-11 15:51:09', 1),
+(0047, 211, 21, 1, '2024-02-11 16:01:28', 1),
+(0048, 216, 22, 1, '2024-02-11 16:18:33', 1),
+(0051, 219, 22, 1, '2024-02-11 16:30:26', 1),
+(0052, 220, 22, 1, '2024-02-11 16:31:19', 1),
+(0053, 221, 22, 1, '2024-02-11 16:34:08', 1),
+(0054, 223, 23, 1, '2024-02-14 19:10:20', 1),
+(0055, 226, 23, 0, '2024-02-14 19:23:28', 1),
+(0056, 230, 26, 0, '2024-05-03 18:52:50', 1),
+(0057, 231, 19, 1, '2024-05-04 11:43:21', 1);
 
 -- --------------------------------------------------------
 
@@ -685,7 +542,8 @@ INSERT INTO `categories` (`uid`, `name`, `active`) VALUES
 (8, 'da001', 1),
 (9, 'test 002', 1),
 (11, 'durable', 1),
-(12, 'reusable', 1);
+(12, 'reusable', 1),
+(13, 'sur mesure', 1);
 
 -- --------------------------------------------------------
 
@@ -778,10 +636,10 @@ CREATE TABLE `commandes` (
   `date` date NOT NULL,
   `magasin_uid` int(10) UNSIGNED NOT NULL,
   `libelle` varchar(45) DEFAULT NULL,
-  `state` tinyint(3) UNSIGNED NOT NULL DEFAULT 1 COMMENT '0:canceled;1:en cours;2:valide;3:avoir',
+  `state` tinyint(3) UNSIGNED NOT NULL DEFAULT 1 COMMENT '0:canceled client;1:en cours client;2:valide client;3:avoir client;4 facture fournisseur;5 avoir fournisseur',
   `user_uid` int(10) UNSIGNED NOT NULL,
   `datetime` timestamp NOT NULL DEFAULT current_timestamp(),
-  `total_ht_avant_remise` decimal(14,2) NOT NULL,
+  `total_ht_avant_remise` double(14,2) NOT NULL,
   `total_ttc_avant_remise` double(14,2) NOT NULL,
   `remise_taux` double(14,2) NOT NULL,
   `remise_montant` double(14,2) NOT NULL,
@@ -850,7 +708,118 @@ INSERT INTO `commandes` (`uid`, `client_uid`, `date`, `magasin_uid`, `libelle`, 
 (107, 18, '2023-11-16', 1, NULL, 3, 1, '2023-11-16 16:59:39', 0.00, 0.00, 5.00, 11880.00, 0.00, 0.00),
 (109, 18, '2023-11-16', 1, NULL, 3, 1, '2023-11-16 17:15:08', 0.00, 0.00, 5.00, 5940.00, 0.00, 0.00),
 (110, 18, '2023-11-16', 1, NULL, 3, 1, '2023-11-16 17:22:05', 99000.00, 118800.00, 5.00, 5940.00, 94050.00, 112860.00),
-(112, 18, '2023-11-16', 1, NULL, 3, 1, '2023-11-16 17:44:02', -198000.00, -237600.00, 5.00, 11880.00, -188100.00, -225720.00);
+(112, 18, '2023-11-16', 1, NULL, 3, 1, '2023-11-16 17:44:02', -198000.00, -237600.00, 5.00, 11880.00, -188100.00, -225720.00),
+(113, 15, '2023-11-19', 1, NULL, 3, 1, '2023-11-19 09:58:12', -500.00, -600.00, 0.00, 0.00, -500.00, -600.00),
+(114, 15, '2023-11-19', 1, NULL, 3, 1, '2023-11-19 09:59:07', -1000.00, -1200.00, 0.00, 0.00, -1000.00, -1200.00),
+(115, 15, '2023-11-19', 1, NULL, 3, 1, '2023-11-19 10:00:43', -500.00, -600.00, 0.00, 0.00, -500.00, -600.00),
+(116, 15, '2023-11-19', 1, NULL, 3, 1, '2023-11-19 10:29:21', -500.00, -600.00, 0.00, 0.00, -500.00, -600.00),
+(117, 15, '2023-11-19', 1, NULL, 3, 1, '2023-11-19 10:52:01', -500.00, -600.00, 0.00, 0.00, -500.00, -600.00),
+(118, 7, '2023-11-19', 1, NULL, 3, 1, '2023-11-19 10:56:36', -500.00, -600.00, 0.00, 0.00, -500.00, -600.00),
+(119, 40, '2023-11-19', 1, NULL, 3, 1, '2023-11-19 13:09:01', -25000.00, -30000.00, 0.00, 0.00, -25000.00, -30000.00),
+(120, 18, '2023-11-19', 1, NULL, 3, 1, '2023-11-19 13:10:43', -99000.00, -118800.00, 5.00, 5940.00, -94050.00, -112860.00),
+(121, 18, '2023-11-19', 1, NULL, 3, 1, '2023-11-19 14:01:16', -99000.00, -118800.00, 5.00, 5940.00, -94050.00, -112860.00),
+(122, 18, '2023-11-19', 1, NULL, 3, 1, '2023-11-19 15:40:39', -198000.00, -237600.00, 5.00, -11880.00, -188100.00, -225720.00),
+(123, 18, '2023-11-19', 1, NULL, 3, 1, '2023-11-19 15:45:10', -99000.00, -118800.00, 5.00, -5940.00, -94050.00, -112860.00),
+(124, 15, '2023-11-19', 1, NULL, 3, 1, '2023-11-19 15:48:19', -1000.00, -1200.00, 0.00, 0.00, -1000.00, -1200.00),
+(136, 11, '2023-12-10', 1, NULL, 3, 1, '2023-12-10 17:32:31', -50000.00, -60000.00, 6.67, -4002.00, -46665.00, -55998.00),
+(139, 11, '2023-12-10', 1, NULL, 3, 1, '2023-12-10 17:41:19', -56000.00, -67200.00, 0.00, 0.00, -56000.00, -67200.00),
+(140, 13, '2023-12-10', 1, NULL, 3, 1, '2023-12-10 17:43:45', -1000.00, -1200.00, 0.00, 0.00, -1000.00, -1200.00),
+(141, 11, '2023-12-10', 1, NULL, 3, 1, '2023-12-10 17:44:40', -2000.00, -2400.00, 0.00, 0.00, -2000.00, -2400.00),
+(142, 11, '2023-12-10', 1, NULL, 3, 1, '2023-12-10 17:45:12', -1000.00, -1200.00, 0.00, 0.00, -1000.00, -1200.00),
+(143, 7, '2023-12-13', 1, NULL, 3, 1, '2023-12-13 19:25:31', -500.00, -600.00, 0.00, 0.00, -500.00, -600.00),
+(144, 21, '2023-12-19', 1, NULL, 0, 1, '2023-12-19 17:40:09', 1099000.00, 1318800.00, 0.00, 0.00, 1099000.00, 1318800.00),
+(145, 46, '2023-12-19', 1, NULL, 0, 1, '2023-12-19 17:43:53', 1500000.00, 1800000.00, 0.00, 0.00, 1500000.00, 1800000.00),
+(147, 22, '2023-12-19', 1, 'test new', 0, 1, '2023-12-19 17:56:33', 1500000.00, 1800000.00, 0.00, 0.00, 1500000.00, 1800000.00),
+(148, 7, '2023-12-19', 1, NULL, 0, 1, '2023-12-19 17:58:59', 396000.00, 475200.00, 0.00, 0.00, 396000.00, 475200.00),
+(149, 11, '2023-12-19', 1, NULL, 0, 1, '2023-12-19 17:59:20', 198000.00, 237600.00, 0.00, 0.00, 198000.00, 237600.00),
+(150, 58, '2023-12-19', 1, 'test new', 0, 1, '2023-12-19 18:03:12', 3000000.00, 3600000.00, 0.00, 0.00, 3000000.00, 3600000.00),
+(151, 78, '2023-12-19', 1, NULL, 0, 1, '2023-12-19 18:07:12', 9000.00, 10800.00, 0.00, 0.00, 9000.00, 10800.00),
+(152, 37, '2023-12-19', 1, NULL, 0, 1, '2023-12-19 18:08:25', 594000.00, 712800.00, 0.00, 0.00, 594000.00, 712800.00),
+(153, 40, '2023-12-19', 1, NULL, 0, 1, '2023-12-19 18:09:14', 1500000.00, 1800000.00, 0.00, 0.00, 1500000.00, 1800000.00),
+(154, 78, '2023-12-19', 1, NULL, 0, 1, '2023-12-19 18:10:38', 3000000.00, 3600000.00, 0.00, 0.00, 3000000.00, 3600000.00),
+(155, 55, '2023-12-19', 1, NULL, 0, 1, '2023-12-19 18:12:14', 2000000.00, 2400000.00, 0.00, 0.00, 2000000.00, 2400000.00),
+(156, 14, '2023-12-20', 1, 'test variable prix', 0, 1, '2023-12-20 17:00:10', 1325000.00, 1590000.00, 0.00, 0.00, 1325000.00, 1590000.00),
+(157, 5, '2023-12-20', 1, NULL, 0, 1, '2023-12-20 17:35:16', 333000.00, 399600.00, 0.00, 0.00, 333000.00, 399600.00),
+(158, 5, '2023-12-20', 1, NULL, 0, 1, '2023-12-20 18:24:56', 800000.00, 960000.00, 0.00, 0.00, 800000.00, 960000.00),
+(159, 37, '2023-12-20', 1, NULL, 0, 1, '2023-12-20 18:33:09', 500000.00, 600000.00, 0.00, 0.00, 500000.00, 600000.00),
+(160, 11, '2023-12-20', 1, 'test variable big state proble', 1, 1, '2023-12-20 18:59:10', 6066004.00, 7279204.80, 0.00, 0.00, 6066004.00, 7279204.80),
+(178, 5, '2024-01-26', 1, NULL, 1, 1, '2024-01-26 19:02:10', 4500000.00, 5400000.00, 0.00, 0.00, 4500000.00, 5400000.00),
+(179, 37, '2024-01-26', 1, NULL, 1, 1, '2024-01-26 19:55:17', 198000.00, 237600.00, 0.00, 0.00, 198000.00, 237600.00),
+(180, 28, '2024-01-26', 1, NULL, 1, 1, '2024-01-26 19:56:17', 4500.00, 5400.00, 0.00, 0.00, 4500.00, 5400.00),
+(181, 5, '2024-01-27', 1, NULL, 1, 1, '2024-01-27 11:34:57', 560000.00, 672000.00, 0.00, 0.00, 560000.00, 672000.00),
+(182, 5, '2024-01-27', 1, NULL, 1, 1, '2024-01-27 11:42:15', 560000.00, 672000.00, 0.00, 0.00, 560000.00, 672000.00),
+(183, 27, '2024-01-27', 1, NULL, 1, 1, '2024-01-27 11:43:42', 1120000.00, 1344000.00, 0.00, 0.00, 1120000.00, 1344000.00),
+(184, 14, '2024-01-27', 1, NULL, 1, 1, '2024-01-27 11:49:38', 1120000.00, 1344000.00, 0.00, 0.00, 1120000.00, 1344000.00),
+(185, 13, '2024-01-27', 1, NULL, 1, 1, '2024-01-27 12:50:07', 1121500.00, 1345800.00, 0.00, 0.00, 1121500.00, 1345800.00),
+(187, 14, '2024-01-28', 1, NULL, 2, 1, '2024-01-28 13:08:15', 50000.00, 60000.00, 0.00, 0.00, 50000.00, 60000.00),
+(189, 56, '2024-01-28', 1, NULL, 2, 1, '2024-01-28 13:16:24', 50000.00, 60000.00, 0.00, 0.00, 50000.00, 60000.00),
+(191, 31, '2024-01-28', 1, NULL, 1, 1, '2024-01-28 13:32:25', 50000.00, 60000.00, 0.00, 0.00, 50000.00, 60000.00),
+(192, 47, '2024-01-28', 1, 'test qty update', 2, 1, '2024-01-28 13:36:22', 51000.00, 61200.00, 0.00, 0.00, 51000.00, 61200.00),
+(193, 14, '2024-01-30', 1, NULL, 1, 1, '2024-01-30 17:26:43', 1120000.00, 1344000.00, 0.00, 0.00, 1120000.00, 1344000.00),
+(194, 14, '2024-01-30', 1, NULL, 2, 1, '2024-01-30 17:58:08', 1120000.00, 1344000.00, 0.00, 0.00, 1120000.00, 1344000.00),
+(197, 18, '2024-02-03', 1, NULL, 3, 1, '2024-02-03 18:35:45', -99000.00, -118800.00, 5.00, -5940.00, -94050.00, -112860.00),
+(198, 11, '2024-02-04', 1, NULL, 3, 1, '2024-02-04 12:37:40', -50000.00, -60000.00, 0.00, 0.00, -50000.00, -60000.00),
+(201, 18, '2024-02-10', 1, NULL, 3, 1, '2024-02-10 19:18:22', -198.00, -237.00, 5.00, -11.00, -188.00, -225.00),
+(204, 18, '2024-02-10', 1, NULL, 3, 1, '2024-02-10 19:21:37', -198.00, -237.00, 5.00, -11.00, -188.00, -225.00),
+(205, 18, '2024-02-10', 1, NULL, 3, 1, '2024-02-10 19:22:05', -198.00, -237.00, 5.00, -11.00, -188.00, -225.00),
+(206, 14, '2024-02-10', 1, NULL, 3, 1, '2024-02-10 19:24:43', -50.00, -60.00, 0.00, 0.00, -50.00, -60.00),
+(207, 14, '2024-02-11', 1, NULL, 3, 1, '2024-02-11 15:47:07', -560.00, -672.00, 0.00, 0.00, -560.00, -672.00),
+(209, 14, '2024-02-11', 1, NULL, 3, 1, '2024-02-11 15:51:09', -560.00, -672.00, 0.00, 0.00, -560.00, -672.00),
+(210, 14, '2024-02-11', 1, 'guinea pig for avoir return active', 2, 1, '2024-02-11 15:53:56', 1680000.00, 2016000.00, 5.00, 100800.00, 1596000.00, 1915200.00),
+(211, 14, '2024-02-11', 1, NULL, 3, 1, '2024-02-11 16:01:28', -1.00, -1.00, 5.00, -67.00, -1.00, -1.00),
+(215, 55, '2024-02-11', 1, NULL, 2, 1, '2024-02-11 16:16:57', 1680000.00, 2016000.00, 10.00, 201600.00, 1512000.00, 1814400.00),
+(216, 55, '2024-02-11', 1, NULL, 3, 1, '2024-02-11 16:18:33', -560.00, -672.00, 10.00, -67.00, -504.00, -604.00),
+(217, 55, '2024-02-11', 1, NULL, 3, 1, '2024-02-11 16:20:22', -1.00, -1.00, 10.00, -134.00, -1.00, -1.00),
+(218, 55, '2024-02-11', 1, NULL, 3, 1, '2024-02-11 16:24:13', -1.00, -1.00, 10.00, -134.00, -1.00, -1.00),
+(219, 55, '2024-02-11', 1, NULL, 3, 1, '2024-02-11 16:30:26', -1.00, -1.00, 10.00, -134.00, -1.00, -1.00),
+(220, 55, '2024-02-11', 1, NULL, 3, 1, '2024-02-11 16:31:19', -1.00, -1.00, 10.00, -134.00, -1.00, -1.00),
+(221, 55, '2024-02-11', 1, NULL, 3, 1, '2024-02-11 16:34:08', -1.00, -1.00, 10.00, -134.00, -1.00, -1.00),
+(222, 19, '2024-02-14', 1, NULL, 2, 1, '2024-02-14 19:09:40', 2500000.00, 3000000.00, 0.00, 0.00, 2500000.00, 3000000.00),
+(223, 19, '2024-02-14', 1, NULL, 3, 1, '2024-02-14 19:10:20', -1.00, -1.00, 0.00, 0.00, -1.00, -1.00),
+(226, 19, '2024-02-14', 1, NULL, 3, 1, '2024-02-14 19:23:16', -500000.00, -600000.00, 0.00, 0.00, -500000.00, -600000.00),
+(227, 5, '2024-05-01', 2, NULL, 2, 1, '2024-05-01 11:51:20', 175000.00, 210000.00, 5.00, 10500.00, 166250.00, 199500.00),
+(228, 78, '2024-05-01', 2, 'test 2024', 2, 1, '2024-05-01 11:58:56', 3000.00, 3600.00, 0.00, 0.00, 3000.00, 3600.00),
+(229, 14, '2024-05-03', 1, NULL, 2, 1, '2024-05-03 18:34:29', 560000.00, 672000.00, 0.00, 0.00, 560000.00, 672000.00),
+(230, 14, '2024-05-03', 1, NULL, 3, 1, '2024-05-03 18:52:50', -560000.00, -672000.00, 0.00, 0.00, -560000.00, -672000.00),
+(231, 47, '2024-05-04', 1, NULL, 3, 1, '2024-05-04 11:43:21', -25500.00, -30600.00, 0.00, 0.00, -25500.00, -30600.00),
+(233, 55, '2024-05-07', 1, NULL, 1, 1, '2024-05-07 19:54:02', 7000.00, 8400.00, 0.00, 0.00, 7000.00, 8400.00),
+(234, 21, '2024-05-07', 1, NULL, 1, 1, '2024-05-07 19:57:50', 76000.00, 91200.00, 0.00, 0.00, 76000.00, 91200.00),
+(235, 47, '2024-05-08', 1, NULL, 1, 1, '2024-05-08 14:33:22', 25000000.00, 30000000.00, 0.00, 0.00, 25000000.00, 30000000.00),
+(236, 47, '2024-05-08', 1, NULL, 1, 1, '2024-05-08 14:42:02', 30000000.00, 36000000.00, 0.00, 0.00, 30000000.00, 36000000.00),
+(237, 47, '2024-05-08', 1, NULL, 1, 1, '2024-05-08 14:44:25', 30000000.00, 36000000.00, 0.00, 0.00, 30000000.00, 36000000.00),
+(238, 14, '2024-05-08', 1, NULL, 1, 1, '2024-05-08 16:08:43', 2250000.00, 2700000.00, 0.00, 0.00, 2250000.00, 2700000.00),
+(239, 37, '2024-05-08', 1, NULL, 1, 1, '2024-05-08 16:09:44', 5000000.00, 6000000.00, 0.00, 0.00, 5000000.00, 6000000.00),
+(240, 37, '2024-05-08', 1, NULL, 1, 1, '2024-05-08 16:10:33', 15000000.00, 18000000.00, 0.00, 0.00, 15000000.00, 18000000.00),
+(241, 52, '2024-05-08', 1, NULL, 1, 1, '2024-05-08 16:13:13', 15000000.00, 18000000.00, 0.00, 0.00, 15000000.00, 18000000.00),
+(242, 52, '2024-05-08', 1, NULL, 1, 1, '2024-05-08 16:14:43', 20000000.00, 24000000.00, 0.00, 0.00, 20000000.00, 24000000.00),
+(243, 7, '2024-05-08', 1, NULL, 1, 1, '2024-05-08 16:18:48', 350000.00, 420000.00, 0.00, 0.00, 350000.00, 420000.00),
+(244, 49, '2024-05-08', 1, NULL, 1, 1, '2024-05-08 16:23:13', 22500000.00, 27000000.00, 0.00, 0.00, 22500000.00, 27000000.00),
+(245, 49, '2024-05-08', 1, NULL, 1, 1, '2024-05-08 16:25:59', 55000.00, 66000.00, 0.00, 0.00, 55000.00, 66000.00),
+(246, 50, '2024-05-08', 1, NULL, 1, 1, '2024-05-08 16:27:38', 90000.00, 108000.00, 0.00, 0.00, 90000.00, 108000.00),
+(247, 50, '2024-05-08', 1, NULL, 1, 1, '2024-05-08 16:30:47', 500000.00, 600000.00, 0.00, 0.00, 500000.00, 600000.00),
+(248, 48, '2024-05-08', 1, NULL, 1, 1, '2024-05-08 16:32:54', 100000.00, 120000.00, 0.00, 0.00, 100000.00, 120000.00),
+(249, 5, '2024-05-08', 1, NULL, 2, 1, '2024-05-08 16:37:26', 300000.00, 360000.00, 0.00, 0.00, 300000.00, 360000.00),
+(250, 48, '2024-05-08', 1, NULL, 1, 1, '2024-05-08 16:41:09', 196020.00, 235224.00, 0.00, 0.00, 196020.00, 235224.00),
+(251, 48, '2024-05-08', 1, NULL, 2, 1, '2024-05-08 16:41:09', 196020.00, 235224.00, 0.00, 0.00, 196020.00, 235224.00),
+(252, 48, '2024-05-08', 1, NULL, 2, 1, '2024-05-08 16:41:09', 196020.00, 235224.00, 0.00, 0.00, 196020.00, 235224.00),
+(253, 48, '2024-05-08', 1, NULL, 2, 1, '2024-05-08 16:44:06', 500000.00, 600000.00, 0.00, 0.00, 500000.00, 600000.00),
+(254, 48, '2024-05-08', 1, NULL, 2, 1, '2024-05-08 16:45:09', 750000.00, 900000.00, 0.00, 0.00, 750000.00, 900000.00),
+(255, 49, '2024-05-08', 1, NULL, 2, 1, '2024-05-08 16:46:01', 54350.00, 65220.00, 0.00, 0.00, 54350.00, 65220.00),
+(256, 49, '2024-05-08', 1, NULL, 2, 1, '2024-05-08 16:48:54', 175000.00, 210000.00, 0.00, 0.00, 175000.00, 210000.00),
+(257, 5, '2024-05-08', 1, NULL, 2, 1, '2024-05-08 16:51:13', 500000000.00, 600000000.00, 0.00, 0.00, 500000000.00, 600000000.00),
+(258, 41, '2024-05-08', 1, NULL, 2, 1, '2024-05-08 16:51:52', 30000.00, 36000.00, 0.00, 0.00, 30000.00, 36000.00),
+(259, 17, '2024-05-08', 1, NULL, 2, 1, '2024-05-08 16:54:09', 750000.00, 900000.00, 0.00, 0.00, 750000.00, 900000.00),
+(260, 13, '2024-05-08', 1, NULL, 2, 1, '2024-05-08 16:54:43', 26565.00, 31878.00, 0.00, 0.00, 26565.00, 31878.00),
+(261, 21, '2024-05-08', 1, NULL, 2, 1, '2024-05-08 16:56:00', 20000.00, 24000.00, 0.00, 0.00, 20000.00, 24000.00),
+(262, 5, '2024-05-08', 1, NULL, 2, 1, '2024-05-08 16:57:31', 581770.00, 698124.00, 0.00, 0.00, 581770.00, 698124.00),
+(263, 51, '2024-05-08', 1, NULL, 2, 1, '2024-05-08 16:58:14', 234550.00, 281460.00, 0.00, 0.00, 234550.00, 281460.00),
+(264, 7, '2024-05-08', 1, NULL, 2, 1, '2024-05-08 17:00:36', 150000000.00, 180000000.00, 0.00, 0.00, 150000000.00, 180000000.00),
+(265, 41, '2024-05-08', 1, NULL, 2, 1, '2024-05-08 17:08:27', 30000.00, 36000.00, 0.00, 0.00, 30000.00, 36000.00),
+(266, 40, '2024-05-08', 1, NULL, 2, 1, '2024-05-08 17:09:30', 500000.00, 600000.00, 0.00, 0.00, 500000.00, 600000.00),
+(267, 41, '2024-05-08', 1, NULL, 2, 1, '2024-05-08 17:11:37', 500000.00, 600000.00, 0.00, 0.00, 500000.00, 600000.00),
+(268, 41, '2024-05-08', 1, NULL, 2, 1, '2024-05-08 17:15:42', 50000.00, 60000.00, 0.00, 0.00, 50000.00, 60000.00),
+(269, 6, '2024-05-09', 1, NULL, 1, 1, '2024-05-09 10:31:02', 50000.00, 60000.00, 0.00, 0.00, 50000.00, 60000.00),
+(270, 41, '2024-05-09', 1, NULL, 2, 1, '2024-05-09 10:31:43', 60000.00, 72000.00, 0.00, 0.00, 60000.00, 72000.00);
 
 -- --------------------------------------------------------
 
@@ -866,89 +835,219 @@ CREATE TABLE `commandes_details` (
   `quantity` double(14,2) NOT NULL,
   `prix_unitaire` double(14,2) UNSIGNED NOT NULL,
   `prix_total` double(14,2) NOT NULL,
-  `commande_initial_uid` int(10) UNSIGNED DEFAULT NULL
+  `commande_initial_uid` int(10) UNSIGNED DEFAULT NULL,
+  `num_serie` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `commandes_details`
 --
 
-INSERT INTO `commandes_details` (`uid`, `commande_uid`, `item_uid`, `description_item`, `quantity`, `prix_unitaire`, `prix_total`, `commande_initial_uid`) VALUES
-(9, 16, 'vet056', '', 3.00, 99000.00, 297000.00, NULL),
-(11, 20, 'vet056', 'test 106 all', 1.00, 99000.00, 99000.00, NULL),
-(12, 20, 'styetisth459', 'test 106 all', 1.00, 500.00, 500.00, NULL),
-(13, 21, '0654ste8', '', 2.00, 25000.00, 50000.00, NULL),
-(14, 22, 'vet056', '', 1.00, 99000.00, 99000.00, NULL),
-(15, 23, '0654ste8', 'reste', 1.00, 25000.00, 25000.00, NULL),
-(16, 24, 'vet056', 'upup', 1.00, 99000.00, 99000.00, NULL),
-(17, 25, '0654ste8', 'sophie', 1.00, 25000.00, 25000.00, NULL),
-(18, 26, '0654ste8', 'soso', 1.00, 25000.00, 25000.00, NULL),
-(19, 27, 'vet056', '', 1.00, 99000.00, 99000.00, NULL),
-(20, 28, 'vet056', 'reer', 2.00, 99000.00, 198000.00, NULL),
-(21, 29, 'vet056', 'tree', 1.00, 99000.00, 99000.00, NULL),
-(22, 30, '0654ste8', 'yy', 1.00, 25000.00, 25000.00, NULL),
-(23, 30, 'vet056', 'yyy', 1.00, 99000.00, 99000.00, NULL),
-(24, 31, '0654ste8', 'gzertt', 1.00, 25000.00, 25000.00, NULL),
-(25, 32, 'vet056', 'sdf', 1.00, 99000.00, 99000.00, NULL),
-(26, 33, '0654ste8', '', 17.00, 25000.00, 425000.00, NULL),
-(27, 34, '0654ste8', '', 1.00, 25000.00, 25000.00, NULL),
-(28, 35, '0654ste8', '', 1.00, 25000.00, 25.00, NULL),
-(29, 35, 'vet056', '', 1.00, 99000.00, 99.00, NULL),
-(30, 36, 'vet056', '', 4.00, 99000.00, 396.00, NULL),
-(31, 36, '0654ste8', '', 1.00, 25000.00, 25.00, NULL),
-(32, 36, 'styetisth459', '', 10.00, 500.00, 5.00, NULL),
-(33, 37, '0654ste8', '', 5.00, 25000.00, 125000.00, NULL),
-(34, 37, 'styetisth459', '', 10.00, 500.00, 5000.00, NULL),
-(35, 38, 'styetisth459', '', 5.00, 500.00, 2500.00, NULL),
-(36, 39, 'styetisth459', '', 25.00, 500.00, 12500.00, NULL),
-(38, 42, 'toy015648', '', 1.00, 500000.00, 500000.00, NULL),
-(39, 43, '0654ste8', '', 25.00, 25000.00, 625000.00, NULL),
-(40, 44, 'toy015648', '', 2.00, 500000.00, 1000000.00, NULL),
-(41, 45, 'toy015648', '', 3.00, 500000.00, 1500000.00, NULL),
-(42, 46, 'toy015648', '', 2.00, 500000.00, 1000000.00, NULL),
-(43, 47, '0654ste8', '', 3.00, 25000.00, 75000.00, NULL),
-(44, 47, 'toy015648', '', 1.00, 500000.00, 500000.00, NULL),
-(45, 48, 'styetisth459', '', 15.00, 500.00, 7500.00, NULL),
-(46, 49, 'styetisth459', '', 10.00, 500.00, 5000.00, NULL),
-(47, 50, 'styetisth459', '', 9.00, 500.00, 4500.00, NULL),
-(48, 51, 'styetisth459', '', 5.00, 500.00, 2500.00, NULL),
-(58, 61, '0654ste8', '', 654.00, 654.00, 427716.00, NULL),
-(59, 62, '0654ste8', '', 654.00, 654.00, 427716.00, NULL),
-(60, 63, 'vet056', '', 0.00, 0.00, 0.00, NULL),
-(61, 22, '0654ste8', '', 1.00, 25000.00, 25000.00, NULL),
-(62, 28, '0654ste8', 'ter', 3.00, 25000.00, 75000.00, NULL),
-(64, 64, '0654ste8', '', 7.00, 25000.00, 175000.00, NULL),
-(65, 64, 'styetisth459', '', 3.00, 500.00, 1500.00, NULL),
-(66, 65, '0654ste8', 'f', 3.00, 25000.00, 75000.00, NULL),
-(67, 66, 'styetisth459', '', 2.00, 500.00, 1000.00, NULL),
-(70, 69, '0654ste8', '', 11.00, 25000.00, 275000.00, NULL),
-(71, 70, 'styetisth459', '', 3.00, 500.00, 1500.00, NULL),
-(73, 72, 'vet056', 'retest', 1.00, 99000.00, 99000.00, NULL),
-(74, 73, 'vet056', 'restest2', 20.00, 99000.00, 1980000.00, NULL),
-(75, 74, 'styetisth459', 'factnew', 4.00, 500.00, 2000.00, NULL),
-(76, 75, 'styetisth459', 'fs', 1.00, 500.00, 500.00, NULL),
-(77, 76, 'styetisth459', '12', 12.00, 500.00, 6000.00, NULL),
-(78, 81, '0654ste8', '', -1.00, 25000.00, -25000.00, 37),
-(79, 81, 'styetisth459', '', -1.00, 500.00, -500.00, 37),
-(82, 83, '0654ste8', '', -1.00, 25000.00, -25000.00, 37),
-(83, 83, 'styetisth459', '', -1.00, 500.00, -500.00, 37),
-(98, 91, '0654ste8', '', -1.00, 25000.00, -25000.00, 37),
-(99, 91, 'styetisth459', '', -1.00, 500.00, -500.00, 37),
-(106, 95, '0654ste8', '', -1.00, 25000.00, -25000.00, 37),
-(107, 95, 'styetisth459', '', -1.00, 500.00, -500.00, 37),
-(108, 96, '0654ste8', '', -1.00, 25000.00, -25000.00, 37),
-(109, 96, 'styetisth459', '', -1.00, 500.00, -500.00, 37),
-(116, 100, '0654ste8', '', 0.00, 25000.00, 0.00, 37),
-(117, 100, 'styetisth459', '', -1.00, 500.00, -500.00, 37),
-(123, 104, '0654ste8', '', 0.00, 25000.00, 0.00, 37),
-(124, 104, 'styetisth459', '', -1.00, 500.00, -500.00, 37),
-(125, 105, '0654ste8', '', 0.00, 25000.00, 0.00, 37),
-(126, 105, 'styetisth459', '', -1.00, 500.00, -500.00, 37),
-(127, 106, 'vet056', 'restest2', -2.00, 99000.00, -198000.00, 73),
-(128, 107, 'vet056', 'restest2', -2.00, 99000.00, -198000.00, 73),
-(129, 109, 'vet056', 'restest2', -1.00, 99000.00, -99000.00, 73),
-(130, 110, 'vet056', 'restest2', -1.00, 99000.00, -99000.00, 73),
-(131, 112, 'vet056', 'restest2', -2.00, 99000.00, -198000.00, 73);
+INSERT INTO `commandes_details` (`uid`, `commande_uid`, `item_uid`, `description_item`, `quantity`, `prix_unitaire`, `prix_total`, `commande_initial_uid`, `num_serie`) VALUES
+(9, 16, 'vet056', '', 3.00, 99000.00, 297000.00, NULL, NULL),
+(11, 20, 'vet056', 'test 106 all', 1.00, 99000.00, 99000.00, NULL, NULL),
+(12, 20, 'styetisth459', 'test 106 all', 1.00, 500.00, 500.00, NULL, NULL),
+(13, 21, '0654ste8', '', 2.00, 25000.00, 50000.00, NULL, NULL),
+(14, 22, 'vet056', '', 1.00, 99000.00, 99000.00, NULL, NULL),
+(15, 23, '0654ste8', 'reste', 1.00, 25000.00, 25000.00, NULL, NULL),
+(16, 24, 'vet056', 'upup', 1.00, 99000.00, 99000.00, NULL, NULL),
+(17, 25, '0654ste8', 'sophie', 1.00, 25000.00, 25000.00, NULL, NULL),
+(18, 26, '0654ste8', 'soso', 1.00, 25000.00, 25000.00, NULL, NULL),
+(19, 27, 'vet056', '', 1.00, 99000.00, 99000.00, NULL, NULL),
+(20, 28, 'vet056', 'reer', 2.00, 99000.00, 198000.00, NULL, NULL),
+(21, 29, 'vet056', 'tree', 1.00, 99000.00, 99000.00, NULL, NULL),
+(22, 30, '0654ste8', 'yy', 1.00, 25000.00, 25000.00, NULL, NULL),
+(23, 30, 'vet056', 'yyy', 1.00, 99000.00, 99000.00, NULL, NULL),
+(24, 31, '0654ste8', 'gzertt', 1.00, 25000.00, 25000.00, NULL, NULL),
+(25, 32, 'vet056', 'sdf', 1.00, 99000.00, 99000.00, NULL, NULL),
+(26, 33, '0654ste8', '', 17.00, 25000.00, 425000.00, NULL, NULL),
+(27, 34, '0654ste8', '', 1.00, 25000.00, 25000.00, NULL, NULL),
+(28, 35, '0654ste8', '', 1.00, 25000.00, 25.00, NULL, NULL),
+(29, 35, 'vet056', '', 1.00, 99000.00, 99.00, NULL, NULL),
+(30, 36, 'vet056', '', 4.00, 99000.00, 396.00, NULL, NULL),
+(31, 36, '0654ste8', '', 1.00, 25000.00, 25.00, NULL, NULL),
+(32, 36, 'styetisth459', '', 10.00, 500.00, 5.00, NULL, NULL),
+(33, 37, '0654ste8', '', 5.00, 25000.00, 125000.00, NULL, NULL),
+(34, 37, 'styetisth459', '', 10.00, 500.00, 5000.00, NULL, NULL),
+(35, 38, 'styetisth459', '', 5.00, 500.00, 2500.00, NULL, NULL),
+(36, 39, 'styetisth459', '', 25.00, 500.00, 12500.00, NULL, NULL),
+(38, 42, 'toy015648', '', 1.00, 500000.00, 500000.00, NULL, NULL),
+(39, 43, '0654ste8', '', 25.00, 25000.00, 625000.00, NULL, NULL),
+(40, 44, 'toy015648', '', 2.00, 500000.00, 1000000.00, NULL, NULL),
+(41, 45, 'toy015648', '', 3.00, 500000.00, 1500000.00, NULL, NULL),
+(42, 46, 'toy015648', '', 2.00, 500000.00, 1000000.00, NULL, NULL),
+(43, 47, '0654ste8', '', 3.00, 25000.00, 75000.00, NULL, NULL),
+(44, 47, 'toy015648', '', 1.00, 500000.00, 500000.00, NULL, NULL),
+(45, 48, 'styetisth459', '', 15.00, 500.00, 7500.00, NULL, NULL),
+(46, 49, 'styetisth459', '', 10.00, 500.00, 5000.00, NULL, NULL),
+(47, 50, 'styetisth459', '', 9.00, 500.00, 4500.00, NULL, NULL),
+(48, 51, 'styetisth459', '', 5.00, 500.00, 2500.00, NULL, NULL),
+(58, 61, '0654ste8', '', 654.00, 654.00, 427716.00, NULL, NULL),
+(59, 62, '0654ste8', '', 654.00, 654.00, 427716.00, NULL, NULL),
+(60, 63, 'vet056', '', 0.00, 0.00, 0.00, NULL, NULL),
+(61, 22, '0654ste8', '', 1.00, 25000.00, 25000.00, NULL, NULL),
+(62, 28, '0654ste8', 'ter', 3.00, 25000.00, 75000.00, NULL, NULL),
+(64, 64, '0654ste8', '', 7.00, 25000.00, 175000.00, NULL, NULL),
+(65, 64, 'styetisth459', '', 3.00, 500.00, 1500.00, NULL, NULL),
+(66, 65, '0654ste8', 'f', 3.00, 25000.00, 75000.00, NULL, NULL),
+(67, 66, 'styetisth459', '', 2.00, 500.00, 1000.00, NULL, NULL),
+(70, 69, '0654ste8', '', 11.00, 25000.00, 275000.00, NULL, NULL),
+(71, 70, 'styetisth459', '', 3.00, 500.00, 1500.00, NULL, NULL),
+(73, 72, 'vet056', 'retest', 1.00, 99000.00, 99000.00, NULL, NULL),
+(74, 73, 'vet056', 'restest2', 20.00, 99000.00, 1980000.00, NULL, NULL),
+(75, 74, 'styetisth459', 'factnew', 4.00, 500.00, 2000.00, NULL, NULL),
+(76, 75, 'styetisth459', 'fs', 1.00, 500.00, 500.00, NULL, NULL),
+(77, 76, 'styetisth459', '12', 12.00, 500.00, 6000.00, NULL, NULL),
+(78, 81, '0654ste8', '', -1.00, 25000.00, -25000.00, 37, NULL),
+(79, 81, 'styetisth459', '', -1.00, 500.00, -500.00, 37, NULL),
+(82, 83, '0654ste8', '', -1.00, 25000.00, -25000.00, 37, NULL),
+(83, 83, 'styetisth459', '', -1.00, 500.00, -500.00, 37, NULL),
+(98, 91, '0654ste8', '', -1.00, 25000.00, -25000.00, 37, NULL),
+(99, 91, 'styetisth459', '', -1.00, 500.00, -500.00, 37, NULL),
+(106, 95, '0654ste8', '', -1.00, 25000.00, -25000.00, 37, NULL),
+(107, 95, 'styetisth459', '', -1.00, 500.00, -500.00, 37, NULL),
+(108, 96, '0654ste8', '', -1.00, 25000.00, -25000.00, 37, NULL),
+(109, 96, 'styetisth459', '', -1.00, 500.00, -500.00, 37, NULL),
+(116, 100, '0654ste8', '', 0.00, 25000.00, 0.00, 37, NULL),
+(117, 100, 'styetisth459', '', -1.00, 500.00, -500.00, 37, NULL),
+(123, 104, '0654ste8', '', 0.00, 25000.00, 0.00, 37, NULL),
+(124, 104, 'styetisth459', '', -1.00, 500.00, -500.00, 37, NULL),
+(125, 105, '0654ste8', '', 0.00, 25000.00, 0.00, 37, NULL),
+(126, 105, 'styetisth459', '', -1.00, 500.00, -500.00, 37, NULL),
+(127, 106, 'vet056', 'restest2', -2.00, 99000.00, -198000.00, 73, NULL),
+(128, 107, 'vet056', 'restest2', -2.00, 99000.00, -198000.00, 73, NULL),
+(129, 109, 'vet056', 'restest2', -1.00, 99000.00, -99000.00, 73, NULL),
+(130, 110, 'vet056', 'restest2', -1.00, 99000.00, -99000.00, 73, NULL),
+(131, 112, 'vet056', 'restest2', -2.00, 99000.00, -198000.00, 73, NULL),
+(132, 113, 'styetisth459', '12', -1.00, 500.00, -500.00, 76, NULL),
+(133, 114, 'styetisth459', '12', -2.00, 500.00, -1000.00, 76, NULL),
+(134, 115, 'styetisth459', '12', -1.00, 500.00, -500.00, 76, NULL),
+(135, 116, 'styetisth459', '12', -1.00, 500.00, -500.00, 76, NULL),
+(136, 117, 'styetisth459', '12', -1.00, 500.00, -500.00, 76, NULL),
+(137, 118, 'styetisth459', '', -1.00, 500.00, -500.00, 49, NULL),
+(138, 119, '0654ste8', 'ter', -1.00, 25000.00, -25000.00, 28, NULL),
+(139, 119, 'vet056', 'reer', 0.00, 99000.00, 0.00, 28, NULL),
+(140, 120, 'vet056', 'restest2', -1.00, 99000.00, -99000.00, 73, NULL),
+(141, 121, 'vet056', 'restest2', -1.00, 99000.00, -99000.00, 73, NULL),
+(142, 122, 'vet056', 'restest2', -2.00, 99000.00, -198000.00, 73, NULL),
+(143, 123, 'vet056', 'restest2', 1.00, 99000.00, 99000.00, 73, NULL),
+(144, 124, 'styetisth459', '12', -2.00, 500.00, -1000.00, 76, NULL),
+(148, 136, '0654ste8', '', -2.00, 25000.00, -50000.00, 43, ''),
+(150, 139, 'cstm_avr', '', -1.00, 56000.00, -56000.00, NULL, 'test56'),
+(151, 140, 'cstm_avr', '', -1.00, 1000.00, -1000.00, NULL, 'test1k'),
+(152, 141, 'cstm_avr', '', -1.00, 2000.00, -2000.00, NULL, 'test2k'),
+(153, 142, 'cstm_avr', '', -1.00, 1000.00, -1000.00, NULL, 'test1k'),
+(154, 143, 'styetisth459', '', -1.00, 500.00, -500.00, 49, ''),
+(155, 144, 'toy015648', '', 2.00, 500000.00, 1000000.00, NULL, ''),
+(156, 144, 'vet056', '', 1.00, 99000.00, 99000.00, NULL, ''),
+(157, 145, 'toy015648', '', 3.00, 500000.00, 1500000.00, NULL, ''),
+(158, 147, 'toy015648', '', 3.00, 500000.00, 1500000.00, NULL, ''),
+(159, 148, 'vet056', '', 4.00, 99000.00, 396000.00, NULL, ''),
+(160, 149, 'vet056', '', 2.00, 99000.00, 198000.00, NULL, ''),
+(161, 150, 'toy015648', '', 6.00, 500000.00, 3000000.00, NULL, ''),
+(162, 151, 'styetisth459', '', 18.00, 500.00, 9000.00, NULL, ''),
+(163, 152, 'vet056', '', 6.00, 99000.00, 594000.00, NULL, ''),
+(164, 153, 'toy015648', '', 3.00, 500000.00, 1500000.00, NULL, ''),
+(165, 154, 'toy015648', '', 6.00, 500000.00, 3000000.00, NULL, ''),
+(166, 155, 'toy015648', '', 4.00, 500000.00, 2000000.00, NULL, ''),
+(167, 156, 'cstm_avr', 'bande roll xxxx', 1.00, 1325000.00, 1325000.00, NULL, ''),
+(168, 157, 'divers', '', 1.00, 333000.00, 333000.00, NULL, ''),
+(170, 158, 'divers', '', 1.00, 800000.00, 800000.00, NULL, ''),
+(171, 159, 'cstm_avr', '', 1.00, 500000.00, 500000.00, NULL, ''),
+(172, 160, 'divers', 'ma grosse b', 1.00, 6066004.00, 6066004.00, NULL, ''),
+(201, 178, 'toy015648', '', 9.00, 500000.00, 4500000.00, NULL, ''),
+(202, 179, 'vet056', '', 2.00, 99000.00, 198000.00, NULL, ''),
+(203, 180, 'styetisth459', '', 9.00, 500.00, 4500.00, NULL, ''),
+(204, 181, 'phone_itel', '', 1.00, 560000.00, 560000.00, NULL, '001928939404'),
+(205, 182, 'phone_itel', '', 1.00, 560000.00, 560000.00, NULL, '001928939404'),
+(206, 183, 'phone_itel', '', 1.00, 560000.00, 560000.00, NULL, '001928939404'),
+(207, 183, 'phone_itel', '', 1.00, 560000.00, 560000.00, NULL, '123455670123'),
+(208, 184, 'phone_itel', '', 1.00, 560000.00, 560000.00, NULL, '001928939404'),
+(209, 184, 'phone_itel', '', 1.00, 560000.00, 560000.00, NULL, '001928939404'),
+(210, 185, 'phone_itel', '', 1.00, 560000.00, 560000.00, NULL, '2378945870197'),
+(211, 185, 'phone_itel', '', 1.00, 560000.00, 560000.00, NULL, '001928939404'),
+(212, 185, 'styetisth459', '', 3.00, 500.00, 1500.00, NULL, ''),
+(214, 187, '0654ste8', '', 2.00, 25000.00, 50000.00, NULL, ''),
+(216, 189, '0654ste8', '', 2.00, 25000.00, 50000.00, NULL, ''),
+(218, 191, '0654ste8', '', 2.00, 25000.00, 50000.00, NULL, ''),
+(219, 192, '0654ste8', '', 2.00, 25000.00, 50000.00, NULL, ''),
+(220, 192, 'styetisth459', '', 2.00, 500.00, 1000.00, NULL, ''),
+(221, 193, 'phone_itel', '', 1.00, 560000.00, 560000.00, NULL, '123455670123'),
+(222, 193, 'phone_itel', '', 1.00, 560000.00, 560000.00, NULL, '123455670123'),
+(223, 194, 'phone_itel', '', 1.00, 560000.00, 560000.00, NULL, '001928939404'),
+(224, 194, 'phone_itel', '', 1.00, 560000.00, 560000.00, NULL, 'ahdb123798634'),
+(227, 197, 'vet056', 'restest2', -1.00, 99000.00, -99000.00, 73, ''),
+(228, 198, 'cstm_avr', 'some test to get it right=', -1.00, 50000.00, -50000.00, NULL, ''),
+(231, 201, 'vet056', 'restest2', -2.00, 99.00, -198.00, 73, ''),
+(234, 204, 'vet056', 'restest2', -2.00, 99.00, -198.00, 73, ''),
+(235, 205, 'vet056', 'restest2', -2.00, 99.00, -198.00, 73, ''),
+(236, 206, '0654ste8', '', -2.00, 25.00, -50.00, 187, ''),
+(237, 207, 'phone_itel', '', -1.00, 560.00, -560.00, 194, 'ahdb123798634'),
+(238, 207, 'phone_itel', '', 0.00, 560.00, 0.00, 194, '001928939404'),
+(240, 209, 'phone_itel', '', 0.00, 560.00, 0.00, 194, 'ahdb123798634'),
+(241, 209, 'phone_itel', '', -1.00, 560.00, -560.00, 194, '001928939404'),
+(242, 210, 'phone_itel', '', 1.00, 560000.00, 560000.00, NULL, 'fhafi4090'),
+(243, 210, 'phone_itel', '', 1.00, 560000.00, 560000.00, NULL, 'ahdb123798634'),
+(244, 210, 'phone_itel', '', 1.00, 560000.00, 560000.00, NULL, '123455670123'),
+(245, 211, 'phone_itel', '', 0.00, 560.00, 0.00, 210, '123455670123'),
+(246, 211, 'phone_itel', '', -1.00, 560.00, -560.00, 210, 'ahdb123798634'),
+(247, 211, 'phone_itel', '', -1.00, 560.00, -560.00, 210, 'fhafi4090'),
+(252, 215, 'phone_itel', '', 1.00, 560000.00, 560000.00, NULL, 'ahdb123798634'),
+(253, 215, 'phone_itel', '', 1.00, 560000.00, 560000.00, NULL, '890304754892'),
+(254, 215, 'phone_itel', '', 1.00, 560000.00, 560000.00, NULL, '2378945870197'),
+(255, 216, 'phone_itel', '', -1.00, 560.00, -560.00, 215, '2378945870197'),
+(256, 221, 'phone_itel', '', -1.00, 560.00, -560.00, 215, '890304754892'),
+(257, 221, 'phone_itel', '', -1.00, 560.00, -560.00, 215, 'ahdb123798634'),
+(258, 222, 'toy015648', '', 5.00, 500000.00, 2500000.00, NULL, ''),
+(259, 223, 'toy015648', '', -2.00, 500.00, -1000.00, 222, ''),
+(260, 226, 'toy015648', '', -1.00, 500000.00, -500000.00, 222, ''),
+(261, 227, '0654ste8', 'ship1', 5.00, 25000.00, 125000.00, NULL, ''),
+(262, 227, '0654ste8', 'ship2', 2.00, 25000.00, 50000.00, NULL, ''),
+(263, 228, 'styetisth459', '', 6.00, 500.00, 3000.00, NULL, ''),
+(264, 229, 'phone_itel', '', 1.00, 560000.00, 560000.00, NULL, 'fhafi4090'),
+(265, 230, 'phone_itel', '', -1.00, 560000.00, -560000.00, 229, 'fhafi4090'),
+(266, 231, '0654ste8', '', -1.00, 25000.00, -25000.00, 192, ''),
+(267, 231, 'styetisth459', '', -1.00, 500.00, -500.00, 192, ''),
+(269, 233, 'styetisth459', '', 4.00, 500.00, 2000.00, NULL, ''),
+(270, 233, 'divers', 'custom bag', 1.00, 5000.00, 5000.00, NULL, ''),
+(271, 234, 'styetisth459', '', 2.00, 500.00, 1000.00, NULL, ''),
+(272, 234, 'divers', 'custom bags quadri', 5.00, 15000.00, 75000.00, NULL, ''),
+(273, 235, 'divers', '', 10.00, 2500000.00, 25000000.00, NULL, ''),
+(274, 236, 'divers', '', 10.00, 3000000.00, 30000000.00, NULL, ''),
+(275, 237, 'divers', '', 10.00, 3000000.00, 30000000.00, NULL, ''),
+(276, 238, 'divers', 'another custom thing', 1500.00, 1500.00, 2250000.00, NULL, ''),
+(277, 239, 'divers', 'props', 20.00, 250000.00, 5000000.00, NULL, ''),
+(278, 240, 'divers', 'props encore', 50.00, 300000.00, 15000000.00, NULL, ''),
+(279, 241, 'divers', 't shirt custom', 1000.00, 15000.00, 15000000.00, NULL, ''),
+(280, 242, 'divers', 't shirt personnalisé', 1000.00, 20000.00, 20000000.00, NULL, ''),
+(281, 243, 'divers', 'ouvrage metallique', 1.00, 350000.00, 350000.00, NULL, ''),
+(282, 244, 'divers', 'n\'importe quoi', 150.00, 150000.00, 22500000.00, NULL, ''),
+(283, 245, 'divers', 'testons', 1100.00, 50.00, 55000.00, NULL, ''),
+(284, 246, 'divers', 'test', 200.00, 450.00, 90000.00, NULL, ''),
+(285, 247, 'divers', 'testons encore', 100.00, 5000.00, 500000.00, NULL, ''),
+(286, 248, 'test_variable_6', 'testonf inal', 250.00, 400.00, 100000.00, NULL, ''),
+(287, 249, 'divers', 'decoupage metallique personnalisé', 2.00, 150000.00, 300000.00, NULL, ''),
+(288, 250, 'divers', 'saving custom test', 45.00, 4356.00, 196020.00, NULL, ''),
+(289, 251, 'divers', 'saving custom test', 45.00, 4356.00, 196020.00, NULL, ''),
+(290, 252, 'divers', 'saving custom test', 45.00, 4356.00, 196020.00, NULL, ''),
+(291, 253, 'divers', 'final test', 5.00, 100000.00, 500000.00, NULL, ''),
+(292, 254, 'divers', 'encore', 150.00, 5000.00, 750000.00, NULL, ''),
+(293, 255, 'divers', 'retert', 10.00, 5435.00, 54350.00, NULL, ''),
+(294, 256, 'divers', 'testencore caaa', 35.00, 5000.00, 175000.00, NULL, ''),
+(295, 257, 'divers', 'voila je pense que c\'est bon', 50000.00, 10000.00, 500000000.00, NULL, ''),
+(296, 258, 'divers', 'dtf', 2.00, 15000.00, 30000.00, NULL, ''),
+(297, 259, 'divers', 'impressions bache 4m x 25m', 5.00, 150000.00, 750000.00, NULL, ''),
+(298, 260, 'divers', '2314', 23.00, 1155.00, 26565.00, NULL, ''),
+(299, 261, 'divers', 're', 2000.00, 10.00, 20000.00, NULL, ''),
+(300, 262, 'divers', 'testr', 14.00, 41555.00, 581770.00, NULL, ''),
+(301, 263, 'divers', 'final test??', 10.00, 23455.00, 234550.00, NULL, ''),
+(302, 264, 'divers', 'custom merch', 15000.00, 10000.00, 150000000.00, NULL, ''),
+(303, 265, 'divers', 'impression custom merch taylor swift recto verso', 2.00, 15000.00, 30000.00, NULL, ''),
+(304, 266, 'divers', 'de la merde', 10.00, 50000.00, 500000.00, NULL, ''),
+(305, 267, 'divers', 'eras tours', 50.00, 10000.00, 500000.00, NULL, ''),
+(306, 268, 'divers', 'tete', 50.00, 1000.00, 50000.00, NULL, ''),
+(307, 269, 'divers', 'custom', 1.00, 50000.00, 50000.00, NULL, ''),
+(308, 270, 'divers', 'custom fashion for dogs', 3.00, 20000.00, 60000.00, NULL, '');
 
 -- --------------------------------------------------------
 
@@ -1022,7 +1121,9 @@ INSERT INTO `companies` (`uid`, `nom_commercial`, `raison_sociale`) VALUES
 (86, 'ESSCA', 'ESSCA LTD'),
 (88, 'test', 'test'),
 (89, 'ttte', 'tet'),
-(92, '', '');
+(92, '', ''),
+(94, 'sanifer', 'sanifer'),
+(95, 'jirama', 'jiro sy rano malagasy');
 
 -- --------------------------------------------------------
 
@@ -1158,7 +1259,39 @@ INSERT INTO `factures_client` (`num_facture`, `commande_uid`, `datetime`, `user_
 (00008, 73, '2023-08-20 15:43:36', 1, 0),
 (00009, 74, '2023-08-20 15:48:29', 1, 0),
 (00010, 75, '2023-08-20 16:00:04', 1, 0),
-(00011, 76, '2023-08-20 16:09:04', 1, 0);
+(00011, 76, '2023-08-20 16:09:04', 1, 0),
+(00014, 187, '2024-01-28 13:08:15', 1, 0),
+(00015, 187, '2024-01-28 13:08:15', 1, 0),
+(00017, 189, '2024-01-28 13:16:24', 1, 0),
+(00018, 189, '2024-01-28 13:16:32', 1, 0),
+(00019, 192, '2024-01-28 13:36:22', 1, 0),
+(00020, 194, '2024-01-30 17:58:08', 1, 0),
+(00021, 210, '2024-02-11 15:53:56', 1, 0),
+(00022, 215, '2024-02-11 16:16:57', 1, 0),
+(00023, 222, '2024-02-14 19:09:40', 1, 0),
+(00024, 227, '2024-05-01 11:51:20', 1, 0),
+(00025, 228, '2024-05-01 11:58:56', 1, 0),
+(00026, 229, '2024-05-03 18:34:29', 1, 0),
+(00027, 249, '2024-05-08 16:37:26', 1, 0),
+(00028, 251, '2024-05-08 16:41:09', 1, 0),
+(00029, 252, '2024-05-08 16:41:09', 1, 0),
+(00030, 253, '2024-05-08 16:44:07', 1, 0),
+(00031, 254, '2024-05-08 16:45:09', 1, 0),
+(00032, 255, '2024-05-08 16:46:01', 1, 0),
+(00033, 256, '2024-05-08 16:48:54', 1, 0),
+(00034, 257, '2024-05-08 16:51:13', 1, 0),
+(00035, 258, '2024-05-08 16:51:52', 1, 0),
+(00036, 259, '2024-05-08 16:54:09', 1, 0),
+(00037, 260, '2024-05-08 16:54:43', 1, 0),
+(00038, 261, '2024-05-08 16:56:00', 1, 0),
+(00039, 262, '2024-05-08 16:57:31', 1, 0),
+(00040, 263, '2024-05-08 16:58:14', 1, 0),
+(00041, 264, '2024-05-08 17:00:36', 1, 0),
+(00042, 265, '2024-05-08 17:08:27', 1, 0),
+(00043, 266, '2024-05-08 17:09:30', 1, 0),
+(00044, 267, '2024-05-08 17:11:37', 1, 0),
+(00045, 268, '2024-05-08 17:15:42', 1, 0),
+(00046, 270, '2024-05-09 10:31:43', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1167,6 +1300,71 @@ INSERT INTO `factures_client` (`num_facture`, `commande_uid`, `datetime`, `user_
 --
 
 CREATE TABLE `factures_fournisseur` (
+  `uid` int(10) UNSIGNED NOT NULL,
+  `fournisseur_uid` int(10) UNSIGNED NOT NULL,
+  `num_facture` varchar(20) NOT NULL,
+  `date` date NOT NULL,
+  `libelle` varchar(45) DEFAULT NULL,
+  `state` tinyint(3) UNSIGNED NOT NULL DEFAULT 1 COMMENT '0 declarable; 1 nd ',
+  `magasin_uid` int(10) UNSIGNED NOT NULL,
+  `user_uid` int(10) UNSIGNED NOT NULL,
+  `tva_flag` tinyint(1) NOT NULL DEFAULT 1,
+  `datetime` timestamp NOT NULL DEFAULT current_timestamp(),
+  `total_ht_avant_remise` double(14,2) NOT NULL,
+  `total_ttc_avant_remise` double(14,2) NOT NULL,
+  `remise_taux` double(14,2) NOT NULL,
+  `remise_montant` double(14,2) NOT NULL,
+  `total_ht_apres_remise` double(14,2) NOT NULL,
+  `tva_apres_remise` double(14,2) NOT NULL,
+  `total_ttc_apres_remise` double(14,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `factures_fournisseur`
+--
+
+INSERT INTO `factures_fournisseur` (`uid`, `fournisseur_uid`, `num_facture`, `date`, `libelle`, `state`, `magasin_uid`, `user_uid`, `tva_flag`, `datetime`, `total_ht_avant_remise`, `total_ttc_avant_remise`, `remise_taux`, `remise_montant`, `total_ht_apres_remise`, `tva_apres_remise`, `total_ttc_apres_remise`) VALUES
+(7, 94, 'sonyblack', '2024-07-04', NULL, 0, 1, 1, 1, '2024-07-13 06:48:04', 54000.00, 64800.00, 0.00, 0.00, 54000.00, 0.00, 64800.00),
+(12, 88, '5431q', '2024-07-18', 'x6', 0, 1, 1, 1, '2024-07-18 18:04:32', 500000.00, 600000.00, 0.00, 0.00, 500000.00, 0.00, 600000.00),
+(13, 89, 'where55', '2024-07-16', NULL, 0, 1, 1, 1, '2024-07-18 18:20:17', 560000.00, 672000.00, 0.00, 0.00, 560000.00, 0.00, 672000.00),
+(14, 89, 'where56', '2024-07-16', 'tre', 0, 1, 1, 0, '2024-07-18 18:34:44', 1120000.00, 1120000.00, 0.00, 0.00, 1120000.00, 0.00, 1120000.00);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `factures_fournisseur_details`
+--
+
+CREATE TABLE `factures_fournisseur_details` (
+  `uid` int(10) UNSIGNED NOT NULL,
+  `facture_uid` int(10) UNSIGNED NOT NULL,
+  `item_uid` varchar(20) NOT NULL,
+  `description_item` tinytext DEFAULT NULL,
+  `quantity` double(14,2) NOT NULL,
+  `prix_unitaire` double(14,2) UNSIGNED NOT NULL,
+  `prix_total` double(14,2) NOT NULL,
+  `num_serie` varchar(100) DEFAULT NULL,
+  `return_item` tinyint(4) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `factures_fournisseur_details`
+--
+
+INSERT INTO `factures_fournisseur_details` (`uid`, `facture_uid`, `item_uid`, `description_item`, `quantity`, `prix_unitaire`, `prix_total`, `num_serie`, `return_item`) VALUES
+(2, 7, 'carburant', '', 12.00, 4500.00, 54000.00, '', NULL),
+(7, 12, 'phone_itel', '', 1.00, 500000.00, 500000.00, '0123456abtt', NULL),
+(8, 13, 'phone_itel', '', 1.00, 560000.00, 560000.00, '22287658hgh', NULL),
+(9, 14, 'phone_itel', '', 1.00, 560000.00, 560000.00, 'hgjeiu01', NULL),
+(10, 14, 'phone_itel', '', 1.00, 560000.00, 560000.00, 'hgjeiu02', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `factures_fournisseur_old`
+--
+
+CREATE TABLE `factures_fournisseur_old` (
   `uid` int(10) UNSIGNED NOT NULL,
   `fournisseur_uid` int(10) UNSIGNED NOT NULL,
   `num_facture` varchar(45) NOT NULL,
@@ -1202,7 +1400,9 @@ INSERT INTO `familles` (`uid`, `name`, `active`) VALUES
 (10, 'produit d entretien', 1),
 (11, 'meubles', 1),
 (12, 'arme', 1),
-(13, 'vhs', 1);
+(13, 'vhs', 1),
+(14, 'sur mesure', 1),
+(15, 'dépenses générales', 1);
 
 -- --------------------------------------------------------
 
@@ -1262,7 +1462,9 @@ INSERT INTO `fournisseurs` (`uid`, `encours`, `evaluation`, `nb_jour`, `declarab
 (88, 0.00, 2, 0, 1, 1),
 (89, 0.00, 2, 0, 1, 1),
 (92, 0.00, 2, 0, 1, 1),
-(93, 0.00, 2, 0, 1, 1);
+(93, 0.00, 2, 0, 1, 1),
+(94, 0.00, 2, 0, 1, 1),
+(95, 0.00, 2, 0, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -1316,13 +1518,30 @@ INSERT INTO `humans` (`uid`, `noms`, `prenoms`, `cin`, `cin_date`, `cin_lieu`, `
 --
 
 CREATE TABLE `identifiables` (
-  `num_serie` varchar(45) NOT NULL,
-  `item_uid` int(10) UNSIGNED NOT NULL,
-  `in_outside_uid` int(10) UNSIGNED NOT NULL,
-  `out_outside_uid` int(10) UNSIGNED DEFAULT NULL,
-  `in_stock` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
-  `magasin_uid` int(10) UNSIGNED NOT NULL
+  `item_code` varchar(25) NOT NULL,
+  `num_serie` varchar(25) NOT NULL,
+  `actif` tinyint(4) NOT NULL,
+  `magasin_uid` int(4) UNSIGNED NOT NULL,
+  `ref_in` varchar(50) DEFAULT NULL,
+  `ref_out` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `identifiables`
+--
+
+INSERT INTO `identifiables` (`item_code`, `num_serie`, `actif`, `magasin_uid`, `ref_in`, `ref_out`) VALUES
+('phone_itel', '001928939404', 1, 1, NULL, NULL),
+('phone_itel', '0123456abtt', 1, 1, NULL, NULL),
+('phone_itel', '123455670123', 1, 1, NULL, NULL),
+('phone_itel', '22287658hgh', 1, 1, NULL, NULL),
+('phone_itel', '2378945870197', 1, 1, NULL, NULL),
+('phone_itel', '267819038', 1, 1, NULL, NULL),
+('phone_itel', '890304754892', 1, 1, NULL, NULL),
+('phone_itel', 'ahdb123798634', 1, 1, NULL, NULL),
+('phone_itel', 'fhafi4090', 0, 1, NULL, NULL),
+('phone_itel', 'hgjeiu01', 1, 1, NULL, NULL),
+('phone_itel', 'hgjeiu02', 1, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1387,18 +1606,30 @@ CREATE TABLE `items` (
   `identifiable` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
   `unite_mesure_uid` int(10) UNSIGNED NOT NULL,
   `active` tinyint(4) NOT NULL DEFAULT 1,
-  `note` tinytext DEFAULT NULL
+  `note` tinytext DEFAULT NULL,
+  `prix_variable` tinyint(4) NOT NULL DEFAULT 0,
+  `stock` double(14,2) UNSIGNED NOT NULL DEFAULT 0.00,
+  `pour_achat` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `pour_vente` tinyint(3) UNSIGNED NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `items`
 --
 
-INSERT INTO `items` (`uid`, `code`, `name`, `type_item`, `declarable`, `category_uid`, `family_uid`, `prix_vente`, `prix_achat_mp`, `stockable`, `identifiable`, `unite_mesure_uid`, `active`, `note`) VALUES
-(3, '0654ste8', 'jean lacoste', 1, 1, 3, 5, 25000.00, 0.00, 1, 0, 1, 1, NULL),
-(2, 'styetisth459', 'yaourt 50g', 1, 1, 3, 2, 500.00, 0.00, 1, 0, 1, 1, 'le prix est monté'),
-(5, 'toy015648', 'figurine articulé power ranger rouge', 1, 1, 11, 8, 500000.00, 0.00, 1, 0, 1, 1, NULL),
-(4, 'vet056', 'chocolat ferrero rocher 250g', 1, 1, 6, 2, 99000.00, 0.00, 1, 0, 1, 1, 'cher pour rien');
+INSERT INTO `items` (`uid`, `code`, `name`, `type_item`, `declarable`, `category_uid`, `family_uid`, `prix_vente`, `prix_achat_mp`, `stockable`, `identifiable`, `unite_mesure_uid`, `active`, `note`, `prix_variable`, `stock`, `pour_achat`, `pour_vente`) VALUES
+(3, '0654ste8', 'jean lacoste', 1, 1, 3, 5, 25000.00, 0.00, 1, 0, 1, 1, NULL, 0, 19.00, 1, 1),
+(10, 'carburant', 'carburant divers but', 1, 1, 3, 7, 0.00, 0.00, 1, 0, 1, 1, NULL, 0, 0.00, 1, 0),
+(7, 'cstm_avr', 'custom_avoir', 0, 1, 13, 14, 0.00, 0.00, 0, 0, 1, 1, 'default item for simple avoir', 1, 0.00, 0, 1),
+(9, 'divers', 'divers_2', 1, 1, 13, 14, 0.00, 0.00, 0, 0, 1, 1, NULL, 1, 0.00, 1, 1),
+(11, 'internet', 'internet', 1, 1, 12, 15, 0.00, 0.00, 0, 0, 1, 1, NULL, 0, 0.00, 1, 0),
+(13, 'jirama_eau', 'eau jirama', 0, 1, 3, 15, 0.00, 0.00, 0, 0, 1, 1, NULL, 0, 0.00, 1, 0),
+(12, 'jirama_elec', 'electricite jirama', 0, 1, 3, 15, 0.00, 0.00, 0, 0, 1, 1, NULL, 0, 0.00, 1, 0),
+(8, 'phone_itel', 'itel xxt 35 2023', 1, 1, 3, 8, 560000.00, 0.00, 1, 1, 1, 1, NULL, 0, 10.00, 1, 1),
+(2, 'styetisth459', 'yaourt 50g', 1, 1, 3, 2, 500.00, 0.00, 1, 0, 1, 1, 'le prix est monté', 0, 18.00, 1, 1),
+(6, 'test_variable_6', 'test prix variable 6', 1, 1, 13, 14, 0.00, 0.00, 0, 0, 1, 1, NULL, 1, 0.00, 0, 1),
+(5, 'toy015648', 'figurine articulé power ranger rouge', 1, 1, 11, 8, 500000.00, 0.00, 1, 0, 1, 1, NULL, 0, 7.00, 1, 1),
+(4, 'vet056', 'chocolat ferrero rocher 250g', 1, 1, 6, 2, 99000.00, 0.00, 1, 0, 1, 1, 'cher pour rien', 0, 5.00, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -1646,6 +1877,26 @@ INSERT INTO `test` (`uid`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `the_compamy`
+--
+
+CREATE TABLE `the_compamy` (
+  `raison_sociale` varchar(100) NOT NULL,
+  `nom_commercial` varchar(150) NOT NULL,
+  `nif` int(40) NOT NULL,
+  `stat` int(40) NOT NULL,
+  `tva_flag` tinyint(2) NOT NULL,
+  `adresse_siege` int(11) NOT NULL,
+  `phone1` int(11) NOT NULL,
+  `phone2` int(11) DEFAULT NULL,
+  `email1` int(11) NOT NULL,
+  `email2` int(11) DEFAULT NULL,
+  `rcs` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `tiers`
 --
 
@@ -1746,7 +1997,9 @@ INSERT INTO `tiers` (`uid`, `type_personnality_uid`, `adress`, `nif`, `stat`, `r
 (88, 2, 'tes', NULL, NULL, NULL, 'tes', 'set', 'set', 'set', 1, NULL),
 (89, 2, 'rre', NULL, NULL, NULL, 'chsd', 'g', 'sdf', 'dg', 1, NULL),
 (92, 2, 'gfhjzf', NULL, NULL, NULL, 'fghj', 'ghj', 'fghj', 'fghj', 1, NULL),
-(93, 1, 'qqer', NULL, NULL, NULL, 'qsr', 'qser', 'qser', 'qser', 1, 'qser');
+(93, 1, 'qqer', NULL, NULL, NULL, 'qsr', 'qser', 'qser', 'qser', 1, 'qser'),
+(94, 2, 'ankazomanga', NULL, NULL, NULL, '340930490', NULL, 'contact@sanifer.mg', NULL, 1, NULL),
+(95, 2, 'xxx', '342523', '652346325', NULL, '098', '0987', 'lsdfj@jirama.mg', 'contact@jirama.mg', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -1980,7 +2233,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`uid`, `login`, `mdp`, `active`, `client_create`, `client_read`, `client_update`, `client_delete`, `fournisseur_create`, `fournisseur_read`, `fournisseur_update`, `fournisseur_delete`, `facture_client_create`, `facture_client_read`, `facture_client_update`, `facture_client_delete`, `facture_fournisseur_create`, `facture_fournisseur_read`, `facture_fournisseur_update`, `facture_fournisseur_delete`, `tresorerie_create`, `tresorerie_read`, `tresorerie_update`, `tresorerie_delete`, `stock_create`, `stock_read`, `stock_update`, `stock_delete`, `famille_create`, `famille_read`, `famille_update`, `famille_delete`, `categorie_create`, `categorie_read`, `categorie_update`, `categorie_delete`, `item_create`, `item_read`, `item_update`, `item_delete`, `employee_create`, `employee_read`, `employee_update`, `employee_delete`, `authorization_create`, `authorization_read`, `authorization_update`, `authorization_delete`, `affaire_create`, `affaire_read`, `affaire_update`, `affaire_delete`, `devis_create`, `devis_read`, `devis_update`, `devis_delete`, `avoir_client_create`, `avoir_client_read`, `avoir_client_update`, `avoir_client_delete`, `mvt_treso_create`, `mvt_treso_read`, `mvt_treso_update`, `mvts_treso_delete`, `nd_client_create`, `nd_client_read`, `nd_client_update`, `nd_client_delete`, `mvt_interne_create`, `mvt_interne_read`, `mvt_interne_update`, `mvt_interne_delete`, `magasin_create`, `magasin_read`, `magasin_update`, `magasin_delete`, `commande_create`, `commande_read`, `commande_update`, `commande_delete`) VALUES
-(1, 'mampi', '123456', 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0),
+(1, 'mampi', '123456', 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0),
 (2, 'user1', '123456', 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
@@ -2000,7 +2253,7 @@ CREATE TABLE `view_all_avoirs_client_headers` (
 ,`client_uid` int(10) unsigned
 ,`libelle` varchar(45)
 ,`state` tinyint(3) unsigned
-,`total_ht_avant_remise` decimal(14,2)
+,`total_ht_avant_remise` double(14,2)
 ,`total_ttc_avant_remise` double(14,2)
 ,`remise_taux` double(14,2)
 ,`remise_montant` double(14,2)
@@ -2061,30 +2314,42 @@ CREATE TABLE `view_all_commandes_details` (
 `uid` int(10) unsigned
 ,`commande_uid` int(10) unsigned
 ,`item_uid` varchar(20)
-,`description_item` tinytext
+,`stockable` tinyint(3) unsigned
+,`identifiable` tinyint(3) unsigned
+,`prix_variable` tinyint(4)
+,`active` tinyint(4)
+,`description_item` text
+,`num_serie` varchar(100)
 ,`quantity` double(14,2)
-,`prix_unitaire` double(14,2) unsigned
+,`prix_unitaire` double(14,2)
 ,`prix_total` double(14,2)
 ,`commande_initial_uid` int(10) unsigned
 ,`item_name` varchar(45)
+,`type_avoir` decimal(3,0)
 );
 
 -- --------------------------------------------------------
 
 --
--- Doublure de structure pour la vue `view_all_commandes_details_old`
+-- Doublure de structure pour la vue `view_all_commandes_details_v3`
 -- (Voir ci-dessous la vue réelle)
 --
-CREATE TABLE `view_all_commandes_details_old` (
+CREATE TABLE `view_all_commandes_details_v3` (
 `uid` int(10) unsigned
 ,`commande_uid` int(10) unsigned
 ,`item_uid` varchar(20)
+,`stockable` tinyint(3) unsigned
+,`identifiable` tinyint(3) unsigned
+,`prix_variable` tinyint(4)
+,`active` tinyint(4)
 ,`description_item` tinytext
+,`num_serie` varchar(100)
 ,`quantity` double(14,2)
 ,`prix_unitaire` double(14,2) unsigned
 ,`prix_total` double(14,2)
 ,`commande_initial_uid` int(10) unsigned
 ,`item_name` varchar(45)
+,`type_avoir` tinyint(3) unsigned
 );
 
 -- --------------------------------------------------------
@@ -2103,7 +2368,7 @@ CREATE TABLE `view_all_commandes_headers` (
 ,`user_uid` int(10) unsigned
 ,`user_name` varchar(45)
 ,`datetime` timestamp
-,`total_ht_avant_remise` decimal(14,2)
+,`total_ht_avant_remise` double(14,2)
 ,`total_ttc_avant_remise` double(14,2)
 ,`remise_taux` double(14,2)
 ,`remise_montant` double(14,2)
@@ -2132,7 +2397,7 @@ CREATE TABLE `view_all_factures_client_headers` (
 ,`client_uid` int(10) unsigned
 ,`libelle` varchar(45)
 ,`state` tinyint(3) unsigned
-,`total_ht_avant_remise` decimal(14,2)
+,`total_ht_avant_remise` double(14,2)
 ,`total_ttc_avant_remise` double(14,2)
 ,`remise_taux` double(14,2)
 ,`remise_montant` double(14,2)
@@ -2149,30 +2414,56 @@ CREATE TABLE `view_all_factures_client_headers` (
 -- --------------------------------------------------------
 
 --
--- Doublure de structure pour la vue `view_all_factures_client_headers_old`
+-- Doublure de structure pour la vue `view_all_factures_fournisseur_details`
 -- (Voir ci-dessous la vue réelle)
 --
-CREATE TABLE `view_all_factures_client_headers_old` (
-`num_facture` int(5) unsigned zerofill
-,`commande_uid` int(10) unsigned
-,`datetime` timestamp
-,`user_uid` int(10) unsigned
-,`user_name` varchar(45)
-,`client_uid` int(10) unsigned
+CREATE TABLE `view_all_factures_fournisseur_details` (
+`uid` int(10) unsigned
+,`facture_uid` int(10) unsigned
+,`item_uid` varchar(20)
+,`stockable` tinyint(3) unsigned
+,`identifiable` tinyint(3) unsigned
+,`prix_variable` tinyint(4)
+,`active` tinyint(4)
+,`description_item` tinytext
+,`num_serie` varchar(100)
+,`quantity` double(14,2)
+,`prix_unitaire` double(14,2) unsigned
+,`prix_total` double(14,2)
+,`item_name` varchar(45)
+,`return_item` tinyint(4)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Doublure de structure pour la vue `view_all_factures_fournisseur_headers`
+-- (Voir ci-dessous la vue réelle)
+--
+CREATE TABLE `view_all_factures_fournisseur_headers` (
+`uid` int(10) unsigned
+,`fournisseur_uid` int(10) unsigned
+,`num_facture` varchar(20)
+,`date` date
 ,`libelle` varchar(45)
 ,`state` tinyint(3) unsigned
-,`total_ht_avant_remise` decimal(14,2)
+,`magasin_uid` int(10) unsigned
+,`magasin_name` varchar(45)
+,`user_uid` int(10) unsigned
+,`user_name` varchar(45)
+,`tva_flag` tinyint(1)
+,`datetime` timestamp
+,`total_ht_avant_remise` double(14,2)
 ,`total_ttc_avant_remise` double(14,2)
 ,`remise_taux` double(14,2)
 ,`remise_montant` double(14,2)
 ,`total_ht_apres_remise` double(14,2)
 ,`total_ttc_apres_remise` double(14,2)
+,`tva_apres_remise` double(14,2)
 ,`noms` varchar(60)
 ,`prenoms` varchar(60)
 ,`nom_commercial` varchar(45)
 ,`raison_sociale` varchar(45)
-,`magasin_uid` int(10) unsigned
-,`magasin_name` varchar(45)
 );
 
 -- --------------------------------------------------------
@@ -2233,6 +2524,35 @@ CREATE TABLE `view_all_items` (
 ,`prix_vente` double(14,2) unsigned
 ,`prix_achat_mp` double(14,2) unsigned
 ,`note` tinytext
+,`prix_variable` tinyint(4)
+,`stock` double(14,2) unsigned
+,`pour_achat` tinyint(3) unsigned
+,`pour_vente` tinyint(3) unsigned
+);
+
+-- --------------------------------------------------------
+
+--
+-- Doublure de structure pour la vue `view_all_items-old`
+-- (Voir ci-dessous la vue réelle)
+--
+CREATE TABLE `view_all_items-old` (
+`uid` int(10) unsigned
+,`code` varchar(20)
+,`active` tinyint(4)
+,`declarable` tinyint(3) unsigned
+,`name` varchar(45)
+,`type_item` tinyint(3) unsigned
+,`famille_uid` int(10) unsigned
+,`famille` varchar(45)
+,`categorie_uid` int(10) unsigned
+,`categorie` varchar(45)
+,`unite_mesure_uid` int(10) unsigned
+,`stockable` tinyint(3) unsigned
+,`identifiable` tinyint(3) unsigned
+,`prix_vente` double(14,2) unsigned
+,`prix_achat_mp` double(14,2) unsigned
+,`note` tinytext
 );
 
 -- --------------------------------------------------------
@@ -2274,16 +2594,16 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `view_all_commandes_details`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_all_commandes_details`  AS SELECT `commandes_details`.`uid` AS `uid`, `commandes_details`.`commande_uid` AS `commande_uid`, `commandes_details`.`item_uid` AS `item_uid`, `commandes_details`.`description_item` AS `description_item`, `commandes_details`.`quantity` AS `quantity`, `commandes_details`.`prix_unitaire` AS `prix_unitaire`, `commandes_details`.`prix_total` AS `prix_total`, `commandes_details`.`commande_initial_uid` AS `commande_initial_uid`, `items`.`name` AS `item_name` FROM (`commandes_details` join `items` on(`commandes_details`.`item_uid` = `items`.`code`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_all_commandes_details`  AS SELECT `commandes_details`.`uid` AS `uid`, `commandes_details`.`commande_uid` AS `commande_uid`, `commandes_details`.`item_uid` AS `item_uid`, `items`.`stockable` AS `stockable`, `items`.`identifiable` AS `identifiable`, `items`.`prix_variable` AS `prix_variable`, `items`.`active` AS `active`, `commandes_details`.`description_item` AS `description_item`, `commandes_details`.`num_serie` AS `num_serie`, `commandes_details`.`quantity` AS `quantity`, `commandes_details`.`prix_unitaire` AS `prix_unitaire`, `commandes_details`.`prix_total` AS `prix_total`, `commandes_details`.`commande_initial_uid` AS `commande_initial_uid`, `items`.`name` AS `item_name`, NULL AS `type_avoir` FROM ((`commandes_details` join `items` on(`commandes_details`.`item_uid` = `items`.`code`)) join `commandes` on(`commandes_details`.`commande_uid` = `commandes`.`uid`)) WHERE `commandes`.`state` UNION SELECT `commandes_details`.`uid` AS `uid`,`commandes_details`.`commande_uid` AS `commande_uid`,`commandes_details`.`item_uid` AS `item_uid`,`items`.`stockable` AS `stockable`,`items`.`identifiable` AS `identifiable`,`items`.`prix_variable` AS `prix_variable`,`items`.`active` AS `active`,`commandes_details`.`description_item` AS `description_item`,`commandes_details`.`num_serie` AS `num_serie`,`commandes_details`.`quantity` AS `quantity`,`commandes_details`.`prix_unitaire` AS `prix_unitaire`,`commandes_details`.`prix_total` AS `prix_total`,`commandes_details`.`commande_initial_uid` AS `commande_initial_uid`,`items`.`name` AS `item_name`,`avoirs_client`.`type` AS `type_avoir` from ((`commandes_details` join `avoirs_client` on(`commandes_details`.`commande_uid` = `avoirs_client`.`commande_uid`)) join `items` on(`commandes_details`.`item_uid` = `items`.`code`)) order by `uid`  ;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la vue `view_all_commandes_details_old`
+-- Structure de la vue `view_all_commandes_details_v3`
 --
-DROP TABLE IF EXISTS `view_all_commandes_details_old`;
+DROP TABLE IF EXISTS `view_all_commandes_details_v3`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_all_commandes_details_old`  AS SELECT `commandes_details`.`uid` AS `uid`, `commandes_details`.`commande_uid` AS `commande_uid`, `commandes_details`.`item_uid` AS `item_uid`, `commandes_details`.`description_item` AS `description_item`, `commandes_details`.`quantity` AS `quantity`, `commandes_details`.`prix_unitaire` AS `prix_unitaire`, `commandes_details`.`prix_total` AS `prix_total`, `commandes_details`.`commande_initial_uid` AS `commande_initial_uid`, `items`.`name` AS `item_name` FROM (`commandes_details` join `items` on(`commandes_details`.`item_uid` = `items`.`code`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_all_commandes_details_v3`  AS SELECT `commandes_details`.`uid` AS `uid`, `commandes_details`.`commande_uid` AS `commande_uid`, `commandes_details`.`item_uid` AS `item_uid`, `items`.`stockable` AS `stockable`, `items`.`identifiable` AS `identifiable`, `items`.`prix_variable` AS `prix_variable`, `items`.`active` AS `active`, `commandes_details`.`description_item` AS `description_item`, `commandes_details`.`num_serie` AS `num_serie`, `commandes_details`.`quantity` AS `quantity`, `commandes_details`.`prix_unitaire` AS `prix_unitaire`, `commandes_details`.`prix_total` AS `prix_total`, `commandes_details`.`commande_initial_uid` AS `commande_initial_uid`, `items`.`name` AS `item_name`, `avoirs_client`.`type` AS `type_avoir` FROM ((`commandes_details` join `items` on(`commandes_details`.`item_uid` = `items`.`code`)) join `avoirs_client` on(`commandes_details`.`commande_uid` = `avoirs_client`.`commande_uid`)) ;
 
 -- --------------------------------------------------------
 
@@ -2306,11 +2626,20 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Structure de la vue `view_all_factures_client_headers_old`
+-- Structure de la vue `view_all_factures_fournisseur_details`
 --
-DROP TABLE IF EXISTS `view_all_factures_client_headers_old`;
+DROP TABLE IF EXISTS `view_all_factures_fournisseur_details`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_all_factures_client_headers_old`  AS SELECT `factures_client`.`num_facture` AS `num_facture`, `factures_client`.`commande_uid` AS `commande_uid`, `factures_client`.`datetime` AS `datetime`, `factures_client`.`user_uid` AS `user_uid`, `users`.`login` AS `user_name`, `view_all_commandes_headers`.`client_uid` AS `client_uid`, `view_all_commandes_headers`.`libelle` AS `libelle`, `view_all_commandes_headers`.`state` AS `state`, `view_all_commandes_headers`.`total_ht_avant_remise` AS `total_ht_avant_remise`, `view_all_commandes_headers`.`total_ttc_avant_remise` AS `total_ttc_avant_remise`, `view_all_commandes_headers`.`remise_taux` AS `remise_taux`, `view_all_commandes_headers`.`remise_montant` AS `remise_montant`, `view_all_commandes_headers`.`total_ht_apres_remise` AS `total_ht_apres_remise`, `view_all_commandes_headers`.`total_ttc_apres_remise` AS `total_ttc_apres_remise`, `view_all_commandes_headers`.`noms` AS `noms`, `view_all_commandes_headers`.`prenoms` AS `prenoms`, `view_all_commandes_headers`.`nom_commercial` AS `nom_commercial`, `view_all_commandes_headers`.`raison_sociale` AS `raison_sociale`, `view_all_commandes_headers`.`magasin_uid` AS `magasin_uid`, `view_all_commandes_headers`.`magasin_name` AS `magasin_name` FROM ((`factures_client` join `view_all_commandes_headers` on(`factures_client`.`commande_uid` = `view_all_commandes_headers`.`uid`)) join `users` on(`users`.`uid` = `factures_client`.`user_uid`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_all_factures_fournisseur_details`  AS SELECT `factures_fournisseur_details`.`uid` AS `uid`, `factures_fournisseur_details`.`facture_uid` AS `facture_uid`, `factures_fournisseur_details`.`item_uid` AS `item_uid`, `items`.`stockable` AS `stockable`, `items`.`identifiable` AS `identifiable`, `items`.`prix_variable` AS `prix_variable`, `items`.`active` AS `active`, `factures_fournisseur_details`.`description_item` AS `description_item`, `factures_fournisseur_details`.`num_serie` AS `num_serie`, `factures_fournisseur_details`.`quantity` AS `quantity`, `factures_fournisseur_details`.`prix_unitaire` AS `prix_unitaire`, `factures_fournisseur_details`.`prix_total` AS `prix_total`, `items`.`name` AS `item_name`, `factures_fournisseur_details`.`return_item` AS `return_item` FROM (`factures_fournisseur_details` join `items` on(`factures_fournisseur_details`.`item_uid` = `items`.`code`)) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la vue `view_all_factures_fournisseur_headers`
+--
+DROP TABLE IF EXISTS `view_all_factures_fournisseur_headers`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_all_factures_fournisseur_headers`  AS SELECT `factures_fournisseur`.`uid` AS `uid`, `factures_fournisseur`.`fournisseur_uid` AS `fournisseur_uid`, `factures_fournisseur`.`num_facture` AS `num_facture`, `factures_fournisseur`.`date` AS `date`, `factures_fournisseur`.`libelle` AS `libelle`, `factures_fournisseur`.`state` AS `state`, `factures_fournisseur`.`magasin_uid` AS `magasin_uid`, `magasins`.`name` AS `magasin_name`, `factures_fournisseur`.`user_uid` AS `user_uid`, `users`.`login` AS `user_name`, `factures_fournisseur`.`tva_flag` AS `tva_flag`, `factures_fournisseur`.`datetime` AS `datetime`, `factures_fournisseur`.`total_ht_avant_remise` AS `total_ht_avant_remise`, `factures_fournisseur`.`total_ttc_avant_remise` AS `total_ttc_avant_remise`, `factures_fournisseur`.`remise_taux` AS `remise_taux`, `factures_fournisseur`.`remise_montant` AS `remise_montant`, `factures_fournisseur`.`total_ht_apres_remise` AS `total_ht_apres_remise`, `factures_fournisseur`.`total_ttc_apres_remise` AS `total_ttc_apres_remise`, `factures_fournisseur`.`tva_apres_remise` AS `tva_apres_remise`, `view_all_fournisseurs`.`noms` AS `noms`, `view_all_fournisseurs`.`prenoms` AS `prenoms`, `view_all_fournisseurs`.`nom_commercial` AS `nom_commercial`, `view_all_fournisseurs`.`raison_sociale` AS `raison_sociale` FROM (((`factures_fournisseur` join `view_all_fournisseurs` on(`factures_fournisseur`.`fournisseur_uid` = `view_all_fournisseurs`.`uid`)) join `users` on(`users`.`uid` = `factures_fournisseur`.`user_uid`)) join `magasins` on(`magasins`.`uid` = `factures_fournisseur`.`magasin_uid`)) ;
 
 -- --------------------------------------------------------
 
@@ -2328,7 +2657,16 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `view_all_items`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_all_items`  AS SELECT `items`.`uid` AS `uid`, `items`.`code` AS `code`, `items`.`active` AS `active`, `items`.`declarable` AS `declarable`, `items`.`name` AS `name`, `items`.`type_item` AS `type_item`, `items`.`family_uid` AS `famille_uid`, `familles`.`name` AS `famille`, `items`.`category_uid` AS `categorie_uid`, `categories`.`name` AS `categorie`, `items`.`unite_mesure_uid` AS `unite_mesure_uid`, `items`.`stockable` AS `stockable`, `items`.`identifiable` AS `identifiable`, `items`.`prix_vente` AS `prix_vente`, `items`.`prix_achat_mp` AS `prix_achat_mp`, `items`.`note` AS `note` FROM ((`items` join `familles` on(`familles`.`uid` = `items`.`family_uid`)) join `categories` on(`categories`.`uid` = `items`.`category_uid`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_all_items`  AS SELECT `items`.`uid` AS `uid`, `items`.`code` AS `code`, `items`.`active` AS `active`, `items`.`declarable` AS `declarable`, `items`.`name` AS `name`, `items`.`type_item` AS `type_item`, `items`.`family_uid` AS `famille_uid`, `familles`.`name` AS `famille`, `items`.`category_uid` AS `categorie_uid`, `categories`.`name` AS `categorie`, `items`.`unite_mesure_uid` AS `unite_mesure_uid`, `items`.`stockable` AS `stockable`, `items`.`identifiable` AS `identifiable`, `items`.`prix_vente` AS `prix_vente`, `items`.`prix_achat_mp` AS `prix_achat_mp`, `items`.`note` AS `note`, `items`.`prix_variable` AS `prix_variable`, `items`.`stock` AS `stock`, `items`.`pour_achat` AS `pour_achat`, `items`.`pour_vente` AS `pour_vente` FROM ((`items` join `familles` on(`familles`.`uid` = `items`.`family_uid`)) join `categories` on(`categories`.`uid` = `items`.`category_uid`)) ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la vue `view_all_items-old`
+--
+DROP TABLE IF EXISTS `view_all_items-old`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_all_items-old`  AS SELECT `items`.`uid` AS `uid`, `items`.`code` AS `code`, `items`.`active` AS `active`, `items`.`declarable` AS `declarable`, `items`.`name` AS `name`, `items`.`type_item` AS `type_item`, `items`.`family_uid` AS `famille_uid`, `familles`.`name` AS `famille`, `items`.`category_uid` AS `categorie_uid`, `categories`.`name` AS `categorie`, `items`.`unite_mesure_uid` AS `unite_mesure_uid`, `items`.`stockable` AS `stockable`, `items`.`identifiable` AS `identifiable`, `items`.`prix_vente` AS `prix_vente`, `items`.`prix_achat_mp` AS `prix_achat_mp`, `items`.`note` AS `note` FROM ((`items` join `familles` on(`familles`.`uid` = `items`.`family_uid`)) join `categories` on(`categories`.`uid` = `items`.`category_uid`)) ;
 
 --
 -- Index pour les tables déchargées
@@ -2451,7 +2789,8 @@ ALTER TABLE `clients`
 ALTER TABLE `commandes`
   ADD PRIMARY KEY (`uid`),
   ADD KEY `fk_commandes_user_uid_idx` (`user_uid`),
-  ADD KEY `fk_commandes_magasin_uid` (`magasin_uid`);
+  ADD KEY `fk_commandes_magasin_uid` (`magasin_uid`),
+  ADD KEY `fk_commandes_client_uid` (`client_uid`);
 
 --
 -- Index pour la table `commandes_details`
@@ -2534,6 +2873,23 @@ ALTER TABLE `factures_client`
 --
 ALTER TABLE `factures_fournisseur`
   ADD PRIMARY KEY (`uid`),
+  ADD UNIQUE KEY `uid` (`uid`),
+  ADD KEY `fk_fact_frnsr_frnsr_uid` (`fournisseur_uid`),
+  ADD KEY `fk_fact_frnsr_magasin_uid` (`magasin_uid`);
+
+--
+-- Index pour la table `factures_fournisseur_details`
+--
+ALTER TABLE `factures_fournisseur_details`
+  ADD PRIMARY KEY (`uid`),
+  ADD KEY `fk_factures_fournisseur_details_factures_fournisseur_uid_idx` (`facture_uid`),
+  ADD KEY `fk_factures_fournisseur_details_item_code` (`item_uid`);
+
+--
+-- Index pour la table `factures_fournisseur_old`
+--
+ALTER TABLE `factures_fournisseur_old`
+  ADD PRIMARY KEY (`uid`),
   ADD KEY `fk_factures_fournisseur_fournisseur_uid_idx` (`fournisseur_uid`),
   ADD KEY `fk_factures_fournisseur_commande_uid_idx` (`commande_uid`),
   ADD KEY `fk_factures_fournisseur_magasin_uid_idx` (`magasin_uid`);
@@ -2568,11 +2924,8 @@ ALTER TABLE `humans`
 -- Index pour la table `identifiables`
 --
 ALTER TABLE `identifiables`
-  ADD PRIMARY KEY (`num_serie`,`item_uid`,`in_outside_uid`),
-  ADD KEY `fk_identifiables_item_uid_idx` (`item_uid`),
-  ADD KEY `fk_identifiables_in_outside_uid_idx` (`in_outside_uid`),
-  ADD KEY `fk_identifiables_out_outside_uid_idx` (`out_outside_uid`),
-  ADD KEY `fk_identifiables_magasin_uid_idx` (`magasin_uid`);
+  ADD PRIMARY KEY (`item_code`,`num_serie`),
+  ADD KEY `fk_identifiables_magasin_uid` (`magasin_uid`);
 
 --
 -- Index pour la table `insides`
@@ -2613,6 +2966,7 @@ ALTER TABLE `items`
 --
 ALTER TABLE `magasins`
   ADD PRIMARY KEY (`uid`),
+  ADD UNIQUE KEY `uid` (`uid`),
   ADD KEY `fk_magasins_user_uid_idx` (`user_uid`);
 
 --
@@ -2742,6 +3096,12 @@ ALTER TABLE `smie`
 --
 ALTER TABLE `test`
   ADD PRIMARY KEY (`uid`);
+
+--
+-- Index pour la table `the_compamy`
+--
+ALTER TABLE `the_compamy`
+  ADD PRIMARY KEY (`raison_sociale`);
 
 --
 -- Index pour la table `tiers`
@@ -2881,7 +3241,7 @@ ALTER TABLE `arretes_wallet_electronic`
 -- AUTO_INCREMENT pour la table `avoirs_client`
 --
 ALTER TABLE `avoirs_client`
-  MODIFY `num_avoir` int(4) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `num_avoir` int(4) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT pour la table `avoirs_client_details`
@@ -2893,19 +3253,19 @@ ALTER TABLE `avoirs_client_details`
 -- AUTO_INCREMENT pour la table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT pour la table `commandes`
 --
 ALTER TABLE `commandes`
-  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
+  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=271;
 
 --
 -- AUTO_INCREMENT pour la table `commandes_details`
 --
 ALTER TABLE `commandes_details`
-  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
+  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=309;
 
 --
 -- AUTO_INCREMENT pour la table `credits`
@@ -2947,13 +3307,25 @@ ALTER TABLE `entries`
 -- AUTO_INCREMENT pour la table `factures_client`
 --
 ALTER TABLE `factures_client`
-  MODIFY `num_facture` int(5) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `num_facture` int(5) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+
+--
+-- AUTO_INCREMENT pour la table `factures_fournisseur`
+--
+ALTER TABLE `factures_fournisseur`
+  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT pour la table `factures_fournisseur_details`
+--
+ALTER TABLE `factures_fournisseur_details`
+  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT pour la table `familles`
 --
 ALTER TABLE `familles`
-  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT pour la table `insides`
@@ -2971,7 +3343,7 @@ ALTER TABLE `inside_details`
 -- AUTO_INCREMENT pour la table `items`
 --
 ALTER TABLE `items`
-  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT pour la table `magasins`
@@ -3013,7 +3385,7 @@ ALTER TABLE `test`
 -- AUTO_INCREMENT pour la table `tiers`
 --
 ALTER TABLE `tiers`
-  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
+  MODIFY `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 
 --
 -- AUTO_INCREMENT pour la table `tresos`
@@ -3072,7 +3444,7 @@ ALTER TABLE `wallets_electonic`
 --
 ALTER TABLE `affectations_achat`
   ADD CONSTRAINT `fk_affectations_achat_facture_commande_uid` FOREIGN KEY (`commande_uid`) REFERENCES `commandes` (`uid`),
-  ADD CONSTRAINT `fk_affectations_achat_facture_fournisseur_uid` FOREIGN KEY (`facture_fournisseur_uid`) REFERENCES `factures_fournisseur` (`uid`);
+  ADD CONSTRAINT `fk_affectations_achat_facture_fournisseur_uid` FOREIGN KEY (`facture_fournisseur_uid`) REFERENCES `factures_fournisseur_old` (`uid`);
 
 --
 -- Contraintes pour la table `arretes_banque`
@@ -3154,6 +3526,7 @@ ALTER TABLE `clients`
 -- Contraintes pour la table `commandes`
 --
 ALTER TABLE `commandes`
+  ADD CONSTRAINT `fk_commandes_client_uid` FOREIGN KEY (`client_uid`) REFERENCES `clients` (`uid`),
   ADD CONSTRAINT `fk_commandes_magasin_uid` FOREIGN KEY (`magasin_uid`) REFERENCES `magasins` (`uid`),
   ADD CONSTRAINT `fk_commandes_user_uid` FOREIGN KEY (`user_uid`) REFERENCES `users` (`uid`);
 
@@ -3220,6 +3593,20 @@ ALTER TABLE `factures_client`
 -- Contraintes pour la table `factures_fournisseur`
 --
 ALTER TABLE `factures_fournisseur`
+  ADD CONSTRAINT `fk_fact_frnsr_frnsr_uid` FOREIGN KEY (`fournisseur_uid`) REFERENCES `fournisseurs` (`uid`),
+  ADD CONSTRAINT `fk_fact_frnsr_magasin_uid` FOREIGN KEY (`magasin_uid`) REFERENCES `magasins` (`uid`);
+
+--
+-- Contraintes pour la table `factures_fournisseur_details`
+--
+ALTER TABLE `factures_fournisseur_details`
+  ADD CONSTRAINT `fk_factures_fournisseur_details_item_code` FOREIGN KEY (`item_uid`) REFERENCES `items` (`code`),
+  ADD CONSTRAINT `fk_factures_fournisseur_factures_fournisseur_uid_idx` FOREIGN KEY (`facture_uid`) REFERENCES `factures_fournisseur` (`uid`);
+
+--
+-- Contraintes pour la table `factures_fournisseur_old`
+--
+ALTER TABLE `factures_fournisseur_old`
   ADD CONSTRAINT `fk_factures_fournisseur_commande_uid` FOREIGN KEY (`commande_uid`) REFERENCES `commandes` (`uid`),
   ADD CONSTRAINT `fk_factures_fournisseur_fournisseur_uid` FOREIGN KEY (`fournisseur_uid`) REFERENCES `fournisseurs` (`uid`),
   ADD CONSTRAINT `fk_factures_fournisseur_magasin_uid` FOREIGN KEY (`magasin_uid`) REFERENCES `magasins` (`uid`),
@@ -3248,10 +3635,8 @@ ALTER TABLE `humans`
 -- Contraintes pour la table `identifiables`
 --
 ALTER TABLE `identifiables`
-  ADD CONSTRAINT `fk_identifiables_in_outside_uid` FOREIGN KEY (`in_outside_uid`) REFERENCES `outsides` (`uid`),
-  ADD CONSTRAINT `fk_identifiables_item_uid` FOREIGN KEY (`item_uid`) REFERENCES `magasins` (`uid`),
-  ADD CONSTRAINT `fk_identifiables_magasin_uid` FOREIGN KEY (`magasin_uid`) REFERENCES `magasins` (`uid`),
-  ADD CONSTRAINT `fk_identifiables_out_outside_uid` FOREIGN KEY (`out_outside_uid`) REFERENCES `outsides` (`uid`);
+  ADD CONSTRAINT `fk_identifiables_item_code` FOREIGN KEY (`item_code`) REFERENCES `items` (`code`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_identifiables_magasin_uid` FOREIGN KEY (`magasin_uid`) REFERENCES `magasins` (`uid`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `insides`

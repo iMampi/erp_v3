@@ -5,18 +5,23 @@ use Database\Bindings;
 use Database\DbHandler;
 use Converter\UpdateStock;
 use Converter\UpdateIdentifiable;
+
+
 use function Session\can_create;
 
 use Database\StandardPreparedStatement;
 use Converter\NewFactureFournisseurHeader;
 use Converter\NewFactureFournisseurItem;
 use Converter\NewIdentifiable;
+use Database\Special\PrepareCommandeItems;
+
+
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 
 session_start();
 
-require_once $_SERVER["DOCUMENT_ROOT"] . "/utilities/check_identifiables.php";
+// require_once $_SERVER["DOCUMENT_ROOT"] . "/utilities/check_identifiables.php";
 
 
 if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("facture_fournisseur"))) {
@@ -28,48 +33,51 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("facture_fournisseur")
     $conn->begin_transaction();
 
 
-    $stock_to_check = [];
-    $identifiables_to_check = [];
+    // $stock_to_check = [];
+    // $identifiables_to_check = [];
+    $preparation = new PrepareCommandeItems($data["items"]);
+    $preparation->prepare_identifiables();
+    $preparation->check_stocks();
+    // // group quantities for easy stock checking
+    // foreach ($data["items"] as $array_values) {
+    //     // stockable?
+    //     if ($array_values[7]) {
+    //         if ($array_values[2] == 0) {
+    //             continue;
+    //         }
+    //         // item alredy listed?
+    //         if (!array_key_exists($array_values[1], $stock_to_check)) {
+    //             $stock_to_check[$array_values[1]] = 0;
+    //         }
+    //         $stock_to_check[$array_values[1]] += $array_values[2];
+    //         // identifiable? 
+    //         if ($array_values[6]) {
 
-    // group quantities for easy stock checking
-    foreach ($data["items"] as $array_values) {
-        // stockable?
-        if ($array_values[7]) {
-            if ($array_values[2] == 0) {
-                continue;
-            }
-            // item alredy listed?
-            if (!array_key_exists($array_values[1], $stock_to_check)) {
-                $stock_to_check[$array_values[1]] = 0;
-            }
-            $stock_to_check[$array_values[1]] += $array_values[2];
-            // identifiable? 
-            if ($array_values[6]) {
-
-                // item already listed?
-                if (!array_key_exists($array_values[1], $identifiables_to_check)) {
-                    $identifiables_to_check[$array_values[1]] = [];
-                }
-                // num-serie already listed?
-                if (!in_array($array_values[4], $identifiables_to_check[$array_values[1]])) {
-                    $identifiables_to_check[$array_values[1]][] = $array_values[4];
-                    $test = check_identifiables($array_values[1], $array_values[4]);
-                    if ($test[0] === false) {
-                        print(json_encode($test));
-                        return;
-                    }
-                } else {
-                    print(json_encode([false, [["num serie double//" . $array_values[4]]]]));
-                    return;
-                }
-            }
-        }
-    }
+    //             // item already listed?
+    //             if (!array_key_exists($array_values[1], $identifiables_to_check)) {
+    //                 $identifiables_to_check[$array_values[1]] = [];
+    //             }
+    //             // num-serie already listed?
+    //             if (!in_array($array_values[4], $identifiables_to_check[$array_values[1]])) {
+    //                 $identifiables_to_check[$array_values[1]][] = $array_values[4];
+    //                 $test = check_identifiables($array_values[1], $array_values[4]);
+    //                 if ($test[0] === false) {
+    //                     print(json_encode($test));
+    //                     return;
+    //                 }
+    //             } else {
+    //                 print(json_encode([false, [["num serie double//" . $array_values[4]]]]));
+    //                 return;
+    //             }
+    //         }
+    //     }
+    // }
 
 
     // treating headers
     // saving general details order and getting new order uid
     $NewObj = new NewFactureFournisseurHeader($data["header"]);
+
 
     $Query1 = new Queries("save_new_facture_fournisseur");
     $Binding = new Bindings($NewObj);
@@ -84,7 +92,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("facture_fournisseur")
         print(json_encode($temp_array_result));
         return;
     } else {
-        //saving itemrow with the new order uid
+        //success:saving itemrow with the new order uid
         $new_commande_uid = $temp_array_result[1][0][0];
 
         try {
@@ -114,7 +122,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("facture_fournisseur")
 
         //updating stock quantity for facture effectively created with no problem
         try {
-            foreach ($stock_to_check as $item_code => $quantity) {
+            foreach ($preparation->stock_to_check as $item_code => $quantity) {
                 if ($quantity == 0) {
                     continue;
                 }
@@ -132,9 +140,9 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("facture_fournisseur")
         }
         //entering new identifiables
         try {
-            foreach ($identifiables_to_check as $item_code => $num_serie_array) {
+            foreach ($preparation->identifiables_to_check as $item_code => $num_serie_array) {
                 foreach ($num_serie_array as $num_serie) {
-                    $NewIdentifiabletockObj = new NewIdentifiable(["item-code" => $item_code, "num-serie" => $num_serie, "actif" => 1, "magasin-uid" => $data["header"]["magasin"]]);
+                    $NewIdentifiabletockObj = new NewIdentifiable(["item-code" => $item_code, "num-serie" => $num_serie, "actif" => 1, "magasin-uid" => $data["header"]["magasin"], "ref_in" => $new_commande_uid]);
                     $Query5 = new Queries("save_new_identifiable");
                     $Binding5 = new Bindings($NewIdentifiabletockObj);
                     $Statement5 = new StandardPreparedStatement($Query5, $Binding5);
@@ -143,7 +151,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("facture_fournisseur")
             }
         } catch (\Throwable $th) {
             $conn->rollback();
-            //error while updating stock quantity
+            //error while updating identifiable
             print("error06 " . $th);
             return;
         }

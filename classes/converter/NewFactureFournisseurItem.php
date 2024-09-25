@@ -32,7 +32,7 @@ class NewFactureFournisseurItem extends NewCommandeItem
         unset($this->data_from_user["commande_initial_uid"]);
         unset($this->data_from_user["commande_uid"]);
 
-        $this->data_for_db["return_item"] = $input[8];
+        $this->data_for_db["sortie_stock"] = $input[8];
 
         $this->data_for_db["facture_uid"] = $input[9];
     }

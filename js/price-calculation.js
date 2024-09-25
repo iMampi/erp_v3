@@ -48,9 +48,13 @@ function updateDiscountFromRemiseMontant(remisetauxinput, remisemontantinput, tt
 }
 
 
-function updateItemRowTotalPrice(rowNode) {
+function updateItemRowTotalPrice(rowNode, positive = true) {
+    let positiver = 1;
+    if (!positive) {
+        positiver = -1
+    }
     setInputValue(rowNode.querySelector("#item-prix-total"), AutoNumeric.format(
-        calculateItemRowTotalPrice(rowNode),
+        calculateItemRowTotalPrice(rowNode) * positiver,
         defaultAutoNumericOptions));
 
 }

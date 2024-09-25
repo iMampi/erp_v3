@@ -1,17 +1,6 @@
-<br />
-<font size='1'><table class='xdebug-error xe-warning' dir='ltr' border='1' cellspacing='0' cellpadding='1'>
-<tr><th align='left' bgcolor='#f57900' colspan="5"><span style='background-color: #cc0000; color: #fce94f; font-size: x-large;'>( ! )</span> Warning: Undefined array key "uid" in C:\xampp\htdocs\mymanager.local\database\select\one_facture_fournisseur_details.php on line <i>33</i></th></tr>
-<tr><th align='left' bgcolor='#e9b96e' colspan='5'>Call Stack</th></tr>
-<tr><th align='center' bgcolor='#eeeeec'>#</th><th align='left' bgcolor='#eeeeec'>Time</th><th align='left' bgcolor='#eeeeec'>Memory</th><th align='left' bgcolor='#eeeeec'>Function</th><th align='left' bgcolor='#eeeeec'>Location</th></tr>
-<tr><td bgcolor='#eeeeec' align='center'>1</td><td bgcolor='#eeeeec' align='center'>0.4293</td><td bgcolor='#eeeeec' align='right'>419048</td><td bgcolor='#eeeeec'>{main}(  )</td><td title='C:\xampp\htdocs\mymanager.local\database\select\one_facture_fournisseur_details.php' bgcolor='#eeeeec'>...\one_facture_fournisseur_details.php<b>:</b>0</td></tr>
-</table></font>
-[true,"no match"]<br />
-<font size='1'><table class='xdebug-error xe-uncaught-exception' dir='ltr' border='1' cellspacing='0' cellpadding='1'>
-<tr><th align='left' bgcolor='#f57900' colspan="5"><span style='background-color: #cc0000; color: #fce94f; font-size: x-large;'>( ! )</span> Fatal error: Uncaught mysqli_sql_exception: Table 'erpv2.view_all_factures_fournisseur_details' doesn't exist in C:\xampp\htdocs\mymanager.local\classes\database\DbHandler.php on line <i>95</i></th></tr>
-<tr><th align='left' bgcolor='#f57900' colspan="5"><span style='background-color: #cc0000; color: #fce94f; font-size: x-large;'>( ! )</span> mysqli_sql_exception: Table 'erpv2.view_all_factures_fournisseur_details' doesn't exist in C:\xampp\htdocs\mymanager.local\classes\database\DbHandler.php on line <i>95</i></th></tr>
-<tr><th align='left' bgcolor='#e9b96e' colspan='5'>Call Stack</th></tr>
-<tr><th align='center' bgcolor='#eeeeec'>#</th><th align='left' bgcolor='#eeeeec'>Time</th><th align='left' bgcolor='#eeeeec'>Memory</th><th align='left' bgcolor='#eeeeec'>Function</th><th align='left' bgcolor='#eeeeec'>Location</th></tr>
-<tr><td bgcolor='#eeeeec' align='center'>1</td><td bgcolor='#eeeeec' align='center'>0.4293</td><td bgcolor='#eeeeec' align='right'>419048</td><td bgcolor='#eeeeec'>{main}(  )</td><td title='C:\xampp\htdocs\mymanager.local\database\select\one_facture_fournisseur_details.php' bgcolor='#eeeeec'>...\one_facture_fournisseur_details.php<b>:</b>0</td></tr>
-<tr><td bgcolor='#eeeeec' align='center'>2</td><td bgcolor='#eeeeec' align='center'>0.4658</td><td bgcolor='#eeeeec' align='right'>695048</td><td bgcolor='#eeeeec'>Database\DbHandler::execute_prepared_statement( <span>$prepared_statement = </span><span>class Database\StandardPreparedStatement { public string $query = &#39;select * from view_all_factures_fournisseur_details where facture_uid=?&#39;; public array $binding = [0 =&gt; &#39;i&#39;, 1 =&gt; 12] }</span>, <span>$fetch_mode = </span><span>1</span> )</td><td title='C:\xampp\htdocs\mymanager.local\database\select\one_facture_fournisseur_details.php' bgcolor='#eeeeec'>...\one_facture_fournisseur_details.php<b>:</b>45</td></tr>
-<tr><td bgcolor='#eeeeec' align='center'>3</td><td bgcolor='#eeeeec' align='center'>0.4658</td><td bgcolor='#eeeeec' align='right'>704544</td><td bgcolor='#eeeeec'><a href='http://www.php.net/mysqli-stmt.prepare' target='_new'>prepare</a>( <span>$query = </span><span>&#39;select * from view_all_factures_fournisseur_details where facture_uid=?&#39;</span> )</td><td title='C:\xampp\htdocs\mymanager.local\classes\database\DbHandler.php' bgcolor='#eeeeec'>...\DbHandler.php<b>:</b>95</td></tr>
-</table></font>
+error06 TypeError: trim(): Argument #1 ($string) must be of type string, int given in C:\xampp\htdocs\mymanager.local\classes\converter\NewIdentifiable.php:27
+Stack trace:
+#0 C:\xampp\htdocs\mymanager.local\classes\converter\NewIdentifiable.php(27): trim(16)
+#1 C:\xampp\htdocs\mymanager.local\classes\converter\NewIdentifiable.php(12): Converter\NewIdentifiable->converter_for_db()
+#2 C:\xampp\htdocs\mymanager.local\database\save\new_facture_fournisseur.php(145): Converter\NewIdentifiable->__construct(Array)
+#3 {main}
