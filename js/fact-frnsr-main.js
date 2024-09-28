@@ -1531,7 +1531,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     setInputValue(montantTTCApresRemiseInputNew, calculateTTC(montantHTApresRemiseInputNew, TVAApresRemiseInputNew));
 
                     // TODO : deal with the fact that when mode is avoir, the total ttc will be negeative
-                    if (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) > 0) {
+                    let testTotal = {
+                        "facture": (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) > 0),
+                        "avoir": (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) < 0)
+                    };
+                    if (testTotal[modeFacture]) {
                         modalFactureNew.querySelector("#btn-save-new").disabled = false;
                     } else {
                         modalFactureNew.querySelector("#btn-save-new").disabled = true;
@@ -1543,7 +1547,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-                    if (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) > 0) {
+                    let testTotal = {
+                        "facture": (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) > 0),
+                        "avoir": (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) < 0)
+                    };
+                    if (testTotal[modeFacture]) {
                         modalFactureNew.querySelector("#btn-save-new").disabled = false;
                         modalFactureNew.querySelector("#btn-validate-new").disabled = false;
                     } else {
@@ -1604,7 +1612,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 setInputValue(montantTTCApresRemiseInputNew, calculateTTC(montantHTApresRemiseInputNew, TVAApresRemiseInputNew));
 
 
-                if (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) > 0) {
+                let testTotal = {
+                    "facture": (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) > 0),
+                    "avoir": (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) < 0)
+                };
+                if (testTotal[modeFacture]) {
                     modalFactureNew.querySelector("#btn-save-new").disabled = false;
                     // modalFactureNew.querySelector("#btn-validate-new").disabled = false;
                 } else {
@@ -1737,7 +1749,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-                if (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) > 0) {
+                let testTotal = {
+                    "facture": (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) > 0),
+                    "avoir": (AutoNumeric.getNumber(montantTTCApresRemiseInputNew) < 0)
+                };
+                if (testTotal[modeFacture]) {
                     modalFactureNew.querySelector("#btn-save-new").disabled = false;
                 } else {
                     modalFactureNew.querySelector("#btn-save-new").disabled = true;

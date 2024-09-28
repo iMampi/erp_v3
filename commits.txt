@@ -1355,4 +1355,7 @@ avec tvaflag, tva variable, update price...
 implemented modeFacture;
 rewrote updateTotalPriceHT() to add a flag to return postive or negative value;
 updated all "// *update max for remiseMontantInput";
-
+-------------------------
+170_an:
+le bouton sauvegarder reste disabled meme total est la...je sais, cést parce que la condition est "total > 0". 
+alors que quand c'est un avoir, le total est negatif : c'est réglé!!
