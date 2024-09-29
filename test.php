@@ -1,25 +1,22 @@
 <?php
-// phpinfo();
-$test = 666;
-echo "32";
-?>
-<select class="nd input form-control form-control-sm input state" id="state" disabled>
-    <option value="1" >encours</option>
-    <option value="0">annulé</option>
-    <option value="2">validé</option>
-</select>
-<?php
-set_error_handler(function () { /* ignore errors */
-});
-dns_get_record();
-restore_error_handler();
-try {
-//code...
-echo $love;
-throw new Exception("this is x debg test", 1);;
-} catch (\Exception $th) {
-//throw $th;
-}
+phpinfo();
+// $test = 666;
+// echo "32";
+// 
+
+
+// <?php
+// set_error_handler(function () { /* ignore errors */
+// });
+// dns_get_record();
+// restore_error_handler();
+// try {
+// //code...
+// echo $love;
+// throw new Exception("this is x debg test", 1);;
+// } catch (\Exception $th) {
+// //throw $th;
+// }
 
 
 

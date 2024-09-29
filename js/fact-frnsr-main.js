@@ -617,6 +617,7 @@ function grabCommandeDataForm(modal) {
             console.log("ehrror : " + error);
         }
     });
+    data["header"]["mode"] = modeFacture;
 
     // console.log(tableBodyRows);
     tableBodyRows.forEach(row => {
@@ -629,12 +630,9 @@ function grabCommandeDataForm(modal) {
         let libelle = row.querySelector("#item-libelle").value;
         let identifiable = row.querySelector("#identifiable").value;
         let stockable = row.querySelector("#stockable").value;
-        let sortieStock = null;
-        try {
-            sortieStock = row.querySelector("#sortie-stock").value;
-        } catch (error) {
-            console.log("sortie-stock does not exist");
-        }
+        let sortieStock = getInputValue(row.querySelector("#sortie-stock"));
+
+
 
         data["items"].push([rowID, itemID, quantity, prixUnitaire, numSerie, libelle, identifiable, stockable, sortieStock]);
     });

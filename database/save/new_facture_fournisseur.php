@@ -127,7 +127,11 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("facture_fournisseur")
                     continue;
                 }
                 $UpdateStockObj = new UpdateStock(["code" => $item_code, "quantity" => $quantity]);
-                $Query4 = new Queries("update_stock_add");
+                $queries_name = [
+                    "facture" => "update_stock_add",
+                    "avoir" => "update_stock_sub"
+                ];
+                $Query4 = new Queries($queries_name[$data["header"]["mode"]]);
                 $Binding4 = new Bindings($UpdateStockObj);
                 $Statement4 = new StandardPreparedStatement($Query4, $Binding4);
                 $temp_array_stock_update = DbHandler::execute_prepared_statement($Statement4, MYSQLI_NUM);

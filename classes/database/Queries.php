@@ -368,7 +368,7 @@ class Queries
         select new_facture_client (?,?)
         ";
     static public $save_new_facture_fournisseur = "
-        select new_facture_fournisseur (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+        select new_facture_fournisseur (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
         ";
     static public $save_new_avoir_client = "
         select new_avoir_client (?,?,?,?)

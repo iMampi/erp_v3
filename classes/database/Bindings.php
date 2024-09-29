@@ -141,7 +141,7 @@ class Bindings
             ];
         } else if ($this->converter::class == "Converter\NewFactureFournisseurHeader") {
             $this->binding = [
-                'isssiiiiddddddd',
+                'isssiiiiddddddds',
                 $arr["fournisseur_uid"],
                 $arr["num_facture"],
                 $arr["date"],
@@ -156,7 +156,8 @@ class Bindings
                 $arr["remise_montant"],
                 $arr["total_ht_apres_remise"],
                 $arr["tva_apres_remise"],
-                $arr["total_ttc_apres_remise"]
+                $arr["total_ttc_apres_remise"],
+                $arr["mode"]
             ];
         } else if ($this->converter::class == "Converter\NewFactureClient") {
             $this->binding = [

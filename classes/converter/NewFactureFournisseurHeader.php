@@ -57,5 +57,7 @@ class NewFactureFournisseurHeader extends Converter
         $this->data_for_db["total_ttc_apres_remise"] = \array_key_exists("totalTTC-apres-remise", $input) ? \floatval($input["totalTTC-apres-remise"]) != "" ?  \floatval($input["totalTTC-apres-remise"]) : 0 : 0;
 
         $this->data_for_db["tva_apres_remise"] = \array_key_exists("tva-apres-remise", $input) ? \floatval($input["tva-apres-remise"]) != "" ?  \floatval($input["tva-apres-remise"]) : 0 : 0;
+
+        $this->data_for_db["mode"] = \array_key_exists("mode", $input) ? \trim($input["mode"]) != "" ?  \trim($input["mode"]) : "" : "";
     }
 }

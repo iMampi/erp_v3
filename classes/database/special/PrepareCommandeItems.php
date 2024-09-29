@@ -24,7 +24,7 @@ class PrepareCommandeItems
     {
         foreach ($this->row_items as $array_values) {
             // stockable?
-            if ($array_values[7]) {
+            if ($array_values[7] && $array_values[8]) {
                 if ($array_values[2] == 0) {
                     continue;
                 }
@@ -32,6 +32,7 @@ class PrepareCommandeItems
                 if (!array_key_exists($array_values[1], $this->stock_to_check)) {
                     $this->stock_to_check[$array_values[1]] = 0;
                 }
+                // add to quantity
                 $this->stock_to_check[$array_values[1]] += $array_values[2];
                 // identifiable? 
                 if ($array_values[6]) {

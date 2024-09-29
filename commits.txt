@@ -1359,3 +1359,12 @@ updated all "// *update max for remiseMontantInput";
 170_an:
 le bouton sauvegarder reste disabled meme total est la...je sais, cést parce que la condition est "total > 0". 
 alors que quand c'est un avoir, le total est negatif : c'est réglé!!
+-------------------------
+171_an:
+updated database structure.
+updated new_facture_fournisseur.php to handle update stock (add or sub) depending on facture or avoir.
+updated Queries.
+updated Binding.
+updated NewFactureFournisseurHeader.
+
+updating grabCommandeDataForm() : the value is null, empty. it should not. should be true or false. : used getInputValue() instead : fixed.
