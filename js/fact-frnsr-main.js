@@ -120,7 +120,6 @@ const InputsDisabledByDefaultCommandeNewFormArray = [
     'uid',
     "state",
     "commercial",
-    "date",
     "totalHT-avant-remise",
     "TVA-avant-remise",
     "totalTTC-avant-remise",
@@ -509,6 +508,24 @@ function defaultButtons(modal) {
     });
 }
 
+function generateRowTable(nodeModel, DataObj) {
+    //MARQUE PAGE
+    console.log(DataObj);
+
+    let newNode = nodeModel.cloneNode(true);
+    newNode.id = "row-" + DataObj["num-facture"];
+
+    // TODO : use a dto or something
+    newNode.querySelector(".num-facture.input").value = DataObj["num-facture"];
+    newNode.querySelector("input.date").value = DataObj["date"];
+    newNode.querySelector(".fournisseur.input").value = DataObj["fournisseur"];
+
+    newNode.querySelector(".total.input").value = AutoNumeric.format(parseFloat(DataObj["totalTTC-apres-remise"]), defaultAutoNumericOptions);
+
+    // newNode.querySelector(".payment.input").value = DataObj["payment"] || "impayé";
+
+    return newNode;
+}
 
 function cleanNewForm(modal, disable = false) {
     console.log("cleaning");
@@ -1135,13 +1152,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     // insert uid of newly created facture client
                     console.log("result va");
                     console.log(result);
-                    dataModalNew["header"]["num-facture"] = result[1][0];
+                    // dataModalNew["header"]["num-facture"] = result[1][0];
                     dataModalNew["header"]["state"] = 1;
                     // console.log(dataObj);
                     // TODO : cache html
 
                     fetch(
-                        "/elements/facts_frnsr/facture_frnsr_table_details_base.html"
+                        "/elements/facts_frnsr/liste_facts_frnsr_table_001_base.html"
                     )
                         .then((response) => {
                             let tt = response.text();

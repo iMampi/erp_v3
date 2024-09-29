@@ -1368,3 +1368,9 @@ updated Binding.
 updated NewFactureFournisseurHeader.
 
 updating grabCommandeDataForm() : the value is null, empty. it should not. should be true or false. : used getInputValue() instead : fixed.
+-------------------------
+172_an:
+
+added generateRowTable();
+remove "date" from InputsDisabledByDefaultCommandeNewFormArray;
+
