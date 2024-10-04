@@ -20,7 +20,7 @@ class PrepareCommandeItems
         // $this->identifiables_to_check = [];
     }
 
-    public function prepare_identifiables()
+    public function prepare_stockables_and_identifiables()
     {
         foreach ($this->row_items as $array_values) {
             // stockable?

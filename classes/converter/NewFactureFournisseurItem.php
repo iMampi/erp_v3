@@ -23,6 +23,7 @@ class NewFactureFournisseurItem extends NewCommandeItem
         // ]
         $this->converter_for_db();
     }
+
     public function converter_for_db()
     {
         parent::converter_for_db();
@@ -35,5 +36,9 @@ class NewFactureFournisseurItem extends NewCommandeItem
         $this->data_for_db["sortie_stock"] = $input[8];
 
         $this->data_for_db["facture_uid"] = $input[9];
+
+        if (isset($input[10]) && $input[10] == "avoir") {
+            $this->data_for_db["prix_total"] = $this->data_for_db["prix_total"] * -1;
+        }
     }
 }

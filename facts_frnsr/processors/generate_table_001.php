@@ -51,6 +51,7 @@ foreach ($all_factures_fournisseur_header_limit as $el) {
             $option_ = $xpath->query(".//*[(@value='" . $el["state"] . "')]", $el_input);
             $option_[0]->setAttribute("selected", "true");
         }
+        $row_counter += 1;
     }
 }
 echo utf8_decode($dom->saveHTML($dom->documentElement));

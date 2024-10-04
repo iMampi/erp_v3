@@ -36,7 +36,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("facture_fournisseur")
     // $stock_to_check = [];
     // $identifiables_to_check = [];
     $preparation = new PrepareCommandeItems($data["items"]);
-    $preparation->prepare_identifiables();
+    $preparation->prepare_stockables_and_identifiables();
     $preparation->check_stocks();
     // // group quantities for easy stock checking
     // foreach ($data["items"] as $array_values) {
@@ -101,7 +101,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("facture_fournisseur")
                     // quantity is zero
                     continue;
                 }
-                $ItemRowObj = new NewFactureFournisseurItem([...$array_values, $new_commande_uid]);
+                $ItemRowObj = new NewFactureFournisseurItem([...$array_values, $new_commande_uid, $data["header"]["mode"]]);
                 $Query2 = new Queries("save_new_facture_fournisseur_row");
                 $Binding = new Bindings($ItemRowObj);
                 $Statement = new StandardPreparedStatement($Query2, $Binding);

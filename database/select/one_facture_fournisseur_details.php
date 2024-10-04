@@ -19,9 +19,7 @@ new DbHandler();
 
 
 if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_visit("facture_fournisseur"))) {
-    // if (\true) {
     $data = json_decode(file_get_contents('php://input'), true);
-    // var_dump($data);
 
     $SelectOneObj = new SelectOneFactureFournisseur($data);
     // var_dump($NewClientObj);

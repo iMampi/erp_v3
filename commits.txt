@@ -1373,4 +1373,8 @@ updating grabCommandeDataForm() : the value is null, empty. it should not. shoul
 
 added generateRowTable();
 remove "date" from InputsDisabledByDefaultCommandeNewFormArray;
-
+-------------------------
+173_an:
+working on view fact details... :
+modified a ton of shit, i don't even remember. just look a git status.
+ca marche, mais il reste a corriger la generation de nouvel ligne dans le tableau. le mauvais facture-uid est mis...

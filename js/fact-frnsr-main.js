@@ -513,7 +513,8 @@ function generateRowTable(nodeModel, DataObj) {
     console.log(DataObj);
 
     let newNode = nodeModel.cloneNode(true);
-    newNode.id = "row-" + DataObj["num-facture"];
+    // newNode.id = "row-" + DataObj["facture-uid"];
+    newNode.id = DataObj["facture-uid"];
 
     // TODO : use a dto or something
     newNode.querySelector(".num-facture.input").value = DataObj["num-facture"];
@@ -549,6 +550,9 @@ function cleanNewForm(modal, disable = false) {
         }
         setInputValue(input, myValue);
     });
+    if (modal.id === "modal-facture-new") {
+        modal.querySelector("#mode-facture").checked = true;
+    }
 }
 
 async function DefaultModalCommandInputs(modal, min_row = 1) {
@@ -701,10 +705,19 @@ async function responseHandlerSelectOneFacture(response) {
 function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
     console.log("responseJSON : ");
     console.log(responseJSON);
-    valueObj = responseJSON["header"];
-    // valueObj["TVA-avant-remise"] = valueObj["total_ht_avant_remise"];
-    // valueObj["TVA-apres-remise"] = valueObj["total_ht_apres_remise"];
+    let valueObj = responseJSON["header"];
+    let negationableInputId = [
+        "totalHT-avant-remise",
+        "totalTTC-avant-remise",
+        "totalHT-apres-remise",
+        "totalTTC-apres-remise",
+        "TVA-avant-remise",
+        "TVA-apres-remise",
+        "remise-montant",
+    ]
 
+
+    // format value
     valueObj["TVA_avant_remise"] = AutoNumeric.format(parseFloat(valueObj["total_ttc_avant_remise"]) - parseFloat(valueObj["total_ht_avant_remise"]), defaultAutoNumericOptions);
     valueObj["TVA_apres_remise"] = AutoNumeric.format(valueObj["total_ttc_apres_remise"] - valueObj["total_ht_apres_remise"], defaultAutoNumericOptions);
 
@@ -721,6 +734,23 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
     //TODO : use a DTO>> TO DUPLICATE EVERYWHERE ELSE
     for (let index = 0; index < inputsElements.length; index++) {
         let element = inputsElements[index];
+
+        // console.log("elementid : " + element.id);
+        if (valueObj["mode"] == "avoir" && negationableInputId.includes(element.id)) {
+            AutoNumeric.getAutoNumericElement(element).update(
+                {
+                    minimumValue: -999999999999,
+                    maximumValue: 0,
+                })
+        } else if (valueObj["mode"] == "facture" && negationableInputId.includes(element.id)) {
+            AutoNumeric.getAutoNumericElement(element).update(
+                {
+                    minimumValue: 0,
+                    maximumValue: 999999999999,
+
+                })
+        }
+
         if (element.id === "fournisseur") {
             fillFournisseurButton(valueObj, element);
         }
@@ -731,7 +761,7 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
 
         } else {
             if (NUMBER_INPUT_HEADERS.includes(element.id)) {
-                if (element.id === "remise-montant") {
+                if (element.id === "remise-montant" && valueObj["mode"] == "facture") {
                     AutoNumeric.getAutoNumericElement(element).update({ maximumValue: AutoNumeric.unformat(valueObj["total_ttc_avant_remise"], defaultAutoNumericOptions) });
                 }
                 element.value = AutoNumeric.format(valueObj[DTO_FILL_INPUT_HEADERS[element.id]], defaultAutoNumericOptions);
@@ -749,7 +779,7 @@ function fillInputsDetailsHeaders(responseJSON, modalDetailsHeaders) {
     }
 }
 
-function fillInputsDetailsItemRow(arrayData, rowNode, mode = "view") {
+function fillInputsDetailsItemRow(arrayData, rowNode, mode = "view", modeF = "facture") {
     if (!["view", "new"].includes(mode)) {
         throw new Error("mode must be view or new.");
     }
@@ -774,7 +804,7 @@ function fillInputsDetailsItemRow(arrayData, rowNode, mode = "view") {
 
     }
 
-
+    // iterate through inputs field to fill them
     for (let k = 0; k < inputs.length; k++) {
         let input = inputs[k];
         try {
@@ -819,24 +849,24 @@ function disableInputsAndButtons(tableNode) {
     }
 }
 
-async function addItemRowsLoop(numberOfRows, modalDetailsItemsTable) {
+async function addItemRowsLoop(numberOfRows, modalDetailsItemsTable, modeF = "facture") {
     for (let i = 0; i < numberOfRows; ++i) {
         console.log("counterRowItem : " + counterRowItem);
         await addItem(modalDetailsItemsTable, 'view');
-        autonumericItemRow(modalDetailsItemsTable);
+        autonumericItemRow(modalDetailsItemsTable, modeF);
     }
     return new Promise((resolve, reject) => resolve(true));
 }
 
-async function fillInputsDetailsItems(itemsArray, modalDetailsItemsTable) {
+async function fillInputsDetailsItems(itemsArray, modalDetailsItemsTable, mode, modeF = "facture") {
 
     let numberOfRows = itemsArray.length;
-    await addItemRowsLoop(numberOfRows, modalDetailsItemsTable);
+    await addItemRowsLoop(numberOfRows, modalDetailsItemsTable, modeF);
     disableInputsAndButtons(modalDetailsItemsTable);
     let rowsToFill = modalDetailsItemsTable.querySelectorAll(".item-commande-row");
 
     for (let j = 0; j < numberOfRows; j++) {
-        fillInputsDetailsItemRow(itemsArray[j], rowsToFill[j]);
+        fillInputsDetailsItemRow(itemsArray[j], rowsToFill[j], mode, modeF);
 
     }
 }
@@ -888,7 +918,7 @@ function addItem(tableFactureBody, mode = "new") {
                 .then((txt) => {
                     // TODO : abstract this process
                     console.log("from fetch");
-                    console.log(txt);
+                    // console.log(txt);
                     counterRowItem++;
 
                     let doc = new DOMParser().parseFromString(
@@ -932,14 +962,14 @@ function addItem(tableFactureBody, mode = "new") {
 
 
 
-function autonumericItemRow(tableFactureBody) {
+function autonumericItemRow(tableFactureBody, modeF = "facture") {
     let currentRow = tableFactureBody.querySelector("#row-" + zeroLeftPadding(counterRowItem, 3, false));
     new AutoNumeric(currentRow.querySelector("#item-pu"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
     new AutoNumeric(currentRow.querySelector("#item-quantity"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
     new AutoNumeric(currentRow.querySelector("#item-prix-total"), [defaultAutoNumericOptions, { minimumValue: 0 }]);
-    if (modeFacture === "avoir") {
+    if (modeF === "avoir") {
         AutoNumeric.getAutoNumericElement(currentRow.querySelector("#item-prix-total")).update({ minimumValue: -999999999999 })
-    } else if (modeFacture === "facture") {
+    } else if (modeF === "facture") {
         AutoNumeric.getAutoNumericElement(currentRow.querySelector("#item-prix-total")).update({ minimumValue: 0 })
     }
 }
@@ -1120,8 +1150,10 @@ document.addEventListener("DOMContentLoaded", () => {
 		Êtes vous sûr de vouloir quitter ce formulaire?",
         yes: () => {
             bsModalFactureNew.hide();
+            switchMode("facture", modalFactureNew);
             DefaultModalCommandInputs(modalFactureNew);
             bsModalConfirmation.hide();
+
             modificationWatcher = false;
         },
         no: () => {
@@ -1152,8 +1184,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     // insert uid of newly created facture client
                     console.log("result va");
                     console.log(result);
-                    // dataModalNew["header"]["num-facture"] = result[1][0];
-                    dataModalNew["header"]["state"] = 1;
+                    dataModalNew["header"]["facture-uid"] = result[1][0];
+                    // dataModalNew["header"]["state"] = 1;
                     // console.log(dataObj);
                     // TODO : cache html
 
@@ -1178,9 +1210,11 @@ document.addEventListener("DOMContentLoaded", () => {
                                 generateRowTable(trModel, dataModalNew["header"])
                             );
                             bsModalFactureNew.hide();
+                            switchMode("facture", modalFactureNew);
                             DefaultModalCommandInputs(modalFactureNew);
                             bsModalConfirmation.hide();
                             console.log("yes saving called");
+                            modificationWatcher = false;
                             return false;
                         });
                     bsModalFactureNew.hide();
@@ -1207,18 +1241,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // caching data
         let parent = event.target.parentNode.parentNode;
-        // console.log("parent");
-        // console.log(parent);
         let myuid = parent.querySelector(".input.facture-uid").value;
-        // console.log("myuid tr");
-        // console.log(myuid);
-        // console.log("num-fact tr");
-        // console.log(parent.querySelector(".input.num-fact").value);
 
+        // ajax query
         sendData("/database/select/one_facture_fournisseur_details.php", {
             "facture-uid": myuid
         })
             .then((resp) => {
+                // format query result
                 console.log("shwodetail :");
                 console.log(resp);
                 return responseHandlerSelectOneFacture(resp);
@@ -1245,7 +1275,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     let inputsHeader = modalFactureDetails.querySelector("#modal-body-heads")
                     fillInputsDetailsHeaders(result[1], inputsHeader);
-                    fillInputsDetailsItems(result[1]["items"], modalFactureDetails.querySelector("#table-facture"), "view");
+                    fillInputsDetailsItems(result[1]["items"],
+                        modalFactureDetails.querySelector("#table-facture"),
+                        "view",
+                        result[1]["header"]["mode"]);
                 } else {
                     throw new Error(result);
                 }
@@ -1455,7 +1488,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         );
                     } else {
                         bsModalFactureNew.hide();
-                        defaultButtons(modalFactureNew)
+                        cleanNewForm(modalFactureNew, false);
+                        switchMode("facture", modalFactureNew);
+                        defaultButtons(modalFactureNew);
                     }
                 } else if (event.target.id === "btn-save-new") {
                     console.log("saving cliekede");
@@ -1579,7 +1614,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 event.target.parentNode.querySelector("#search-item").focus();
             } else if (event.target.id == "btn-add-item") {
                 addItem(tableItemsFactureNew).
-                    then(() => autonumericItemRow(tableItemsFactureNew)).
+                    then(() => autonumericItemRow(tableItemsFactureNew, modeFacture)).
                     then(() => modificationWatcher = true);
             } else if (event.target.classList.contains("btn-del")) {
                 removeItem(event.target, "target");
