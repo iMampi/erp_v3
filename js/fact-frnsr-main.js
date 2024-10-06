@@ -476,6 +476,7 @@ function formatFournisseurNameSearchResult(objectData) {
 
 
 function removeItem(target, mode) {
+    // remove a row of item
     console.log("remove me");
     if (mode === "target") {
         let rowId = target.parentNode.parentNode.remove();
@@ -487,6 +488,7 @@ function removeItem(target, mode) {
 }
 
 function removeItemRows(nodeList) {
+    // looop throught to remove all items
     if (nodeList.length === 0) {
         return false;
     }
@@ -517,6 +519,7 @@ function generateRowTable(nodeModel, DataObj) {
     newNode.id = DataObj["facture-uid"];
 
     // TODO : use a dto or something
+    newNode.querySelector(".facture-uid.input").value = DataObj["facture-uid"];
     newNode.querySelector(".num-facture.input").value = DataObj["num-facture"];
     newNode.querySelector("input.date").value = DataObj["date"];
     newNode.querySelector(".fournisseur.input").value = DataObj["fournisseur"];
@@ -1003,7 +1006,7 @@ function switchMode(myMode, modalFacture) {
 
     table.querySelectorAll("tr .input").forEach(element => {
         console.log("here here here");
-
+        // if ()
         if (element.id === "item-prix-total") {
             let _initialValue = AutoNumeric.getNumber(element);
             setInputValue(element, 0);
@@ -1150,8 +1153,9 @@ document.addEventListener("DOMContentLoaded", () => {
 		Êtes vous sûr de vouloir quitter ce formulaire?",
         yes: () => {
             bsModalFactureNew.hide();
-            switchMode("facture", modalFactureNew);
-            DefaultModalCommandInputs(modalFactureNew);
+            DefaultModalCommandInputs(modalFactureNew).then((res) => {
+                switchMode("facture", modalFactureNew);
+            });
             bsModalConfirmation.hide();
 
             modificationWatcher = false;
@@ -1210,8 +1214,10 @@ document.addEventListener("DOMContentLoaded", () => {
                                 generateRowTable(trModel, dataModalNew["header"])
                             );
                             bsModalFactureNew.hide();
-                            switchMode("facture", modalFactureNew);
-                            DefaultModalCommandInputs(modalFactureNew);
+                            DefaultModalCommandInputs(modalFactureNew).then((res) => {
+                                switchMode("facture", modalFactureNew);
+                            });
+
                             bsModalConfirmation.hide();
                             console.log("yes saving called");
                             modificationWatcher = false;

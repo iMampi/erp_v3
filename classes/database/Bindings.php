@@ -175,12 +175,13 @@ class Bindings
             ];
         } else if ($this->converter::class == "Converter\NewIdentifiable") {
             $this->binding = [
-                'ssiii',
+                'ssiiii',
                 $arr["item_code"],
                 $arr["num_serie"],
                 $arr["actif"],
                 $arr["magasin_uid"],
-                $arr["ref_in"]
+                $arr["ref_in"],
+                \null
             ];
         } else if (\in_array($this->converter::class, ["Converter\NewCommandeItem", "Converter\NewCommandeAvoirItem"])) {
             $this->binding = [
@@ -371,11 +372,16 @@ class Bindings
                 $arr["quantity"],
                 $arr["code"]
             ];
-        } elseif ($this->converter::class == "Converter\UpdateIdentifiable") {
+        } elseif ($this->converter::class == "Converter\UpdateIdentifiableIn") {
             $this->binding = [
                 'iss',
-                $arr["actif"],
                 $arr["ref_in"],
+                $arr["code"],
+                $arr["num_serie"]
+            ];
+        } elseif ($this->converter::class == "Converter\UpdateIdentifiableOut") {
+            $this->binding = [
+                'iss',
                 $arr["ref_out"],
                 $arr["code"],
                 $arr["num_serie"]

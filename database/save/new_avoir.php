@@ -87,7 +87,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("avoir_client"))) {
                     print("error03b");
                     exit;
                 }
-
+                // update identifiables
                 try {
                     if ($data["header"]["type"] === "1" && $ItemRowObj->data_for_db["identifiable"]) {
                         $UpdateIdentifiabletockObj = new UpdateIdentifiable(["code" => $ItemRowObj->data_for_db["item_uid"], "num_serie" => $ItemRowObj->data_for_db["num_serie"], "actif" => 1]);

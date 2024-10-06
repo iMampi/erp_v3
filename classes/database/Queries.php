@@ -414,7 +414,7 @@ class Queries
             ?)
         ";
 
-    static public $save_new_identifiable = " insert into identifiables values (?,?,?,?,?)";
+    static public $save_new_identifiable = " insert into identifiables values (?,?,?,?,?,?)";
     static public $check_item_stock = "
         select code, stock from items where code=?;
         ";

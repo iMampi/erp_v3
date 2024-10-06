@@ -4,15 +4,17 @@ use Database\Queries;
 use Database\Bindings;
 use Database\DbHandler;
 use Converter\UpdateStock;
-use Converter\UpdateIdentifiable;
+use Converter\NewIdentifiable;
 
 
 use function Session\can_create;
 
+use Converter\UpdateIdentifiable;
+use Converter\UpdateIdentifiableIn;
 use Database\StandardPreparedStatement;
-use Converter\NewFactureFournisseurHeader;
 use Converter\NewFactureFournisseurItem;
-use Converter\NewIdentifiable;
+use Converter\NewFactureFournisseurHeader;
+use Converter\UpdateIdentifiableOut;
 use Database\Special\PrepareCommandeItems;
 
 
@@ -142,22 +144,41 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (can_create("facture_fournisseur")
             print("error06 " . $th);
             return;
         }
-        //entering new identifiables
-        try {
-            foreach ($preparation->identifiables_to_check as $item_code => $num_serie_array) {
-                foreach ($num_serie_array as $num_serie) {
-                    $NewIdentifiabletockObj = new NewIdentifiable(["item-code" => $item_code, "num-serie" => $num_serie, "actif" => 1, "magasin-uid" => $data["header"]["magasin"], "ref_in" => $new_commande_uid]);
-                    $Query5 = new Queries("save_new_identifiable");
-                    $Binding5 = new Bindings($NewIdentifiabletockObj);
+
+        if ($data["header"]["mode"] == "facture") {
+            //entering new identifiables
+
+            try {
+                foreach ($preparation->identifiables_to_check as $item_code => $num_serie_array) {
+                    foreach ($num_serie_array as $num_serie) {
+                        $NewIdentifiabletockObj = new NewIdentifiable(["item-code" => $item_code, "num-serie" => $num_serie, "actif" => 1, "magasin-uid" => $data["header"]["magasin"], "ref_in" => $new_commande_uid]);
+                        $Query5 = new Queries("save_new_identifiable");
+                        $Binding5 = new Bindings($NewIdentifiabletockObj);
+                        $Statement5 = new StandardPreparedStatement($Query5, $Binding5);
+                        $temp_array_identifiable_update = DbHandler::execute_prepared_statement($Statement5, MYSQLI_NUM);
+                    }
+                }
+            } catch (\Throwable $th) {
+                $conn->rollback();
+                //error while updating identifiable
+                print("error09v " . $th);
+                return;
+            }
+        } elseif ($data["header"]["mode"] == "avoir") {
+            // updating identifiable to not active
+            try {
+                if ($ItemRowObj->data_for_db["sortie_stock"] && $ItemRowObj->data_for_db["identifiable"]) {
+                    $UpdateIdentifiabletockObj = new UpdateIdentifiableOut(["code" => $ItemRowObj->data_for_db["item_uid"], "num_serie" => $ItemRowObj->data_for_db["num_serie"], "actif" => 0]);
+                    $Query5 = new Queries("update_identifiable_out");
+                    $Binding5 = new Bindings($UpdateIdentifiabletockObj);
                     $Statement5 = new StandardPreparedStatement($Query5, $Binding5);
                     $temp_array_identifiable_update = DbHandler::execute_prepared_statement($Statement5, MYSQLI_NUM);
                 }
+            } catch (\Throwable $th) {
+                $conn->rollback();
+                print("error03c");
+                exit;
             }
-        } catch (\Throwable $th) {
-            $conn->rollback();
-            //error while updating identifiable
-            print("error06 " . $th);
-            return;
         }
     }
     $conn->commit();

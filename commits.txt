@@ -1378,3 +1378,13 @@ remove "date" from InputsDisabledByDefaultCommandeNewFormArray;
 working on view fact details... :
 modified a ton of shit, i don't even remember. just look a git status.
 ca marche, mais il reste a corriger la generation de nouvel ligne dans le tableau. le mauvais facture-uid est mis...
+-------------------------
+174_an:
+la generation de nouvel ligne dans le tableau. le mauvais facture-uid est mis... : fixed.
+there was another bug. problem of synhronicity with the DefaultModalCommandInputs and switchMode : fixed by implementing then.
+working on making sortie-stock visible on view mode ...
+working on identifiables management...
+
+process for identifiables:
+create a facture fournisseur with identifiable works. all works.
+updated class Bindings, updated new_facture_fournisseur.php, updated class Queries.
