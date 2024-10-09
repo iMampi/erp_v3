@@ -1388,3 +1388,11 @@ working on identifiables management...
 process for identifiables:
 create a facture fournisseur with identifiable works. all works.
 updated class Bindings, updated new_facture_fournisseur.php, updated class Queries.
+-------------------------
+175_an:
+working on making sortie-stock visible on view mode ...
+working on identifiables management...
+    when mode avoir fournisseur, make the numerie serie field change to btn-select...:
+        created the template button_select_dropdown_template.html.
+        creating the logic to add and replace simple input text to button select dropdown
+        >> switcht and replacing simple input with btn-dropdown works.

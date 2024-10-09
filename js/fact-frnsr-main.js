@@ -985,7 +985,44 @@ function generateRowItem(nodeModel, DataObj) {
     return newNode;
 }
 
-function switchMode(myMode, modalFacture) {
+async function fetchModelNode(url) {
+    let resp = await fetch(url);
+    let text = await resp.text();
+    return text;
+}
+
+function createButtonDropdown(btnId, btnDefaultText, dropdownId, searchId, nodeModel) {
+    // await nodeModel
+    nodeModel.querySelector(".dropdown-toggle").id = btnId;
+    nodeModel.querySelector(".dropdown-toggle").classList.add(btnId);
+    nodeModel.querySelector(".dropdown-toggle").textContent = btnDefaultText;
+    nodeModel.querySelector(".dropdown-menu").id = dropdownId;
+    nodeModel.querySelector(".search-input").id = searchId;
+
+    return nodeModel;
+}
+
+function createSimpleTextInput(inputId, classListArray, disabled) {
+    // TODO : add global caching
+    let str_node = "<input type=\"text\" class=\" form-control form-control-sm  input fillable \" disabled>";
+    let node = new DOMParser().parseFromString(
+        str_node,
+        "text/html"
+    );
+    classListArray.forEach(_class => {
+        node.classList.add(_class)
+    });
+    node.setAttribute("id", inputId);
+    node.disabled = disabled;
+    return node
+}
+
+function switchInputType(targetContainer, replacementNode) {
+    targetContainer.removeChild(targetContainer.firstChild);
+    targetContainer.appendChild(replacementNode);
+}
+
+async function switchMode(myMode, modalFacture) {
     let table = modalFacture.querySelector("#table-facture");
     if (!["avoir", "facture"].includes(myMode)) {
         throw new Error("myMode must be avoir or facture.");
@@ -1003,6 +1040,61 @@ function switchMode(myMode, modalFacture) {
             console.log("hide me");
         }
     });
+
+    let node_button;
+    let itemNumSerieID = "item-num-serie";
+    // creating btn dropdown num_serie
+    if (myMode === "avoir") {
+        if (myCache[itemNumSerieID + "_button"]) {
+            // check if cached 
+            console.log("cached");
+
+            let doc = new DOMParser().parseFromString(
+                myCache[itemNumSerieID + "_button"],
+                "text/html"
+            );
+
+            node_button = createButtonDropdown(itemNumSerieID, "...", "num-serie-dropdown", "search-num-serie", doc);
+            node_button = node_button.querySelector(".btn-dropdown-container");
+
+
+        } else {
+            let txt_node = await fetchModelNode("/elements/button_select_dropdown_template.html");
+            let doc = new DOMParser().parseFromString(
+                txt_node,
+                "text/html"
+            );
+
+            console.log("doc");
+            // console.log(doc);
+
+            node_button = createButtonDropdown(itemNumSerieID, "...", "num-serie-dropdown", "search-num-serie", doc);
+
+            // caching
+            myCache[itemNumSerieID + "_button"] = doc.body.innerHTML;
+
+            node_button = node_button.querySelector(".btn-dropdown-container");
+            console.log("node_button");
+            // console.log(node_button);
+        }
+
+    }
+
+
+    table.querySelectorAll(".td-item-num-serie").forEach(
+        td => {
+            if (myMode === "avoir") {
+                console.log("change to btn drop");
+
+                td.removeChild(td.firstChild);
+
+                switchInputType(td, node_button);
+                td.querySelector("#item-num-serie").disabled = false;
+
+            }
+        }
+    )
+
 
     table.querySelectorAll("tr .input").forEach(element => {
         console.log("here here here");

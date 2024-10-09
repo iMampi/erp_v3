@@ -67,10 +67,8 @@ is_logged();
             <!-- TABLEAU -->
             <!-- FIXME width resopnse, class of this table. prendre fact fnsr comme reeference -->
             <div id="table-container" class="row position-relative">
-                <div class="px-0
-            ">
-                    <div class="
-            ">
+                <div class="px-0">
+                    <div class="">
                         <?php
                         require_once __DIR__ . '/processors/generate_table_001.php';
                         ?>
@@ -95,8 +93,7 @@ is_logged();
                             <div id="new-modal-body-heads">
                                 <?php
                                 //TODO : make the header of factures in details readonly
-                                require __DIR__ . "
-                                /../modals_processors/facture_client_formulaire_body_new.php"
+                                require __DIR__ . "/../modals_processors/facture_client_formulaire_body_new.php"
                                 ?>
                             </div>
                             <!-- TODO : to delete. we gonna use only JS here -->
@@ -131,7 +128,7 @@ is_logged();
                             <?php
                             //TODO : make the header of factures in details readonly. 
                             //TODO : change to require once. 
-                        require __DIR__ . "/../modals_processors/facture_client_formulaire_body_read_only.php"
+                            require __DIR__ . "/../modals_processors/facture_client_formulaire_body_read_only.php"
                             ?>
                             <!-- </div> -->
                             <!-- TODO : to elete. we gonna use only JS here -->

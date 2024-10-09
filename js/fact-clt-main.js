@@ -1510,6 +1510,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     modalCommandeNew.querySelector("#btn-save-new").disabled = true;
                     modalCommandeNew.querySelector("#btn-validate-new").disabled = true;
                 }
+            } else if (event.target.id == "item-num-serie") {
+                console.log("clicked item num serie!!");
+
+                event.target.parentNode.querySelector("#search-num-serie").focus();
             }
         }, true)
     } catch (error) {
