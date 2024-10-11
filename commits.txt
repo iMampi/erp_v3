@@ -1396,3 +1396,14 @@ working on identifiables management...
         created the template button_select_dropdown_template.html.
         creating the logic to add and replace simple input text to button select dropdown
         >> switcht and replacing simple input with btn-dropdown works.
+-------------------------
+176_an:
+working on making sortie-stock visible on view mode ...
+working on identifiables management...
+    when mode avoir fournisseur, make the numerie serie field change to btn-select...:
+        created the template button_select_dropdown_template.html.
+        updated the php class SelectionNumSerie : removed the condition to select only actif numserie
+        updated searchNumSerie() in commande-main.js and fact-clt-main.js to cope with the update the php class SelectionNumSerie . now each js file implement what is needed.
+        finalized switchMode. now it works fine handling item-num-serie.
+        >>>DONE
+        problem when having multiple line of item... msut be deu to promises... must verify.

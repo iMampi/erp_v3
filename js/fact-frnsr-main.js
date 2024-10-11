@@ -1009,6 +1009,7 @@ function createSimpleTextInput(inputId, classListArray, disabled) {
         str_node,
         "text/html"
     );
+    node = node.body.firstChild;
     classListArray.forEach(_class => {
         node.classList.add(_class)
     });
@@ -1017,10 +1018,11 @@ function createSimpleTextInput(inputId, classListArray, disabled) {
     return node
 }
 
-function switchInputType(targetContainer, replacementNode) {
-    targetContainer.removeChild(targetContainer.firstChild);
-    targetContainer.appendChild(replacementNode);
-}
+// ca a l'air overkill
+// function switchInputType(targetContainer, replacementNode) {
+//     targetContainer.removeChild(targetContainer.firstChild);
+//     targetContainer.appendChild(replacementNode);
+// }
 
 async function switchMode(myMode, modalFacture) {
     let table = modalFacture.querySelector("#table-facture");
@@ -1041,7 +1043,7 @@ async function switchMode(myMode, modalFacture) {
         }
     });
 
-    let node_button;
+    let replacement_node;
     let itemNumSerieID = "item-num-serie";
     // creating btn dropdown num_serie
     if (myMode === "avoir") {
@@ -1054,8 +1056,8 @@ async function switchMode(myMode, modalFacture) {
                 "text/html"
             );
 
-            node_button = createButtonDropdown(itemNumSerieID, "...", "num-serie-dropdown", "search-num-serie", doc);
-            node_button = node_button.querySelector(".btn-dropdown-container");
+            replacement_node = createButtonDropdown(itemNumSerieID, "...", "num-serie-dropdown", "search-num-serie", doc);
+            replacement_node = replacement_node.querySelector(".btn-dropdown-container");
 
 
         } else {
@@ -1068,30 +1070,40 @@ async function switchMode(myMode, modalFacture) {
             console.log("doc");
             // console.log(doc);
 
-            node_button = createButtonDropdown(itemNumSerieID, "...", "num-serie-dropdown", "search-num-serie", doc);
+            replacement_node = createButtonDropdown(itemNumSerieID, "...", "num-serie-dropdown", "search-num-serie", doc);
 
             // caching
             myCache[itemNumSerieID + "_button"] = doc.body.innerHTML;
 
-            node_button = node_button.querySelector(".btn-dropdown-container");
+            replacement_node = replacement_node.querySelector(".btn-dropdown-container");
             console.log("node_button");
             // console.log(node_button);
         }
+
+    } else {
+        replacement_node = createSimpleTextInput(itemNumSerieID,
+            [itemNumSerieID],
+            true
+        );
 
     }
 
 
     table.querySelectorAll(".td-item-num-serie").forEach(
         td => {
-            if (myMode === "avoir") {
-                console.log("change to btn drop");
+            // if (myMode === "avoir") {
+            console.log("change to btn drop");
 
-                td.removeChild(td.firstChild);
-
-                switchInputType(td, node_button);
+            td.removeChild(td.firstElementChild);
+            td.appendChild(replacement_node);
+            if (td.parentNode.querySelector(".identifiable").value == "1") {
                 td.querySelector("#item-num-serie").disabled = false;
-
             }
+
+            // switchInputType(td, replacement_node);
+
+
+            // }
         }
     )
 
@@ -1463,6 +1475,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(response);
         let myjson = JSON.parse(response);
 
+        myjson = myjson.filter(item => item.actif == "0");
         return myjson;
         // return await fillMainTable(myjson, tableBodyCategorie);
 
@@ -1560,7 +1573,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
 
-            if (event.target.classList.contains("search-result")) {
+            if (event.target.classList.contains("search-result") && event.target.parentNode.parentNode.id == "fournisseur-dropdown") {
                 console.log("chossed founisseur");
                 console.log(event);
                 fillFournisseurButton(JSON.parse(event.target.dataset.infos), event.target.parentNode.parentNode.parentNode.querySelector(".dropdown-toggle"));
@@ -1625,11 +1638,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (dropdownNode.id == "item-dropdown") {
                     console.log("item are here called");
                     fillInputsDetailsItemRow(JSON.parse(event.target.dataset.infos), trNOde, "new");
-                    //! no need to autofill num - serie for cycle achat
-                    // if (JSON.parse(event.target.dataset.infos)["identifiable"] == "1") {
-                    //     searchLive([JSON.parse(event.target.dataset.infos)["code"], ''], event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('#num-serie-dropdown'), "num-serie");
-                    // }
-                    // trNOde.querySelector("#item-num-serie").textContent = "...";
+
+                    //  num serie for avoir
+                    if ((JSON.parse(event.target.dataset.infos)["identifiable"] == "1") && (modeFacture == "avoir")) {
+                        searchLive([JSON.parse(event.target.dataset.infos)["code"], ''], event.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('#num-serie-dropdown'), "num-serie");
+
+                        trNOde.querySelector("#item-num-serie").textContent = "...";
+
+                        trNOde.querySelector("#item-num-serie").disabled = false;
+                    }
 
                     // *start calculating
                     // *the avant remise part

@@ -1424,6 +1424,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("error?");
         console.log(response);
         let myjson = JSON.parse(response);
+        myjson = myjson.filter(item => item.actif == "1");
 
         return myjson;
         // return await fillMainTable(myjson, tableBodyCategorie);

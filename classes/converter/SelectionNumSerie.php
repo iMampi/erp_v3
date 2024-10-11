@@ -68,7 +68,8 @@ class SelectionNumSerie extends Converter
                 if ($key == $last_key) {
                     $this->conditions = \preg_replace('/\s*and\s*$/', "", $this->conditions);
                     $this->conditions = \preg_replace('/\s*where\s*$/', "", $this->conditions);
-                    $this->conditions .= " and actif='1'";
+                    // $this->conditions .= " and actif='1'";
+                    // $this->conditions .= " and actif='1'";
                 }
             }
         }
