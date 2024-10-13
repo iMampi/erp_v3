@@ -991,6 +991,56 @@ async function fetchModelNode(url) {
     return text;
 }
 
+async function getButtonDropdownTemplate(btnID, myMode) {
+    let replacement_node;
+    // creating btn dropdown num_serie
+    if (myMode === "avoir") {
+        if (myCache[btnID + "_button"]) {
+            // check if cached 
+            console.log("cached");
+
+            let doc = new DOMParser().parseFromString(
+                myCache[btnID + "_button"],
+                "text/html"
+            );
+
+            replacement_node = createButtonDropdown(btnID, "...", "num-serie-dropdown", "search-num-serie", doc);
+            replacement_node = replacement_node.querySelector(".btn-dropdown-container");
+
+
+        } else {
+            let txt_node = await fetchModelNode("/elements/button_select_dropdown_template.html");
+            let doc = new DOMParser().parseFromString(
+                txt_node,
+                "text/html"
+            );
+
+            console.log("doc");
+            // console.log(doc);
+
+            replacement_node = createButtonDropdown(btnID, "...", "num-serie-dropdown", "search-num-serie", doc);
+
+            // caching
+            myCache[btnID + "_button"] = doc.body.innerHTML;
+
+            replacement_node = replacement_node.querySelector(".btn-dropdown-container");
+            console.log("node_button");
+            // console.log(node_button);
+        }
+
+    } else {
+        replacement_node = createSimpleTextInput(btnID,
+            [btnID],
+            true
+        );
+
+    }
+    return replacement_node;
+
+}
+
+
+
 function createButtonDropdown(btnId, btnDefaultText, dropdownId, searchId, nodeModel) {
     // await nodeModel
     nodeModel.querySelector(".dropdown-toggle").id = btnId;
@@ -1043,51 +1093,7 @@ async function switchMode(myMode, modalFacture) {
         }
     });
 
-    let replacement_node;
-    let itemNumSerieID = "item-num-serie";
-    // creating btn dropdown num_serie
-    if (myMode === "avoir") {
-        if (myCache[itemNumSerieID + "_button"]) {
-            // check if cached 
-            console.log("cached");
-
-            let doc = new DOMParser().parseFromString(
-                myCache[itemNumSerieID + "_button"],
-                "text/html"
-            );
-
-            replacement_node = createButtonDropdown(itemNumSerieID, "...", "num-serie-dropdown", "search-num-serie", doc);
-            replacement_node = replacement_node.querySelector(".btn-dropdown-container");
-
-
-        } else {
-            let txt_node = await fetchModelNode("/elements/button_select_dropdown_template.html");
-            let doc = new DOMParser().parseFromString(
-                txt_node,
-                "text/html"
-            );
-
-            console.log("doc");
-            // console.log(doc);
-
-            replacement_node = createButtonDropdown(itemNumSerieID, "...", "num-serie-dropdown", "search-num-serie", doc);
-
-            // caching
-            myCache[itemNumSerieID + "_button"] = doc.body.innerHTML;
-
-            replacement_node = replacement_node.querySelector(".btn-dropdown-container");
-            console.log("node_button");
-            // console.log(node_button);
-        }
-
-    } else {
-        replacement_node = createSimpleTextInput(itemNumSerieID,
-            [itemNumSerieID],
-            true
-        );
-
-    }
-
+    let replacement_node = await getButtonDropdownTemplate("item-num-serie", myMode);
 
     table.querySelectorAll(".td-item-num-serie").forEach(
         td => {
@@ -1095,7 +1101,7 @@ async function switchMode(myMode, modalFacture) {
             console.log("change to btn drop");
 
             td.removeChild(td.firstElementChild);
-            td.appendChild(replacement_node);
+            td.appendChild(replacement_node.cloneNode(true));
             if (td.parentNode.querySelector(".identifiable").value == "1") {
                 td.querySelector("#item-num-serie").disabled = false;
             }
@@ -1721,7 +1727,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         modalFactureNew.querySelector("#btn-validate-new").disabled = false;
                     } else {
                         modalFactureNew.querySelector("#btn-save-new").disabled = true;
-                        modalFactureNew.querySelector("#btn-validate-new").disabled = true;
+                        // modalFactureNew.querySelector("#btn-validate-new").disabled = true;
                     }
                 }
 
@@ -1729,8 +1735,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 event.target.parentNode.querySelector("#search-item").focus();
             } else if (event.target.id == "btn-add-item") {
                 addItem(tableItemsFactureNew).
-                    then(() => autonumericItemRow(tableItemsFactureNew, modeFacture)).
-                    then(() => modificationWatcher = true);
+                    then(() => {
+                        autonumericItemRow(tableItemsFactureNew, modeFacture);
+                        modificationWatcher = true;
+
+                        return getButtonDropdownTemplate("item-num-serie", modeFacture)
+                    }).
+                    then((replacement_node) => {
+                        td = tableItemsFactureNew.querySelector("#row-" + zeroLeftPadding(counterRowItem, 3, false)).querySelector(".td-item-num-serie");
+                        console.log("change to btn drop");
+
+                        td.removeChild(td.firstElementChild);
+                        td.appendChild(replacement_node.cloneNode(true));
+                    });
+
+
             } else if (event.target.classList.contains("btn-del")) {
                 removeItem(event.target, "target");
                 modificationWatcher = true;

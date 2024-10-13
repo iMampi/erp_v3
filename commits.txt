@@ -1407,3 +1407,13 @@ working on identifiables management...
         finalized switchMode. now it works fine handling item-num-serie.
         >>>DONE
         problem when having multiple line of item... msut be deu to promises... must verify.
+-------------------------
+176_an
+working on making sortie-stock visible on view mode ...
+working on identifiables management...
+    when mode avoir fournisseur, make the numerie serie field change to btn-select...:
+        problem when having multiple line of item... msut be deu to promises... must verify : problem of node with same uid. so had to clone node >> DONE;
+        when adding a new itemrow, while the item-uid is already in btn mode, the new is still simple inpput. must change it...>> 
+        added Abstraction by creating function getButtonDropdownTemplate();
+        edited the eventlistener (event.target.id == "btn-add-item")
+        >> DONE;
